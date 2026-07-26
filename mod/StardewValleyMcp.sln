@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardewValleyMcp.Protocol", "src\StardewValleyMcp.Protocol\StardewValleyMcp.Protocol.csproj", "{7158D356-BA69-4E78-9ED7-2D9258517968}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardewValleyMcp.Protocol.Tests", "tests\StardewValleyMcp.Protocol.Tests\StardewValleyMcp.Protocol.Tests.csproj", "{8ACEC64A-9355-42F8-9373-E43B7E618F18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardewValleyMcp.Mod", "src\StardewValleyMcp.Mod\StardewValleyMcp.Mod.csproj", "{59567E54-2BB0-40B8-93DC-215DFEB540DB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7158D356-BA69-4E78-9ED7-2D9258517968}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7158D356-BA69-4E78-9ED7-2D9258517968}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7158D356-BA69-4E78-9ED7-2D9258517968}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7158D356-BA69-4E78-9ED7-2D9258517968}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8ACEC64A-9355-42F8-9373-E43B7E618F18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8ACEC64A-9355-42F8-9373-E43B7E618F18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8ACEC64A-9355-42F8-9373-E43B7E618F18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8ACEC64A-9355-42F8-9373-E43B7E618F18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{59567E54-2BB0-40B8-93DC-215DFEB540DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{59567E54-2BB0-40B8-93DC-215DFEB540DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{59567E54-2BB0-40B8-93DC-215DFEB540DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{59567E54-2BB0-40B8-93DC-215DFEB540DB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal

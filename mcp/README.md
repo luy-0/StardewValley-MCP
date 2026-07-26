@@ -15,4 +15,33 @@
 
 MCP 服务端不拥有游戏状态，不嵌入私有平台身份，也不要求本地开源链路依赖托管的 StarCoPlay 平台。
 
-首个公开运行配置将支持本地 MCP 客户端与本地 Mod。实现迁入后再补充具体的打包与启动命令。
+## 当前实现状态
+
+当前已建立独立 Python 包、CLI 和由 `../spec/proto/` 生成的协议类型。`serve` 会启动真正的 MCP stdio Server；它连接本地 Mod、验证 HMAC 与能力摘要，并且当前只暴露 `stardew_query_runtime`。
+
+推荐使用 `uv` 按锁文件安装、测试并构建：
+
+```bash
+./mcp/scripts/test.sh
+uv run --project mcp stardew-valley-mcp doctor
+uv run --project mcp stardew-valley-mcp serve
+```
+
+只重新生成或检查协议代码：
+
+```bash
+python3 scripts/generate_protocol.py
+python3 scripts/generate_protocol.py --check
+```
+
+Python 包不依赖私有平台仓库。当前稳定依赖锁定在 MCP Python SDK v1 系列，避免自动升级到不兼容的主版本。
+
+启动 `serve` 前必须设置 Mod `config.json` 中对应的 Base64 共享秘密：
+
+```bash
+export STARDEW_VALLEY_MCP_HOST=127.0.0.1
+export STARDEW_VALLEY_MCP_PORT=24642
+export STARDEW_VALLEY_MCP_SHARED_SECRET='<Mod config.json 中的值>'
+```
+
+完整安装和 MCP 客户端配置参见 [`../docs/getting-started.md`](../docs/getting-started.md)。

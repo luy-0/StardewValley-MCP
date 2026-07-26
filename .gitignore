@@ -3,8 +3,6 @@
 .idea/
 .vscode/
 *.swp
-agent_workspace/
-
 # Secrets and local configuration
 .env
 .env.*
@@ -30,6 +28,8 @@ obj/
 # Python
 __pycache__/
 *.py[cod]
+*.egg-info/
+build/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/

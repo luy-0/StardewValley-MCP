@@ -1,0 +1,14 @@
+{
+  "messageId": "event-msg-1",
+  "replyTo": "cmd-msg-1",
+  "fence": {
+    "sessionId": "f2d85b2e-4d60-4e32-bf42-fedcba654321",
+    "leaseEpoch": "7",
+    "capabilityDigest": "6c9c9fc8002032a8b4191e3d4809f74ae9c20abcfb26fbf579d7a329d7daf199"
+  },
+  "commandEvent": {
+    "commandId": "a3e96c3f-5e71-4f43-8053-111111111111",
+    "state": "COMMAND_STATE_ACCEPTED",
+    "phase": "queued"
+  }
+}

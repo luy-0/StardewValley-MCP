@@ -365,7 +365,12 @@ def verify_status_response_shape(response: Any) -> None:
         verify_event_shape(response.current)
 
 
-def verify_fixture_semantics(frames: list[Any], manifest: dict[str, Any], digest: str) -> None:
+def verify_fixture_semantics(
+    frames: list[Any],
+    manifest: dict[str, Any],
+    digest: str,
+    advertised_capabilities: list[dict[str, Any]] | None = None,
+) -> None:
     message_ids: set[str] = set()
     frames_by_body: dict[str, list[Any]] = {}
     capability_by_id = {item["id"]: item for item in manifest["capabilities"]}
@@ -453,9 +458,10 @@ def verify_fixture_semantics(frames: list[Any], manifest: dict[str, Any], digest
         "id", "contract_version", "request", "result", "side_effect", "execution", "cancellable",
         "default_timeout_ms", "max_timeout_ms", "required_scope", "risk", "destructive",
     }
+    expected_source = manifest["capabilities"] if advertised_capabilities is None else advertised_capabilities
     expected = {
         item["id"]: {key: value for key, value in item.items() if key in descriptor_fields}
-        for item in manifest["capabilities"]
+        for item in expected_source
     }
     for item in expected.values():
         item["risk"] = sorted(item["risk"], key=lambda value: value.encode("utf-8"))
@@ -467,12 +473,10 @@ def verify_fixture_semantics(frames: list[Any], manifest: dict[str, Any], digest
             require(frame.fence.session_id == ready.session_id, f"Fence Session 不一致: {frame.message_id}")
 
 
-def verify_fixtures(transport_pb2: Any, manifest: dict[str, Any], digest: str) -> list[Path]:
-    index = load_json(FIXTURE_ROOT / "index.json")
-    require(index["schemaVersion"] == 1, "Fixture index schemaVersion 错误")
+def load_fixture_frames(transport_pb2: Any, entries: list[dict[str, Any]]) -> tuple[list[Any], list[Path]]:
     paths: list[Path] = []
     frames = []
-    for entry in index["protoJson"]:
+    for entry in entries:
         require(entry["message"] == "TransportFrame", "未知 Fixture 消息类型")
         path = FIXTURE_ROOT / entry["path"]
         require(path.is_file(), f"Fixture 不存在: {path}")
@@ -491,6 +495,13 @@ def verify_fixtures(transport_pb2: Any, manifest: dict[str, Any], digest: str) -
         require(message == reparsed, f"Proto 往返不一致: {path}")
         frames.append(message)
         paths.append(path)
+    return frames, paths
+
+
+def verify_fixtures(transport_pb2: Any, manifest: dict[str, Any], digest: str) -> list[Path]:
+    index = load_json(FIXTURE_ROOT / "index.json")
+    require(index["schemaVersion"] == 1, "Fixture index schemaVersion 错误")
+    frames, paths = load_fixture_frames(transport_pb2, index["protoJson"])
     verify_fixture_semantics(frames, manifest, digest)
     return paths
 
@@ -526,8 +537,13 @@ def mutate_vector(vector: dict[str, Any], key: str) -> dict[str, Any]:
     return mutated
 
 
-def verify_auth_vector(digest: str, frames: list[Any]) -> dict[str, Any]:
-    vector = load_json(FIXTURE_ROOT / "auth" / "hmac-sha256.json")
+def verify_auth_vector(
+    digest: str,
+    frames: list[Any],
+    vector_path: Path | None = None,
+    vector: dict[str, Any] | None = None,
+) -> dict[str, Any]:
+    vector = vector if vector is not None else load_json(vector_path or FIXTURE_ROOT / "auth" / "hmac-sha256.json")
     require(vector["capabilityDigest"] == digest, "Auth Vector Digest 过期")
     secret = base64.b64decode(vector["secretBase64"], validate=True)
     require(len(secret) >= 32, "测试共享秘密短于 32 字节")
@@ -565,6 +581,92 @@ def verify_auth_vector(digest: str, frames: list[Any]) -> dict[str, Any]:
     require(hmac.compare_digest(downgrade_client, base64.b64decode(downgrade["clientAuthTagBase64"])), "合成降级 Client HMAC 不一致")
     require(hmac.compare_digest(downgrade_server, base64.b64decode(downgrade["serverAuthTagBase64"])), "合成降级 Server HMAC 不一致")
     return vector
+
+
+def verify_bootstrap_fixtures(transport_pb2: Any, manifest: dict[str, Any]) -> tuple[list[Path], dict[str, Any], str]:
+    index = load_json(FIXTURE_ROOT / "index.json")
+    profile = index.get("profiles", {}).get("bootstrap")
+    require(isinstance(profile, dict), "Fixture index 缺少 bootstrap profile")
+    bootstrap_capability = next(
+        (item for item in manifest["capabilities"] if item["id"] == "query_runtime"), None,
+    )
+    require(bootstrap_capability is not None, "Manifest 缺少 query_runtime")
+    bootstrap_digest = capability_digest([bootstrap_capability])
+    vectors = profile.get("authVectors")
+    require(isinstance(vectors, list) and len(vectors) == 1, "bootstrap 必须声明唯一 HMAC 向量")
+    vector_entry = vectors[0]
+    require(vector_entry == {"path": "bootstrap/hmac-sha256.json", "algorithm": "v1_hmac_sha256"}, "bootstrap HMAC 向量声明错误")
+    vector_path = FIXTURE_ROOT / vector_entry["path"]
+    require(vector_path.is_file(), f"bootstrap HMAC Fixture 不存在: {vector_path}")
+
+    scenarios = profile.get("scenarios")
+    require(isinstance(scenarios, list) and len(scenarios) == 2, "bootstrap 必须包含成功与 NOT_READY 两个场景")
+    expected_terminal = {
+        "query-runtime-succeeded": 3,
+        "query-runtime-not-ready": 4,
+    }
+
+    def verify_scenario_terminal(scenario_id: str, declared_terminal: Any, events: list[Any]) -> None:
+        expected = expected_terminal[scenario_id]
+        require([event.state for event in events] == [1, expected], f"bootstrap 状态序列错误: {scenario_id}")
+        require(declared_terminal == {3: "COMMAND_STATE_SUCCEEDED", 4: "COMMAND_STATE_FAILED"}[expected], f"bootstrap 终态声明错误: {scenario_id}")
+        if expected == 3:
+            require(events[-1].WhichOneof("outcome") == "result", "bootstrap 成功终态必须只有 Result")
+        else:
+            require(events[-1].WhichOneof("outcome") == "error", "bootstrap NOT_READY 必须只有 Error")
+            require(events[-1].error.code == 10, "bootstrap FAILED 必须使用 ERROR_CODE_NOT_READY")
+
+    success_paths: list[Path] | None = None
+    success_frames: list[Any] | None = None
+    not_ready_paths: list[Path] | None = None
+    not_ready_frames: list[Any] | None = None
+    for scenario in scenarios:
+        scenario_id = scenario.get("id")
+        require(scenario_id in expected_terminal, f"未知 bootstrap 场景: {scenario_id}")
+        frames, paths = load_fixture_frames(transport_pb2, scenario["protoJson"])
+        verify_fixture_semantics(frames, manifest, bootstrap_digest, [bootstrap_capability])
+        events = [frame.command_event for frame in frames if frame.WhichOneof("body") == "command_event"]
+        verify_scenario_terminal(scenario_id, scenario.get("expectedTerminalState"), events)
+        if scenario_id == "query-runtime-succeeded":
+            success_paths, success_frames = paths, frames
+        else:
+            not_ready_paths = paths
+            not_ready_frames = frames
+
+    require(success_paths is not None and success_frames is not None and not_ready_paths is not None and not_ready_frames is not None, "bootstrap 场景不完整")
+    vector = verify_auth_vector(bootstrap_digest, success_frames, vector_path)
+
+    def rejected(check: Any, label: str) -> None:
+        try:
+            check()
+        except VerificationError:
+            return
+        raise VerificationError(f"bootstrap 篡改未被拒绝: {label}")
+
+    def clone_frames(source: list[Any]) -> list[Any]:
+        cloned: list[Any] = []
+        for frame in source:
+            copy = type(frame)()
+            copy.CopyFrom(frame)
+            cloned.append(copy)
+        return cloned
+
+    changed_descriptor = clone_frames(success_frames)
+    changed_descriptor[2].server_ready.capability_snapshot.capabilities[0].default_timeout_ms += 1
+    rejected(lambda: verify_fixture_semantics(changed_descriptor, manifest, bootstrap_digest, [bootstrap_capability]), "singleton Descriptor")
+    changed_digest = clone_frames(success_frames)
+    changed_digest[2].server_ready.capability_snapshot.digest = "0" * 64
+    rejected(lambda: verify_fixture_semantics(changed_digest, manifest, bootstrap_digest, [bootstrap_capability]), "Snapshot digest")
+    changed_fence = clone_frames(success_frames)
+    changed_fence[3].fence.capability_digest = "0" * 64
+    rejected(lambda: verify_fixture_semantics(changed_fence, manifest, bootstrap_digest, [bootstrap_capability]), "Fence digest")
+    changed_hmac = dict(vector)
+    changed_hmac["serverAuthTagBase64"] = "A" * 44
+    rejected(lambda: verify_auth_vector(bootstrap_digest, success_frames, vector=changed_hmac), "HMAC")
+    changed_not_ready = clone_frames(not_ready_frames)
+    changed_not_ready[-1].command_event.error.code = 11
+    rejected(lambda: verify_scenario_terminal("query-runtime-not-ready", "COMMAND_STATE_FAILED", [frame.command_event for frame in changed_not_ready if frame.WhichOneof("body") == "command_event"]), "FAILED/NOT_READY 状态")
+    return [*success_paths, not_ready_paths[-1]], vector, bootstrap_digest
 
 
 def verify_framing_model(transport_pb2: Any) -> None:
@@ -678,8 +780,11 @@ def verify_csharp(
     python_modules: dict[str, Any],
     digest: str,
     tmp: Path,
+    ready_path: Path,
+    vector_path: Path,
+    label: str,
 ) -> None:
-    harness = tmp / "csharp-harness"
+    harness = tmp / f"csharp-harness-{label}"
     harness.mkdir()
     for source in csharp_out.glob("*.cs"):
         (harness / source.name).write_bytes(source.read_bytes())
@@ -728,8 +833,6 @@ File.WriteAllText(metadataPath, JsonSerializer.Serialize(new { fixtureCount = fi
 Console.WriteLine($"csharp_contract_ok count={fixturePaths.Length} digest={digest}");
 ''', encoding="utf-8")
     metadata = tmp / "csharp-metadata.json"
-    ready_path = FIXTURE_ROOT / "transport" / "server-ready.json"
-    vector_path = FIXTURE_ROOT / "auth" / "hmac-sha256.json"
     run(["dotnet", "run", "--project", str(harness / "Harness.csproj"), "--", str(metadata), str(ready_path), str(vector_path), *map(str, fixture_paths)])
     actual = load_json(metadata)
     require(actual["digest"] == digest, "C# Capability Digest 与 Python 不一致")
@@ -774,10 +877,20 @@ def main() -> None:
             json_format.ParseDict(load_json(FIXTURE_ROOT / entry["path"]), frame, ignore_unknown_fields=False)
             frames.append(frame)
         vector = verify_auth_vector(digest, frames)
+        bootstrap_paths, bootstrap_vector, bootstrap_digest = verify_bootstrap_fixtures(modules["transport"], manifest)
         verify_framing_model(modules["transport"])
         verify_negative_message_models(modules)
         if not args.skip_csharp:
-            verify_csharp(csharp_out, fixture_paths, vector, modules, digest, tmp)
+            verify_csharp(
+                csharp_out, fixture_paths, vector, modules, digest, tmp,
+                FIXTURE_ROOT / "transport" / "server-ready.json",
+                FIXTURE_ROOT / "auth" / "hmac-sha256.json", "full",
+            )
+            verify_csharp(
+                csharp_out, bootstrap_paths, bootstrap_vector, modules, bootstrap_digest, tmp,
+                FIXTURE_ROOT / "bootstrap" / "server-ready.json",
+                FIXTURE_ROOT / "bootstrap" / "hmac-sha256.json", "bootstrap",
+            )
     print(f"spec_v1_conformance_ok capabilities={len(manifest['capabilities'])} digest={digest}")
 
 

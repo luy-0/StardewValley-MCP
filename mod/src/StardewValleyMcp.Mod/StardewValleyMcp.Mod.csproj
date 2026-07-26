@@ -1,0 +1,19 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>StardewValleyMcp.Mod</AssemblyName>
+    <RootNamespace>StardewValleyMcp.Mod</RootNamespace>
+    <Version>0.1.0-alpha.1</Version>
+    <NoWarn>$(NoWarn);CS8032</NoWarn>
+    <ModFolderName>StardewValleyMCP</ModFolderName>
+    <EnableModDeploy>false</EnableModDeploy>
+    <EnableModZip>false</EnableModZip>
+    <BundleExtraAssemblies>ThirdParty</BundleExtraAssemblies>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Pathoschild.Stardew.ModBuildConfig" ExcludeAssets="analyzers" />
+    <ProjectReference Include="../StardewValleyMcp.Protocol/StardewValleyMcp.Protocol.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Update="manifest.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

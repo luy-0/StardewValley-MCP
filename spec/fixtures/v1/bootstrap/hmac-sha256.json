@@ -1,0 +1,20 @@
+{
+  "algorithm": "HMAC-SHA256",
+  "secretBase64": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=",
+  "modInstanceId": "d0b63f0c-2b4e-4c10-9d20-1234567890ab",
+  "clientInstanceId": "e1c74a1d-3c5f-4d21-ae31-abcdef123456",
+  "serverNonceBase64": "ICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj8=",
+  "clientNonceBase64": "QEFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaW1xdXl8=",
+  "requestedMajor": 1,
+  "requestedMinor": 0,
+  "selectedMajor": 1,
+  "selectedMinor": 0,
+  "resumeSessionId": "",
+  "sessionId": "f2d85b2e-4d60-4e32-bf42-fedcba654321",
+  "leaseEpoch": 7,
+  "resultRetentionMs": 300000,
+  "reconnectGraceMs": 10000,
+  "capabilityDigest": "6c9c9fc8002032a8b4191e3d4809f74ae9c20abcfb26fbf579d7a329d7daf199",
+  "clientAuthTagBase64": "rG52WBEEuPTimojsc6SwJmwqc7D9LHP3zwRQ6hmcToU=",
+  "serverAuthTagBase64": "I/xyMVHqIVbQdRN2iFHnhgS2qBGii73AYCDMBfuDUCI="
+}

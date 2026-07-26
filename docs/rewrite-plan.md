@@ -1,6 +1,6 @@
 # 公开版本重写计划
 
-状态：**阶段 0 已完成，进入阶段 1**
+状态：**阶段 1 已完成，`query_runtime` 首个真实纵向切片已贯通**
 
 本计划定义如何以旧仓库已经验证的游戏行为为参考，重新实现一套适合公开发布、独立安装和长期维护的 Mod、MCP 服务端与 Skill 开发套件。它不是旧代码搬迁清单；旧仓库只提供行为证据、失败经验和测试素材，不是新版本的架构模板。
 
@@ -139,22 +139,33 @@ query_runtime, query_world, query_inventory, query_ui, inspect
 
 完成记录：阶段 0 已通过多轮独立审查与最终验收；审查过程已经归档到非产品目录 `agent_workspace/reviews/phase0/`，正式结论均已落实到 Spec 与一致性测试。后续实现若要求改变候选契约，必须按 `spec/VERSIONING.md` 重新作出版本判断并更新 Fixture，不能在代码中建立隐式例外。
 
-### 阶段 1：建立可独立构建的空骨架
+### 阶段 1：建立可独立构建的新骨架
 
-任务：
+任务（已完成）：
 
-1. 建立干净的 Mod Solution、测试项目和构建脚本。
-2. 建立独立 Python Package、CLI、锁定依赖和测试入口。
-3. 建立统一 Proto 代码生成、格式检查和 CI。
-4. 加入禁止依赖扫描与 Spec/Manifest/Registry 一致性检查。
+1. [x] 建立干净的 Mod Solution、测试项目和构建脚本。
+2. [x] 建立独立 Python Package、CLI、锁定依赖和测试入口。
+3. [x] 建立统一 Proto 代码生成、格式检查和跨系统 CI。
+4. [x] 加入禁止依赖、机器路径泄露与 Spec 一致性检查。
+5. [x] 固化 MCP Wheel、Mod ZIP 内容审计与统一回归入口。
 
 退出条件：干净检出后无需旧仓库即可构建、测试和打包；生产源码中禁止词扫描为零。
 
+完成记录：已在全新的临时目录执行 `./scripts/verify.sh --with-mod`，证明代码生成、Spec 一致性、Transport Spike、C# 测试、Python 测试、Mod 构建、MCP 打包和发布包审计均不依赖旧仓库。当前门禁包含 4 项 C# 契约测试、7 项 Python 协议与 MCP 测试，以及公开源码历史依赖和机器专属路径扫描。Mod ZIP 只允许 Manifest、Mod、Protocol 与 Protobuf 四个运行文件，MCP Wheel 与源码包必须包含服务端、Transport、生成协议与 `query_runtime` Tool Schema。
+
 ### 阶段 2：贯通第一个真实纵向切片
 
-以 `query_runtime` 作为第一条端到端能力，依次完成：认证连接、能力协商、命令发送、Mod 主线程执行、结构化结果、MCP Tool 投影和真实游戏验证。
+以 `query_runtime` 作为第一条端到端能力，任务（已完成）：
+
+1. [x] 完成基于共享秘密的本地认证、能力摘要与单 Owner 会话。
+2. [x] 通过新 Proto 发送命令，并由 Mod 在 SMAPI 主线程读取游戏状态。
+3. [x] 把结构化结果投影为唯一的 MCP Tool `stardew_query_runtime`。
+4. [x] 覆盖成功、`not_ready`、HMAC、Frame 与 MCP 标准会话测试。
+5. [x] 在真实游戏存档中执行一次只读调用并通过 Output Schema 校验。
 
 退出条件：一个全新安装的 MCP 客户端能通过新链路读取实际游戏状态；过程中没有文件消息桥、旧 Processor 或私有平台依赖。
+
+完成记录：2026-07-26，SMAPI 成功加载 `0.1.0-alpha.1` Mod 并在 loopback 端口启动新协议 Listener。标准 MCP `ClientSession` 只发现 `stardew_query_runtime`，一次真实调用返回 `succeeded`，读取到当前存档的日期、时间、玩家位置、资源、天气与 UI 摘要，完整结果通过公开 Output Schema。共享秘密只在本地进程内读取，未输出、未写入测试文件或发布包。
 
 ### 阶段 3：完成观察能力
 
@@ -210,6 +221,7 @@ CI 至少包含以下门禁：
 - Manifest、Mod Registry 与 MCP Tool Catalog 的能力集合完全一致；
 - 生产源码禁止出现 `AdapterV2`、`CommandProcessor`、`CompoundDispatcher`、`FallbackToLegacyMapper`、`v2-json` 和 Legacy/V2 命名空间；
 - MCP 禁止导入旧仓库及私有平台包；
+- 公开仓库文本禁止包含用户目录、工作区目录等机器专属绝对路径；
 - Mod 与 MCP 分别从干净环境构建和测试；
 - 安装包内容、秘密扫描、许可证和依赖清单检查；
 - 至少一条只读能力和一条变更能力的真实游戏 Smoke Test。
@@ -224,9 +236,9 @@ CI 至少包含以下门禁：
 
 ## 十一、近期下一步
 
-阶段 0 冻结后进入阶段 1，不再回到旧仓库复制运行时：
+阶段 1 与 `query_runtime` 首个纵向切片完成后，下一步不回到旧仓库复制运行时：
 
-1. 根据 V1 Spec 建立干净的 C# Mod Solution、Python MCP Package 与统一代码生成入口。
-2. 在 CI 中执行 Spec 验证、Transport Spike、跨 OS 构建和禁止依赖扫描。
-3. 建立 Mod Registry 与 MCP Tool Catalog 对 Manifest 的一致性门禁。
-4. 只实现 `query_runtime` 第一条纵向切片，验证真实游戏主线程、结果投影和安装链路后再扩展。
+1. 复审首个切片暴露的 Transport、线程和错误边界，只修复有证据的问题。
+2. 按纵向切片依次实现 `query_world`、`query_inventory`、`query_ui` 与 `inspect`，不预建通用框架。
+3. 每增加一项能力，同步补齐 Spec、Fixture、Mod、MCP、自动化测试和一次真实游戏验证。
+4. 发布准备持续补充许可证、第三方许可证和安全政策，但不与能力实现耦合。

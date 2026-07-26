@@ -1,0 +1,18 @@
+{
+  "messageId": "hello-3",
+  "replyTo": "hello-2",
+  "serverReady": {
+    "selectedVersion": {"major": 1, "minor": 0},
+    "sessionId": "f2d85b2e-4d60-4e32-bf42-fedcba654321",
+    "leaseEpoch": "7",
+    "capabilitySnapshot": {
+      "digest": "6c9c9fc8002032a8b4191e3d4809f74ae9c20abcfb26fbf579d7a329d7daf199",
+      "capabilities": [
+        {"id":"query_runtime","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_READ_ONLY","execution":"EXECUTION_MODE_IMMEDIATE","cancellable":false,"defaultTimeoutMs":5000,"maxTimeoutMs":15000,"requestType":"QueryRuntimeRequest","resultType":"QueryRuntimeResult","requiredScope":"game:read","destructive":false}
+      ]
+    },
+    "resultRetentionMs": 300000,
+    "reconnectGraceMs": 10000,
+    "authTag": "I/xyMVHqIVbQdRN2iFHnhgS2qBGii73AYCDMBfuDUCI="
+  }
+}
