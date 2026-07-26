@@ -1,0 +1,8 @@
+{
+  "messageId": "hello-1",
+  "serverHello": {
+    "version": {"major": 1, "minor": 0},
+    "modInstanceId": "d0b63f0c-2b4e-4c10-9d20-1234567890ab",
+    "serverNonce": "ICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj8="
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "purpose": "仅验证未来同 Major Minor 降级算法，不宣告公开 V1.1",
+  "algorithm": "HMAC-SHA256",
+  "secretBase64": "AAECAwQFBgcICQoLDA0ODxAREhMUFRYXGBkaGxwdHh8=",
+  "modInstanceId": "d0b63f0c-2b4e-4c10-9d20-1234567890ab",
+  "clientInstanceId": "e1c74a1d-3c5f-4d21-ae31-abcdef123456",
+  "serverNonceBase64": "ICEiIyQlJicoKSorLC0uLzAxMjM0NTY3ODk6Ozw9Pj8=",
+  "clientNonceBase64": "QEFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaW1xdXl8=",
+  "requestedMajor": 1,
+  "requestedMinor": 1,
+  "selectedMajor": 1,
+  "selectedMinor": 0,
+  "resumeSessionId": "",
+  "sessionId": "f2d85b2e-4d60-4e32-bf42-fedcba654321",
+  "leaseEpoch": 7,
+  "resultRetentionMs": 300000,
+  "reconnectGraceMs": 10000,
+  "capabilityDigest": "e9a8d2f14250d45f6fe89d844d03543a3e613e351f3156117cd60c600a08092d",
+  "clientAuthTagBase64": "REdqMUuTMEsKLv/QqQi5XXjx8wGSQrfxr2tWmEcJa2Q=",
+  "serverAuthTagBase64": "hgZNwY5gH3GqQzkrxBKTlpbhbYRK1uww6lVW+W+GPPg="
+}

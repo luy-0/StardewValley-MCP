@@ -1,0 +1,120 @@
+syntax = "proto3";
+
+package stardew_valley.mcp.v1;
+
+option csharp_namespace = "StardewValleyMcp.Protocol.V1";
+
+import "capabilities.proto";
+import "common.proto";
+
+message ProtocolVersion {
+  uint32 major = 1;
+  uint32 minor = 2;
+}
+
+enum SideEffect {
+  SIDE_EFFECT_UNSPECIFIED = 0;
+  SIDE_EFFECT_READ_ONLY = 1;
+  SIDE_EFFECT_MUTATING = 2;
+}
+
+enum ExecutionMode {
+  EXECUTION_MODE_UNSPECIFIED = 0;
+  EXECUTION_MODE_IMMEDIATE = 1;
+  EXECUTION_MODE_LONG_RUNNING = 2;
+}
+
+message CapabilityDescriptor {
+  string id = 1;
+  string contract_version = 2;
+  SideEffect side_effect = 3;
+  ExecutionMode execution = 4;
+  bool cancellable = 5;
+  uint32 default_timeout_ms = 6;
+  uint32 max_timeout_ms = 7;
+  string request_type = 8;
+  string result_type = 9;
+  string required_scope = 10;
+  repeated string risks = 11;
+  bool destructive = 12;
+}
+
+message CapabilitySnapshot {
+  // 小写十六进制 SHA-256；规范化算法见 protocol/README.md。
+  string digest = 1;
+  repeated CapabilityDescriptor capabilities = 2;
+}
+
+message SessionFence {
+  string session_id = 1;
+  uint64 lease_epoch = 2;
+  string capability_digest = 3;
+}
+
+message ServerHello {
+  ProtocolVersion version = 1;
+  string mod_instance_id = 2;
+  bytes server_nonce = 3;
+}
+
+message ClientHello {
+  ProtocolVersion requested_version = 1;
+  string client_instance_id = 2;
+  bytes client_nonce = 3;
+  optional string resume_session_id = 4;
+  bytes auth_tag = 5;
+}
+
+message ServerReady {
+  ProtocolVersion selected_version = 1;
+  reserved 2;
+  string session_id = 3;
+  uint64 lease_epoch = 4;
+  CapabilitySnapshot capability_snapshot = 5;
+  uint32 result_retention_ms = 6;
+  uint32 reconnect_grace_ms = 7;
+  bytes auth_tag = 8;
+}
+
+message HandshakeRejected {
+  Error error = 1;
+}
+
+message ProtocolError {
+  Error error = 1;
+}
+
+message Ping {
+  uint64 sequence = 1;
+}
+
+message Pong {
+  uint64 sequence = 1;
+}
+
+message TransportFrame {
+  // 1..64 个 ASCII 字符，在一个连接中唯一。
+  string message_id = 1;
+  // 响应帧和直接命令事件填写触发它的 message_id；主动进度事件可为空。
+  string reply_to = 2;
+  // 握手帧不得携带 Fence；认证后的帧必须携带完整 Fence。
+  optional SessionFence fence = 3;
+
+  oneof body {
+    ServerHello server_hello = 10;
+    ClientHello client_hello = 11;
+    ServerReady server_ready = 12;
+    HandshakeRejected handshake_rejected = 13;
+
+    CommandRequest command_request = 20;
+    CommandEvent command_event = 21;
+    CancelCommandRequest cancel_command_request = 22;
+    CancelCommandResponse cancel_command_response = 23;
+    GetCommandStatusRequest get_command_status_request = 24;
+    GetCommandStatusResponse get_command_status_response = 25;
+
+    Ping ping = 30;
+    Pong pong = 31;
+    ProtocolError protocol_error = 40;
+  }
+}

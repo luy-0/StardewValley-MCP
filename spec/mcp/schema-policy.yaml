@@ -1,0 +1,187 @@
+schema_version: 1
+package: stardew_valley.mcp.v1
+tool_name_prefix: stardew_
+
+# Proto 负责字段、类型、编号、oneof 与嵌套结构；本文件显式定义 Proto 无法表达的
+# MCP JSON 投影策略。未列出的请求消息保持封闭空对象或只使用通用约束。
+messages:
+  SayRequest:
+    required: [content]
+    fields:
+      content: {minLength: 1, maxLength: 500}
+
+  EmoteRequest:
+    required: [emote]
+
+  FaceRequest:
+    required: [direction]
+
+  NavigateRequest:
+    required: [arrival]
+    required_oneofs: [target]
+    allOf:
+      - if: {required: [targetRef]}
+        then:
+          properties:
+            arrival: {const: adjacent}
+      - if: {required: [standSide]}
+        then:
+          properties:
+            arrival: {const: adjacent}
+
+  InteractRequest:
+    required_oneofs: [target]
+
+  UseToolRequest:
+    required_oneofs: [target]
+    fields:
+      chargeLevel: {minimum: 0, maximum: 5, default: 0}
+
+  EquipRequest:
+    required_oneofs: [selector]
+    allOf:
+      - if: {required: [itemRef]}
+        then: {required: [inventoryRevision]}
+
+  OpenMenuRequest:
+    required: [menu]
+
+  ActivateUiRequest:
+    required: [elementRef, uiRevision]
+
+  QueryWorldRequest:
+    fields:
+      entityKinds: {default: []}
+      includeTiles: {default: true}
+      includeEntities: {default: true}
+      includeCharacters: {default: true}
+      # 省略时线路零值由 Mod 解释为 256；Schema 展示的是调用方可见的有效默认值。
+      maxEntities: {minimum: 0, maximum: 512, default: 256}
+      maxCharacters: {minimum: 0, maximum: 512, default: 256}
+    allOf:
+      - if:
+          required: [includeEntities]
+          properties:
+            includeEntities: {const: false}
+        then:
+          properties:
+            entityKinds: {maxItems: 0}
+
+  QueryInventoryRequest:
+    fields:
+      includeEmptySlots: {default: false}
+
+  InspectRequest:
+    required: [refs]
+    fields:
+      refs: {minItems: 1, maxItems: 64, uniqueItems: true}
+
+  Ref:
+    required: [value]
+    fields:
+      value: {minLength: 1, maxLength: 512}
+
+  WorldPosition:
+    required: [locationId, x, y]
+
+  TileArea:
+    required: [locationId, x, y, width, height]
+    fields:
+      width: {minimum: 1, maximum: 32}
+      height: {minimum: 1, maximum: 32}
+
+  RadiusArea:
+    required: [center, radius]
+    fields:
+      radius: {minimum: 0, maximum: 15}
+
+  PlayerInventorySelector: {}
+
+# 成功结果中可由 JSON Schema 静态证明的约束。与实时游戏状态相关的动态
+# 后置条件仍由 capabilities/behavior.md 和实现期 Conformance Harness 验证。
+output_messages:
+  Ref:
+    fields:
+      value: {minLength: 1, maxLength: 512}
+
+  SayResult:
+    fields:
+      contentLength: {minimum: 1, maximum: 500}
+
+  EmoteResult:
+    fields:
+      emote:
+        enum: [happy, sad, heart, exclamation, question, angry, sleep, music]
+
+  FaceResult:
+    fields:
+      finalDirection:
+        enum: [up, right, down, left]
+
+  UseToolResult:
+    fields:
+      chargeLevel: {minimum: 0, maximum: 5}
+
+  InspectedRef:
+    allOf:
+      - oneOf:
+          - properties:
+              resolution:
+                properties: {status: {const: resolved}, kind: {const: world_entity}}
+                required: [status, kind]
+                not: {required: [error]}
+            required: [resolution, worldEntity]
+          - properties:
+              resolution:
+                properties: {status: {const: resolved}, kind: {const: character}}
+                required: [status, kind]
+                not: {required: [error]}
+            required: [resolution, character]
+          - properties:
+              resolution:
+                properties: {status: {const: resolved}, kind: {const: inventory_item}}
+                required: [status, kind]
+                not: {required: [error]}
+            required: [resolution, inventoryItem]
+          - properties:
+              resolution:
+                properties: {status: {const: resolved}, kind: {const: container}}
+                required: [status, kind]
+                not: {required: [error]}
+            required: [resolution, inventory]
+          - properties:
+              resolution:
+                properties: {status: {const: resolved}, kind: {const: ui_element}}
+                required: [status, kind]
+                not: {required: [error]}
+            required: [resolution, uiElement]
+          - properties:
+              resolution:
+                properties:
+                  status: {const: stale}
+                  error:
+                    properties: {code: {const: stale_ref}}
+                    required: [code]
+                required: [status, error]
+            required: [resolution]
+            not: {anyOf: [{required: [worldEntity]}, {required: [character]}, {required: [inventoryItem]}, {required: [inventory]}, {required: [uiElement]}]}
+          - properties:
+              resolution:
+                properties:
+                  status: {const: not_found}
+                  error:
+                    properties: {code: {const: not_found}}
+                    required: [code]
+                required: [status, error]
+            required: [resolution]
+            not: {anyOf: [{required: [worldEntity]}, {required: [character]}, {required: [inventoryItem]}, {required: [inventory]}, {required: [uiElement]}]}
+          - properties:
+              resolution:
+                properties:
+                  status: {const: unsupported}
+                  error:
+                    properties: {code: {const: invalid_argument}}
+                    required: [code]
+                required: [status, error]
+            required: [resolution]
+            not: {anyOf: [{required: [worldEntity]}, {required: [character]}, {required: [inventoryItem]}, {required: [inventory]}, {required: [uiElement]}]}

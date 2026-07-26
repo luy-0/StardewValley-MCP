@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://stardewvalley-mcp.dev/spec/capabilities/v1/manifest.schema.json",
+  "title": "StardewValley MCP 公开能力清单 V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "game", "protocol_version", "capabilities"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "game": {"const": "stardew-valley"},
+    "protocol_version": {"const": "1.0.0"},
+    "capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {"$ref": "#/$defs/capability"}
+    }
+  },
+  "$defs": {
+    "capability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id", "title", "description", "contract_version", "request", "result",
+        "side_effect", "execution", "cancellable", "default_timeout_ms",
+        "max_timeout_ms", "required_scope", "risk", "destructive"
+      ],
+      "properties": {
+        "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
+        "title": {"type": "string", "minLength": 1, "maxLength": 80},
+        "description": {"type": "string", "minLength": 1, "maxLength": 300},
+        "contract_version": {"const": "1.0.0"},
+        "request": {"type": "string", "pattern": "^[A-Z][A-Za-z0-9]*Request$"},
+        "result": {"type": "string", "pattern": "^[A-Z][A-Za-z0-9]*Result$"},
+        "side_effect": {"enum": ["read_only", "mutating"]},
+        "execution": {"enum": ["immediate", "long_running"]},
+        "cancellable": {"type": "boolean"},
+        "default_timeout_ms": {"type": "integer", "minimum": 1000, "maximum": 180000},
+        "max_timeout_ms": {"type": "integer", "minimum": 1000, "maximum": 180000},
+        "required_scope": {"enum": ["game:read", "game:write"]},
+        "risk": {
+          "type": "array",
+          "uniqueItems": true,
+          "items": {
+            "enum": [
+              "changes_save", "advances_time", "consumes_item",
+              "consumes_energy", "spends_money", "changes_relationship",
+              "external_communication", "changes_position"
+            ]
+          }
+        },
+        "destructive": {"type": "boolean"}
+      }
+    }
+  }
+}

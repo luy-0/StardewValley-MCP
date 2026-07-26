@@ -1,0 +1,42 @@
+# Operating systems and editors
+.DS_Store
+.idea/
+.vscode/
+*.swp
+agent_workspace/
+
+# Secrets and local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+
+# Logs and runtime state
+*.log
+.runtime/
+logs/
+tmp/
+
+# Agent process workspace (not part of the public repository artifact)
+agent_workspace/
+
+# .NET / SMAPI
+bin/
+obj/
+*.user
+*.suo
+
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+
+# Node.js
+node_modules/
+dist/
+coverage/

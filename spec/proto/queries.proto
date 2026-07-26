@@ -1,0 +1,88 @@
+syntax = "proto3";
+
+package stardew_valley.mcp.v1;
+
+option csharp_namespace = "StardewValleyMcp.Protocol.V1";
+
+import "common.proto";
+import "facts.proto";
+import "refs.proto";
+
+message QueryWarning {
+  string code = 1;
+  string message = 2;
+  optional Ref ref = 3;
+}
+
+message QueryRuntimeRequest {}
+
+message QueryRuntimeResult {
+  RuntimeSnapshot snapshot = 1;
+  repeated QueryWarning warnings = 2;
+}
+
+message QueryWorldRequest {
+  // 未提供 region 时，以玩家为中心使用半径 8。
+  oneof region {
+    TileArea area = 1;
+    RadiusArea around = 2;
+  }
+  repeated EntityKind entity_kinds = 3;
+  // 三个 include 字段缺省时都解释为 true。
+  optional bool include_tiles = 4;
+  optional bool include_entities = 5;
+  optional bool include_characters = 6;
+  // 1..512；0 使用服务端默认值 256。
+  uint32 max_entities = 7;
+  // 1..512；0 使用服务端默认值 256。
+  uint32 max_characters = 8;
+}
+
+message QueryWorldResult {
+  WorldSnapshot snapshot = 1;
+  repeated QueryWarning warnings = 2;
+}
+
+message QueryInventoryRequest {
+  oneof container {
+    PlayerInventorySelector player_inventory = 1;
+    Ref container_ref = 2;
+  }
+  bool include_empty_slots = 3;
+}
+
+message PlayerInventorySelector {}
+
+message QueryInventoryResult {
+  InventorySnapshot snapshot = 1;
+  repeated QueryWarning warnings = 2;
+}
+
+message QueryUiRequest {}
+
+message QueryUiResult {
+  UiSnapshot snapshot = 1;
+  repeated QueryWarning warnings = 2;
+}
+
+message InspectRequest {
+  // 一次最多 64 个 Ref。
+  repeated Ref refs = 1;
+}
+
+message InspectResult {
+  repeated InspectedRef items = 1;
+  repeated QueryWarning warnings = 2;
+}
+
+message InspectedRef {
+  RefResolution resolution = 1;
+
+  oneof fact {
+    WorldEntityFact world_entity = 10;
+    CharacterFact character = 11;
+    ItemFact inventory_item = 12;
+    InventorySnapshot inventory = 13;
+    UiElementFact ui_element = 14;
+  }
+}

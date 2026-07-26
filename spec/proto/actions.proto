@@ -1,0 +1,147 @@
+syntax = "proto3";
+
+package stardew_valley.mcp.v1;
+
+option csharp_namespace = "StardewValleyMcp.Protocol.V1";
+
+import "common.proto";
+import "facts.proto";
+import "refs.proto";
+
+message SayRequest {
+  // UTF-8 文本；规范限制为 1..500 个 Unicode Scalar Value。
+  string content = 1;
+}
+
+message SayResult {
+  uint32 content_length = 1;
+}
+
+enum EmoteKind {
+  EMOTE_KIND_UNSPECIFIED = 0;
+  EMOTE_KIND_HAPPY = 1;
+  EMOTE_KIND_SAD = 2;
+  EMOTE_KIND_HEART = 3;
+  EMOTE_KIND_EXCLAMATION = 4;
+  EMOTE_KIND_QUESTION = 5;
+  EMOTE_KIND_ANGRY = 6;
+  EMOTE_KIND_SLEEP = 7;
+  EMOTE_KIND_MUSIC = 8;
+}
+
+message EmoteRequest {
+  EmoteKind emote = 1;
+}
+
+message EmoteResult {
+  EmoteKind emote = 1;
+}
+
+message FaceRequest {
+  Direction direction = 1;
+}
+
+message FaceResult {
+  Direction final_direction = 1;
+  bool changed = 2;
+}
+
+enum ArrivalMode {
+  ARRIVAL_MODE_UNSPECIFIED = 0;
+  ARRIVAL_MODE_EXACT = 1;
+  ARRIVAL_MODE_ADJACENT = 2;
+}
+
+message NavigateRequest {
+  oneof target {
+    WorldPosition position = 1;
+    Ref target_ref = 2;
+  }
+  ArrivalMode arrival = 3;
+  optional Direction stand_side = 4;
+  optional Direction face_on_arrival = 5;
+}
+
+message NavigateResult {
+  WorldPosition start = 1;
+  WorldPosition final = 2;
+  WorldPosition resolved_destination = 3;
+  repeated string route_location_ids = 4;
+  reserved 5;
+  ExecutionStats execution = 6;
+}
+
+message InteractRequest {
+  oneof target {
+    WorldPosition position = 1;
+    Ref target_ref = 2;
+  }
+}
+
+message InteractResult {
+  WorldPosition target = 1;
+  reserved 2;
+  ResourceChange energy = 3;
+  ExecutionStats execution = 4;
+}
+
+message UseToolRequest {
+  oneof target {
+    WorldPosition position = 1;
+    Ref target_ref = 2;
+  }
+  // 0 表示不蓄力；有效上限由当前工具决定。
+  uint32 charge_level = 3;
+}
+
+message UseToolResult {
+  WorldPosition target = 1;
+  string tool_qualified_item_id = 2;
+  uint32 charge_level = 3;
+  reserved 4;
+  ResourceChange energy = 5;
+  ExecutionStats execution = 6;
+}
+
+message EquipRequest {
+  oneof selector {
+    // 从 0 开始；调用方应优先使用 query_inventory 返回的 Item Ref。
+    uint32 slot_index = 1;
+    Ref item_ref = 2;
+  }
+  // 提供时必须与产生 item_ref 的 Inventory Revision 一致。
+  optional string inventory_revision = 3;
+}
+
+message EquipResult {
+  uint32 slot_index = 1;
+  ItemFact item = 2;
+  bool changed = 3;
+}
+
+message OpenMenuRequest {
+  MenuKind menu = 1;
+}
+
+message OpenMenuResult {
+  MenuTransition transition = 1;
+}
+
+message ActivateUiRequest {
+  Ref element_ref = 1;
+  // 必须等于 query_ui 返回该 Ref 时的 Revision。
+  string ui_revision = 2;
+}
+
+message ActivateUiResult {
+  Ref element_ref = 1;
+  MenuTransition transition = 2;
+  reserved 3;
+}
+
+message CloseMenuRequest {}
+
+message CloseMenuResult {
+  MenuTransition transition = 1;
+  bool already_closed = 2;
+}

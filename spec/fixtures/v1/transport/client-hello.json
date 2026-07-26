@@ -1,0 +1,10 @@
+{
+  "messageId": "hello-2",
+  "replyTo": "hello-1",
+  "clientHello": {
+    "requestedVersion": {"major": 1, "minor": 0},
+    "clientInstanceId": "e1c74a1d-3c5f-4d21-ae31-abcdef123456",
+    "clientNonce": "QEFCQ0RFRkdISUpLTE1OT1BRUlNUVVZXWFlaW1xdXl8=",
+    "authTag": "rG52WBEEuPTimojsc6SwJmwqc7D9LHP3zwRQ6hmcToU="
+  }
+}

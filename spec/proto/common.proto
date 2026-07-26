@@ -1,0 +1,109 @@
+syntax = "proto3";
+
+package stardew_valley.mcp.v1;
+
+option csharp_namespace = "StardewValleyMcp.Protocol.V1";
+
+// 所有枚举的 0 值只表示调用方没有提供有效值，不能解释为业务默认值。
+enum Direction {
+  DIRECTION_UNSPECIFIED = 0;
+  DIRECTION_UP = 1;
+  DIRECTION_RIGHT = 2;
+  DIRECTION_DOWN = 3;
+  DIRECTION_LEFT = 4;
+}
+
+enum MenuKind {
+  MENU_KIND_UNSPECIFIED = 0;
+  MENU_KIND_INVENTORY = 1;
+  MENU_KIND_SKILLS = 2;
+  MENU_KIND_SOCIAL = 3;
+  MENU_KIND_MAP = 4;
+  MENU_KIND_CRAFTING = 5;
+  MENU_KIND_COLLECTIONS = 6;
+  MENU_KIND_OPTIONS = 7;
+}
+
+enum ErrorCode {
+  ERROR_CODE_UNSPECIFIED = 0;
+  ERROR_CODE_INVALID_ARGUMENT = 1;
+  ERROR_CODE_UNAUTHENTICATED = 2;
+  ERROR_CODE_PERMISSION_DENIED = 3;
+  ERROR_CODE_UNSUPPORTED_VERSION = 4;
+  ERROR_CODE_UNSUPPORTED_CAPABILITY = 5;
+  ERROR_CODE_CAPABILITY_SET_CHANGED = 6;
+  ERROR_CODE_STALE_LEASE = 7;
+  ERROR_CODE_CONFLICT = 8;
+  ERROR_CODE_BUSY = 9;
+  ERROR_CODE_NOT_READY = 10;
+  ERROR_CODE_NOT_FOUND = 11;
+  ERROR_CODE_DEADLINE_EXCEEDED = 12;
+  ERROR_CODE_CANCELLED = 13;
+  ERROR_CODE_STALE_REF = 14;
+  ERROR_CODE_OUT_OF_RANGE = 15;
+  ERROR_CODE_IDEMPOTENCY_RECORD_EXPIRED = 16;
+  ERROR_CODE_EXECUTION_FAILED = 17;
+  ERROR_CODE_PROTOCOL_VIOLATION = 18;
+  ERROR_CODE_INTERNAL = 19;
+}
+
+message Error {
+  ErrorCode code = 1;
+  // 面向调用方的脱敏说明，不得包含秘密、堆栈或主机绝对路径。
+  string message = 2;
+  reserved 3, 4;
+}
+
+message GameDate {
+  string season = 1;
+  uint32 day_of_month = 2;
+  uint32 year = 3;
+}
+
+message TilePoint {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message WorldPosition {
+  // Stardew Valley 的 NameOrUniqueName；不得使用显示名称作为身份。
+  string location_id = 1;
+  int32 x = 2;
+  int32 y = 3;
+}
+
+message TileArea {
+  string location_id = 1;
+  int32 x = 2;
+  int32 y = 3;
+  uint32 width = 4;
+  uint32 height = 5;
+}
+
+message RadiusArea {
+  WorldPosition center = 1;
+  uint32 radius = 2;
+}
+
+message PixelPoint {
+  int32 x = 1;
+  int32 y = 2;
+}
+
+message ResourceChange {
+  double before = 1;
+  double after = 2;
+  double delta = 3;
+}
+
+message ExecutionStats {
+  uint32 elapsed_ticks = 1;
+  string completion_reason = 2;
+}
+
+message MenuTransition {
+  string menu_type_before = 1;
+  string menu_type_after = 2;
+  string ui_revision_before = 3;
+  string ui_revision_after = 4;
+}

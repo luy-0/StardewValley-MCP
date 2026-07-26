@@ -1,0 +1,101 @@
+syntax = "proto3";
+
+package stardew_valley.mcp.v1;
+
+option csharp_namespace = "StardewValleyMcp.Protocol.V1";
+
+import "actions.proto";
+import "common.proto";
+import "queries.proto";
+
+enum CommandState {
+  COMMAND_STATE_UNSPECIFIED = 0;
+  COMMAND_STATE_ACCEPTED = 1;
+  COMMAND_STATE_RUNNING = 2;
+  COMMAND_STATE_SUCCEEDED = 3;
+  COMMAND_STATE_FAILED = 4;
+  COMMAND_STATE_CANCELLED = 5;
+  COMMAND_STATE_TIMED_OUT = 6;
+}
+
+message CommandRequest {
+  // 同一 Mod 启动周期内全局唯一，也是唯一幂等身份。
+  string command_id = 1;
+  // 从 Mod 接受命令时用单调时钟计时；0 使用 Manifest 默认值。
+  uint32 timeout_ms = 2;
+
+  oneof operation {
+    SayRequest say = 10;
+    EmoteRequest emote = 11;
+    FaceRequest face = 12;
+    NavigateRequest navigate = 13;
+    InteractRequest interact = 14;
+    UseToolRequest use_tool = 15;
+    EquipRequest equip = 16;
+    OpenMenuRequest open_menu = 17;
+    ActivateUiRequest activate_ui = 18;
+    CloseMenuRequest close_menu = 19;
+
+    QueryRuntimeRequest query_runtime = 30;
+    QueryWorldRequest query_world = 31;
+    QueryInventoryRequest query_inventory = 32;
+    QueryUiRequest query_ui = 33;
+    InspectRequest inspect = 34;
+  }
+}
+
+message CapabilityResult {
+  oneof result {
+    SayResult say = 10;
+    EmoteResult emote = 11;
+    FaceResult face = 12;
+    NavigateResult navigate = 13;
+    InteractResult interact = 14;
+    UseToolResult use_tool = 15;
+    EquipResult equip = 16;
+    OpenMenuResult open_menu = 17;
+    ActivateUiResult activate_ui = 18;
+    CloseMenuResult close_menu = 19;
+
+    QueryRuntimeResult query_runtime = 30;
+    QueryWorldResult query_world = 31;
+    QueryInventoryResult query_inventory = 32;
+    QueryUiResult query_ui = 33;
+    InspectResult inspect = 34;
+  }
+}
+
+message CommandEvent {
+  string command_id = 1;
+  CommandState state = 2;
+  // 面向人类诊断的简短阶段名，不作为状态机分支依据。
+  string phase = 3;
+  optional uint32 progress_percent = 4;
+
+  oneof outcome {
+    CapabilityResult result = 10;
+    Error error = 11;
+  }
+}
+
+message CancelCommandRequest {
+  string command_id = 1;
+  string reason = 2;
+}
+
+message CancelCommandResponse {
+  string command_id = 1;
+  bool accepted = 2;
+  CommandEvent current = 3;
+  optional Error error = 4;
+}
+
+message GetCommandStatusRequest {
+  string command_id = 1;
+}
+
+message GetCommandStatusResponse {
+  string command_id = 1;
+  bool found = 2;
+  optional CommandEvent current = 3;
+}

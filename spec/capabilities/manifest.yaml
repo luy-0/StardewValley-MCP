@@ -1,0 +1,214 @@
+schema_version: 1
+game: stardew-valley
+protocol_version: 1.0.0
+capabilities:
+  - id: say
+    title: 发送聊天文本
+    description: 让当前玩家在游戏聊天中发送一段文本。
+    contract_version: 1.0.0
+    request: SayRequest
+    result: SayResult
+    side_effect: mutating
+    execution: immediate
+    cancellable: false
+    default_timeout_ms: 5000
+    max_timeout_ms: 15000
+    required_scope: game:write
+    risk: [external_communication]
+    destructive: false
+  - id: emote
+    title: 触发表情
+    description: 让当前玩家播放一个受支持的游戏表情。
+    contract_version: 1.0.0
+    request: EmoteRequest
+    result: EmoteResult
+    side_effect: mutating
+    execution: immediate
+    cancellable: false
+    default_timeout_ms: 5000
+    max_timeout_ms: 15000
+    required_scope: game:write
+    risk: [external_communication]
+    destructive: false
+  - id: face
+    title: 调整朝向
+    description: 让当前玩家面向指定方向，并确认最终朝向。
+    contract_version: 1.0.0
+    request: FaceRequest
+    result: FaceResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 5000
+    max_timeout_ms: 15000
+    required_scope: game:write
+    risk: []
+    destructive: false
+  - id: navigate
+    title: 导航到目标
+    description: 在同一地图或跨地图导航到指定位置或对象附近。
+    contract_version: 1.0.0
+    request: NavigateRequest
+    result: NavigateResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 60000
+    max_timeout_ms: 180000
+    required_scope: game:write
+    risk: [changes_position]
+    destructive: false
+  - id: interact
+    title: 与目标交互
+    description: 对相邻的地图位置或对象执行一次游戏交互。
+    contract_version: 1.0.0
+    request: InteractRequest
+    result: InteractResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: [changes_save, changes_relationship]
+    destructive: true
+  - id: use_tool
+    title: 使用当前工具
+    description: 对相邻的地图位置或对象使用当前装备的工具。
+    contract_version: 1.0.0
+    request: UseToolRequest
+    result: UseToolResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 15000
+    max_timeout_ms: 60000
+    required_scope: game:write
+    risk: [changes_save, consumes_energy]
+    destructive: true
+  - id: equip
+    title: 装备背包物品
+    description: 通过背包槽位或查询得到的物品 Ref 切换当前装备。
+    contract_version: 1.0.0
+    request: EquipRequest
+    result: EquipResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: []
+    destructive: false
+  - id: open_menu
+    title: 打开游戏菜单
+    description: 打开一个受支持的顶层游戏菜单。
+    contract_version: 1.0.0
+    request: OpenMenuRequest
+    result: OpenMenuResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: []
+    destructive: false
+  - id: activate_ui
+    title: 激活界面元素
+    description: 在匹配的 UI Revision 上激活 query_ui 返回的可交互元素。
+    contract_version: 1.0.0
+    request: ActivateUiRequest
+    result: ActivateUiResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: [changes_save, advances_time, consumes_item, spends_money, changes_relationship]
+    destructive: true
+  - id: close_menu
+    title: 关闭当前菜单
+    description: 关闭当前游戏菜单；没有菜单时返回幂等成功。
+    contract_version: 1.0.0
+    request: CloseMenuRequest
+    result: CloseMenuResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: []
+    destructive: false
+  - id: query_runtime
+    title: 查询运行时状态
+    description: 获取当前日期、时间、天气、玩家位置和基础资源状态。
+    contract_version: 1.0.0
+    request: QueryRuntimeRequest
+    result: QueryRuntimeResult
+    side_effect: read_only
+    execution: immediate
+    cancellable: false
+    default_timeout_ms: 5000
+    max_timeout_ms: 15000
+    required_scope: game:read
+    risk: []
+    destructive: false
+  - id: query_world
+    title: 查询世界区域
+    description: 获取一个有界地图区域中的地块、对象和角色事实。
+    contract_version: 1.0.0
+    request: QueryWorldRequest
+    result: QueryWorldResult
+    side_effect: read_only
+    execution: immediate
+    cancellable: false
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:read
+    risk: []
+    destructive: false
+  - id: query_inventory
+    title: 查询库存
+    description: 获取玩家背包或一个已解析容器的槽位与物品事实。
+    contract_version: 1.0.0
+    request: QueryInventoryRequest
+    result: QueryInventoryResult
+    side_effect: read_only
+    execution: immediate
+    cancellable: false
+    default_timeout_ms: 5000
+    max_timeout_ms: 15000
+    required_scope: game:read
+    risk: []
+    destructive: false
+  - id: query_ui
+    title: 查询当前界面
+    description: 获取当前菜单、UI Revision 和可交互元素 Ref。
+    contract_version: 1.0.0
+    request: QueryUiRequest
+    result: QueryUiResult
+    side_effect: read_only
+    execution: immediate
+    cancellable: false
+    default_timeout_ms: 5000
+    max_timeout_ms: 15000
+    required_scope: game:read
+    risk: []
+    destructive: false
+  - id: inspect
+    title: 解析引用
+    description: 批量解析查询结果中返回的不透明 Ref，并返回当前事实或过期状态。
+    contract_version: 1.0.0
+    request: InspectRequest
+    result: InspectResult
+    side_effect: read_only
+    execution: immediate
+    cancellable: false
+    default_timeout_ms: 5000
+    max_timeout_ms: 15000
+    required_scope: game:read
+    risk: []
+    destructive: false

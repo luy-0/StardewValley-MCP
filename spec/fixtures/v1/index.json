@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "protoJson": [
+    {"path": "transport/server-hello.json", "message": "TransportFrame", "sender": "mod"},
+    {"path": "transport/client-hello.json", "message": "TransportFrame", "sender": "mcp"},
+    {"path": "transport/server-ready.json", "message": "TransportFrame", "sender": "mod"},
+    {"path": "commands/query-runtime.request.json", "message": "TransportFrame", "sender": "mcp"},
+    {"path": "commands/query-runtime.accepted.json", "message": "TransportFrame", "sender": "mod"},
+    {"path": "commands/query-runtime.succeeded.json", "message": "TransportFrame", "sender": "mod"},
+    {"path": "commands/navigate.request.json", "message": "TransportFrame", "sender": "mcp"},
+    {"path": "commands/navigate.cancel-request.json", "message": "TransportFrame", "sender": "mcp"},
+    {"path": "commands/navigate.cancel-response.json", "message": "TransportFrame", "sender": "mod"},
+    {"path": "commands/navigate.status-request.json", "message": "TransportFrame", "sender": "mcp"},
+    {"path": "commands/navigate.status-response.json", "message": "TransportFrame", "sender": "mod"}
+  ],
+  "authVectors": [
+    {"path": "auth/hmac-sha256.json", "algorithm": "v1_hmac_sha256"},
+    {"path": "auth/hmac-minor-downgrade.synthetic.json", "algorithm": "v1_hmac_sha256_minor_downgrade"}
+  ]
+}

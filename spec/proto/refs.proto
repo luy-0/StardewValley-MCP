@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package stardew_valley.mcp.v1;
+
+option csharp_namespace = "StardewValleyMcp.Protocol.V1";
+
+import "common.proto";
+
+enum RefKind {
+  REF_KIND_UNSPECIFIED = 0;
+  REF_KIND_WORLD_ENTITY = 1;
+  REF_KIND_CHARACTER = 2;
+  REF_KIND_INVENTORY_ITEM = 3;
+  REF_KIND_CONTAINER = 4;
+  REF_KIND_UI_ELEMENT = 5;
+}
+
+// Ref.value 对调用方完全不透明。调用方不得拆分、拼接或猜测其内部格式。
+message Ref {
+  string value = 1;
+}
+
+enum RefStatus {
+  REF_STATUS_UNSPECIFIED = 0;
+  REF_STATUS_RESOLVED = 1;
+  REF_STATUS_STALE = 2;
+  REF_STATUS_NOT_FOUND = 3;
+  REF_STATUS_UNSUPPORTED = 4;
+}
+
+message RefResolution {
+  Ref ref = 1;
+  RefStatus status = 2;
+  RefKind kind = 3;
+  optional Error error = 4;
+}

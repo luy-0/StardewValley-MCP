@@ -1,0 +1,306 @@
+syntax = "proto3";
+
+package stardew_valley.mcp.v1;
+
+option csharp_namespace = "StardewValleyMcp.Protocol.V1";
+
+import "common.proto";
+import "refs.proto";
+
+message RuntimeSnapshot {
+  GameDate date = 1;
+  uint32 time_of_day = 2;
+  PlayerFact player = 3;
+  WeatherFact weather = 4;
+  UiSummary ui = 5;
+}
+
+message PlayerFact {
+  WorldPosition position = 1;
+  Direction facing = 2;
+  int64 money = 3;
+  double energy = 4;
+  double max_energy = 5;
+  int32 health = 6;
+  int32 max_health = 7;
+  bool can_move = 8;
+}
+
+message WeatherFact {
+  bool raining = 1;
+  bool lightning = 2;
+  bool snowing = 3;
+  bool green_rain = 4;
+  bool festival_day = 5;
+}
+
+message UiSummary {
+  bool menu_open = 1;
+  string menu_type = 2;
+}
+
+enum EntityKind {
+  ENTITY_KIND_UNSPECIFIED = 0;
+  ENTITY_KIND_TREE = 1;
+  ENTITY_KIND_FRUIT_TREE = 2;
+  ENTITY_KIND_CROP = 3;
+  ENTITY_KIND_RESOURCE_NODE = 4;
+  ENTITY_KIND_RESOURCE_CLUMP = 5;
+  ENTITY_KIND_MACHINE = 6;
+  ENTITY_KIND_CONTAINER = 7;
+  ENTITY_KIND_BED = 8;
+  ENTITY_KIND_FURNITURE = 9;
+  ENTITY_KIND_LOOSE_ITEM = 10;
+  ENTITY_KIND_DOOR = 11;
+  ENTITY_KIND_WARP = 12;
+  ENTITY_KIND_GENERIC_OBJECT = 13;
+}
+
+message WorldSnapshot {
+  string world_revision = 1;
+  TileArea area = 2;
+  bool outdoors = 3;
+  repeated TileFact tiles = 4;
+  repeated WorldEntityFact entities = 5;
+  repeated CharacterFact characters = 6;
+  bool entities_truncated = 7;
+  bool characters_truncated = 8;
+}
+
+message TileFact {
+  WorldPosition position = 1;
+  bool passable = 2;
+  bool occupied = 3;
+  bool diggable = 4;
+  bool water = 5;
+  string terrain_kind = 6;
+}
+
+message WorldEntityFact {
+  Ref ref = 1;
+  EntityKind kind = 2;
+  WorldPosition position = 3;
+  string display_name = 4;
+  bool actionable = 5;
+
+  oneof details {
+    TreeFact tree = 20;
+    FruitTreeFact fruit_tree = 21;
+    CropFact crop = 22;
+    ResourceNodeFact resource_node = 23;
+    ResourceClumpFact resource_clump = 24;
+    MachineFact machine = 25;
+    ContainerFact container = 26;
+    BedFact bed = 27;
+    FurnitureFact furniture = 28;
+    LooseItemFact loose_item = 29;
+    DoorFact door = 30;
+    WarpFact warp = 31;
+    GenericObjectFact generic_object = 32;
+  }
+}
+
+message TreeFact {
+  uint32 growth_stage = 1;
+  bool stump = 2;
+  bool tapped = 3;
+  bool mossy = 4;
+  double health = 5;
+}
+
+message FruitTreeFact {
+  string fruit_item_id = 1;
+  uint32 growth_stage = 2;
+  uint32 days_until_mature = 3;
+  uint32 fruit_count = 4;
+  bool stump = 5;
+}
+
+message CropFact {
+  string crop_id = 1;
+  string harvest_item_id = 2;
+  uint32 growth_phase = 3;
+  bool ready_for_harvest = 4;
+  bool watered = 5;
+  bool dead = 6;
+  bool regrows = 7;
+}
+
+message ResourceNodeFact {
+  string node_kind = 1;
+  uint32 hits_to_destroy = 2;
+  string required_tool = 3;
+}
+
+message ResourceClumpFact {
+  string clump_kind = 1;
+  uint32 width = 2;
+  uint32 height = 3;
+  uint32 health = 4;
+  string required_tool = 5;
+  uint32 required_tool_level = 6;
+}
+
+message ItemFact {
+  // 只有来自 InventorySnapshot 的物品保证携带可用于动作的 Ref。
+  optional Ref ref = 1;
+  string qualified_item_id = 2;
+  string display_name = 3;
+  uint32 stack = 4;
+  uint32 quality = 5;
+  string category = 6;
+  bool tool = 7;
+  uint32 tool_level = 8;
+}
+
+message MachineFact {
+  string qualified_item_id = 1;
+  bool ready_for_harvest = 2;
+  int32 minutes_until_ready = 3;
+  optional ItemFact held_item = 4;
+}
+
+message ContainerFact {
+  string container_kind = 1;
+  uint32 capacity = 2;
+  uint32 item_count = 3;
+}
+
+message BedFact {
+  bool can_sleep = 1;
+  repeated WorldPosition occupied_tiles = 2;
+}
+
+message FurnitureFact {
+  string furniture_kind = 1;
+  uint32 rotation = 2;
+  repeated WorldPosition occupied_tiles = 3;
+}
+
+message LooseItemFact {
+  ItemFact item = 1;
+  bool can_pick_up = 2;
+}
+
+message DoorFact {
+  bool locked = 1;
+  string target_location_id = 2;
+  optional TilePoint target_tile = 3;
+}
+
+message WarpFact {
+  WorldPosition destination = 1;
+  bool npc_only = 2;
+}
+
+message GenericObjectFact {
+  string runtime_type = 1;
+  string qualified_item_id = 2;
+}
+
+enum CharacterKind {
+  CHARACTER_KIND_UNSPECIFIED = 0;
+  CHARACTER_KIND_NPC = 1;
+  CHARACTER_KIND_MONSTER = 2;
+  CHARACTER_KIND_FARM_ANIMAL = 3;
+  CHARACTER_KIND_PET = 4;
+  CHARACTER_KIND_HORSE = 5;
+}
+
+message CharacterFact {
+  Ref ref = 1;
+  CharacterKind kind = 2;
+  string name = 3;
+  string display_name = 4;
+  WorldPosition position = 5;
+  Direction facing = 6;
+
+  oneof details {
+    NpcFact npc = 20;
+    MonsterFact monster = 21;
+    FarmAnimalFact farm_animal = 22;
+    PetFact pet = 23;
+    HorseFact horse = 24;
+  }
+}
+
+message NpcFact {
+  bool can_socialize = 1;
+  int32 friendship_points = 2;
+  bool has_dialogue = 3;
+}
+
+message MonsterFact {
+  int32 health = 1;
+  int32 max_health = 2;
+  int32 contact_damage = 3;
+}
+
+message FarmAnimalFact {
+  string animal_type = 1;
+  bool produce_ready = 2;
+  bool petted_today = 3;
+  int32 friendship = 4;
+  int32 happiness = 5;
+}
+
+message PetFact {
+  string pet_type = 1;
+  bool petted_today = 2;
+  int32 friendship = 3;
+}
+
+message HorseFact {
+  bool has_rider = 1;
+}
+
+message InventorySnapshot {
+  string inventory_revision = 1;
+  string container_kind = 2;
+  optional Ref container_ref = 3;
+  uint32 slot_count = 4;
+  repeated InventorySlot slots = 5;
+}
+
+message InventorySlot {
+  // 从 0 开始；与 Stardew Valley 的实际背包索引一致。
+  uint32 index = 1;
+  optional ItemFact item = 2;
+}
+
+enum UiElementKind {
+  UI_ELEMENT_KIND_UNSPECIFIED = 0;
+  UI_ELEMENT_KIND_BUTTON = 1;
+  UI_ELEMENT_KIND_TAB = 2;
+  UI_ELEMENT_KIND_OPTION = 3;
+  UI_ELEMENT_KIND_ITEM_SLOT = 4;
+  UI_ELEMENT_KIND_DIALOGUE_RESPONSE = 5;
+}
+
+message UiSnapshot {
+  string ui_revision = 1;
+  bool menu_open = 2;
+  optional UiMenuFact menu = 3;
+  repeated UiElementFact elements = 4;
+}
+
+message UiMenuFact {
+  string menu_type = 1;
+  optional MenuKind menu_kind = 2;
+  string title = 3;
+  bool modal = 4;
+  string dialogue_text = 5;
+}
+
+message UiElementFact {
+  Ref ref = 1;
+  UiElementKind kind = 2;
+  string label = 3;
+  bool visible = 4;
+  bool enabled = 5;
+  PixelPoint center = 6;
+  uint32 index = 7;
+  optional ItemFact item = 8;
+  optional int64 price = 9;
+  optional uint32 stock = 10;
+}

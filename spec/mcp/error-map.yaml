@@ -1,0 +1,27 @@
+schema_version: 1
+source_enum: stardew_valley.mcp.v1.ErrorCode
+mappings:
+  ERROR_CODE_UNSPECIFIED: {tool_code: internal_error, outcome: failed, retryable: false}
+  ERROR_CODE_INVALID_ARGUMENT: {tool_code: invalid_arguments, outcome: failed, retryable: false}
+  ERROR_CODE_UNAUTHENTICATED: {tool_code: unauthenticated, outcome: failed, retryable: true}
+  ERROR_CODE_PERMISSION_DENIED: {tool_code: capability_denied, outcome: failed, retryable: false}
+  ERROR_CODE_UNSUPPORTED_VERSION: {tool_code: upstream_protocol_error, outcome: failed, retryable: false}
+  ERROR_CODE_UNSUPPORTED_CAPABILITY: {tool_code: capability_denied, outcome: failed, retryable: false}
+  ERROR_CODE_CAPABILITY_SET_CHANGED: {tool_code: capability_changed, outcome: failed, retryable: true}
+  ERROR_CODE_STALE_LEASE: {tool_code: context_expired, outcome: failed, retryable: true}
+  ERROR_CODE_CONFLICT: {tool_code: conflict, outcome: failed, retryable: false}
+  ERROR_CODE_BUSY: {tool_code: busy, outcome: failed, retryable: true}
+  ERROR_CODE_NOT_READY: {tool_code: not_ready, outcome: failed, retryable: true}
+  ERROR_CODE_NOT_FOUND: {tool_code: not_found, outcome: failed, retryable: false}
+  ERROR_CODE_DEADLINE_EXCEEDED: {tool_code: command_timeout, outcome: failed, retryable: false}
+  ERROR_CODE_CANCELLED: {tool_code: command_cancelled, outcome: failed, retryable: false}
+  ERROR_CODE_STALE_REF: {tool_code: stale_ref, outcome: failed, retryable: false}
+  ERROR_CODE_OUT_OF_RANGE: {tool_code: out_of_range, outcome: failed, retryable: false}
+  ERROR_CODE_IDEMPOTENCY_RECORD_EXPIRED: {tool_code: unknown_outcome, outcome: unknown, retryable: false}
+  ERROR_CODE_EXECUTION_FAILED: {tool_code: execution_failed, outcome: failed, retryable: false}
+  ERROR_CODE_PROTOCOL_VIOLATION: {tool_code: upstream_protocol_error, outcome: failed, retryable: false}
+  ERROR_CODE_INTERNAL: {tool_code: internal_error, outcome: failed, retryable: false}
+
+# 由 MCP 自身产生、不对应 Mod Proto ErrorCode 的错误。
+local_errors:
+  route_unavailable: {outcome: failed, retryable: true}
