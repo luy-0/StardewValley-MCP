@@ -669,6 +669,53 @@ def verify_bootstrap_fixtures(transport_pb2: Any, manifest: dict[str, Any]) -> t
     return [*success_paths, not_ready_paths[-1]], vector, bootstrap_digest
 
 
+def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) -> tuple[list[Path], dict[str, Any], str]:
+    index = load_json(FIXTURE_ROOT / "index.json")
+    profile = index.get("profiles", {}).get("observation")
+    require(isinstance(profile, dict), "Fixture index 缺少 observation profile")
+    observation_ids = ["inspect", "query_inventory", "query_runtime", "query_ui", "query_world"]
+    capabilities = [item for item in manifest["capabilities"] if item["id"] in observation_ids]
+    require([item["id"] for item in sorted(capabilities, key=lambda item: item["id"].encode())] == observation_ids, "observation capability 集合错误")
+    digest = capability_digest(capabilities)
+    vectors = profile.get("authVectors")
+    require(vectors == [{"path": "observation/hmac-sha256.json", "algorithm": "v1_hmac_sha256"}], "observation HMAC 向量声明错误")
+    scenarios = profile.get("scenarios")
+    require(isinstance(scenarios, list) and len(scenarios) == 10, "observation 必须有五项成功和失败场景")
+    seen: set[str] = set()
+    all_paths: list[Path] = []
+    success_frames: list[Any] | None = None
+    for scenario in scenarios:
+        scenario_id = scenario.get("id")
+        require(isinstance(scenario_id, str) and scenario_id not in seen, "observation scenario ID 重复或非法")
+        seen.add(scenario_id)
+        frames, paths = load_fixture_frames(transport_pb2, scenario["protoJson"])
+        verify_fixture_semantics(frames, manifest, digest, capabilities)
+        events = [frame.command_event for frame in frames if frame.WhichOneof("body") == "command_event"]
+        require([event.state for event in events] == [1, 3 if scenario_id.endswith("-succeeded") else 4], f"observation 状态序列错误: {scenario_id}")
+        require(scenario.get("expectedTerminalState") == ("COMMAND_STATE_SUCCEEDED" if scenario_id.endswith("-succeeded") else "COMMAND_STATE_FAILED"), f"observation 终态声明错误: {scenario_id}")
+        all_paths.extend(paths)
+        if scenario_id == "query-world-succeeded":
+            success_frames = frames
+    require(success_frames is not None, "observation 缺少 query-world 成功场景")
+    vector_path = FIXTURE_ROOT / "observation" / "hmac-sha256.json"
+    vector = verify_auth_vector(digest, success_frames, vector_path)
+    standalone = [
+        "query-world.success-minimal.json", "query-world.success-complete.json",
+        "query-inventory.success-minimal.json", "query-inventory.success-complete.json",
+        "query-ui.success-no-menu.json", "query-ui.success-menu.json",
+        "inspect.success-minimal.json", "inspect.success-complete.json",
+    ]
+    for name in standalone:
+        frame = transport_pb2.TransportFrame()
+        json_format.ParseDict(load_json(FIXTURE_ROOT / "observation" / name), frame, ignore_unknown_fields=False)
+        require(frame.command_event.state == 3, f"observation 最小/完整 Fixture 非成功: {name}")
+        verify_event_shape(frame.command_event)
+    invalid = load_json(FIXTURE_ROOT / "observation" / "invalid-inputs.json")
+    require(invalid.get("schemaVersion") == 1 and len(invalid.get("cases", [])) >= 5, "observation invalid-inputs 覆盖不足")
+    require({item["capability"] for item in invalid["cases"]} == {"query_world", "query_inventory", "query_ui", "inspect"}, "observation invalid-inputs 能力覆盖错误")
+    return all_paths, vector, digest
+
+
 def verify_framing_model(transport_pb2: Any) -> None:
     frame = transport_pb2.TransportFrame(message_id="frame-smoke", ping=transport_pb2.Ping(sequence=7))
     payload = frame.SerializeToString(deterministic=True)
@@ -878,6 +925,7 @@ def main() -> None:
             frames.append(frame)
         vector = verify_auth_vector(digest, frames)
         bootstrap_paths, bootstrap_vector, bootstrap_digest = verify_bootstrap_fixtures(modules["transport"], manifest)
+        observation_paths, observation_vector, observation_digest = verify_observation_fixtures(modules["transport"], manifest)
         verify_framing_model(modules["transport"])
         verify_negative_message_models(modules)
         if not args.skip_csharp:
@@ -890,6 +938,11 @@ def main() -> None:
                 csharp_out, bootstrap_paths, bootstrap_vector, modules, bootstrap_digest, tmp,
                 FIXTURE_ROOT / "bootstrap" / "server-ready.json",
                 FIXTURE_ROOT / "bootstrap" / "hmac-sha256.json", "bootstrap",
+            )
+            verify_csharp(
+                csharp_out, observation_paths, observation_vector, modules, observation_digest, tmp,
+                FIXTURE_ROOT / "observation" / "server-ready.json",
+                FIXTURE_ROOT / "observation" / "hmac-sha256.json", "observation",
             )
     print(f"spec_v1_conformance_ok capabilities={len(manifest['capabilities'])} digest={digest}")
 

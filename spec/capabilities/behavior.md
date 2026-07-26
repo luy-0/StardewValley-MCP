@@ -134,6 +134,8 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 - 未提供 Region 时使用玩家位置为中心、半径 8。
 - `TileArea.width/height` 分别为 `1..32`，总面积不超过 1024。
 - `RadiusArea.radius` 为 `0..15`；Location 为空或未加载返回 `NOT_FOUND`。
+- 显式 Region 的 `location_id` 必须完全匹配一个当前已加载 Location 的 `NameOrUniqueName`，比较时大小写不敏感；不得回退到本地化名称、短建筑名或旧 Map Token。
+- 请求范围与地图边界相交时，`snapshot.area` 返回裁剪后的实际矩形；完全不相交时返回 `OUT_OF_RANGE`。`around.center.location_id` 与被查询 Location 必须一致。
 - 三个 `include_*` 缺省时解释为 `true`；可以显式关闭任意集合。
 - `entity_kinds` 仅在 `include_entities` 未显式设为 `false` 时允许。
 - `max_entities`、`max_characters` 为 `1..512`；0 分别使用默认值 256。
@@ -144,6 +146,7 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 
 - 未提供 Container 时默认玩家背包；`player_inventory` 空消息与缺省语义相同。
 - `container_ref` 必须解析为带 `ContainerFact` 的 `WORLD_ENTITY` 或当前可读取的 `CONTAINER` 库存视图，否则返回 `STALE_REF`、`NOT_FOUND` 或 `INVALID_ARGUMENT`。
+- V1 的可读取世界容器是当前已加载 Location 中由 `query_world` 返回的 Chest/Fridge 类实体；不通过显示名、坐标字符串或短地图名旁路 Ref 校验。
 - Slot 按 Index 升序。`include_empty_slots=false` 时可以省略空 Slot，但保留原始 Index。
 
 ### `query_ui`
@@ -157,3 +160,13 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 ## 6. 事实覆盖边界
 
 V1 为常见树木、作物、资源、机器、容器、床、家具、掉落物、门、Warp 和角色提供类型化 Fact。其他原版或第三方 Mod 地图对象使用 `ENTITY_KIND_GENERIC_OBJECT` 与 `GenericObjectFact` 提供最小 Runtime Type、Qualified Item ID、位置、显示名和可交互性；实现不得静默丢弃无法类型化但位于查询区域的可见对象。
+
+## 7. 观察能力性能预算
+
+观察 Handler 在 SMAPI 主线程同步生成 Snapshot，因此必须同时限制输入规模、结果大小与单次主线程占用。以下预算是公开 V1 的参考验收门槛，而不是向调用方承诺所有硬件上的实时 SLA：
+
+- 任一成功 `CommandEvent` 序列化后必须小于 `786432` 字节，为线路的 1 MiB 帧上限保留至少 25% 余量；实现不得先生成超大结果再依赖 Transport 拒绝。
+- 真实存档中的默认 `query_world`（玩家半径 8）单次 Handler 目标为不超过 16 ms；最大合法 1024 Tile 区域单次不超过 50 ms。
+- `query_inventory`、`query_ui` 与最多 64 个 Ref 的 `inspect` 单次 Handler 目标为不超过 16 ms。
+- 实机门禁必须记录纯 Handler 耗时和序列化字节数；MCP 往返时间包含排队到下一 Tick、线路和客户端投影，不得冒充主线程耗时。
+- 超过预算时必须缩小扫描、减少重复投影或优化查找；不得把游戏对象读取移动到后台线程，也不得通过遗漏 Generic Object、关闭默认集合或降低契约上限来伪造通过。

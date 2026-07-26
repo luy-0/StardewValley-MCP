@@ -4,29 +4,61 @@ using System.Text;
 
 namespace StardewValleyMcp.Protocol.V1;
 
-public static class QueryRuntimeContract
+public static class CapabilityCatalog
 {
-    public const uint DefaultTimeoutMs = 5_000;
-    public const uint MaxTimeoutMs = 15_000;
-
-    public static CapabilitySnapshot CreateSnapshot()
-    {
-        var descriptor = new CapabilityDescriptor
+    private static readonly IReadOnlyDictionary<string, CapabilityDescriptor> ObservationDescriptors =
+        new Dictionary<string, CapabilityDescriptor>(StringComparer.Ordinal)
         {
-            Id = "query_runtime",
+            ["inspect"] = ReadOnlyImmediate("inspect", nameof(InspectRequest), nameof(InspectResult), 5_000, 15_000),
+            ["query_inventory"] = ReadOnlyImmediate("query_inventory", nameof(QueryInventoryRequest), nameof(QueryInventoryResult), 5_000, 15_000),
+            ["query_runtime"] = ReadOnlyImmediate("query_runtime", nameof(QueryRuntimeRequest), nameof(QueryRuntimeResult), 5_000, 15_000),
+            ["query_ui"] = ReadOnlyImmediate("query_ui", nameof(QueryUiRequest), nameof(QueryUiResult), 5_000, 15_000),
+            ["query_world"] = ReadOnlyImmediate("query_world", nameof(QueryWorldRequest), nameof(QueryWorldResult), 10_000, 30_000),
+        };
+
+    public static CapabilitySnapshot CreateObservationSnapshot()
+    {
+        return CreateSnapshotFor(ObservationDescriptors.Keys);
+    }
+
+    public static CapabilityDescriptor GetObservationDescriptor(string id)
+    {
+        if (!ObservationDescriptors.TryGetValue(id, out var descriptor))
+            throw new ArgumentOutOfRangeException(nameof(id), id, "未定义的观察能力");
+        return descriptor.Clone();
+    }
+
+    public static CapabilitySnapshot CreateSnapshotFor(IEnumerable<string> registeredIds)
+    {
+        var descriptors = registeredIds.Select(id =>
+        {
+            return GetObservationDescriptor(id);
+        });
+        return CreateSnapshot(descriptors);
+    }
+
+    private static CapabilityDescriptor ReadOnlyImmediate(string id, string requestType, string resultType, uint defaultTimeoutMs, uint maxTimeoutMs)
+    {
+        return new CapabilityDescriptor
+        {
+            Id = id,
             ContractVersion = "1.0.0",
             SideEffect = SideEffect.ReadOnly,
             Execution = ExecutionMode.Immediate,
             Cancellable = false,
-            DefaultTimeoutMs = DefaultTimeoutMs,
-            MaxTimeoutMs = MaxTimeoutMs,
-            RequestType = nameof(QueryRuntimeRequest),
-            ResultType = nameof(QueryRuntimeResult),
+            DefaultTimeoutMs = defaultTimeoutMs,
+            MaxTimeoutMs = maxTimeoutMs,
+            RequestType = requestType,
+            ResultType = resultType,
             RequiredScope = "game:read",
             Destructive = false,
         };
+    }
+
+    public static CapabilitySnapshot CreateSnapshot(IEnumerable<CapabilityDescriptor> descriptors)
+    {
         var snapshot = new CapabilitySnapshot();
-        snapshot.Capabilities.Add(descriptor);
+        snapshot.Capabilities.Add(descriptors.OrderBy(item => item.Id, StringComparer.Ordinal));
         snapshot.Digest = ComputeDigest(snapshot.Capabilities);
         return snapshot;
     }
@@ -52,7 +84,6 @@ public static class QueryRuntimeContract
                 WriteLengthPrefixed(input, risk);
             input.WriteByte(descriptor.Destructive ? (byte)1 : (byte)0);
         }
-
         return Convert.ToHexString(SHA256.HashData(input.ToArray())).ToLowerInvariant();
     }
 

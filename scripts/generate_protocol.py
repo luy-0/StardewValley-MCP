@@ -19,7 +19,7 @@ CSHARP_TARGET = ROOT / "mod" / "src" / "StardewValleyMcp.Protocol" / "Generated"
 PYTHON_TARGET = ROOT / "mcp" / "src" / "stardew_valley_mcp" / "protocol"
 SCHEMA_GENERATOR = ROOT / "spec" / "conformance" / "generate_mcp_tool_schemas.py"
 TOOL_SCHEMAS = ROOT / "spec" / "mcp" / "tool-schemas.json"
-QUERY_RUNTIME_TOOL = ROOT / "mcp" / "src" / "stardew_valley_mcp" / "query_runtime_tool.json"
+TOOL_CATALOG = ROOT / "mcp" / "src" / "stardew_valley_mcp" / "generated" / "tool_catalog.json"
 EXPECTED_PROTOC = "libprotoc 34.1"
 GENERATED_PATTERNS = ("*.cs", "*_pb2.py", "*_pb2.pyi")
 
@@ -84,18 +84,26 @@ def sync_generated(source: Path, target: Path, check: bool) -> None:
         (target / name).write_bytes(content)
 
 
-def sync_query_runtime_tool(check: bool) -> None:
-    document = json.loads(TOOL_SCHEMAS.read_text(encoding="utf-8"))
-    matches = [tool for tool in document["tools"] if tool["name"] == "stardew_query_runtime"]
-    if len(matches) != 1:
-        raise SystemExit("tool-schemas.json 必须且只能包含一个 stardew_query_runtime")
-    content = (json.dumps(matches[0], ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()
+def sync_tool_catalog(check: bool) -> None:
+    """生成完整公共 V1 descriptor 与 Tool Schema Catalog。"""
+    import yaml
+
+    schemas = json.loads(TOOL_SCHEMAS.read_text(encoding="utf-8"))
+    manifest = yaml.safe_load((ROOT / "spec" / "capabilities" / "manifest.yaml").read_text(encoding="utf-8"))
+    capabilities = list(manifest["capabilities"])
+    tools = list(schemas["tools"])
+    capabilities.sort(key=lambda item: item["id"].encode("utf-8"))
+    tools.sort(key=lambda item: item["name"].encode("utf-8"))
+    if tuple(item["name"].removeprefix("stardew_") for item in tools) != tuple(item["id"] for item in capabilities):
+        raise SystemExit("MCP Tool Catalog 与 Manifest capability 集合不一致")
+    content = (json.dumps({"capabilities": capabilities, "tools": tools}, ensure_ascii=False, indent=2, sort_keys=True) + "\n").encode()
     if check:
-        actual = QUERY_RUNTIME_TOOL.read_bytes() if QUERY_RUNTIME_TOOL.exists() else b""
+        actual = TOOL_CATALOG.read_bytes() if TOOL_CATALOG.exists() else b""
         if actual != content:
-            raise SystemExit("MCP query_runtime Tool 生成物不是最新状态")
+            raise SystemExit("MCP Tool Catalog 生成物不是最新状态")
     else:
-        QUERY_RUNTIME_TOOL.write_bytes(content)
+        TOOL_CATALOG.parent.mkdir(parents=True, exist_ok=True)
+        TOOL_CATALOG.write_bytes(content)
 
 
 def generate(check: bool) -> None:
@@ -131,7 +139,7 @@ def generate(check: bool) -> None:
     if check:
         schema_command.append("--check")
     run(schema_command, cwd=ROOT)
-    sync_query_runtime_tool(check)
+    sync_tool_catalog(check)
     action = "checked" if check else "generated"
     print(f"protocol_{action} protoc={version} files={len(proto_files)}")
 

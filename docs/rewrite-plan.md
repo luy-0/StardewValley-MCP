@@ -1,6 +1,6 @@
 # 公开版本重写计划
 
-状态：**阶段 1 已完成，`query_runtime` 首个真实纵向切片已贯通**
+状态：**阶段 2 已完成，阶段 3 观察能力正在实现**
 
 本计划定义如何以旧仓库已经验证的游戏行为为参考，重新实现一套适合公开发布、独立安装和长期维护的 Mod、MCP 服务端与 Skill 开发套件。它不是旧代码搬迁清单；旧仓库只提供行为证据、失败经验和测试素材，不是新版本的架构模板。
 
@@ -169,7 +169,30 @@ query_runtime, query_world, query_inventory, query_ui, inspect
 
 ### 阶段 3：完成观察能力
 
-依次重写其余查询能力和 Ref ID 体系。先确定事实模型和性能预算，再移植必要的扫描/投影算法；不得把 V2 DTO 包装后继续对外返回。
+阶段 3 交付 `query_world`、`query_inventory`、`query_ui` 与 `inspect`，并把 `query_runtime` 一并纳入当前构建的五项只读能力目录。旧 StarCoplay 只提供游戏行为证据：保留其“从游戏内存投影事实、真实 Slot、定位符与 Guard 校验、单 Ref 失败不拖垮整批”的有效经验；删除旧 `observe` 聚合、自然语言摘要、类别别名、Agent 内存分页、字符串容器 ID、动态 Ref Dispatcher、V2 DTO 与 Legacy/Bridge 宿主依赖。
+
+阶段 2 的 `query_runtime` 代码是首链 Bootstrap，不是第二项能力可以直接复制的模板。阶段 3 正式写 Handler 前必须先完成一次结构收敛：
+
+- Tool Schema 只保留一个生成产物 `mcp/src/stardew_valley_mcp/generated/tool_catalog.json`，Catalog 包含完整公共 Tool 定义；运行时按公共 Manifest、MCP 支持、Mod 握手公告和权限策略的交集决定 `list_tools`。
+- Transport 只负责 loopback TCP、HMAC、Frame、Session 与 Fence，不保存具体能力 digest/timeout，不构造具体请求，也不判断具体结果分支。
+- Command Runtime 统一处理 Command ID、ACCEPTED/终态、Deadline、断线未知结果和错误映射；Catalog 管能力元数据；Projection 使用 Proto Descriptor 与生成 Enum 映射完成默认 Proto→JSON 转换，只有契约确实不同的字段才使用小型覆盖。
+- Mod 的 Local Server 只完成认证、帧收发、队列与主线程交接；编译期显式 Capability Registry 把每个 Proto operation 映射到唯一 Handler，不使用反射扫描、字符串动态注册、Legacy fallback 或复合编排。
+
+开发计划：
+
+1. [x] 调查旧 Mod 的世界扫描、库存、UI、Inspect/Ref 实现，以及旧调用方的组合方式和卡顿记录。
+2. [x] 冻结阶段 3 边界：V1 不增加 `observe` 聚合能力、不增加查询别名、不增加分页 Cursor；无法识别的 Ref 使用现有 `UNSUPPORTED/INVALID_ARGUMENT`，不扩展新的 `malformed` 状态。
+3. [x] 冻结性能预算：成功帧小于 768 KiB；默认世界查询目标不超过 16 ms，最大合法区域不超过 50 ms；其余观察 Handler 目标不超过 16 ms。
+4. [x] 完成上述阶段 2.5 结构收敛，并通过架构边界测试；在此之前不得新增第二个游戏 Handler。
+5. [ ] 实现进程内不透明 Ref Store，以及 World、Inventory、UI 三类 Revision；调用方不得解析 Ref，Mod 不根据外部字符串猜测 Kind。
+6. [ ] 按 `query_world → query_inventory → query_ui → inspect` 完成四条纵向切片；每条同步交付 Spec Fixture、唯一 Mod Handler、默认 Descriptor Projection 和测试，不预建通用游戏查询框架。
+7. [ ] 为四项能力补齐最小、完整、非法、成功与失败覆盖；固定五项观察能力的握手 Snapshot、HMAC、Fence 和生命周期场景。
+8. [ ] 通过跨语言协议测试、C#/Python 单元与标准 MCP 会话测试、边界扫描、干净构建和发布包审计。
+9. [ ] 部署新 Mod 后逐项执行真实 MCP 调用；验证世界、玩家与容器库存、无菜单和有菜单 UI、混合成功/失败 Ref Inspect，并记录 Handler 耗时与结果字节数。
+
+阶段 2.5 完成记录：MCP 已拆分为唯一生成 Catalog、Descriptor Projection、通用 Command Runtime 与纯 Transport，并以公共 Manifest、MCP 支持集、Mod 公告集和权限策略四方交集决定 Tool；Mod 已用编译期显式 Registry 取代 `LocalServer` 的单能力分支，并校验 Handler ID、Proto operation 与 Request Type 一致。结构门禁同时覆盖握手 Deadline、typed request 错配、未知 Enum、活动命令重放和已完成命令的缓存终态收敛；第二轮独立审查未发现 P0/P1 阻塞。
+
+实现顺序以依赖而不是旧目录划分。`query_world` 先提供 World Entity/Character Ref，`query_inventory` 再基于容器 World Ref 提供库存视图与 Item Ref，`query_ui` 提供 Revision 绑定的 Element Ref，最后由 `inspect` 统一验证所有 Ref Kind。MCP 只投影原始结构化事实；任何面向模型的摘要、搜索、聚合或玩法工作流留给未来 Skill/客户端层。
 
 实机验证可以调用项目级 `launch-stardew-game` Skill：先通过统一构建入口生成 Mod，再以独立 SMAPI 进程和精确测试存档进入游戏，避免复用或干扰其他游戏进程。该 Skill 只负责隔离启动与进入存档；`query_world`、`query_inventory`、`query_ui` 和 `inspect` 仍需逐项执行真实 MCP 调用，并以专用日志、Handler 耗时、结果字节数和协议结果作为阶段 3 验收证据。
 

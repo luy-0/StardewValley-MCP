@@ -79,12 +79,15 @@ public sealed class BootstrapFixtureTests
     }
 
     [Test]
-    public void QueryRuntimeDescriptorMatchesBootstrapDigest()
+    public void RegisteredQueryRuntimeDescriptorMatchesBootstrapDigest()
     {
-        var snapshot = QueryRuntimeContract.CreateSnapshot();
+        var descriptor = CapabilityCatalog.GetObservationDescriptor("query_runtime");
+        var snapshot = CapabilityCatalog.CreateSnapshotFor(new[] { descriptor.Id });
         Assert.That(snapshot.Digest, Is.EqualTo(Digest));
         Assert.That(snapshot.Capabilities, Has.Count.EqualTo(1));
         Assert.That(snapshot.Capabilities[0].Id, Is.EqualTo("query_runtime"));
+        Assert.That(snapshot.Capabilities[0].DefaultTimeoutMs, Is.EqualTo(5_000));
+        Assert.That(snapshot.Capabilities[0].MaxTimeoutMs, Is.EqualTo(15_000));
     }
 
     [Test]

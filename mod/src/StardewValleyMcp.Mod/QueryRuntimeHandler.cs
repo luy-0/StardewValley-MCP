@@ -4,9 +4,20 @@ using StardewValleyMcp.Protocol.V1;
 
 namespace StardewValleyMcp.Mod;
 
-internal static class QueryRuntimeHandler
+internal sealed class QueryRuntimeHandler : ICapabilityHandler
 {
-    public static CommandEvent Execute(string commandId)
+    public string Id => "query_runtime";
+
+    public CommandRequest.OperationOneofCase Operation => CommandRequest.OperationOneofCase.QueryRuntime;
+
+    public Error? Validate(CommandRequest request)
+    {
+        return request.OperationCase == Operation
+            ? null
+            : new Error { Code = ErrorCode.InvalidArgument, Message = "query_runtime 请求类型无效" };
+    }
+
+    public CommandEvent Execute(string commandId, CommandRequest request)
     {
         if (!Context.IsWorldReady || Game1.player?.currentLocation is null)
             return Failed(commandId, ErrorCode.NotReady, "运行时尚未就绪", "not_ready");

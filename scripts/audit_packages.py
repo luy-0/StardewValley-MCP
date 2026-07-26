@@ -62,10 +62,12 @@ def audit_mcp() -> None:
     required = {
         "stardew_valley_mcp/server.py",
         "stardew_valley_mcp/transport.py",
-        "stardew_valley_mcp/query_runtime_tool.json",
+        "stardew_valley_mcp/generated/tool_catalog.json",
     }
     if not required <= names:
         raise SystemExit(f"MCP wheel 缺少运行文件: {sorted(required - names)}")
+    if any(name.endswith("_tool.json") for name in names):
+        raise SystemExit("MCP wheel 不得包含单 Tool JSON")
 
     source_archives = sorted((ROOT / "mcp" / "dist").glob("*.tar.gz"))
     if len(source_archives) != 1:

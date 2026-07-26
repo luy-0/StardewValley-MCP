@@ -18,7 +18,8 @@ internal sealed class LocalServer
     private readonly TcpListener _listener;
     private readonly byte[] _secret;
     private readonly IMonitor _monitor;
-    private readonly CapabilitySnapshot _snapshot = QueryRuntimeContract.CreateSnapshot();
+    private readonly CapabilityRegistry _registry;
+    private readonly CapabilitySnapshot _snapshot;
     private readonly ConcurrentQueue<CommandRecord> _pending = new();
     private readonly ConcurrentDictionary<string, CommandRecord> _commands = new();
     private readonly object _ownerLock = new();
@@ -29,11 +30,19 @@ internal sealed class LocalServer
     private ulong _lastLeaseEpoch;
     private long _messageSequence;
 
-    public LocalServer(IPAddress address, int port, byte[] secret, IMonitor monitor)
+    public LocalServer(
+        IPAddress address,
+        int port,
+        byte[] secret,
+        IMonitor monitor,
+        CapabilityRegistry registry
+    )
     {
         _listener = new TcpListener(address, port);
         _secret = secret.ToArray();
         _monitor = monitor;
+        _registry = registry;
+        _snapshot = registry.Snapshot.Clone();
     }
 
     public void Start()
@@ -66,7 +75,7 @@ internal sealed class LocalServer
         }
         else
         {
-            terminal = QueryRuntimeHandler.Execute(command.CommandId);
+            terminal = command.Handler.Execute(command.CommandId, command.Request);
         }
         command.Complete(terminal);
     }
@@ -253,14 +262,28 @@ internal sealed class LocalServer
             await SendErrorAsync(stream, fence, frame.MessageId, ErrorCode.InvalidArgument, "command_id 必须是小写 UUIDv4");
             return;
         }
-        if (request.OperationCase != CommandRequest.OperationOneofCase.QueryRuntime)
+        if (!_registry.TryResolve(request, out var capability))
         {
             await SendErrorAsync(stream, fence, frame.MessageId, ErrorCode.UnsupportedCapability, "当前构建未提供该能力");
             return;
         }
+        var validationError = capability.Handler.Validate(request);
+        if (validationError is not null)
+        {
+            await SendErrorAsync(
+                stream,
+                fence,
+                frame.MessageId,
+                validationError.Code,
+                validationError.Message
+            );
+            return;
+        }
 
-        var timeoutMs = request.TimeoutMs == 0 ? QueryRuntimeContract.DefaultTimeoutMs : request.TimeoutMs;
-        if (timeoutMs > QueryRuntimeContract.MaxTimeoutMs)
+        var timeoutMs = request.TimeoutMs == 0
+            ? capability.Descriptor.DefaultTimeoutMs
+            : request.TimeoutMs;
+        if (timeoutMs > capability.Descriptor.MaxTimeoutMs)
         {
             await SendErrorAsync(stream, fence, frame.MessageId, ErrorCode.InvalidArgument, "timeout_ms 超过能力上限");
             return;
@@ -274,7 +297,7 @@ internal sealed class LocalServer
                 await SendErrorAsync(stream, fence, frame.MessageId, ErrorCode.Conflict, "command_id 已用于不同请求");
                 return;
             }
-            await SendEventAsync(stream, fence, frame.MessageId, existing.Current).ConfigureAwait(false);
+            await ReplayCommandAsync(stream, fence, frame.MessageId, existing).ConfigureAwait(false);
             return;
         }
         if (_pending.Count >= 64)
@@ -283,7 +306,13 @@ internal sealed class LocalServer
             return;
         }
 
-        var command = new CommandRecord(request.CommandId, requestBytes, timeoutMs);
+        var command = new CommandRecord(
+            request.CommandId,
+            requestBytes,
+            timeoutMs,
+            capability.Handler,
+            request.Clone()
+        );
         if (!_commands.TryAdd(request.CommandId, command))
         {
             await HandleCommandAsync(stream, fence, frame).ConfigureAwait(false);
@@ -292,6 +321,24 @@ internal sealed class LocalServer
 
         await SendEventAsync(stream, fence, frame.MessageId, command.Current).ConfigureAwait(false);
         _pending.Enqueue(command);
+        await SendTerminalAsync(stream, fence, command).ConfigureAwait(false);
+    }
+
+    private async Task ReplayCommandAsync(
+        Stream stream,
+        SessionFence fence,
+        string replyTo,
+        CommandRecord command
+    )
+    {
+        var current = command.Current;
+        await SendEventAsync(stream, fence, replyTo, current).ConfigureAwait(false);
+        if (!IsTerminal(current.State))
+            await SendTerminalAsync(stream, fence, command).ConfigureAwait(false);
+    }
+
+    private async Task SendTerminalAsync(Stream stream, SessionFence fence, CommandRecord command)
+    {
         var terminal = await command.Completion.Task.ConfigureAwait(false);
         await SendEventAsync(stream, fence, "", terminal).ConfigureAwait(false);
     }
@@ -467,6 +514,12 @@ internal sealed class LocalServer
         && "89ab".Contains(value[19])
         && Guid.TryParseExact(value, "D", out _);
 
+    private static bool IsTerminal(CommandState state) => state is
+        CommandState.Succeeded
+        or CommandState.Failed
+        or CommandState.Cancelled
+        or CommandState.TimedOut;
+
     private static Error NewError(ErrorCode code, string message) => new() { Code = code, Message = message };
 
     private sealed class Owner
@@ -495,11 +548,19 @@ internal sealed class LocalServer
     {
         private CommandEvent _current;
 
-        public CommandRecord(string commandId, byte[] requestBytes, uint timeoutMs)
+        public CommandRecord(
+            string commandId,
+            byte[] requestBytes,
+            uint timeoutMs,
+            ICapabilityHandler handler,
+            CommandRequest request
+        )
         {
             CommandId = commandId;
             RequestBytes = requestBytes;
             TimeoutMs = timeoutMs;
+            Handler = handler;
+            Request = request;
             AcceptedAt = Stopwatch.GetTimestamp();
             _current = new CommandEvent
             {
@@ -512,6 +573,8 @@ internal sealed class LocalServer
         public string CommandId { get; }
         public byte[] RequestBytes { get; }
         public uint TimeoutMs { get; }
+        public ICapabilityHandler Handler { get; }
+        public CommandRequest Request { get; }
         public long AcceptedAt { get; }
         public TaskCompletionSource<CommandEvent> Completion { get; } =
             new(TaskCreationOptions.RunContinuationsAsynchronously);

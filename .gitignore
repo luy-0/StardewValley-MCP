@@ -18,6 +18,7 @@ tmp/
 
 # Agent process workspace (not part of the public repository artifact)
 agent_workspace/
+.agent/
 
 # .NET / SMAPI
 bin/

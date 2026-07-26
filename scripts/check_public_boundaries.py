@@ -13,6 +13,7 @@ SOURCE_SUFFIXES = {".cs", ".json", ".proto", ".py", ".toml", ".yaml", ".yml"}
 PUBLIC_TEXT_SUFFIXES = SOURCE_SUFFIXES | {".md", ".sh", ".txt", ".props", ".targets", ".sln"}
 IGNORED_PARTS = {
     ".git",
+    ".agent",
     ".venv",
     ".pytest_cache",
     "__pycache__",

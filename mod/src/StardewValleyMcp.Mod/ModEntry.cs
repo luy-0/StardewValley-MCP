@@ -48,7 +48,8 @@ public sealed class ModEntry : StardewModdingAPI.Mod
             return;
         }
 
-        _server = new LocalServer(address, config.Port, secret, Monitor);
+        var registry = new CapabilityRegistry();
+        _server = new LocalServer(address, config.Port, secret, Monitor, registry);
         CryptographicOperations.ZeroMemory(secret);
         _server.Start();
         helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
