@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <NoWarn>$(NoWarn);CS8032</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" />
+    <PackageReference Include="NUnit" />
+    <PackageReference Include="NUnit3TestAdapter" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/StardewValleyMcp.Mod/StardewValleyMcp.Mod.csproj" />
+    <ProjectReference Include="../../src/StardewValleyMcp.Protocol/StardewValleyMcp.Protocol.csproj" />
+  </ItemGroup>
+</Project>

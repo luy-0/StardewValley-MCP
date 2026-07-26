@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardewValleyMcp.Protocol.T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardewValleyMcp.Mod", "src\StardewValleyMcp.Mod\StardewValleyMcp.Mod.csproj", "{59567E54-2BB0-40B8-93DC-215DFEB540DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "StardewValleyMcp.Mod.Tests", "tests\StardewValleyMcp.Mod.Tests\StardewValleyMcp.Mod.Tests.csproj", "{B1A01D46-0CF7-4EB8-B77C-65811404910A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,5 +28,9 @@ Global
 		{59567E54-2BB0-40B8-93DC-215DFEB540DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{59567E54-2BB0-40B8-93DC-215DFEB540DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{59567E54-2BB0-40B8-93DC-215DFEB540DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B1A01D46-0CF7-4EB8-B77C-65811404910A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B1A01D46-0CF7-4EB8-B77C-65811404910A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B1A01D46-0CF7-4EB8-B77C-65811404910A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B1A01D46-0CF7-4EB8-B77C-65811404910A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

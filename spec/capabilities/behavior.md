@@ -23,7 +23,7 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 
 ### Inventory Revision
 
-以下任一内容变化都必须生成新 `inventory_revision`：Slot 数量、Slot 中的物品身份、堆叠、品质、工具等级或当前选中 Slot。只有 `InventorySnapshot.slots[].item.ref` 保证是可以用于 `equip` 的 Inventory Item Ref；Machine、Loose Item 和 UI 中嵌套的 `ItemFact` 可以没有 Ref，即使存在也不能作为 Equip 权限。
+以下任一内容变化都必须生成新 `inventory_revision`：Slot 数量、Slot 中的物品身份、堆叠、品质、工具等级或当前选中 Slot。所有 `QueryInventoryResult.snapshot.slots[].item.ref` 都是可用于 `inspect` 的 `INVENTORY_ITEM` Ref，包括玩家背包与可读容器中的非空 Slot。只有由 `player_inventory` 选择器（或其缺省等价形式）生成、且调用时仍匹配当前玩家背包与 `inventory_revision` 的 Item Ref 可以用于 `equip`；容器库存 Item Ref 不得用于 `equip`。Machine、Loose Item 和 UI 中嵌套的 `ItemFact` 可以没有 Ref；即使存在，是否可用于 `inspect` 仍由服务端 Ref Binding 决定，且不得据此获得 `equip` 权限。
 
 ### World Revision 与普通 Ref
 
@@ -39,7 +39,7 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 |---|---|---|
 | `WORLD_ENTITY` | `world_entity` | `query_world.entities[].ref`；容器对象也保持此 Kind，可用于导航、交互，并可作为 `query_inventory.container_ref` 输入 |
 | `CHARACTER` | `character` | `query_world.characters[].ref`；可用于导航或交互 |
-| `INVENTORY_ITEM` | `inventory_item` | 玩家背包 Slot 中的 Item Ref；只能在匹配 Inventory Revision 下用于 `equip` |
+| `INVENTORY_ITEM` | `inventory_item` | 玩家背包或可读容器 `InventorySnapshot` 中的非空 Slot Item Ref；均可用于 `inspect`，只有玩家背包来源且匹配当前 Inventory Revision 的 Ref 可用于 `equip` |
 | `CONTAINER` | `inventory` | `InventorySnapshot.container_ref`；表示库存视图，不是地图实体，不可用于导航或交互 |
 | `UI_ELEMENT` | `ui_element` | `query_ui.elements[].ref`；只能在匹配 UI Revision 下用于 `activate_ui` |
 
@@ -101,7 +101,7 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 
 - 必须且只能提供 `slot_index` 或 `item_ref`。
 - `slot_index` 必须小于当前玩家背包 Slot 数；该 Slot 为空时返回 `NOT_FOUND`。
-- 使用 `item_ref` 时必须同时提供产生该 Ref 的当前 `inventory_revision`；Ref 必须来自玩家背包 Snapshot。
+- 使用 `item_ref` 时必须同时提供产生该 Ref 的当前 `inventory_revision`；Ref 必须来自玩家背包 Snapshot，容器库存 Item Ref 即使可被 `inspect` 解析也必须以 `INVALID_ARGUMENT` 拒绝。
 - 使用 Slot 时如果提供 Revision，也必须匹配当前背包。
 - 成功要求当前选中 Slot 和 Item 与 Result 一致；已经装备目标时返回 `changed=false`。
 
@@ -140,6 +140,7 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 - `entity_kinds` 仅在 `include_entities` 未显式设为 `false` 时允许。
 - `max_entities`、`max_characters` 为 `1..512`；0 分别使用默认值 256。
 - Tile 按 `(y,x)` 排序且在区域合法时不得截断；Entity 与 Character 分别按 Ref Value UTF-8 升序排序后截断，并设置各自的 `*_truncated`。
+- Tile 的布尔字段没有 Unknown presence；任一 Tile 读取因 Location 或第三方 override 异常而无法完成时，整个命令必须以 `EXECUTION_FAILED` 失败，不得把不可读字段伪造为 `false`，也不得依赖传输层将异常改写为通用 `INTERNAL`。
 - 需要完整集合时，调用方必须缩小区域重新查询；V1 不提供跨 Revision Cursor。
 
 ### `query_inventory`
@@ -148,6 +149,7 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 - `container_ref` 必须解析为带 `ContainerFact` 的 `WORLD_ENTITY` 或当前可读取的 `CONTAINER` 库存视图，否则返回 `STALE_REF`、`NOT_FOUND` 或 `INVALID_ARGUMENT`。
 - V1 的可读取世界容器是当前已加载 Location 中由 `query_world` 返回的 Chest/Fridge 类实体；不通过显示名、坐标字符串或短地图名旁路 Ref 校验。
 - Slot 按 Index 升序。`include_empty_slots=false` 时可以省略空 Slot，但保留原始 Index。
+- 玩家背包与可读容器的每个非空 Slot Item 都必须携带 `INVENTORY_ITEM` Ref，供后续 `inspect` 解析；是否可用于 `equip` 仍按“操作能力”中的玩家背包来源与 Revision 规则判定。
 
 ### `query_ui`
 
@@ -160,6 +162,14 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 ## 6. 事实覆盖边界
 
 V1 为常见树木、作物、资源、机器、容器、床、家具、掉落物、门、Warp 和角色提供类型化 Fact。其他原版或第三方 Mod 地图对象使用 `ENTITY_KIND_GENERIC_OBJECT` 与 `GenericObjectFact` 提供最小 Runtime Type、Qualified Item ID、位置、显示名和可交互性；实现不得静默丢弃无法类型化但位于查询区域的可见对象。
+
+单个 Character 或 FarmAnimal 的第三方 getter 抛出异常时，实现必须保留只由已知枚举位置、opaque Ref，以及可由安全 CLR 类型判断的现有 `CharacterKind` 构成的最小 `CharacterFact`，并附 `CHARACTER_PROJECTION_FALLBACK` warning；不得继续猜测名称、朝向或类型详情，也不得输出 Proto 中不存在的 runtime type 字段。如果连枚举位置也不可读，则跳过该角色并附不带 Ref 的 `CHARACTER_PROJECTION_SKIPPED` warning，不得编造坐标。Location 的 `GetFridgePosition`/`GetFridge` 抛出异常时，只跳过该冰箱并附不带 Ref 的 `FRIDGE_DISCOVERY_FAILED` warning，不得中止其他实体投影或生成悬空 Ref。
+
+`ItemFact.category` 是 `Item.Category` 使用 invariant culture 格式化得到的十进制整数字符串；它不是本地化分类名称。
+
+`WorldEntityFact.actionable` 只在实现能以无副作用方式可靠判断“创建该 Snapshot 的当前玩家在同一逻辑 Tick 是否可操作该实体”时出现：`true` 表示可操作，`false` 表示已知不可操作。字段缺省表示可操作性未知；包含该 World Entity 的 `QueryWorldResult` 或 `InspectResult` 必须附带 `code=ENTITY_ACTIONABLE_UNKNOWN` 的 `QueryWarning`，且 `ref` 指向对应的 World Entity。第三方实现的可操作性 getter 抛出异常或无法安全调用时，实现必须保留该实体的其他可读取事实，以缺省字段与 warning 表达未知，不得静默映射为 `false`。该字段不是执行权限授予，也不表示玩家已经相邻、路径可达、当前没有 Modal，亦不保证后续 Tick 执行交互时仍可操作。
+
+`DoorFact.locked` 只在实现能以无副作用方式可靠判断“创建该 Snapshot 的当前玩家在同一逻辑 Tick 是否可通过此门”时出现：`true` 表示当前不可通过，`false` 表示当前可以通过。字段缺省表示准入状态未知；包含该 Door Fact 的 `QueryWorldResult` 或 `InspectResult` 必须附带 `code=DOOR_ACCESS_UNKNOWN` 的 `QueryWarning`，且 `ref` 指向对应的 World Entity。实现不得通过调用会传送、播放声音、弹出对话或改变游戏状态的入口来填充该字段，也不得用 `false` 代替未知。该字段不表示玩家已经相邻、路径可达、当前没有 Modal，亦不保证后续 Tick 执行交互时状态不变。
 
 ## 7. 观察能力性能预算
 

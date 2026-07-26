@@ -81,7 +81,8 @@ message WorldEntityFact {
   EntityKind kind = 2;
   WorldPosition position = 3;
   string display_name = 4;
-  bool actionable = 5;
+  // 字段存在时表示该实体对创建 Snapshot 的当前玩家是否可操作；缺省表示未知。
+  optional bool actionable = 5;
 
   oneof details {
     TreeFact tree = 20;
@@ -142,12 +143,14 @@ message ResourceClumpFact {
 }
 
 message ItemFact {
-  // 只有来自 InventorySnapshot 的物品保证携带可用于动作的 Ref。
+  // QueryInventory 返回的非空 Slot Item 携带可用于 inspect 的 INVENTORY_ITEM Ref；
+  // 是否可用于具体动作由能力行为契约决定。
   optional Ref ref = 1;
   string qualified_item_id = 2;
   string display_name = 3;
   uint32 stack = 4;
   uint32 quality = 5;
+  // Item.Category 使用 invariant culture 格式化得到的十进制整数字符串，不是本地化分类名称。
   string category = 6;
   bool tool = 7;
   uint32 tool_level = 8;
@@ -183,7 +186,7 @@ message LooseItemFact {
 }
 
 message DoorFact {
-  bool locked = 1;
+  optional bool locked = 1;
   string target_location_id = 2;
   optional TilePoint target_tile = 3;
 }

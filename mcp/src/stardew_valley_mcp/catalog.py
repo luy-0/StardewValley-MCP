@@ -18,7 +18,11 @@ class CatalogPolicy:
     allowed_scopes: frozenset[str]
 
 
-STAGE_2_5_POLICY = CatalogPolicy(frozenset({"query_runtime"}), frozenset({"game:read"}))
+OBSERVATION_POLICY = CatalogPolicy(
+    frozenset({"query_runtime", "query_world", "query_inventory", "query_ui", "inspect"}),
+    frozenset({"game:read"}),
+)
+DEFAULT_POLICY = OBSERVATION_POLICY
 
 
 def _lp(value: str) -> bytes:
@@ -45,7 +49,7 @@ def descriptor_digest(descriptors: Iterable[Any]) -> str:
 
 
 class Catalog:
-    def __init__(self, document: dict[str, Any], policy: CatalogPolicy = STAGE_2_5_POLICY):
+    def __init__(self, document: dict[str, Any], policy: CatalogPolicy = DEFAULT_POLICY):
         self._capabilities = {item["id"]: item for item in document["capabilities"]}
         self._tools = {item["capabilityId"]: item for item in document["tools"]}
         if set(self._capabilities) != set(self._tools):
@@ -53,7 +57,7 @@ class Catalog:
         self._policy = policy
 
     @classmethod
-    def load(cls, policy: CatalogPolicy = STAGE_2_5_POLICY) -> "Catalog":
+    def load(cls, policy: CatalogPolicy = DEFAULT_POLICY) -> "Catalog":
         raw = files("stardew_valley_mcp.generated").joinpath("tool_catalog.json").read_text()
         return cls(json.loads(raw), policy)
 

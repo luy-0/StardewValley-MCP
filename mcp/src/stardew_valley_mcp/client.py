@@ -1,13 +1,15 @@
-"""阶段 2.5 的唯一运行调用适配器。"""
+"""观察能力的统一运行调用器。"""
 
 from __future__ import annotations
 
 from typing import Any
 
+from google.protobuf.json_format import ParseError
 from jsonschema import Draft202012Validator, ValidationError
 
 from .catalog import Catalog
 from .command_runtime import CommandRuntime
+from .projection import parse_message
 from .protocol import queries_pb2
 from .transport import ConnectionConfig, TransportConnection
 
@@ -27,21 +29,28 @@ class StardewClient:
         command_id = self._runtime.new_command_id()
         try:
             capability_id = self._catalog.capability_for_tool(tool_name)
-            Draft202012Validator(self._catalog.tool(capability_id).inputSchema).validate(arguments)
-            operation = _operation_for(capability_id, arguments)
-        except (ValueError, ValidationError):
-            return {"status": "failed", "commandId": command_id, "error": {"code": "invalid_arguments", "message": "参数不符合公开 Tool Schema", "retryable": False}}
+        except ValueError:
+            return {"status": "failed", "commandId": command_id, "error": {"code": "invalid_arguments", "message": "未知 MCP Tool", "retryable": False}}
         if not self._catalog.allows(capability_id):
             return {"status": "failed", "commandId": command_id, "error": {"code": "capability_denied", "message": "当前策略未授权该能力", "retryable": False}}
+        try:
+            Draft202012Validator(self._catalog.tool(capability_id).inputSchema).validate(arguments)
+            operation = _operation_for(capability_id, arguments)
+        except (ValueError, ValidationError, ParseError):
+            return {"status": "failed", "commandId": command_id, "error": {"code": "invalid_arguments", "message": "参数不符合公开 Tool Schema", "retryable": False}}
         return await self._runtime.execute(command_id, capability_id, operation)
 
 
 def _operation_for(capability_id: str, arguments: dict[str, Any]):
-    """阶段 2.5 的显式运行注册表；新增能力必须另行注册。"""
-    factories = {"query_runtime": queries_pb2.QueryRuntimeRequest}
-    factory = factories.get(capability_id)
-    if factory is None:
+    """公开观察能力的显式 request-class 注册表。"""
+    request_classes = {
+        "query_runtime": queries_pb2.QueryRuntimeRequest,
+        "query_world": queries_pb2.QueryWorldRequest,
+        "query_inventory": queries_pb2.QueryInventoryRequest,
+        "query_ui": queries_pb2.QueryUiRequest,
+        "inspect": queries_pb2.InspectRequest,
+    }
+    message_class = request_classes.get(capability_id)
+    if message_class is None:
         raise ValueError("该能力尚无运行调用实现")
-    if arguments:
-        raise ValueError("query_runtime 不接受参数")
-    return factory()
+    return parse_message(arguments, message_class)

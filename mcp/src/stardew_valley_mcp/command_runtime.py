@@ -7,6 +7,7 @@ import uuid
 from typing import Any
 
 from google.protobuf.message import Message
+from jsonschema import Draft202012Validator, ValidationError
 
 from .catalog import Catalog
 from .projection import project_message
@@ -59,6 +60,7 @@ class CommandRuntime:
         self._discovery_timeout_seconds = discovery_timeout_seconds
         self._transport_margin_seconds = transport_margin_seconds
         self._lock = asyncio.Lock()
+        self._output_validators: dict[str, Draft202012Validator] = {}
 
     async def available_tools(self) -> list[Any]:
         try:
@@ -111,7 +113,22 @@ class CommandRuntime:
                         if event.state == capabilities_pb2.COMMAND_STATE_SUCCEEDED:
                             if event.WhichOneof("outcome") != "result" or event.result.WhichOneof("result") != capability_id:
                                 raise ProtocolError("成功结果与命令能力不匹配")
-                            return {"status": "succeeded", "commandId": command_id, "output": project_message(getattr(event.result, capability_id))}
+                            result = {
+                                "status": "succeeded",
+                                "commandId": command_id,
+                                "output": project_message(getattr(event.result, capability_id)),
+                            }
+                            validator = self._output_validators.get(capability_id)
+                            if validator is None:
+                                validator = Draft202012Validator(
+                                    self._catalog.tool(capability_id).outputSchema
+                                )
+                                self._output_validators[capability_id] = validator
+                            try:
+                                validator.validate(result)
+                            except ValidationError as error:
+                                raise ProtocolError("成功结果不符合公共 Output Schema") from error
+                            return result
                         if event.state in {capabilities_pb2.COMMAND_STATE_FAILED, capabilities_pb2.COMMAND_STATE_CANCELLED, capabilities_pb2.COMMAND_STATE_TIMED_OUT} and event.WhichOneof("outcome") == "error":
                             return _error(command_id, event.error)
                         raise ProtocolError("命令终态无效")

@@ -13,6 +13,7 @@ internal sealed class LocalServer
 {
     private const uint ResultRetentionMs = 300_000;
     private const uint ReconnectGraceMs = 10_000;
+    private const int MaximumSuccessfulEventBytes = 768 * 1024;
     private static readonly ProtocolVersion ProtocolVersion = new() { Major = 1, Minor = 0 };
 
     private readonly TcpListener _listener;
@@ -23,7 +24,7 @@ internal sealed class LocalServer
     private readonly ConcurrentQueue<CommandRecord> _pending = new();
     private readonly ConcurrentDictionary<string, CommandRecord> _commands = new();
     private readonly object _ownerLock = new();
-    private readonly string _modInstanceId = Guid.NewGuid().ToString("D");
+    private readonly string _modInstanceId;
 
     private Owner? _owner;
     private bool _ownerConnected;
@@ -35,7 +36,8 @@ internal sealed class LocalServer
         int port,
         byte[] secret,
         IMonitor monitor,
-        CapabilityRegistry registry
+        CapabilityRegistry registry,
+        string modInstanceId
     )
     {
         _listener = new TcpListener(address, port);
@@ -43,6 +45,7 @@ internal sealed class LocalServer
         _monitor = monitor;
         _registry = registry;
         _snapshot = registry.Snapshot.Clone();
+        _modInstanceId = modInstanceId;
     }
 
     public void Start()
@@ -75,7 +78,53 @@ internal sealed class LocalServer
         }
         else
         {
-            terminal = command.Handler.Execute(command.CommandId, command.Request);
+            var handlerStartedAt = Stopwatch.GetTimestamp();
+            try
+            {
+                terminal = command.Handler.Execute(command.CommandId, command.Request);
+            }
+            catch (Exception exception)
+            {
+                _monitor.Log(
+                    $"capability_execute_failed capability_id={command.Handler.Id} "
+                    + $"exception_type={exception.GetType().Name}",
+                    LogLevel.Error
+                );
+                terminal = new CommandEvent
+                {
+                    CommandId = command.CommandId,
+                    State = CommandState.Failed,
+                    Phase = "failed",
+                    Error = new Error
+                    {
+                        Code = ErrorCode.Internal,
+                        Message = "能力执行失败",
+                    },
+                };
+            }
+            var handlerElapsedMs = ElapsedMilliseconds(handlerStartedAt);
+            var producedBytes = terminal.CalculateSize();
+            if (terminal.State == CommandState.Succeeded && producedBytes >= MaximumSuccessfulEventBytes)
+            {
+                terminal = new CommandEvent
+                {
+                    CommandId = command.CommandId,
+                    State = CommandState.Failed,
+                    Phase = "result_too_large",
+                    Error = new Error
+                    {
+                        Code = ErrorCode.ExecutionFailed,
+                        Message = "命令结果达到或超过 768 KiB 限制",
+                    },
+                };
+            }
+
+            _monitor.Log(
+                $"capability_execute capability_id={command.Handler.Id} "
+                + $"elapsed_ms={handlerElapsedMs} serialized_bytes={terminal.CalculateSize()} "
+                + $"produced_bytes={producedBytes} state={terminal.State}",
+                LogLevel.Debug
+            );
         }
         command.Complete(terminal);
     }

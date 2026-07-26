@@ -48,12 +48,16 @@ public sealed class ModEntry : StardewModdingAPI.Mod
             return;
         }
 
-        var registry = new CapabilityRegistry();
-        _server = new LocalServer(address, config.Port, secret, Monitor, registry);
+        var modInstanceId = Guid.NewGuid().ToString("D");
+        var registry = new CapabilityRegistry(modInstanceId);
+        _server = new LocalServer(address, config.Port, secret, Monitor, registry, modInstanceId);
         CryptographicOperations.ZeroMemory(secret);
         _server.Start();
         helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
-        Monitor.Log("Stardew Valley MCP query_runtime 已加载。", LogLevel.Info);
+        Monitor.Log(
+            $"Stardew Valley MCP 已注册能力：{string.Join(", ", registry.Snapshot.Capabilities.Select(item => item.Id))}",
+            LogLevel.Info
+        );
     }
 
     private void OnUpdateTicked(object? sender, UpdateTickedEventArgs eventArgs)

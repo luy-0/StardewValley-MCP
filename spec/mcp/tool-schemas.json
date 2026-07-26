@@ -12401,7 +12401,6 @@
               }
             },
             "required": [
-              "locked",
               "targetLocationId"
             ],
             "type": "object"
@@ -14384,7 +14383,6 @@
               }
             },
             "required": [
-              "actionable",
               "displayName",
               "kind",
               "position",
@@ -17200,7 +17198,6 @@
               }
             },
             "required": [
-              "locked",
               "targetLocationId"
             ],
             "type": "object"
@@ -19729,7 +19726,6 @@
               }
             },
             "required": [
-              "actionable",
               "displayName",
               "kind",
               "position",

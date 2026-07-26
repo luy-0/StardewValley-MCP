@@ -6,10 +6,16 @@ internal sealed class CapabilityRegistry
 {
     private readonly IReadOnlyDictionary<CommandRequest.OperationOneofCase, RegisteredCapability> _byOperation;
 
-    public CapabilityRegistry()
+    public CapabilityRegistry(string modInstanceId)
+        : this(new OpaqueRefStore(modInstanceId))
+    {
+    }
+
+    private CapabilityRegistry(OpaqueRefStore refs)
         : this(new ICapabilityHandler[]
         {
             new QueryRuntimeHandler(),
+            new QueryWorldHandler(refs),
         })
     {
     }

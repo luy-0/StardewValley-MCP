@@ -6,6 +6,7 @@ mod_root="$(cd "$script_dir/.." && pwd -P)"
 solution="$mod_root/StardewValleyMcp.sln"
 project="$mod_root/src/StardewValleyMcp.Mod/StardewValleyMcp.Mod.csproj"
 tests="$mod_root/tests/StardewValleyMcp.Protocol.Tests/StardewValleyMcp.Protocol.Tests.csproj"
+mod_tests="$mod_root/tests/StardewValleyMcp.Mod.Tests/StardewValleyMcp.Mod.Tests.csproj"
 
 deploy=false
 package=false
@@ -39,6 +40,9 @@ fi
 dotnet restore "$solution" -p:RestoreLockedMode=true
 dotnet clean "$solution" -c Release -p:GamePath="$game_path"
 dotnet test "$tests" --no-restore -c Release -p:RestoreLockedMode=true
+dotnet test "$mod_tests" --no-restore -c Release \
+  -p:GamePath="$game_path" \
+  -p:RestoreLockedMode=true
 dotnet build "$project" --no-restore -c Release \
   -p:GamePath="$game_path" \
   -p:EnableModDeploy="$deploy" \

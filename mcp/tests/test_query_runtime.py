@@ -154,7 +154,13 @@ def test_catalog_intersection_and_descriptor_projection_cover_observation_fixtur
     json_format.Parse((OBSERVATION_FIXTURES / "server-ready.json").read_text(), ready)
     catalog = Catalog.load()
     assert len(catalog.capability_ids) == 15
-    assert [tool.name for tool in catalog.tools_for(ready.server_ready.capability_snapshot)] == ["stardew_query_runtime"]
+    assert [tool.name for tool in catalog.tools_for(ready.server_ready.capability_snapshot)] == [
+        "stardew_inspect",
+        "stardew_query_inventory",
+        "stardew_query_runtime",
+        "stardew_query_ui",
+        "stardew_query_world",
+    ]
     for capability, fixture_name in [("query_runtime", "query-runtime.success.json"), ("query_world", "query-world.success-complete.json"), ("inspect", "inspect.success-complete.json")]:
         frame = transport_pb2.TransportFrame()
         json_format.Parse((OBSERVATION_FIXTURES / fixture_name).read_text(), frame)
@@ -254,12 +260,13 @@ class _FakeConnection:
     def __init__(self, snapshot, frames=()):
         self.snapshot = snapshot
         self.frames = list(frames)
+        self.closed = False
 
     async def connect(self):
         return self.snapshot
 
     async def close(self):
-        return None
+        self.closed = True
 
     def next_message_id(self):
         return "c-1"
@@ -300,6 +307,88 @@ def test_unknown_result_enum_maps_to_schema_valid_upstream_error() -> None:
     runtime = CommandRuntime(_FakeConnection(snapshot, [accepted, terminal]), Catalog.load())
     result = asyncio.run(runtime.execute(command_id, "query_runtime", queries_pb2.QueryRuntimeRequest()))
     assert result["error"]["code"] == "upstream_protocol_error"
+    Draft202012Validator(Catalog.load().tool("query_runtime").outputSchema).validate(result)
+
+
+def test_success_with_empty_location_id_is_rejected_and_connection_closed() -> None:
+    ready = transport_pb2.TransportFrame()
+    json_format.Parse((OBSERVATION_FIXTURES / "server-ready.json").read_text(), ready)
+    command_id = "11111111-1111-4111-8111-111111111111"
+    accepted = transport_pb2.TransportFrame(
+        message_id="s-3",
+        reply_to="c-1",
+        command_event=capabilities_pb2.CommandEvent(
+            command_id=command_id,
+            state=capabilities_pb2.COMMAND_STATE_ACCEPTED,
+        ),
+    )
+    terminal = transport_pb2.TransportFrame()
+    json_format.Parse(
+        (OBSERVATION_FIXTURES / "query-world.success-complete.json").read_text(),
+        terminal,
+    )
+    terminal.command_event.command_id = command_id
+    terminal.command_event.result.query_world.snapshot.area.location_id = ""
+    connection = _FakeConnection(ready.server_ready.capability_snapshot, [accepted, terminal])
+    runtime = CommandRuntime(connection, Catalog.load())
+
+    result = asyncio.run(
+        runtime.execute(command_id, "query_world", queries_pb2.QueryWorldRequest())
+    )
+
+    assert result["status"] == "failed"
+    assert result["error"] == {
+        "code": "upstream_protocol_error",
+        "message": "本地 Mod 返回了无效协议响应",
+        "retryable": False,
+    }
+    assert connection.closed is True
+    Draft202012Validator(Catalog.load().tool("query_world").outputSchema).validate(result)
+
+
+def test_success_missing_required_fact_is_rejected_and_connection_closed() -> None:
+    snapshot = fixture("server-ready.json").server_ready.capability_snapshot
+    command_id = "55555555-5555-4555-8555-555555555555"
+    accepted = transport_pb2.TransportFrame(
+        message_id="s-3",
+        reply_to="c-1",
+        command_event=capabilities_pb2.CommandEvent(
+            command_id=command_id,
+            state=capabilities_pb2.COMMAND_STATE_ACCEPTED,
+        ),
+    )
+    terminal = fixture("query-runtime.succeeded.json")
+    terminal.command_event.command_id = command_id
+    terminal.command_event.result.query_runtime.ClearField("snapshot")
+    connection = _FakeConnection(snapshot, [accepted, terminal])
+    runtime = CommandRuntime(connection, Catalog.load())
+
+    result = asyncio.run(
+        runtime.execute(command_id, "query_runtime", queries_pb2.QueryRuntimeRequest())
+    )
+
+    assert result["status"] == "failed"
+    assert result["error"]["code"] == "upstream_protocol_error"
+    assert connection.closed is True
+    Draft202012Validator(Catalog.load().tool("query_runtime").outputSchema).validate(result)
+
+
+def test_schema_valid_success_remains_succeeded_and_connection_open() -> None:
+    snapshot = fixture("server-ready.json").server_ready.capability_snapshot
+    command_id = "55555555-5555-4555-8555-555555555555"
+    terminal = fixture("query-runtime.succeeded.json")
+    terminal.message_id = "s-cached"
+    terminal.reply_to = "c-1"
+    terminal.command_event.command_id = command_id
+    connection = _FakeConnection(snapshot, [terminal])
+    runtime = CommandRuntime(connection, Catalog.load())
+
+    result = asyncio.run(
+        runtime.execute(command_id, "query_runtime", queries_pb2.QueryRuntimeRequest())
+    )
+
+    assert result["status"] == "succeeded"
+    assert connection.closed is False
     Draft202012Validator(Catalog.load().tool("query_runtime").outputSchema).validate(result)
 
 
