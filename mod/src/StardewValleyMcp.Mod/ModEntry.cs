@@ -8,10 +8,12 @@ namespace StardewValleyMcp.Mod;
 public sealed class ModEntry : StardewModdingAPI.Mod
 {
     private LocalServer? _server;
+    private SaveAutoLoader? _saveAutoLoader;
 
     public override void Entry(IModHelper helper)
     {
         var config = helper.ReadConfig<ModConfig>();
+        _saveAutoLoader = new SaveAutoLoader(helper, Monitor, config);
         if (string.IsNullOrWhiteSpace(config.SharedSecretBase64))
         {
             config.SharedSecretBase64 = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
