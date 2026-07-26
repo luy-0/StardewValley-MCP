@@ -171,6 +171,8 @@ query_runtime, query_world, query_inventory, query_ui, inspect
 
 依次重写其余查询能力和 Ref ID 体系。先确定事实模型和性能预算，再移植必要的扫描/投影算法；不得把 V2 DTO 包装后继续对外返回。
 
+实机验证可以调用项目级 `launch-stardew-game` Skill：先通过统一构建入口生成 Mod，再以独立 SMAPI 进程和精确测试存档进入游戏，避免复用或干扰其他游戏进程。该 Skill 只负责隔离启动与进入存档；`query_world`、`query_inventory`、`query_ui` 和 `inspect` 仍需逐项执行真实 MCP 调用，并以专用日志、Handler 耗时、结果字节数和协议结果作为阶段 3 验收证据。
+
 退出条件：所有保留的观察能力拥有最小、完整、非法参数、成功和失败 fixture，并通过 C#/Python 交叉测试与实机性能门禁。
 
 ### 阶段 4：完成简单交互能力
