@@ -1,6 +1,6 @@
 # 公开版本重写计划
 
-状态：**阶段 2 已完成，阶段 3 观察能力正在实现**
+状态：**阶段 3 已完成，下一步进入阶段 4 简单交互能力**
 
 本计划定义如何以旧仓库已经验证的游戏行为为参考，重新实现一套适合公开发布、独立安装和长期维护的 Mod、MCP 服务端与 Skill 开发套件。它不是旧代码搬迁清单；旧仓库只提供行为证据、失败经验和测试素材，不是新版本的架构模板。
 
@@ -184,17 +184,19 @@ query_runtime, query_world, query_inventory, query_ui, inspect
 2. [x] 冻结阶段 3 边界：V1 不增加 `observe` 聚合能力、不增加查询别名、不增加分页 Cursor；无法识别的 Ref 使用现有 `UNSUPPORTED/INVALID_ARGUMENT`，不扩展新的 `malformed` 状态。
 3. [x] 冻结性能预算：成功帧小于 768 KiB；默认世界查询目标不超过 16 ms，最大合法区域不超过 50 ms；其余观察 Handler 目标不超过 16 ms。
 4. [x] 完成上述阶段 2.5 结构收敛，并通过架构边界测试；在此之前不得新增第二个游戏 Handler。
-5. [ ] 实现进程内不透明 Ref Store，以及 World、Inventory、UI 三类 Revision；调用方不得解析 Ref，Mod 不根据外部字符串猜测 Kind。
-6. [ ] 按 `query_world → query_inventory → query_ui → inspect` 完成四条纵向切片；每条同步交付 Spec Fixture、唯一 Mod Handler、默认 Descriptor Projection 和测试，不预建通用游戏查询框架。
-7. [ ] 为四项能力补齐最小、完整、非法、成功与失败覆盖；固定五项观察能力的握手 Snapshot、HMAC、Fence 和生命周期场景。
-8. [ ] 通过跨语言协议测试、C#/Python 单元与标准 MCP 会话测试、边界扫描、干净构建和发布包审计。
-9. [ ] 部署新 Mod 后逐项执行真实 MCP 调用；验证世界、玩家与容器库存、无菜单和有菜单 UI、混合成功/失败 Ref Inspect，并记录 Handler 耗时与结果字节数。
+5. [x] 实现进程内不透明 Ref Store，以及 World、Inventory、UI 三类 Revision；调用方不得解析 Ref，Mod 不根据外部字符串猜测 Kind。
+6. [x] 按 `query_world → query_inventory → query_ui → inspect` 完成四条纵向切片；每条同步交付 Spec Fixture、唯一 Mod Handler、默认 Descriptor Projection 和测试，不预建通用游戏查询框架。
+7. [x] 为四项能力补齐最小、完整、非法、成功与失败覆盖；固定五项观察能力的握手 Snapshot、HMAC、Fence 和生命周期场景。
+8. [x] 通过跨语言协议测试、C#/Python 单元与标准 MCP 会话测试、边界扫描和 Mod 构建。
+9. [x] 部署新 Mod 后通过标准 MCP Session 逐项执行真实调用；验证世界、玩家与容器库存、无菜单 UI、真实与不存在 Ref 的混合 Inspect，并记录 Handler 耗时与结果字节数。有菜单 UI 由离线 Fixture 覆盖，不作为本阶段实机阻塞项。
 
 阶段 2.5 完成记录：MCP 已拆分为唯一生成 Catalog、Descriptor Projection、通用 Command Runtime 与纯 Transport，并以公共 Manifest、MCP 支持集、Mod 公告集和权限策略四方交集决定 Tool；Mod 已用编译期显式 Registry 取代 `LocalServer` 的单能力分支，并校验 Handler ID、Proto operation 与 Request Type 一致。结构门禁同时覆盖握手 Deadline、typed request 错配、未知 Enum、活动命令重放和已完成命令的缓存终态收敛；第二轮独立审查未发现 P0/P1 阻塞。
 
 实现顺序以依赖而不是旧目录划分。`query_world` 先提供 World Entity/Character Ref，`query_inventory` 再基于容器 World Ref 提供库存视图与 Item Ref，`query_ui` 提供 Revision 绑定的 Element Ref，最后由 `inspect` 统一验证所有 Ref Kind。MCP 只投影原始结构化事实；任何面向模型的摘要、搜索、聚合或玩法工作流留给未来 Skill/客户端层。
 
 实机验证可以调用项目级 `launch-stardew-game` Skill：先通过统一构建入口生成 Mod，再以独立 SMAPI 进程和精确测试存档进入游戏，避免复用或干扰其他游戏进程。该 Skill 只负责隔离启动与进入存档；`query_world`、`query_inventory`、`query_ui` 和 `inspect` 仍需逐项执行真实 MCP 调用，并以专用日志、Handler 耗时、结果字节数和协议结果作为阶段 3 验收证据。
+
+阶段 3 完成记录：2026-07-27，隔离 SMAPI 实例自动加载测试存档后，标准 MCP `ClientSession` 发现且仅发现五项观察 Tool。`query_runtime`、`query_world`、`query_inventory`、`query_ui` 与 `inspect` 均返回 `succeeded`；默认世界查询返回 10 个实体，玩家背包返回 5 个非空 Slot，容器查询返回 36 个 Slot 和 1 个非空 Slot，来自世界与背包的真实 Ref 均被 `inspect` 解析，不存在的 Ref 以单项 `not_found` 返回且未中断批次。专用 SMAPI 日志同时记录了每项 Handler 的耗时和序列化字节数；预热后的默认调用为 `query_world` 11–16 ms、`query_inventory` 2–4 ms、`query_ui` 4 ms、`inspect` 2 ms，结果均远小于 768 KiB。首次世界查询包含运行时冷启动开销，记录为 171 ms，不为这一罕见样本扩展架构；有菜单 UI、异常对象投影和 `FACT_UNAVAILABLE` 继续由 Fixture 与单元测试覆盖。
 
 退出条件：所有保留的观察能力拥有最小、完整、非法参数、成功和失败 fixture，并通过 C#/Python 交叉测试与实机性能门禁。
 
@@ -261,9 +263,9 @@ CI 至少包含以下门禁：
 
 ## 十一、近期下一步
 
-阶段 1 与 `query_runtime` 首个纵向切片完成后，下一步不回到旧仓库复制运行时：
+阶段 3 已完成，下一步进入阶段 4，仍按小型纵向切片推进：
 
-1. 复审首个切片暴露的 Transport、线程和错误边界，只修复有证据的问题。
-2. 按纵向切片依次实现 `query_world`、`query_inventory`、`query_ui` 与 `inspect`，不预建通用框架。
-3. 每增加一项能力，同步补齐 Spec、Fixture、Mod、MCP、自动化测试和一次真实游戏验证。
-4. 发布准备持续补充许可证、第三方许可证和安全政策，但不与能力实现耦合。
+1. 先复审 `say`、`emote`、`face`、`equip`、`open_menu`、`activate_ui` 与 `close_menu` 的公共契约，优先选择一项最简单能力打通首条变更链路。
+2. 为变更命令建立统一结果确认规则，明确“已接受”“已执行”和“游戏效果已确认”的边界；不引入旧 Processor、复合命令或兼容别名。
+3. 每项能力同步交付 Spec、Fixture、唯一 Mod Handler、MCP Tool、自动化测试和真实游戏效果证据。
+4. 阶段 6 的 Skill SDK 与阶段 7 的许可证、安全政策和安装文档可以独立推进，但不得反向扩张 Mod/MCP 原语。

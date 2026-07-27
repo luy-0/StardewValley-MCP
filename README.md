@@ -53,7 +53,7 @@ Skill 开发入口，只包含接口定义、编写模板、最小示例和一�
 
 ## 项目状态
 
-当前预览版已经具备独立的 Mod、MCP Python 包和第一项只读能力 `query_runtime`。其余十四项候选能力仍在按纵向切片重写，尚不能把本仓库视为完整 V1 正式版。
+当前预览版已经具备独立的 Mod、MCP Python 包，以及 `query_runtime`、`query_world`、`query_inventory`、`query_ui` 和 `inspect` 五项只读能力。其余十项候选变更能力仍在按纵向切片重写，尚不能把本仓库视为完整 V1 正式版。
 
 首次安装与调用方法见[快速开始](docs/getting-started.md)，本地完整回归入口为：
 

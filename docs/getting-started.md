@@ -1,6 +1,6 @@
 # 快速开始
 
-当前预览版只提供只读 Tool `stardew_query_runtime`。它可以读取当前日期、时间、天气、玩家位置、基础资源和菜单摘要；其他能力仍在重写中。
+当前预览版提供五项只读 Tool：`stardew_query_runtime`、`stardew_query_world`、`stardew_query_inventory`、`stardew_query_ui` 与 `stardew_inspect`。它们分别用于读取运行状态、局部世界、玩家或容器库存、当前 UI，以及解析查询结果返回的不透明 Ref；变更游戏状态的能力仍在重写中。
 
 ## 一、安装 Mod
 
@@ -57,7 +57,7 @@ uv run --project mcp stardew-valley-mcp serve
 }
 ```
 
-MCP 只有在成功连接并验证 Mod 的 `query_runtime` 能力快照后才会列出 `stardew_query_runtime`。游戏停留在标题界面时，Tool 会返回稳定的 `not_ready`；加载存档后会返回 `succeeded` 和结构化 Snapshot。
+MCP 只有在成功连接并验证 Mod 的能力快照后才会列出双方共同支持且获准读取的 Tool。当前 Mod 与 MCP 正常配对时会列出五项观察 Tool；游戏停留在标题界面时，查询会返回稳定的 `not_ready`，加载存档后会返回 `succeeded` 和结构化 Snapshot。`query_world`、`query_inventory` 与 `query_ui` 返回的 `ref` 是不透明值，调用方只能原样交给 `stardew_inspect` 或其他明确接受 Ref 的 Tool，不应解析或自行构造。
 
 ## 四、本地验证
 
