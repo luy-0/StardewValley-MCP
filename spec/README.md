@@ -69,6 +69,7 @@ Fixture 只展示有效或无效交互。如果示例与机器可读契约或规
 - [版本与兼容性](VERSIONING.md)
 - [公开 V1 范围决策](decisions/0001-public-v1-scope.md)
 - [本地传输决策](decisions/0002-local-transport.md)
+- [统一命令运行时决策](decisions/0003-unified-command-runtime.md)
 - [Mod–MCP 行为协议](mod-mcp-protocol.md)
 - [Proto 线路数据模型](proto/README.md)
 - [Mod 公开实现契约](mod.md)
