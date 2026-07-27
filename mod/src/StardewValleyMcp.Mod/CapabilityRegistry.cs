@@ -17,6 +17,7 @@ internal sealed class CapabilityRegistry
             new QueryRuntimeHandler(),
             new QueryWorldHandler(refs),
             new QueryInventoryHandler(refs),
+            new QueryUiHandler(refs),
         })
     {
     }

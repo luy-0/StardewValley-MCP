@@ -125,6 +125,38 @@ def test_all_five_local_invalid_arguments_are_schema_valid() -> None:
     assert runtime.calls == []
 
 
+def test_query_ui_game_menu_and_unsupported_shell_use_generic_projection() -> None:
+    menu = _success("query_ui")
+    output = menu["output"]
+    assert output["snapshot"]["menu"] == {
+        "menuType": "GameMenu",
+        "menuKind": "inventory",
+        "title": "背包",
+        "modal": False,
+        "dialogueText": "",
+    }
+    assert output["snapshot"]["elements"][0]["kind"] == "tab"
+    assert output["snapshot"]["elements"][0]["enabled"] is False
+    assert output["snapshot"]["elements"][0]["center"] == {"x": 160, "y": 96}
+    assert output["snapshot"]["elements"][1]["enabled"] is True
+
+    frame = transport_pb2.TransportFrame()
+    json_format.Parse(
+        (FIXTURES / "query-ui.success-unsupported-menu.json").read_text(),
+        frame,
+    )
+    unsupported = project_message(frame.command_event.result.query_ui)
+    projected = {
+        "status": "succeeded",
+        "commandId": frame.command_event.command_id,
+        "output": unsupported,
+    }
+    Draft202012Validator(Catalog.load().tool("query_ui").outputSchema).validate(projected)
+    assert unsupported["snapshot"]["menuOpen"] is True
+    assert unsupported["snapshot"]["elements"] == []
+    assert unsupported["warnings"][0]["code"] == "UI_MENU_UNSUPPORTED"
+
+
 def test_direct_call_cannot_bypass_mod_announcement_intersection() -> None:
     bootstrap = transport_pb2.TransportFrame()
     json_format.Parse((ROOT / "spec" / "fixtures" / "v1" / "bootstrap" / "server-ready.json").read_text(), bootstrap)

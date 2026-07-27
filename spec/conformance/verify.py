@@ -703,6 +703,7 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         "query-world.success-minimal.json", "query-world.success-complete.json",
         "query-inventory.success-minimal.json", "query-inventory.success-complete.json",
         "query-ui.success-no-menu.json", "query-ui.success-menu.json",
+        "query-ui.success-unsupported-menu.json",
         "inspect.success-minimal.json", "inspect.success-complete.json",
     ]
     for name in standalone:

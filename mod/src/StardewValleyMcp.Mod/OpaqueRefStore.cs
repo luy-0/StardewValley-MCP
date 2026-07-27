@@ -19,13 +19,19 @@ internal sealed class OpaqueRefStore
     private readonly ConditionalWeakTable<object, Dictionary<BindingKey, Binding>> _byIdentity = new();
     private readonly Dictionary<string, IOpaqueBinding> _byToken = new(StringComparer.Ordinal);
     private readonly InventoryItemBindingStore _inventoryItems = new();
+    private readonly UiElementBindingStore _uiElements;
     private readonly ConditionalWeakTable<object, Dictionary<LogicalKey, object>> _logicalIdentities = new();
 
-    public OpaqueRefStore(string modInstanceId, Func<string>? tokenFactory = null)
+    public OpaqueRefStore(
+        string modInstanceId,
+        Func<string>? tokenFactory = null,
+        Func<string>? menuEpochFactory = null
+    )
     {
         OpaqueRefTokenCodec.ValidateInstanceId(modInstanceId);
         _modInstanceId = modInstanceId;
         _tokenFactory = tokenFactory ?? (() => OpaqueRefTokenCodec.NewToken(_modInstanceId));
+        _uiElements = new UiElementBindingStore(menuEpochFactory);
     }
 
     public Ref GetOrCreate(
@@ -110,6 +116,85 @@ internal sealed class OpaqueRefStore
     public void CompleteInventoryObservation(IInventoryRefOwner owner, int capacity)
     {
         _inventoryItems.Complete(owner, capacity);
+    }
+
+    public UiProjectionSession BeginUiProjection(object menu) => _uiElements.Begin(menu);
+
+    public Ref ObserveUiElement(
+        UiProjectionSession session,
+        IUiElementRefOwner owner,
+        UiElementBindingIdentity identity
+    )
+    {
+        var binding = _uiElements.Observe(session, owner, identity, CreateUniqueToken);
+        if (_byToken.TryGetValue(binding.Token, out var registered))
+        {
+            if (!ReferenceEquals(registered, binding))
+                throw new InvalidOperationException("Ref token 冲突");
+        }
+        else
+        {
+            _byToken.Add(binding.Token, binding);
+        }
+        return new Ref { Value = binding.Token };
+    }
+
+    public void CompleteUiProjection(UiProjectionSession session) =>
+        _uiElements.Complete(session);
+
+    public void CloseUiProjection() => _uiElements.CloseActive();
+
+    public UiElementResolveResult ResolveUiElement(Ref reference)
+    {
+        try
+        {
+            var resolution = ResolveCore(
+                reference,
+                kind => kind == RefKind.UiElement,
+                out var binding,
+                out var target
+            );
+            var status = resolution.Status switch
+            {
+                RefStatus.Resolved => UiElementResolveStatus.Resolved,
+                RefStatus.Stale => UiElementResolveStatus.Stale,
+                RefStatus.NotFound => UiElementResolveStatus.NotFound,
+                RefStatus.Unsupported => UiElementResolveStatus.Unsupported,
+                _ => UiElementResolveStatus.Unavailable,
+            };
+            if (status != UiElementResolveStatus.Resolved)
+                return new UiElementResolveResult(status, resolution.Kind, resolution.Error, null);
+            if (binding is not UiElementBinding uiBinding || target is null)
+            {
+                return new UiElementResolveResult(
+                    UiElementResolveStatus.Unavailable,
+                    RefKind.UiElement,
+                    new Error { Code = ErrorCode.Internal, Message = "当前 UI Ref 绑定不可用" },
+                    null
+                );
+            }
+            return new UiElementResolveResult(
+                status,
+                resolution.Kind,
+                null,
+                new ResolvedUiElementRef(
+                    target,
+                    uiBinding.MenuEpoch,
+                    uiBinding.Extractor,
+                    uiBinding.PublicKind,
+                    uiBinding.Index
+                )
+            );
+        }
+        catch (OpaqueRefUnavailableException)
+        {
+            return new UiElementResolveResult(
+                UiElementResolveStatus.Unavailable,
+                RefKind.UiElement,
+                new Error { Code = ErrorCode.Internal, Message = "当前 UI Ref 事实不可用" },
+                null
+            );
+        }
     }
 
     public RefResolution Resolve(
