@@ -1,4 +1,3 @@
-using System.Globalization;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValley.Characters;
@@ -457,17 +456,7 @@ internal static class WorldProjector
     {
         var itemCount = ChestInventoryReader.EnumerateSlots(chest, Game1.player)
             .Count(item => item is not null);
-        var containerKind = locatorKind == RefLocatorKind.Fridge || chest.fridge.Value
-            ? "fridge"
-            : chest.SpecialChestType switch
-            {
-                Chest.SpecialChestTypes.JunimoChest => "junimo_chest",
-                Chest.SpecialChestTypes.MiniShippingBin => "mini_shipping_bin",
-                Chest.SpecialChestTypes.AutoLoader => "auto_loader",
-                Chest.SpecialChestTypes.BigChest => "big_chest",
-                _ when chest.playerChest.Value => "chest",
-                _ => "container",
-            };
+        var containerKind = ContainerKindClassifier.Classify(chest, locatorKind);
         var fact = Entity(
             chest,
             location,
@@ -477,7 +466,7 @@ internal static class WorldProjector
             EntityKind.Container,
             chest.DisplayName,
             null,
-            $"container:{chest.GetType().FullName}:{chest.QualifiedItemId}:{containerKind}",
+            ContainerKindClassifier.IdentityGuard(chest, locatorKind),
             entity => entity.Container = new ContainerFact
             {
                 ContainerKind = containerKind,
@@ -1057,16 +1046,7 @@ internal static class WorldProjector
         return fact;
     }
 
-    private static ItemFact ProjectItem(Item item) => new()
-    {
-        QualifiedItemId = item.QualifiedItemId ?? "",
-        DisplayName = item.DisplayName ?? "",
-        Stack = UInt(item.Stack),
-        Quality = UInt(item.Quality),
-        Category = item.Category.ToString(CultureInfo.InvariantCulture),
-        Tool = item is Tool,
-        ToolLevel = item is Tool tool ? UInt(tool.UpgradeLevel) : 0,
-    };
+    private static ItemFact ProjectItem(Item item) => ItemFactProjector.Project(item);
 
     private static List<WorldPosition> OccupiedTiles(
         GameLocation location,

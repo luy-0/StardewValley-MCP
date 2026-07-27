@@ -148,7 +148,11 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 - 未提供 Container 时默认玩家背包；`player_inventory` 空消息与缺省语义相同。
 - `container_ref` 必须解析为带 `ContainerFact` 的 `WORLD_ENTITY` 或当前可读取的 `CONTAINER` 库存视图，否则返回 `STALE_REF`、`NOT_FOUND` 或 `INVALID_ARGUMENT`。
 - V1 的可读取世界容器是当前已加载 Location 中由 `query_world` 返回的 Chest/Fridge 类实体；不通过显示名、坐标字符串或短地图名旁路 Ref 校验。
+- `container_kind` 的稳定值固定为 `player`、`fridge`、`junimo_chest`、`mini_shipping_bin`、`auto_loader`、`big_chest`、`chest` 或 `container`；`query_world` 与 `query_inventory` 必须使用同一分类规则。
+- 容器库存必须只读取已经存在的 Local、Global、Separate Wallet 或 Junimo backing；缺失的共享 backing 解释为空逻辑视图，不得通过查询创建 backing 或写入游戏状态。容量使用父 Chest 的实际容量；容量为负、backing 数量超过容量或关键 getter 异常时，以脱敏 `INTERNAL` 失败。
 - Slot 按 Index 升序。`include_empty_slots=false` 时可以省略空 Slot，但保留原始 Index。
+- `inventory_revision` 必须先基于全容量 Slot、完整 `ItemFact`、Item Ref 与 owner 内部事实计算，再过滤空 Slot；因此同一状态下 `include_empty_slots` 不改变 Revision。玩家当前选中 Slot 属于 Revision 材料，容器 Revision 不受玩家切换工具影响。
+- 同一父容器经 `WORLD_ENTITY` 或其 `CONTAINER` Ref 查询时，必须返回相同的 Container Ref、Slot、Item Ref、`container_kind`、`slot_count` 与 Revision。Container Ref 绑定父 Chest 与 Location，不得只绑定可能由多个容器共享的库存 backing。
 - 玩家背包与可读容器的每个非空 Slot Item 都必须携带 `INVENTORY_ITEM` Ref，供后续 `inspect` 解析；是否可用于 `equip` 仍按“操作能力”中的玩家背包来源与 Revision 规则判定。
 
 ### `query_ui`

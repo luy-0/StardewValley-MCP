@@ -10,8 +10,15 @@ namespace StardewValleyMcp.Mod;
 internal static class ChestInventoryReader
 {
     public static IEnumerable<Item> EnumerateSlots(Chest chest, Farmer player)
+        => GetExistingSlots(chest, player, out _);
+
+    public static IList<Item> GetExistingSlots(
+        Chest chest,
+        Farmer player,
+        out ChestInventoryBacking backing
+    )
     {
-        var backing = ChestInventorySelection.Select(
+        backing = ChestInventorySelection.Select(
             chest.GlobalInventoryId is not null,
             chest.SpecialChestType == Chest.SpecialChestTypes.MiniShippingBin,
             player.team.useSeparateWallets.Value,
@@ -47,8 +54,30 @@ internal static class ChestInventoryReader
     }
 }
 
+internal static class ContainerKindClassifier
+{
+    public static string Classify(Chest chest, RefLocatorKind locatorKind) =>
+        locatorKind == RefLocatorKind.Fridge || chest.fridge.Value
+            ? "fridge"
+            : chest.SpecialChestType switch
+            {
+                Chest.SpecialChestTypes.JunimoChest => "junimo_chest",
+                Chest.SpecialChestTypes.MiniShippingBin => "mini_shipping_bin",
+                Chest.SpecialChestTypes.AutoLoader => "auto_loader",
+                Chest.SpecialChestTypes.BigChest => "big_chest",
+                _ when chest.playerChest.Value => "chest",
+                _ => "container",
+            };
+
+    public static string IdentityGuard(
+        Chest chest,
+        RefLocatorKind locatorKind
+    ) => $"container:{chest.GetType().FullName}:{chest.QualifiedItemId}:{Classify(chest, locatorKind)}";
+}
+
 internal enum ChestInventoryBacking
 {
+    Player,
     Global,
     SeparateWallet,
     Junimo,

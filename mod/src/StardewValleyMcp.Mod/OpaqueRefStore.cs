@@ -13,15 +13,19 @@ namespace StardewValleyMcp.Mod;
 /// </summary>
 internal sealed class OpaqueRefStore
 {
+    private const int TokenGenerationAttempts = 8;
     private readonly string _modInstanceId;
+    private readonly Func<string> _tokenFactory;
     private readonly ConditionalWeakTable<object, Dictionary<BindingKey, Binding>> _byIdentity = new();
-    private readonly Dictionary<string, Binding> _byToken = new(StringComparer.Ordinal);
-    private readonly ConditionalWeakTable<GameLocation, Dictionary<LogicalKey, object>> _logicalIdentities = new();
+    private readonly Dictionary<string, IOpaqueBinding> _byToken = new(StringComparer.Ordinal);
+    private readonly InventoryItemBindingStore _inventoryItems = new();
+    private readonly ConditionalWeakTable<object, Dictionary<LogicalKey, object>> _logicalIdentities = new();
 
-    public OpaqueRefStore(string modInstanceId)
+    public OpaqueRefStore(string modInstanceId, Func<string>? tokenFactory = null)
     {
         OpaqueRefTokenCodec.ValidateInstanceId(modInstanceId);
         _modInstanceId = modInstanceId;
+        _tokenFactory = tokenFactory ?? (() => OpaqueRefTokenCodec.NewToken(_modInstanceId));
     }
 
     public Ref GetOrCreate(
@@ -49,8 +53,8 @@ internal sealed class OpaqueRefStore
             current.Stale = true;
         }
 
-        var token = OpaqueRefTokenCodec.NewToken(_modInstanceId);
-        var binding = new Binding(token, target, location, kind, locatorKind, x, y, guard);
+        var token = CreateUniqueToken();
+        var binding = new Binding(token, target, location, kind, locatorKind, x, y, guard, role);
         bindings[bindingKey] = binding;
         _byToken.Add(token, binding);
         return new Ref { Value = token };
@@ -68,28 +72,174 @@ internal sealed class OpaqueRefStore
         return identity;
     }
 
-    public RefResolution Resolve(Ref reference, RefKind expectedKind, out object? target)
+    public Ref ObserveInventoryItem(
+        IInventoryRefOwner owner,
+        int slot,
+        object target,
+        string guard
+    )
     {
+        ArgumentNullException.ThrowIfNull(owner);
+        ArgumentNullException.ThrowIfNull(target);
+        if (slot < 0)
+            throw new ArgumentOutOfRangeException(nameof(slot));
+        var binding = _inventoryItems.Observe(
+            owner,
+            slot,
+            target,
+            guard,
+            CreateUniqueToken
+        );
+        if (_byToken.TryGetValue(binding.Token, out var registered))
+        {
+            if (!ReferenceEquals(registered, binding))
+                throw new InvalidOperationException("Ref token 冲突");
+        }
+        else
+        {
+            _byToken.Add(binding.Token, binding);
+        }
+        return new Ref { Value = binding.Token };
+    }
+
+    public void ObserveEmptyInventorySlot(IInventoryRefOwner owner, int slot)
+    {
+        _inventoryItems.ObserveEmpty(owner, slot);
+    }
+
+    public void CompleteInventoryObservation(IInventoryRefOwner owner, int capacity)
+    {
+        _inventoryItems.Complete(owner, capacity);
+    }
+
+    public RefResolution Resolve(
+        Ref reference,
+        IReadOnlySet<RefKind> allowedKinds,
+        out ResolvedOpaqueRef? resolved
+    )
+    {
+        var resolution = ResolveAllowedKinds(
+            reference,
+            allowedKinds,
+            out var binding,
+            out var target
+        );
+        resolved = null;
+        if (resolution.Status != RefStatus.Resolved
+            || binding is not Binding contextual
+            || target is null
+            || !contextual.TryGetLocation(out var location))
+            return resolution;
+        resolved = new ResolvedOpaqueRef(
+            target,
+            contextual.Kind,
+            location,
+            contextual.LocatorKind,
+            contextual.X,
+            contextual.Y,
+            contextual.Guard,
+            contextual.Role
+        );
+        return resolution;
+    }
+
+    public InventoryItemResolveResult ResolveInventoryItem(Ref reference)
+    {
+        try
+        {
+            var resolution = ResolveCore(
+                reference,
+                kind => kind == RefKind.InventoryItem,
+                out var binding,
+                out var target
+            );
+            var status = resolution.Status switch
+            {
+                RefStatus.Resolved => InventoryItemResolveStatus.Resolved,
+                RefStatus.Stale => InventoryItemResolveStatus.Stale,
+                RefStatus.NotFound => InventoryItemResolveStatus.NotFound,
+                RefStatus.Unsupported => InventoryItemResolveStatus.Unsupported,
+                _ => InventoryItemResolveStatus.Unavailable,
+            };
+            InventoryItemRefTarget? resolved = null;
+            if (status == InventoryItemResolveStatus.Resolved)
+            {
+                if (binding is not InventoryItemBinding itemBinding || target is null)
+                {
+                    return new InventoryItemResolveResult(
+                        InventoryItemResolveStatus.Unavailable,
+                        RefKind.InventoryItem,
+                        new Error { Code = ErrorCode.Internal, Message = "当前 Item Ref 绑定不可用" },
+                        null
+                    );
+                }
+                resolved = new InventoryItemRefTarget(
+                    target,
+                    itemBinding.Slot,
+                    itemBinding.Provenance
+                );
+            }
+            return new InventoryItemResolveResult(
+                status,
+                resolution.Kind,
+                resolution.Error,
+                resolved
+            );
+        }
+        catch (OpaqueRefUnavailableException)
+        {
+            return new InventoryItemResolveResult(
+                InventoryItemResolveStatus.Unavailable,
+                RefKind.InventoryItem,
+                new Error { Code = ErrorCode.Internal, Message = "当前 Item Ref 事实不可用" },
+                null
+            );
+        }
+    }
+
+    internal RefResolution ResolveAllowedKinds(
+        Ref reference,
+        IReadOnlySet<RefKind> allowedKinds,
+        out IOpaqueBinding? binding,
+        out object? target
+    )
+    {
+        return ResolveCore(reference, allowedKinds.Contains, out binding, out target);
+    }
+
+    private RefResolution ResolveCore(
+        Ref reference,
+        Func<RefKind, bool> kindAllowed,
+        out IOpaqueBinding? binding,
+        out object? target
+    )
+    {
+        binding = null;
         target = null;
         if (reference is null || string.IsNullOrEmpty(reference.Value))
             return Resolution(reference, RefStatus.NotFound, RefKind.Unspecified, ErrorCode.NotFound, "Ref 不存在");
-        var tokenKnown = _byToken.TryGetValue(reference.Value, out var binding);
+        var tokenKnown = _byToken.TryGetValue(reference.Value, out binding);
         var tokenDecision = OpaqueRefTokenCodec.Decide(reference.Value, _modInstanceId, tokenKnown);
         if (tokenDecision == OpaqueRefLookupDecision.Stale)
             return Resolution(reference, RefStatus.Stale, RefKind.Unspecified, ErrorCode.StaleRef, "Ref 来自已失效的 Mod 实例");
         if (tokenDecision != OpaqueRefLookupDecision.Lookup || binding is null)
             return Resolution(reference, RefStatus.NotFound, RefKind.Unspecified, ErrorCode.NotFound, "Ref 不存在");
 
-        if (binding.Stale || !binding.TryGetCurrent(out target))
+        if (!kindAllowed(binding.Kind))
+            return Resolution(reference, RefStatus.Unsupported, binding.Kind, ErrorCode.InvalidArgument, "Ref 类型不匹配");
+        if (binding.Stale)
+        {
+            target = null;
+            return Resolution(reference, RefStatus.Stale, binding.Kind, ErrorCode.StaleRef, "Ref 已失效");
+        }
+        var current = binding.ResolveCurrent(out target);
+        if (current == OpaqueBindingCurrentStatus.Unavailable)
+            throw new OpaqueRefUnavailableException();
+        if (current == OpaqueBindingCurrentStatus.Stale)
         {
             binding.Stale = true;
             target = null;
             return Resolution(reference, RefStatus.Stale, binding.Kind, ErrorCode.StaleRef, "Ref 已失效");
-        }
-        if (binding.Kind != expectedKind)
-        {
-            target = null;
-            return Resolution(reference, RefStatus.Unsupported, binding.Kind, ErrorCode.InvalidArgument, "Ref 类型不匹配");
         }
         return new RefResolution
         {
@@ -113,7 +263,21 @@ internal sealed class OpaqueRefStore
         Error = new Error { Code = code, Message = message },
     };
 
-    private sealed class Binding
+    private string CreateUniqueToken()
+    {
+        for (var attempt = 0; attempt < TokenGenerationAttempts; attempt++)
+        {
+            var token = _tokenFactory();
+            if (OpaqueRefTokenCodec.Classify(token, _modInstanceId)
+                    != OpaqueRefTokenScope.CurrentInstance)
+                throw new InvalidOperationException("Ref token 生成器返回了无效 token");
+            if (!_byToken.ContainsKey(token))
+                return token;
+        }
+        throw new InvalidOperationException("无法生成唯一 Ref token");
+    }
+
+    private sealed class Binding : IOpaqueBinding
     {
         private readonly WeakReference<object> _target;
         private readonly WeakReference<GameLocation> _location;
@@ -128,7 +292,8 @@ internal sealed class OpaqueRefStore
             RefLocatorKind locatorKind,
             int x,
             int y,
-            string guard
+            string guard,
+            string role
         )
         {
             Token = token;
@@ -140,11 +305,14 @@ internal sealed class OpaqueRefStore
             X = x;
             Y = y;
             _guard = guard;
+            Role = role;
         }
 
         public string Token { get; }
         public RefKind Kind { get; }
         public RefLocatorKind LocatorKind { get; }
+        public string Guard => _guard;
+        public string Role { get; }
         public int X { get; set; }
         public int Y { get; set; }
         public bool Stale { get; set; }
@@ -181,49 +349,60 @@ internal sealed class OpaqueRefStore
             return true;
         }
 
-        public bool TryGetCurrent(out object? target)
+        public OpaqueBindingCurrentStatus ResolveCurrent(out object? target)
         {
             target = null;
-            if (!_target.TryGetTarget(out var candidate))
-                return false;
-            if (!_location.TryGetTarget(out var boundLocation))
-                return false;
-            GameLocation? location = boundLocation;
-            if (LocatorKind == RefLocatorKind.Character)
+            try
             {
-                var currentLocation = candidate switch
+                if (!_target.TryGetTarget(out var candidate))
+                    return OpaqueBindingCurrentStatus.Stale;
+                if (!_location.TryGetTarget(out var boundLocation))
+                    return OpaqueBindingCurrentStatus.Stale;
+                GameLocation? location = boundLocation;
+                if (LocatorKind == RefLocatorKind.Character)
                 {
-                    NPC npc => npc.currentLocation,
-                    FarmAnimal animal => animal.currentLocation,
-                    _ => null,
-                };
-                if (currentLocation is null
-                    || !LoadedLocationInstancePolicy.AllowsCharacterMove(
-                        _locationId,
-                        boundLocation,
-                        currentLocation.NameOrUniqueName,
-                        currentLocation,
-                        GameLocationIdentity.EnumerateLoadedInstances()
-                    ))
-                    return false;
-                location = currentLocation;
-                if (!ReferenceEquals(boundLocation, currentLocation))
-                {
-                    _location.SetTarget(currentLocation);
-                    _locationId = currentLocation.NameOrUniqueName;
+                    var currentLocation = candidate switch
+                    {
+                        NPC npc => npc.currentLocation,
+                        FarmAnimal animal => animal.currentLocation,
+                        _ => null,
+                    };
+                    if (currentLocation is null
+                        || !LoadedLocationInstancePolicy.AllowsCharacterMove(
+                            _locationId,
+                            boundLocation,
+                            currentLocation.NameOrUniqueName,
+                            currentLocation,
+                            GameLocationIdentity.EnumerateLoadedInstances()
+                        ))
+                        return OpaqueBindingCurrentStatus.Stale;
+                    location = currentLocation;
+                    if (!ReferenceEquals(boundLocation, currentLocation))
+                    {
+                        _location.SetTarget(currentLocation);
+                        _locationId = currentLocation.NameOrUniqueName;
+                    }
                 }
+                else if (!LoadedLocationInstancePolicy.IsCurrent(
+                    _locationId,
+                    boundLocation,
+                    GameLocationIdentity.EnumerateLoadedInstances()
+                ))
+                    return OpaqueBindingCurrentStatus.Stale;
+                if (!IsStillAttached(candidate, location))
+                    return OpaqueBindingCurrentStatus.Stale;
+                target = candidate;
+                return OpaqueBindingCurrentStatus.Resolved;
             }
-            else if (!LoadedLocationInstancePolicy.IsCurrent(
-                _locationId,
-                boundLocation,
-                GameLocationIdentity.EnumerateLoadedInstances()
-            ))
-                return false;
-            if (!IsStillAttached(candidate, location))
-                return false;
-            target = candidate;
-            return true;
+            catch
+            {
+                target = null;
+                return OpaqueBindingCurrentStatus.Unavailable;
+            }
         }
+
+        public bool TryGetLocation(out GameLocation location) =>
+            _location.TryGetTarget(out location!);
 
         private bool IsStillAttached(object target, GameLocation location)
         {
@@ -253,6 +432,69 @@ internal sealed class OpaqueRefStore
     private readonly record struct LogicalKey(RefLocatorKind Kind, int X, int Y);
     private readonly record struct BindingKey(RefKind Kind, string Role);
 }
+
+internal interface IInventoryRefOwner
+{
+    InventoryItemProvenance Provenance { get; }
+    bool TryGetIdentity(out object identity);
+    InventorySlotLookup ResolveCurrentSlot(int slot);
+}
+
+internal enum InventorySlotLookupStatus
+{
+    Resolved,
+    Stale,
+    Unavailable,
+}
+
+internal readonly record struct InventorySlotLookup(
+    InventorySlotLookupStatus Status,
+    object? Target = null,
+    string Guard = ""
+);
+
+internal enum InventoryItemProvenance
+{
+    Player,
+    Container,
+}
+
+internal sealed record InventoryItemRefTarget(
+    object Target,
+    int Slot,
+    InventoryItemProvenance Provenance
+);
+
+internal enum InventoryItemResolveStatus
+{
+    Resolved,
+    Stale,
+    NotFound,
+    Unsupported,
+    Unavailable,
+}
+
+internal sealed record InventoryItemResolveResult(
+    InventoryItemResolveStatus Status,
+    RefKind Kind,
+    Error? Error,
+    InventoryItemRefTarget? Target
+);
+
+internal sealed class OpaqueRefUnavailableException : Exception
+{
+}
+
+internal sealed record ResolvedOpaqueRef(
+    object Target,
+    RefKind Kind,
+    GameLocation Location,
+    RefLocatorKind LocatorKind,
+    int X,
+    int Y,
+    string Guard,
+    string Role
+);
 
 internal static class OpaqueRefTokenCodec
 {
@@ -382,6 +624,9 @@ internal static class GameLocationIdentity
         );
         return match;
     }
+
+    public static bool IsCurrent(string locationId, GameLocation instance) =>
+        LoadedLocationInstancePolicy.IsCurrent(locationId, instance, EnumerateLoadedInstances());
 
     public static IEnumerable<(string LocationId, object Instance)> EnumerateLoadedInstances()
     {
