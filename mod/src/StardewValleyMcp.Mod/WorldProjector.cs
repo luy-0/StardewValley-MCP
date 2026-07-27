@@ -288,6 +288,12 @@ internal static class WorldProjector
     /// The caller-owned Ref remains authoritative; a changed identity guard is surfaced as
     /// stale instead of silently returning a newly signed Ref.
     /// </summary>
+    /// <remarks>
+    /// 当前实现让 inspect 与 query_world 返回同一层级的 WorldEntityFact。这保证了
+    /// Ref 解析链路一致，但尚未满足“inspect 返回更丰富对象详情”的长期目标。未来
+    /// 应将这里拆到 inspect-only detail projector：query_world 保持轻量 discovery/index，
+    /// inspect 针对少量 Ref 补充更昂贵或更细的动作相关事实。
+    /// </remarks>
     public static WorldEntityFact ProjectResolvedEntity(
         ResolvedOpaqueRef resolved,
         Ref reference,

@@ -11,6 +11,15 @@ namespace StardewValleyMcp.Mod;
 /// the in-memory binding and verifies that the original runtime object is still attached
 /// to the same location collection.
 /// </summary>
+/// <remarks>
+/// 当前 V1 观察切片的已知限制：
+/// <list type="bullet">
+/// <item>Ref 只在单个 Mod 进程内有效。游戏重启或 Mod 重载后，客户端必须把旧 Ref 视为 stale 并重新查询 Snapshot。</item>
+/// <item>Token 索引目前没有 TTL 或容量策略。长时间会话观察大量不同对象时，stale binding 会保留到进程退出。</item>
+/// <item>部分世界实体依赖运行时对象身份、Location、Tile 与 Guard 校验。这比解析公开字符串更严格，但无法在游戏重建等价对象后恢复身份。</item>
+/// <item>Door 等逻辑身份 Ref 绑定在 Location 与 Tile 级身份上，适合同一已加载世界内的 inspect 和后续动作，不是持久存档级 ID。</item>
+/// </list>
+/// </remarks>
 internal sealed class OpaqueRefStore
 {
     private const int TokenGenerationAttempts = 8;

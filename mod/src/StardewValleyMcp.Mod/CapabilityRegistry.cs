@@ -1,7 +1,7 @@
 using StardewValleyMcp.Protocol.V1;
 
 namespace StardewValleyMcp.Mod;
-
+# 目前阶段, 没有把 capability 抽象成更复杂的 class hierarchy，比如 ReadOnlyCapability、LongRunningCapability、MutationCapability。原因是当前阶段只实现观察能力，过早拆层会让接口为了未来猜测变重。长期动作、瞬时动作、查询动作的差异现在放在 CapabilityDescriptor 里，也就是 side_effect、execution、cancellable、timeout、scope、risk、destructive 这些字段。等后续 做 mutating 和 long-running 时，再让运行时根据 descriptor 扩展状态处理，而不是直接按照当前设计的路径继续依赖, 需要在运行时里做 capability 的分类。
 internal sealed class CapabilityRegistry
 {
     private readonly IReadOnlyDictionary<CommandRequest.OperationOneofCase, RegisteredCapability> _byOperation;

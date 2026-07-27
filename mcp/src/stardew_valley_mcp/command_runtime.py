@@ -45,7 +45,7 @@ def _error(command_id: str, error: common_pb2.Error) -> dict[str, object]:
     status, code, retryable = _ERRORS.get(error.code, ("failed", "upstream_protocol_error", False))
     return {"status": status, "commandId": command_id, "error": {"code": code, "message": error.message[:512] or "Mod 返回错误", "retryable": retryable}}
 
-
+# TODO： 当前 Python CommandRuntime 只完整处理了 ACCEPTED → SUCCEEDED/FAILED/CANCELLED/TIMED_OUT 说明阶段 3 还没有实现长期动作的进度事件消费。长期动作如 navigate/interact/use_tool 已在 manifest 中标为 long_running/cancellable，但 Python Runtime 还没有实现 RUNNING 进度、取消请求、状态查询的 MCP 暴露
 class CommandRuntime:
     def __init__(
         self,
@@ -131,7 +131,7 @@ class CommandRuntime:
                             return result
                         if event.state in {capabilities_pb2.COMMAND_STATE_FAILED, capabilities_pb2.COMMAND_STATE_CANCELLED, capabilities_pb2.COMMAND_STATE_TIMED_OUT} and event.WhichOneof("outcome") == "error":
                             return _error(command_id, event.error)
-                        raise ProtocolError("命令终态无效")
+                        raise ProtocolError("命令终态无效") 
             except (OSError, asyncio.IncompleteReadError, asyncio.TimeoutError):
                 await self._connection.close()
                 if accepted:
