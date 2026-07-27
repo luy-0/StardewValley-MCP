@@ -106,6 +106,7 @@ class TransportConnection:
         self._sequence = 0
         self._seen: set[str] = set()
         self._lock = asyncio.Lock()
+        self._write_lock = asyncio.Lock()
         self.snapshot: transport_pb2.CapabilitySnapshot | None = None
 
     async def connect(self) -> transport_pb2.CapabilitySnapshot:
@@ -125,14 +126,15 @@ class TransportConnection:
                 client_hello.resume_session_id = self._session_id
             client_hello.auth_tag = client_auth_tag(self._config.secret, hello.mod_instance_id, self._client_id, hello.server_nonce, nonce, self._session_id)
             request_id = self.next_message_id()
-            await write_frame(self._writer, transport_pb2.TransportFrame(message_id=request_id, reply_to=hello_frame.message_id, client_hello=client_hello))
+            async with self._write_lock:
+                await write_frame(self._writer, transport_pb2.TransportFrame(message_id=request_id, reply_to=hello_frame.message_id, client_hello=client_hello))
             ready_frame = await read_frame(self._reader)
             if ready_frame.WhichOneof("body") == "handshake_rejected":
                 raise ProtocolError("握手被拒绝")
             if ready_frame.WhichOneof("body") != "server_ready" or ready_frame.HasField("fence") or ready_frame.reply_to != request_id:
                 raise ProtocolError("需要 ServerReady")
             ready = ready_frame.server_ready
-            if (ready.selected_version.major, ready.selected_version.minor) != (1, 0) or not hmac.compare_digest(ready.auth_tag, server_auth_tag(self._config.secret, hello.mod_instance_id, self._client_id, hello.server_nonce, nonce, ready)):
+            if (ready.selected_version.major, ready.selected_version.minor) != (1, 0) or ready.result_retention_ms < 300_000 or ready.reconnect_grace_ms < 10_000 or not hmac.compare_digest(ready.auth_tag, server_auth_tag(self._config.secret, hello.mod_instance_id, self._client_id, hello.server_nonce, nonce, ready)):
                 raise ProtocolError("ServerReady 无效")
             self._session_id, self._lease_epoch, self._digest = ready.session_id, ready.lease_epoch, ready.capability_snapshot.digest
             self._seen = {hello_frame.message_id, ready_frame.message_id}
@@ -149,7 +151,10 @@ class TransportConnection:
     async def send_authenticated(self, frame: transport_pb2.TransportFrame) -> None:
         if self._writer is None:
             raise ProtocolError("连接未认证")
-        await write_frame(self._writer, frame)
+        async with self._write_lock:
+            if self._writer is None:
+                raise ProtocolError("连接未认证")
+            await write_frame(self._writer, frame)
 
     async def receive_authenticated(self) -> transport_pb2.TransportFrame:
         if self._reader is None:

@@ -30,8 +30,12 @@ internal sealed class CapabilityRegistry
         var byOperation = new Dictionary<CommandRequest.OperationOneofCase, RegisteredCapability>();
         foreach (var handler in handlers)
         {
-            var descriptor = CapabilityCatalog.GetObservationDescriptor(handler.Id);
+            var descriptor = CapabilityCatalog.GetDescriptor(handler.Id);
             CapabilityRegistrationContract.Validate(handler.Id, handler.Operation, descriptor);
+            if (descriptor.Execution == ExecutionMode.Immediate && handler is not IImmediateCapabilityHandler)
+                throw new InvalidOperationException($"immediate capability 必须实现 IImmediateCapabilityHandler: {handler.Id}");
+            if (descriptor.Execution == ExecutionMode.LongRunning && handler is not ILongRunningCapabilityHandler)
+                throw new InvalidOperationException($"long-running capability 必须实现 ILongRunningCapabilityHandler: {handler.Id}");
             var registration = new RegisteredCapability(handler, descriptor);
             if (!byId.TryAdd(handler.Id, registration))
                 throw new InvalidOperationException($"重复 capability id: {handler.Id}");

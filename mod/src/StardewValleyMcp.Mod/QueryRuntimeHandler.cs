@@ -4,7 +4,7 @@ using StardewValleyMcp.Protocol.V1;
 
 namespace StardewValleyMcp.Mod;
 
-internal sealed class QueryRuntimeHandler : ICapabilityHandler
+internal sealed class QueryRuntimeHandler : IImmediateCapabilityHandler
 {
     public string Id => "query_runtime";
 

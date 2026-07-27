@@ -19,6 +19,32 @@ def test_package_has_one_generated_catalog_and_no_single_tool_json() -> None:
     assert not list(PACKAGE.glob("*_tool.json"))
 
 
+def test_command_runtime_is_the_only_authenticated_frame_reader() -> None:
+    runtime = (PACKAGE / "command_runtime.py").read_text()
+    client = (PACKAGE / "client.py").read_text()
+    server = (PACKAGE / "server.py").read_text()
+
+    assert runtime.count("receive_authenticated()") == 1
+    assert "receive_authenticated(" not in client
+    assert "receive_authenticated(" not in server
+
+
+def test_client_operation_mapping_comes_from_command_request_descriptor() -> None:
+    source = (PACKAGE / "client.py").read_text()
+
+    assert "CommandRequest.DESCRIPTOR.fields_by_name" in source
+    assert "GetMessageClass(field.message_type)" in source
+    assert "request_classes" not in source
+    assert "queries_pb2" not in source
+
+
+def test_catalog_support_set_is_not_hardcoded_to_observation_capabilities() -> None:
+    source = (PACKAGE / "catalog.py").read_text()
+
+    assert "OBSERVATION_POLICY" not in source
+    assert "frozenset(self._capabilities)" in source
+
+
 def test_query_inventory_uses_registry_without_transport_or_server_branch() -> None:
     registry = (MOD / "CapabilityRegistry.cs").read_text()
     transport = (PACKAGE / "transport.py").read_text()

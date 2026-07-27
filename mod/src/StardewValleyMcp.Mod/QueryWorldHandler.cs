@@ -5,7 +5,7 @@ using StardewValleyMcp.Protocol.V1;
 
 namespace StardewValleyMcp.Mod;
 
-internal sealed class QueryWorldHandler : ICapabilityHandler
+internal sealed class QueryWorldHandler : IImmediateCapabilityHandler
 {
     private const uint DefaultMaximum = 256;
     private readonly OpaqueRefStore _refs;

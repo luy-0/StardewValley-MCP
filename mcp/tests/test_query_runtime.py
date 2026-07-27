@@ -12,9 +12,9 @@ from google.protobuf import json_format
 from jsonschema import Draft202012Validator
 from mcp import ClientSession
 
-from stardew_valley_mcp.protocol import capabilities_pb2, queries_pb2, transport_pb2
+from stardew_valley_mcp.protocol import capabilities_pb2, common_pb2, queries_pb2, transport_pb2
 from stardew_valley_mcp.catalog import Catalog, CatalogPolicy, descriptor_digest
-from stardew_valley_mcp.client import StardewClient
+from stardew_valley_mcp.client import StardewClient, _operation_for
 from stardew_valley_mcp.command_runtime import CommandRuntime
 from stardew_valley_mcp.projection import project_message
 from stardew_valley_mcp.server import create_server
@@ -23,6 +23,7 @@ from stardew_valley_mcp.transport import (
     client_auth_tag,
     read_frame,
     server_auth_tag,
+    ProtocolError,
     TransportConnection,
     write_frame,
 )
@@ -60,6 +61,59 @@ def test_hmac_and_capability_digest_match_public_fixtures() -> None:
         base64.b64decode(vector["clientNonceBase64"]),
         ready,
     ) == base64.b64decode(vector["serverAuthTagBase64"])
+
+
+def test_handshake_rejects_server_ready_below_recovery_retention_minimums() -> None:
+    async def rejects(field: str, value: int) -> None:
+        async def handle(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
+            try:
+                hello = transport_pb2.TransportFrame(
+                    message_id="s-1",
+                    server_hello=transport_pb2.ServerHello(
+                        version=transport_pb2.ProtocolVersion(major=1, minor=0),
+                        mod_instance_id="d0b63f0c-2b4e-4c10-9d20-1234567890ab",
+                        server_nonce=bytes(range(32, 64)),
+                    ),
+                )
+                await write_frame(writer, hello)
+                client_frame = await read_frame(reader)
+                ready_frame = fixture("server-ready.json")
+                ready_frame.message_id = "s-2"
+                ready_frame.reply_to = client_frame.message_id
+                setattr(ready_frame.server_ready, field, value)
+                ready_frame.server_ready.auth_tag = server_auth_tag(
+                    SECRET,
+                    hello.server_hello.mod_instance_id,
+                    client_frame.client_hello.client_instance_id,
+                    hello.server_hello.server_nonce,
+                    client_frame.client_hello.client_nonce,
+                    ready_frame.server_ready,
+                )
+                await write_frame(writer, ready_frame)
+            finally:
+                writer.close()
+                await writer.wait_closed()
+
+        server = await asyncio.start_server(handle, "127.0.0.1", 0)
+        port = server.sockets[0].getsockname()[1]
+        connection = TransportConnection(ConnectionConfig("127.0.0.1", port, SECRET))
+        try:
+            try:
+                await connection.connect()
+            except ProtocolError:
+                pass
+            else:
+                raise AssertionError(f"{field} 低于下限必须拒绝")
+        finally:
+            await connection.close()
+            server.close()
+            await server.wait_closed()
+
+    async def exercise() -> None:
+        await rejects("result_retention_ms", 299_999)
+        await rejects("reconnect_grace_ms", 9_999)
+
+    asyncio.run(exercise())
 
 
 async def run_query(terminal_fixture: str) -> dict[str, object]:
@@ -191,6 +245,34 @@ def test_catalog_rejects_unknown_mod_capability_and_injects_scope_policy() -> No
     assert Catalog.load(denied).tools_for(ready.server_ready.capability_snapshot) == []
 
 
+def test_announced_action_enters_tools_through_catalog_snapshot_and_scope_intersection() -> None:
+    ready = transport_pb2.TransportFrame()
+    json_format.Parse((OBSERVATION_FIXTURES / "server-ready.json").read_text(), ready)
+    snapshot = ready.server_ready.capability_snapshot
+    snapshot.capabilities.add(
+        id="face",
+        contract_version="1.0.0",
+        side_effect=transport_pb2.SIDE_EFFECT_MUTATING,
+        execution=transport_pb2.EXECUTION_MODE_LONG_RUNNING,
+        cancellable=True,
+        default_timeout_ms=5_000,
+        max_timeout_ms=15_000,
+        request_type="FaceRequest",
+        result_type="FaceResult",
+        required_scope="game:write",
+        destructive=False,
+    )
+    snapshot.digest = descriptor_digest(snapshot.capabilities)
+
+    read_only = Catalog.load().tools_for(snapshot)
+    read_write = Catalog.load(
+        CatalogPolicy(None, frozenset({"game:read", "game:write"}))
+    ).tools_for(snapshot)
+
+    assert "stardew_face" not in {tool.name for tool in read_only}
+    assert "stardew_face" in {tool.name for tool in read_write}
+
+
 def test_catalog_unknown_enum_number_is_stable_value_error() -> None:
     ready = transport_pb2.TransportFrame()
     json_format.Parse((OBSERVATION_FIXTURES / "server-ready.json").read_text(), ready)
@@ -229,6 +311,13 @@ def test_local_invalid_arguments_has_command_id_and_matches_output_schema() -> N
     Draft202012Validator(Catalog.load().tool("query_runtime").outputSchema).validate(result)
 
 
+def test_operation_factory_builds_action_request_from_command_descriptor() -> None:
+    operation = _operation_for("face", {"direction": "left"})
+
+    assert operation.DESCRIPTOR.name == "FaceRequest"
+    assert operation.direction == common_pb2.DIRECTION_LEFT
+
+
 def test_silent_tcp_peer_cannot_hang_discovery_or_execute() -> None:
     async def exercise() -> None:
         async def silent(reader: asyncio.StreamReader, writer: asyncio.StreamWriter) -> None:
@@ -261,6 +350,7 @@ class _FakeConnection:
         self.snapshot = snapshot
         self.frames = list(frames)
         self.closed = False
+        self._sent = asyncio.Event()
 
     async def connect(self):
         return self.snapshot
@@ -275,10 +365,13 @@ class _FakeConnection:
         return transport_pb2.SessionFence()
 
     async def send_authenticated(self, frame):
-        return None
+        self._sent.set()
 
     async def receive_authenticated(self):
-        return self.frames.pop(0)
+        await self._sent.wait()
+        if self.frames:
+            return self.frames.pop(0)
+        await asyncio.Future()
 
 
 def test_typed_request_mismatch_is_schema_valid_upstream_error() -> None:
@@ -327,6 +420,7 @@ def test_success_with_empty_location_id_is_rejected_and_connection_closed() -> N
         (OBSERVATION_FIXTURES / "query-world.success-complete.json").read_text(),
         terminal,
     )
+    terminal.reply_to = "c-1"
     terminal.command_event.command_id = command_id
     terminal.command_event.result.query_world.snapshot.area.location_id = ""
     connection = _FakeConnection(ready.server_ready.capability_snapshot, [accepted, terminal])
@@ -358,6 +452,7 @@ def test_success_missing_required_fact_is_rejected_and_connection_closed() -> No
         ),
     )
     terminal = fixture("query-runtime.succeeded.json")
+    terminal.reply_to = "c-1"
     terminal.command_event.command_id = command_id
     terminal.command_event.result.query_runtime.ClearField("snapshot")
     connection = _FakeConnection(snapshot, [accepted, terminal])

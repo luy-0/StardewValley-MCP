@@ -81,7 +81,7 @@ public sealed class BootstrapFixtureTests
     [Test]
     public void RegisteredQueryRuntimeDescriptorMatchesBootstrapDigest()
     {
-        var descriptor = CapabilityCatalog.GetObservationDescriptor("query_runtime");
+        var descriptor = CapabilityCatalog.GetDescriptor("query_runtime");
         var snapshot = CapabilityCatalog.CreateSnapshotFor(new[] { descriptor.Id });
         Assert.That(snapshot.Digest, Is.EqualTo(Digest));
         Assert.That(snapshot.Capabilities, Has.Count.EqualTo(1));

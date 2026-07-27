@@ -37,13 +37,17 @@ def create_server(client: Any) -> Server:
 
 
 async def run_stdio(config: ConnectionConfig) -> None:
-    server = create_server(StardewClient(config))
-    async with stdio_server() as (read_stream, write_stream):
-        await server.run(
-            read_stream,
-            write_stream,
-            server.create_initialization_options(NotificationOptions(), {}),
-        )
+    client = StardewClient(config)
+    server = create_server(client)
+    try:
+        async with stdio_server() as (read_stream, write_stream):
+            await server.run(
+                read_stream,
+                write_stream,
+                server.create_initialization_options(NotificationOptions(), {}),
+            )
+    finally:
+        await client.aclose()
 
 
 def main() -> int:

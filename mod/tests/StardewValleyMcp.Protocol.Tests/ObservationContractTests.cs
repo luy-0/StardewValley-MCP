@@ -8,23 +8,17 @@ public sealed class ObservationContractTests
     private const string Digest = "14664e95bbeb39b4c0ab235a5a7b3bf9df8fa2f702e66e1157b23dd4082f2994";
 
     [Test]
-    public void ObservationDescriptorsMatchStageThreeCatalog()
+    public void GeneratedCatalogContainsAllPublicDescriptors()
     {
-        var snapshot = CapabilityCatalog.CreateObservationSnapshot();
-        Assert.That(snapshot.Digest, Is.EqualTo(Digest));
-        Assert.That(snapshot.Capabilities.Select(item => item.Id), Is.EqualTo(new[]
+        var snapshot = CapabilityCatalog.CreateSnapshotFor(new[]
         {
-            "inspect", "query_inventory", "query_runtime", "query_ui", "query_world",
-        }));
-        Assert.That(snapshot.Capabilities.All(item =>
-            item.ContractVersion == "1.0.0"
-            && item.SideEffect == SideEffect.ReadOnly
-            && item.Execution == ExecutionMode.Immediate
-            && !item.Cancellable
-            && item.RequiredScope == "game:read"
-            && !item.Destructive
-            && item.Risks.Count == 0
-        ), Is.True);
+            "say", "emote", "face", "navigate", "interact", "use_tool", "equip", "open_menu", "activate_ui", "close_menu",
+            "query_runtime", "query_world", "query_inventory", "query_ui", "inspect",
+        });
+        Assert.That(snapshot.Capabilities, Has.Count.EqualTo(15));
+        Assert.That(snapshot.Capabilities.Single(item => item.Id == "say").Execution, Is.EqualTo(ExecutionMode.Immediate));
+        Assert.That(snapshot.Capabilities.Single(item => item.Id == "face").Execution, Is.EqualTo(ExecutionMode.LongRunning));
+        Assert.That(snapshot.Capabilities.Single(item => item.Id == "query_runtime").RequiredScope, Is.EqualTo("game:read"));
     }
 
     [Test]
@@ -38,7 +32,7 @@ public sealed class ObservationContractTests
     [Test]
     public void CapabilityRegistrationMatchesIdOperationAndRequestType()
     {
-        var descriptor = CapabilityCatalog.GetObservationDescriptor("query_runtime");
+        var descriptor = CapabilityCatalog.GetDescriptor("query_runtime");
 
         Assert.DoesNotThrow(() => CapabilityRegistrationContract.Validate(
             "query_runtime",
@@ -50,7 +44,7 @@ public sealed class ObservationContractTests
     [Test]
     public void CapabilityRegistrationRejectsMismatchedIdOperationOrRequestType()
     {
-        var descriptor = CapabilityCatalog.GetObservationDescriptor("query_runtime");
+        var descriptor = CapabilityCatalog.GetDescriptor("query_runtime");
 
         Assert.Multiple(() =>
         {

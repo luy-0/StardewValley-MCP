@@ -2,7 +2,7 @@ using StardewValleyMcp.Protocol.V1;
 
 namespace StardewValleyMcp.Mod;
 
-internal sealed class InspectHandler : ICapabilityHandler
+internal sealed class InspectHandler : IImmediateCapabilityHandler
 {
     private readonly OpaqueRefStore _refs;
 

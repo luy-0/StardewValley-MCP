@@ -62,6 +62,6 @@ public sealed class ModEntry : StardewModdingAPI.Mod
 
     private void OnUpdateTicked(object? sender, UpdateTickedEventArgs eventArgs)
     {
-        _server?.ProcessOne();
+        _server?.Tick();
     }
 }

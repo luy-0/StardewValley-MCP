@@ -6,25 +6,13 @@ namespace StardewValleyMcp.Protocol.V1;
 
 public static class CapabilityCatalog
 {
-    private static readonly IReadOnlyDictionary<string, CapabilityDescriptor> ObservationDescriptors =
-        new Dictionary<string, CapabilityDescriptor>(StringComparer.Ordinal)
-        {
-            ["inspect"] = ReadOnlyImmediate("inspect", nameof(InspectRequest), nameof(InspectResult), 5_000, 15_000),
-            ["query_inventory"] = ReadOnlyImmediate("query_inventory", nameof(QueryInventoryRequest), nameof(QueryInventoryResult), 5_000, 15_000),
-            ["query_runtime"] = ReadOnlyImmediate("query_runtime", nameof(QueryRuntimeRequest), nameof(QueryRuntimeResult), 5_000, 15_000),
-            ["query_ui"] = ReadOnlyImmediate("query_ui", nameof(QueryUiRequest), nameof(QueryUiResult), 5_000, 15_000),
-            ["query_world"] = ReadOnlyImmediate("query_world", nameof(QueryWorldRequest), nameof(QueryWorldResult), 10_000, 30_000),
-        };
+    private static readonly IReadOnlyDictionary<string, CapabilityDescriptor> Descriptors =
+        CapabilityCatalogData.Create();
 
-    public static CapabilitySnapshot CreateObservationSnapshot()
+    public static CapabilityDescriptor GetDescriptor(string id)
     {
-        return CreateSnapshotFor(ObservationDescriptors.Keys);
-    }
-
-    public static CapabilityDescriptor GetObservationDescriptor(string id)
-    {
-        if (!ObservationDescriptors.TryGetValue(id, out var descriptor))
-            throw new ArgumentOutOfRangeException(nameof(id), id, "未定义的观察能力");
+        if (!Descriptors.TryGetValue(id, out var descriptor))
+            throw new ArgumentOutOfRangeException(nameof(id), id, "未定义的公共能力");
         return descriptor.Clone();
     }
 
@@ -32,27 +20,9 @@ public static class CapabilityCatalog
     {
         var descriptors = registeredIds.Select(id =>
         {
-            return GetObservationDescriptor(id);
+            return GetDescriptor(id);
         });
         return CreateSnapshot(descriptors);
-    }
-
-    private static CapabilityDescriptor ReadOnlyImmediate(string id, string requestType, string resultType, uint defaultTimeoutMs, uint maxTimeoutMs)
-    {
-        return new CapabilityDescriptor
-        {
-            Id = id,
-            ContractVersion = "1.0.0",
-            SideEffect = SideEffect.ReadOnly,
-            Execution = ExecutionMode.Immediate,
-            Cancellable = false,
-            DefaultTimeoutMs = defaultTimeoutMs,
-            MaxTimeoutMs = maxTimeoutMs,
-            RequestType = requestType,
-            ResultType = resultType,
-            RequiredScope = "game:read",
-            Destructive = false,
-        };
     }
 
     public static CapabilitySnapshot CreateSnapshot(IEnumerable<CapabilityDescriptor> descriptors)

@@ -1,6 +1,6 @@
 # 公开版本重写计划
 
-状态：**阶段 4 方案已冻结，下一步实现阶段 4.0 统一命令运行时**
+状态：**阶段 4.0 统一命令运行时已完成，下一步实现阶段 4.1 `face`**
 
 本计划定义如何以旧仓库已经验证的游戏行为为参考，重新实现一套适合公开发布、独立安装和长期维护的 Mod、MCP 服务端与 Skill 开发套件。它不是旧代码搬迁清单；旧仓库只提供行为证据、失败经验和测试素材，不是新版本的架构模板。
 
@@ -227,12 +227,16 @@ query_runtime, query_world, query_inventory, query_ui, inspect
 
 #### 开发顺序
 
-1. [ ] **阶段 4.0：运行时基础。** 生成全量 C# Descriptor 和通用 Python Request 映射；拆出 Mod Command Coordinator 与 MCP 事件分发；实现 `RUNNING`、Cancel、Status、Deadline、Result retention/Tombstone。用 fake immediate 与 fake staged execution 覆盖状态竞争，不提前实现游戏动作。
+1. [x] **阶段 4.0：运行时基础。** 生成全量 C# Descriptor 和通用 Python Request 映射；拆出 Mod Command Coordinator 与 MCP 事件分发；实现 `RUNNING`、Cancel、Status、Deadline、Result retention/Tombstone。用 fake immediate 与 fake staged execution 覆盖状态竞争，不提前实现游戏动作。
 2. [ ] **阶段 4.1：`face`。** 作为第一个低风险 staged slice，验证 `RUNNING`、取消、Deadline、输入清理和最终朝向。
 3. [ ] **阶段 4.2：`say → emote`。** 验证 immediate mutation、`game:write`、外部沟通风险，以及“效果开始即成功”而非等待动画结束。
 4. [ ] **阶段 4.3：`equip`。** 验证 Slot/Item Ref 二选一、Inventory Revision、玩家背包来源、空 Slot、stale Ref 与 no-op。
 5. [ ] **阶段 4.4：`open_menu → close_menu → activate_ui`。** 先建立可恢复的菜单开闭，再处理带 Revision 的元素激活；覆盖 UI Scale、Modal、旧 Revision、不可见/禁用元素和潜在破坏性操作。
 6. [ ] 每个 slice 均按 `Spec/Fixture → 唯一 Mod Handler → MCP 调用 → 自动化 → 单条实机验收` 完成后再进入下一项；失败立即停在当前 slice 取证，不批量执行七项动作。
+
+阶段 4.0 完成记录：2026-07-27，Mod 已将唯一接受点、幂等账本、单变更并发、主线程 immediate/staged 推进、Deadline、Cancel、Status、300 秒结果保留与进程期 Tombstone 收敛到独立 `CommandCoordinator`；`LocalServer` 只保留认证、Fence、控制帧路由和单一有界写出队列，并通过接受响应门闩保证 `ACCEPTED` 一定先于后续主动事件入队。MCP 已由唯一 Reader 按 `command_id` 与 `reply_to` 分发重复 `RUNNING`、终态和控制响应；客户端取消已接受的可取消调用时发送内部 Cancel，断线后只用原 Command ID 查询 Status，`found=false` 与结果过期均收敛为 `unknown`，不会重放命令。Manifest/Proto 现在确定性生成 15 项 C# Descriptor、完整 Tool Catalog，并通过 `CommandRequest` Descriptor 动态取得 Python Request 类型；默认仍只授权 `game:read`，显式加入 `game:write` 且 Mod 公告动作 Handler 后才会暴露动作 Tool。本阶段未实现任何真实动作 Handler，也未修改 V1 Proto。
+
+验证结果：生成检查与 Spec conformance 通过，跨语言生命周期 Fixture 覆盖 `RUNNING`、`CANCELLED`、`TIMED_OUT` 和过期 Tombstone；Python 59 项、Protocol 10 项、Mod 64 项测试通过，Transport Spike、公共边界扫描、MCP Wheel/源码包与 Mod ZIP 审计、`git diff --check` 全部通过。最终独立交叉审查未发现 P0/P1/P2，阶段 4.1 可以直接以 `face` 验证首个真实 staged action。
 
 阶段 4 明确不实现 `navigate`、`interact`、`use_tool`、复合农务、持久队列、多变更并发、公开命令历史 Tool 或进度百分比估算。这些要么属于阶段 5，要么不进入 Mod/MCP 原语层。
 

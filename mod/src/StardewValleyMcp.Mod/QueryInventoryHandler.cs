@@ -4,7 +4,7 @@ using StardewValleyMcp.Protocol.V1;
 
 namespace StardewValleyMcp.Mod;
 
-internal sealed class QueryInventoryHandler : ICapabilityHandler
+internal sealed class QueryInventoryHandler : IImmediateCapabilityHandler
 {
     private static readonly IReadOnlySet<RefKind> ContainerRefKinds = new HashSet<RefKind>
     {

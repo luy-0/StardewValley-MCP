@@ -5,12 +5,13 @@ from __future__ import annotations
 from typing import Any
 
 from google.protobuf.json_format import ParseError
+from google.protobuf.message_factory import GetMessageClass
 from jsonschema import Draft202012Validator, ValidationError
 
 from .catalog import Catalog
 from .command_runtime import CommandRuntime
 from .projection import parse_message
-from .protocol import queries_pb2
+from .protocol import capabilities_pb2
 from .transport import ConnectionConfig, TransportConnection
 
 
@@ -24,6 +25,9 @@ class StardewClient:
 
     async def query_runtime(self) -> dict[str, object]:
         return await self.call_tool("stardew_query_runtime", {})
+
+    async def aclose(self) -> None:
+        await self._runtime.aclose()
 
     async def call_tool(self, tool_name: str, arguments: dict[str, Any]) -> dict[str, object]:
         command_id = self._runtime.new_command_id()
@@ -42,15 +46,9 @@ class StardewClient:
 
 
 def _operation_for(capability_id: str, arguments: dict[str, Any]):
-    """公开观察能力的显式 request-class 注册表。"""
-    request_classes = {
-        "query_runtime": queries_pb2.QueryRuntimeRequest,
-        "query_world": queries_pb2.QueryWorldRequest,
-        "query_inventory": queries_pb2.QueryInventoryRequest,
-        "query_ui": queries_pb2.QueryUiRequest,
-        "inspect": queries_pb2.InspectRequest,
-    }
-    message_class = request_classes.get(capability_id)
-    if message_class is None:
+    """从 CommandRequest operation descriptor 动态取得 Request class。"""
+    field = capabilities_pb2.CommandRequest.DESCRIPTOR.fields_by_name.get(capability_id)
+    if field is None or field.message_type is None or field.containing_oneof is None:
         raise ValueError("该能力尚无运行调用实现")
+    message_class = GetMessageClass(field.message_type)
     return parse_message(arguments, message_class)

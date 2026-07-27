@@ -14,15 +14,11 @@ from mcp import types
 
 @dataclass(frozen=True)
 class CatalogPolicy:
-    supported_capabilities: frozenset[str]
+    supported_capabilities: frozenset[str] | None
     allowed_scopes: frozenset[str]
 
 
-OBSERVATION_POLICY = CatalogPolicy(
-    frozenset({"query_runtime", "query_world", "query_inventory", "query_ui", "inspect"}),
-    frozenset({"game:read"}),
-)
-DEFAULT_POLICY = OBSERVATION_POLICY
+DEFAULT_POLICY = CatalogPolicy(None, frozenset({"game:read"}))
 
 
 def _lp(value: str) -> bytes:
@@ -55,6 +51,11 @@ class Catalog:
         if set(self._capabilities) != set(self._tools):
             raise ValueError("public Tool Catalog capability 集合不一致")
         self._policy = policy
+        self._supported_capabilities = (
+            frozenset(self._capabilities)
+            if policy.supported_capabilities is None
+            else policy.supported_capabilities
+        )
 
     @classmethod
     def load(cls, policy: CatalogPolicy = DEFAULT_POLICY) -> "Catalog":
@@ -105,14 +106,14 @@ class Catalog:
         self.validate_snapshot(snapshot)
         announced = {item.id for item in snapshot.capabilities}
         enabled = sorted(
-            set(self._tools) & self._policy.supported_capabilities & announced,
+            set(self._tools) & self._supported_capabilities & announced,
             key=lambda capability_id: self._tools[capability_id]["name"],
         )
         return [self._as_tool(self._tools[capability_id]) for capability_id in enabled if self._capabilities[capability_id]["required_scope"] in self._policy.allowed_scopes]
 
     def descriptor(self, capability_id: str, snapshot: Any) -> Any:
         self.validate_snapshot(snapshot)
-        if capability_id not in self._policy.supported_capabilities or capability_id not in self._capabilities:
+        if capability_id not in self._supported_capabilities or capability_id not in self._capabilities:
             raise ValueError("MCP 当前不支持该能力")
         for descriptor in snapshot.capabilities:
             if descriptor.id == capability_id and descriptor.required_scope in self._policy.allowed_scopes:
@@ -129,7 +130,7 @@ class Catalog:
         raise ValueError("未知 MCP Tool")
 
     def allows(self, capability_id: str) -> bool:
-        return capability_id in self._policy.supported_capabilities and capability_id in self._capabilities and self._capabilities[capability_id]["required_scope"] in self._policy.allowed_scopes
+        return capability_id in self._supported_capabilities and capability_id in self._capabilities and self._capabilities[capability_id]["required_scope"] in self._policy.allowed_scopes
 
     @staticmethod
     def _as_tool(source: dict[str, Any]) -> types.Tool:

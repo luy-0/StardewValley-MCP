@@ -13,6 +13,12 @@
     {"path": "commands/navigate.status-request.json", "message": "TransportFrame", "sender": "mcp"},
     {"path": "commands/navigate.status-response.json", "message": "TransportFrame", "sender": "mod"}
   ],
+  "lifecycleFixtures": [
+    {"path": "commands/navigate.running.json", "message": "TransportFrame", "sender": "mod"},
+    {"path": "commands/navigate.cancelled.json", "message": "TransportFrame", "sender": "mod"},
+    {"path": "commands/navigate.timed-out.json", "message": "TransportFrame", "sender": "mod"},
+    {"path": "commands/navigate.status-expired.json", "message": "TransportFrame", "sender": "mod"}
+  ],
   "authVectors": [
     {"path": "auth/hmac-sha256.json", "algorithm": "v1_hmac_sha256"},
     {"path": "auth/hmac-minor-downgrade.synthetic.json", "algorithm": "v1_hmac_sha256_minor_downgrade"}

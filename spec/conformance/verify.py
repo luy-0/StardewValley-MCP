@@ -506,6 +506,82 @@ def verify_fixtures(transport_pb2: Any, manifest: dict[str, Any], digest: str) -
     return paths
 
 
+def verify_lifecycle_fixtures(transport_pb2: Any, index: dict[str, Any], top_level_frames: list[Any]) -> list[Path]:
+    """独立验证互斥的生命周期向量，不把它们误当成同一事件流。"""
+    entries = index.get("lifecycleFixtures")
+    require(isinstance(entries, list) and len(entries) == 4, "lifecycleFixtures 必须恰含四个向量")
+
+    top_by_id = {frame.message_id: frame for frame in top_level_frames}
+    navigate_request = top_by_id.get("cmd-msg-2")
+    status_request = top_by_id.get("status-msg-1")
+    require(navigate_request is not None and navigate_request.WhichOneof("body") == "command_request", "缺少 navigate 请求 fixture")
+    require(status_request is not None and status_request.WhichOneof("body") == "get_command_status_request", "缺少 navigate 状态请求 fixture")
+    command_id = navigate_request.command_request.command_id
+    require(status_request.get_command_status_request.command_id == command_id, "navigate 状态请求 Command ID 不一致")
+
+    expected_paths = {
+        "commands/navigate.running.json",
+        "commands/navigate.cancelled.json",
+        "commands/navigate.timed-out.json",
+        "commands/navigate.status-expired.json",
+    }
+    require({entry.get("path") for entry in entries} == expected_paths, "lifecycleFixtures 路径集合错误")
+
+    seen_message_ids = set(top_by_id)
+    frames_by_path: dict[str, Any] = {}
+    paths: list[Path] = []
+    for entry in entries:
+        require(entry.get("message") == "TransportFrame", "lifecycle fixture 消息类型错误")
+        require(entry.get("sender") == "mod", "lifecycle fixture 发送方必须为 mod")
+        path = FIXTURE_ROOT / entry["path"]
+        require(path.is_file(), f"lifecycle fixture 不存在: {path}")
+        frame = transport_pb2.TransportFrame()
+        json_format.ParseDict(load_json(path), frame, ignore_unknown_fields=False)
+        require(frame.WhichOneof("body") is not None, f"lifecycle fixture 缺少 body: {path}")
+        require(frame.HasField("fence"), f"lifecycle fixture 缺少 Fence: {path}")
+        require(frame.fence == navigate_request.fence, f"lifecycle fixture Fence 不一致: {path}")
+        require(1 <= len(frame.message_id) <= 64, f"lifecycle fixture message_id 长度非法: {path}")
+        require(all(0x20 <= ord(char) <= 0x7E for char in frame.message_id), f"lifecycle fixture message_id 不是可打印 ASCII: {path}")
+        require(frame.message_id not in seen_message_ids, f"lifecycle fixture message_id 重复: {frame.message_id}")
+        seen_message_ids.add(frame.message_id)
+        binary = frame.SerializeToString(deterministic=True)
+        require(frame == transport_pb2.TransportFrame.FromString(binary), f"lifecycle fixture Proto 往返不一致: {path}")
+        frames_by_path[entry["path"]] = frame
+        paths.append(path)
+
+    running = frames_by_path["commands/navigate.running.json"]
+    require(running.WhichOneof("body") == "command_event", "running fixture 必须为 CommandEvent")
+    require(running.reply_to == navigate_request.message_id, "RUNNING 必须直接关联 navigate 请求")
+    require(running.command_event.command_id == command_id, "RUNNING Command ID 不一致")
+    require(running.command_event.state == 2 and running.command_event.phase == "walking", "RUNNING state/phase 错误")
+    require(running.command_event.WhichOneof("outcome") is None, "RUNNING 不得携带 Outcome")
+    verify_event_shape(running.command_event, "navigate")
+
+    cancelled = frames_by_path["commands/navigate.cancelled.json"]
+    require(cancelled.WhichOneof("body") == "command_event", "cancelled fixture 必须为 CommandEvent")
+    require(not cancelled.reply_to, "CANCELLED 终态事件必须作为主动事件发送")
+    require(cancelled.command_event.command_id == command_id, "CANCELLED Command ID 不一致")
+    require(cancelled.command_event.state == 5, "CANCELLED state 错误")
+    require(cancelled.command_event.WhichOneof("outcome") == "error", "CANCELLED 必须仅携带 Error")
+    require(cancelled.command_event.error.code == 13, "CANCELLED 必须使用 ERROR_CODE_CANCELLED")
+    verify_event_shape(cancelled.command_event, "navigate")
+
+    timed_out = frames_by_path["commands/navigate.timed-out.json"]
+    require(timed_out.WhichOneof("body") == "command_event", "timed-out fixture 必须为 CommandEvent")
+    require(not timed_out.reply_to, "TIMED_OUT 终态事件必须作为主动事件发送")
+    require(timed_out.command_event.command_id == command_id, "TIMED_OUT Command ID 不一致")
+    require(timed_out.command_event.state == 6, "TIMED_OUT state 错误")
+    require(timed_out.command_event.WhichOneof("outcome") == "error", "TIMED_OUT 必须仅携带 Error")
+    require(timed_out.command_event.error.code == 12, "TIMED_OUT 必须使用 ERROR_CODE_DEADLINE_EXCEEDED")
+    verify_event_shape(timed_out.command_event, "navigate")
+
+    expired = frames_by_path["commands/navigate.status-expired.json"]
+    require(expired.WhichOneof("body") == "protocol_error", "status-expired fixture 必须为 ProtocolError")
+    require(expired.reply_to == status_request.message_id, "过期 tombstone 必须关联 status request")
+    require(expired.protocol_error.error.code == 16, "过期 tombstone 必须使用 ERROR_CODE_IDEMPOTENCY_RECORD_EXPIRED")
+    return paths
+
+
 def client_auth_data(vector: dict[str, Any]) -> bytes:
     return b"".join([
         lp("stardew-valley-mcp/v1/client-auth"), lp(vector["modInstanceId"]), lp(vector["clientInstanceId"]),
@@ -962,6 +1038,7 @@ def main() -> None:
             frame = modules["transport"].TransportFrame()
             json_format.ParseDict(load_json(FIXTURE_ROOT / entry["path"]), frame, ignore_unknown_fields=False)
             frames.append(frame)
+        lifecycle_paths = verify_lifecycle_fixtures(modules["transport"], index, frames)
         vector = verify_auth_vector(digest, frames)
         bootstrap_paths, bootstrap_vector, bootstrap_digest = verify_bootstrap_fixtures(modules["transport"], manifest)
         observation_paths, observation_vector, observation_digest = verify_observation_fixtures(modules["transport"], manifest)
@@ -969,7 +1046,7 @@ def main() -> None:
         verify_negative_message_models(modules)
         if not args.skip_csharp:
             verify_csharp(
-                csharp_out, fixture_paths, vector, modules, digest, tmp,
+                csharp_out, fixture_paths + lifecycle_paths, vector, modules, digest, tmp,
                 FIXTURE_ROOT / "transport" / "server-ready.json",
                 FIXTURE_ROOT / "auth" / "hmac-sha256.json", "full",
             )

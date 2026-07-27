@@ -4,7 +4,7 @@ using StardewValleyMcp.Protocol.V1;
 
 namespace StardewValleyMcp.Mod;
 
-internal sealed class QueryUiHandler : ICapabilityHandler
+internal sealed class QueryUiHandler : IImmediateCapabilityHandler
 {
     private readonly OpaqueRefStore _refs;
 
