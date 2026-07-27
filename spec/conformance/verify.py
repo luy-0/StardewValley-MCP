@@ -684,6 +684,7 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
     seen: set[str] = set()
     all_paths: list[Path] = []
     success_frames: list[Any] | None = None
+    inspect_success_frames: list[Any] | None = None
     for scenario in scenarios:
         scenario_id = scenario.get("id")
         require(isinstance(scenario_id, str) and scenario_id not in seen, "observation scenario ID 重复或非法")
@@ -696,7 +697,44 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         all_paths.extend(paths)
         if scenario_id == "query-world-succeeded":
             success_frames = frames
+        elif scenario_id == "inspect-succeeded":
+            inspect_success_frames = frames
     require(success_frames is not None, "observation 缺少 query-world 成功场景")
+    require(inspect_success_frames is not None, "observation 缺少 inspect 成功场景")
+    inspect_request = next(
+        frame.command_request.inspect
+        for frame in inspect_success_frames
+        if frame.WhichOneof("body") == "command_request"
+    )
+    inspect_result = next(
+        frame.command_event.result.inspect
+        for frame in inspect_success_frames
+        if frame.WhichOneof("body") == "command_event" and frame.command_event.state == 3
+    )
+    require(
+        [reference.value for reference in inspect_request.refs]
+        == [item.resolution.ref.value for item in inspect_result.items],
+        "Inspect Fixture 未保持请求顺序或等长",
+    )
+    require(
+        [item.WhichOneof("fact") for item in inspect_result.items if item.resolution.status == 1]
+        == ["world_entity", "character", "inventory_item", "inventory", "ui_element"],
+        "Inspect Fixture 未覆盖五种 resolved Fact",
+    )
+    unavailable = inspect_result.items[5]
+    require(unavailable.resolution.status == 5, "Inspect Fixture 缺少 FACT_UNAVAILABLE")
+    require(unavailable.resolution.kind == 3, "FACT_UNAVAILABLE 必须保留已知 Kind")
+    require(unavailable.WhichOneof("fact") is None, "FACT_UNAVAILABLE 不得携带 Fact")
+    require(
+        unavailable.resolution.error.code == 19
+        and unavailable.resolution.error.message == "当前 Ref 事实不可用",
+        "FACT_UNAVAILABLE Error 不符合固定契约",
+    )
+    require(
+        inspect_result.items[-1].resolution.status == 1
+        and inspect_result.items[-1].WhichOneof("fact") == "ui_element",
+        "FACT_UNAVAILABLE 后续项未继续 resolved",
+    )
     vector_path = FIXTURE_ROOT / "observation" / "hmac-sha256.json"
     vector = verify_auth_vector(digest, success_frames, vector_path)
     standalone = [

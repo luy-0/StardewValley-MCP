@@ -26,6 +26,8 @@ enum RefStatus {
   REF_STATUS_STALE = 2;
   REF_STATUS_NOT_FOUND = 3;
   REF_STATUS_UNSUPPORTED = 4;
+  // Binding 身份仍有效，但本次无法生成完整、可信的公开 Fact。
+  REF_STATUS_FACT_UNAVAILABLE = 5;
 }
 
 message RefResolution {

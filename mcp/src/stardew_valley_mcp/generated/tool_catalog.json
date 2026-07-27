@@ -6651,6 +6651,77 @@
                     "required": [
                       "resolution"
                     ]
+                  },
+                  {
+                    "not": {
+                      "anyOf": [
+                        {
+                          "required": [
+                            "worldEntity"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "character"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "inventoryItem"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "inventory"
+                          ]
+                        },
+                        {
+                          "required": [
+                            "uiElement"
+                          ]
+                        }
+                      ]
+                    },
+                    "properties": {
+                      "resolution": {
+                        "properties": {
+                          "error": {
+                            "properties": {
+                              "code": {
+                                "const": "internal"
+                              },
+                              "message": {
+                                "const": "当前 Ref 事实不可用"
+                              }
+                            },
+                            "required": [
+                              "code",
+                              "message"
+                            ]
+                          },
+                          "kind": {
+                            "enum": [
+                              "world_entity",
+                              "character",
+                              "inventory_item",
+                              "container",
+                              "ui_element"
+                            ]
+                          },
+                          "status": {
+                            "const": "fact_unavailable"
+                          }
+                        },
+                        "required": [
+                          "status",
+                          "kind",
+                          "error"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "resolution"
+                    ]
                   }
                 ]
               }
@@ -6983,7 +7054,8 @@
                   "resolved",
                   "stale",
                   "not_found",
-                  "unsupported"
+                  "unsupported",
+                  "fact_unavailable"
                 ],
                 "type": "string"
               }

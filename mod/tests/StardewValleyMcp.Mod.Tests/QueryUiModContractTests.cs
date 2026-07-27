@@ -312,12 +312,12 @@ public sealed class QueryUiModContractTests
     }
 
     [Test]
-    public void CapabilityRegistry_ExplicitlyAdvertisesQueryUiWithSharedObservationSet()
+    public void CapabilityRegistry_ExplicitlyAdvertisesSharedObservationSet()
     {
         var registry = new CapabilityRegistry(InstanceId);
         Assert.That(
             registry.Snapshot.Capabilities.Select(item => item.Id),
-            Is.EqualTo(new[] { "query_inventory", "query_runtime", "query_ui", "query_world" })
+            Is.EqualTo(new[] { "inspect", "query_inventory", "query_runtime", "query_ui", "query_world" })
         );
     }
 

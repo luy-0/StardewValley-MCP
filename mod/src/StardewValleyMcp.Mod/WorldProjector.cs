@@ -283,6 +283,154 @@ internal static class WorldProjector
         return facts;
     }
 
+    /// <summary>
+    /// Reuses the same typed leaf projectors as query_world for one already-resolved entity.
+    /// The caller-owned Ref remains authoritative; a changed identity guard is surfaced as
+    /// stale instead of silently returning a newly signed Ref.
+    /// </summary>
+    public static WorldEntityFact ProjectResolvedEntity(
+        ResolvedOpaqueRef resolved,
+        Ref reference,
+        OpaqueRefStore refs,
+        ICollection<QueryWarning> warnings
+    )
+    {
+        var location = resolved.Location;
+        var (x, y) = CurrentEntityTile(resolved);
+        var fact = resolved.LocatorKind switch
+        {
+            RefLocatorKind.TerrainFeature => resolved.Target switch
+            {
+                STree tree => ProjectTree(location, x, y, tree, refs),
+                FruitTree fruitTree => ProjectFruitTree(location, x, y, fruitTree, refs),
+                HoeDirt { crop: not null } dirt => ProjectCrop(location, x, y, dirt, refs),
+                TerrainFeature feature => ProjectGenericTerrainFeature(
+                    location,
+                    x,
+                    y,
+                    feature,
+                    refs,
+                    warnings
+                ),
+                _ => throw new InvalidOperationException("Terrain Ref 目标类型无效"),
+            },
+            RefLocatorKind.Object when resolved.Target is SObject obj =>
+                ProjectObject(location, x, y, obj, refs, warnings),
+            RefLocatorKind.Fridge when resolved.Target is Chest fridge =>
+                ProjectContainer(
+                    location,
+                    x,
+                    y,
+                    fridge,
+                    refs,
+                    RefLocatorKind.Fridge,
+                    warnings
+                ),
+            RefLocatorKind.Furniture when resolved.Target is BedFurniture bed =>
+                ProjectBed(location, x, y, bed, refs, warnings),
+            RefLocatorKind.Furniture when resolved.Target is Furniture furniture =>
+                ProjectFurniture(location, x, y, furniture, refs, warnings),
+            RefLocatorKind.ResourceClump when resolved.Target is ResourceClump clump =>
+                ProjectResourceClump(location, x, y, clump, refs),
+            RefLocatorKind.Warp when resolved.Target is Warp warp =>
+                ProjectWarp(location, warp, refs, warnings),
+            RefLocatorKind.Door => ProjectDoor(
+                location,
+                new Point(x, y),
+                resolved.Guard,
+                refs,
+                warnings
+            ),
+            _ => throw new InvalidOperationException("World Entity Ref 目标类型无效"),
+        };
+        PreserveInputRef(fact.Ref, reference);
+        fact.Ref = reference.Clone();
+        PreserveWarningRefs(warnings, reference);
+        return fact;
+    }
+
+    public static CharacterFact ProjectResolvedCharacter(
+        ResolvedOpaqueRef resolved,
+        Ref reference,
+        OpaqueRefStore refs
+    )
+    {
+        var (x, y) = CurrentCharacterTile(resolved.Target);
+        var fact = resolved.Target switch
+        {
+            FarmAnimal animal => ProjectFarmAnimal(resolved.Location, x, y, animal, refs),
+            NPC character => ProjectCharacter(resolved.Location, x, y, character, refs),
+            _ => throw new InvalidOperationException("Character Ref 目标类型无效"),
+        };
+        PreserveInputRef(fact.Ref, reference);
+        fact.Ref = reference.Clone();
+        return fact;
+    }
+
+    private static (int X, int Y) CurrentEntityTile(ResolvedOpaqueRef resolved)
+    {
+        if (resolved.LocatorKind == RefLocatorKind.Object)
+        {
+            foreach (var pair in resolved.Location.Objects.Pairs)
+            {
+                if (ReferenceEquals(pair.Value, resolved.Target))
+                    return ((int)pair.Key.X, (int)pair.Key.Y);
+            }
+            throw new InspectRefStaleException();
+        }
+        return resolved.LocatorKind switch
+        {
+            RefLocatorKind.TerrainFeature => FindTerrainTile(resolved),
+            RefLocatorKind.Fridge => FindFridgeTile(resolved),
+            RefLocatorKind.Furniture when resolved.Target is Furniture furniture =>
+                ((int)furniture.TileLocation.X, (int)furniture.TileLocation.Y),
+            RefLocatorKind.ResourceClump when resolved.Target is ResourceClump clump =>
+                ((int)clump.Tile.X, (int)clump.Tile.Y),
+            RefLocatorKind.Warp when resolved.Target is Warp warp => (warp.X, warp.Y),
+            RefLocatorKind.Door => (resolved.X, resolved.Y),
+            _ => throw new InvalidOperationException("World Entity Ref Locator 不支持检查"),
+        };
+    }
+
+    private static (int X, int Y) FindTerrainTile(ResolvedOpaqueRef resolved)
+    {
+        foreach (var pair in resolved.Location.terrainFeatures.Pairs)
+        {
+            if (ReferenceEquals(pair.Value, resolved.Target))
+                return ((int)pair.Key.X, (int)pair.Key.Y);
+        }
+        throw new InspectRefStaleException();
+    }
+
+    private static (int X, int Y) FindFridgeTile(ResolvedOpaqueRef resolved)
+    {
+        if (resolved.Location.GetFridgePosition() is not { } tile)
+            throw new InspectRefStaleException();
+        return (tile.X, tile.Y);
+    }
+
+    private static (int X, int Y) CurrentCharacterTile(object target) => target switch
+    {
+        NPC character => ((int)character.Tile.X, (int)character.Tile.Y),
+        FarmAnimal animal => ((int)animal.Tile.X, (int)animal.Tile.Y),
+        _ => throw new InvalidOperationException("Character Ref 目标类型无效"),
+    };
+
+    private static void PreserveInputRef(Ref projected, Ref input)
+    {
+        if (!string.Equals(projected.Value, input.Value, StringComparison.Ordinal))
+            throw new InspectRefStaleException();
+    }
+
+    private static void PreserveWarningRefs(ICollection<QueryWarning> warnings, Ref input)
+    {
+        foreach (var warning in warnings)
+        {
+            if (warning.Ref is not null)
+                warning.Ref = input.Clone();
+        }
+    }
+
     private static WorldEntityFact ProjectTree(
         GameLocation location,
         int x,

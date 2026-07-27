@@ -23,6 +23,7 @@ class RefStatus(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     REF_STATUS_STALE: _ClassVar[RefStatus]
     REF_STATUS_NOT_FOUND: _ClassVar[RefStatus]
     REF_STATUS_UNSUPPORTED: _ClassVar[RefStatus]
+    REF_STATUS_FACT_UNAVAILABLE: _ClassVar[RefStatus]
 REF_KIND_UNSPECIFIED: RefKind
 REF_KIND_WORLD_ENTITY: RefKind
 REF_KIND_CHARACTER: RefKind
@@ -34,6 +35,7 @@ REF_STATUS_RESOLVED: RefStatus
 REF_STATUS_STALE: RefStatus
 REF_STATUS_NOT_FOUND: RefStatus
 REF_STATUS_UNSUPPORTED: RefStatus
+REF_STATUS_FACT_UNAVAILABLE: RefStatus
 
 class Ref(_message.Message):
     __slots__ = ("value",)

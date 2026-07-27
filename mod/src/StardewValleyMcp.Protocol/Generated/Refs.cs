@@ -34,11 +34,11 @@ namespace StardewValleyMcp.Protocol.V1 {
             "RUNJRklFRBAAEhkKFVJFRl9LSU5EX1dPUkxEX0VOVElUWRABEhYKElJFRl9L",
             "SU5EX0NIQVJBQ1RFUhACEhsKF1JFRl9LSU5EX0lOVkVOVE9SWV9JVEVNEAMS",
             "FgoSUkVGX0tJTkRfQ09OVEFJTkVSEAQSFwoTUkVGX0tJTkRfVUlfRUxFTUVO",
-            "VBAFKowBCglSZWZTdGF0dXMSGgoWUkVGX1NUQVRVU19VTlNQRUNJRklFRBAA",
+            "VBAFKq0BCglSZWZTdGF0dXMSGgoWUkVGX1NUQVRVU19VTlNQRUNJRklFRBAA",
             "EhcKE1JFRl9TVEFUVVNfUkVTT0xWRUQQARIUChBSRUZfU1RBVFVTX1NUQUxF",
             "EAISGAoUUkVGX1NUQVRVU19OT1RfRk9VTkQQAxIaChZSRUZfU1RBVFVTX1VO",
-            "U1VQUE9SVEVEEARCH6oCHFN0YXJkZXdWYWxsZXlNY3AuUHJvdG9jb2wuVjFi",
-            "BnByb3RvMw=="));
+            "U1VQUE9SVEVEEAQSHwobUkVGX1NUQVRVU19GQUNUX1VOQVZBSUxBQkxFEAVC",
+            "H6oCHFN0YXJkZXdWYWxsZXlNY3AuUHJvdG9jb2wuVjFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::StardewValleyMcp.Protocol.V1.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.RefKind), typeof(global::StardewValleyMcp.Protocol.V1.RefStatus), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -65,6 +65,10 @@ namespace StardewValleyMcp.Protocol.V1 {
     [pbr::OriginalName("REF_STATUS_STALE")] Stale = 2,
     [pbr::OriginalName("REF_STATUS_NOT_FOUND")] NotFound = 3,
     [pbr::OriginalName("REF_STATUS_UNSUPPORTED")] Unsupported = 4,
+    /// <summary>
+    /// Binding 身份仍有效，但本次无法生成完整、可信的公开 Fact。
+    /// </summary>
+    [pbr::OriginalName("REF_STATUS_FACT_UNAVAILABLE")] FactUnavailable = 5,
   }
 
   #endregion

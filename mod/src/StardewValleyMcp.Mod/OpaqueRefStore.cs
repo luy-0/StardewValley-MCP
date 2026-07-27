@@ -197,6 +197,116 @@ internal sealed class OpaqueRefStore
         }
     }
 
+    /// <summary>
+    /// Resolves an inspect Ref exactly once and preserves the concrete binding family for
+    /// the projection layer. A temporarily unreadable binding remains live and is reported
+    /// as FACT_UNAVAILABLE rather than being marked stale.
+    /// </summary>
+    public InspectRefLookup ResolveForInspect(Ref reference)
+    {
+        IOpaqueBinding? binding = null;
+        object? target = null;
+        try
+        {
+            var resolution = ResolveCore(
+                reference,
+                IsInspectableKind,
+                out binding,
+                out target
+            );
+            if (resolution.Status != RefStatus.Resolved)
+                return new InspectRefLookup(resolution, null);
+            if (target is null)
+                return FactUnavailable(reference, binding?.Kind ?? RefKind.Unspecified);
+
+            InspectableRefTarget? inspected = binding switch
+            {
+                Binding contextual when contextual.Kind == RefKind.WorldEntity =>
+                    CreateContextTarget(contextual, target, RefKind.WorldEntity),
+                Binding contextual when contextual.Kind == RefKind.Character =>
+                    CreateContextTarget(contextual, target, RefKind.Character),
+                Binding contextual when contextual.Kind == RefKind.Container =>
+                    CreateContextTarget(contextual, target, RefKind.Container),
+                InventoryItemBinding item when item.Kind == RefKind.InventoryItem =>
+                    new InventoryItemInspectTarget(
+                        new InventoryItemRefTarget(target, item.Slot, item.Provenance)
+                    ),
+                UiElementBinding ui when ui.Kind == RefKind.UiElement =>
+                    new UiElementInspectTarget(
+                        new ResolvedUiElementRef(
+                            target,
+                            ui.MenuEpoch,
+                            ui.Extractor,
+                            ui.PublicKind,
+                            ui.Index
+                        )
+                    ),
+                _ => null,
+            };
+            if (inspected is not null)
+                return new InspectRefLookup(resolution, inspected);
+            return new InspectRefLookup(
+                Resolution(
+                    reference,
+                    RefStatus.Unsupported,
+                    binding?.Kind ?? RefKind.Unspecified,
+                    ErrorCode.InvalidArgument,
+                    "当前 Ref 类型不支持检查"
+                ),
+                null
+            );
+        }
+        catch (OpaqueRefUnavailableException)
+        {
+            return FactUnavailable(reference, binding?.Kind ?? RefKind.Unspecified);
+        }
+    }
+
+    private static bool IsInspectableKind(RefKind kind) => kind is
+        RefKind.WorldEntity
+        or RefKind.Character
+        or RefKind.InventoryItem
+        or RefKind.Container
+        or RefKind.UiElement;
+
+    private static InspectableRefTarget? CreateContextTarget(
+        Binding binding,
+        object target,
+        RefKind kind
+    )
+    {
+        if (!binding.TryGetLocation(out var location))
+            return null;
+        var resolved = new ResolvedOpaqueRef(
+            target,
+            binding.Kind,
+            location,
+            binding.LocatorKind,
+            binding.X,
+            binding.Y,
+            binding.Guard,
+            binding.Role
+        );
+        return kind switch
+        {
+            RefKind.WorldEntity => new WorldEntityInspectTarget(resolved),
+            RefKind.Character => new CharacterInspectTarget(resolved),
+            RefKind.Container => new ContainerInspectTarget(resolved),
+            _ => null,
+        };
+    }
+
+    private static InspectRefLookup FactUnavailable(Ref reference, RefKind kind) => new(
+        Resolution(
+            reference,
+            RefStatus.FactUnavailable,
+            kind,
+            ErrorCode.Internal,
+            "当前 Ref 事实不可用"
+        ),
+        null
+    );
+
     public RefResolution Resolve(
         Ref reference,
         IReadOnlySet<RefKind> allowedKinds,
@@ -580,6 +690,23 @@ internal sealed record ResolvedOpaqueRef(
     string Guard,
     string Role
 );
+
+internal sealed record InspectRefLookup(
+    RefResolution Resolution,
+    InspectableRefTarget? Target
+);
+
+internal abstract record InspectableRefTarget(RefKind Kind);
+internal sealed record WorldEntityInspectTarget(ResolvedOpaqueRef Value)
+    : InspectableRefTarget(RefKind.WorldEntity);
+internal sealed record CharacterInspectTarget(ResolvedOpaqueRef Value)
+    : InspectableRefTarget(RefKind.Character);
+internal sealed record InventoryItemInspectTarget(InventoryItemRefTarget Value)
+    : InspectableRefTarget(RefKind.InventoryItem);
+internal sealed record ContainerInspectTarget(ResolvedOpaqueRef Value)
+    : InspectableRefTarget(RefKind.Container);
+internal sealed record UiElementInspectTarget(ResolvedUiElementRef Value)
+    : InspectableRefTarget(RefKind.UiElement);
 
 internal static class OpaqueRefTokenCodec
 {

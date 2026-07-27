@@ -185,3 +185,16 @@ output_messages:
                 required: [status, error]
             required: [resolution]
             not: {anyOf: [{required: [worldEntity]}, {required: [character]}, {required: [inventoryItem]}, {required: [inventory]}, {required: [uiElement]}]}
+          - properties:
+              resolution:
+                properties:
+                  status: {const: fact_unavailable}
+                  kind: {enum: [world_entity, character, inventory_item, container, ui_element]}
+                  error:
+                    properties:
+                      code: {const: internal}
+                      message: {const: 当前 Ref 事实不可用}
+                    required: [code, message]
+                required: [status, kind, error]
+            required: [resolution]
+            not: {anyOf: [{required: [worldEntity]}, {required: [character]}, {required: [inventoryItem]}, {required: [inventory]}, {required: [uiElement]}]}

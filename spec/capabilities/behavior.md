@@ -51,6 +51,9 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 | `STALE` | 已知时提供 | 不得存在 | `STALE_REF` |
 | `NOT_FOUND` | 已知时提供 | 不得存在 | `NOT_FOUND` |
 | `UNSUPPORTED` | 已知时提供 | 不得存在 | `INVALID_ARGUMENT` |
+| `FACT_UNAVAILABLE` | 非 `UNSPECIFIED` | 不得存在 | `INTERNAL`，消息固定为“当前 Ref 事实不可用” |
+
+`STALE` 只在对象或 owner 生命周期已由肯定证据终止时产生，并保持单调不复活。getter、关键字段、typed projector 或完整 UI capture 本次不可读，但 Binding 身份仍可验证时，必须逐项返回 `FACT_UNAVAILABLE`；该项不改变 Binding、不产生 warning，也不得拖垮同批其他 Ref。既有安全 fallback 若已形成完整公开 Fact，仍返回 `RESOLVED` 及对应 warning。
 
 ## 3. 成功终态的统一含义
 

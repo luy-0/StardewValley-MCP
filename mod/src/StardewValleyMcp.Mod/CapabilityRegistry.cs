@@ -18,6 +18,7 @@ internal sealed class CapabilityRegistry
             new QueryWorldHandler(refs),
             new QueryInventoryHandler(refs),
             new QueryUiHandler(refs),
+            new InspectHandler(refs),
         })
     {
     }

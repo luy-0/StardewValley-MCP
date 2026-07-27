@@ -13,7 +13,7 @@ from stardew_valley_mcp.catalog import Catalog
 from stardew_valley_mcp.client import StardewClient
 from stardew_valley_mcp.command_runtime import CommandRuntime
 from stardew_valley_mcp.projection import project_message
-from stardew_valley_mcp.protocol import transport_pb2
+from stardew_valley_mcp.protocol import refs_pb2, transport_pb2
 from stardew_valley_mcp.server import create_server
 from stardew_valley_mcp.transport import ConnectionConfig
 
@@ -105,6 +105,37 @@ def test_client_builds_all_five_requests_with_descriptor_enum_inverse_mapping() 
     world_request = runtime.calls[-1][2]
     enum = world_request.DESCRIPTOR.fields_by_name["entity_kinds"].enum_type
     assert [enum.values_by_number[value].name for value in world_request.entity_kinds] == ["ENTITY_KIND_TREE", "ENTITY_KIND_CONTAINER"]
+
+
+def test_inspect_fixture_covers_all_facts_and_fact_unavailable_without_stopping() -> None:
+    assert refs_pb2.REF_STATUS_FACT_UNAVAILABLE == 5
+    request_refs = [item["value"] for item in _arguments("inspect")["refs"]]
+    result = _success("inspect")
+    output = result["output"]
+    assert [item["resolution"]["ref"]["value"] for item in output["items"]] == request_refs
+    assert [
+        next(
+            key
+            for key in ("worldEntity", "character", "inventoryItem", "inventory", "uiElement")
+            if key in item
+        )
+        for item in output["items"]
+        if item["resolution"]["status"] == "resolved"
+    ] == ["worldEntity", "character", "inventoryItem", "inventory", "uiElement"]
+    unavailable = output["items"][5]
+    assert unavailable == {
+        "resolution": {
+            "ref": {"value": "fact-unavailable-a"},
+            "status": "fact_unavailable",
+            "kind": "inventory_item",
+            "error": {
+                "code": "internal",
+                "message": "当前 Ref 事实不可用",
+            },
+        }
+    }
+    assert output["items"][-1]["resolution"]["status"] == "resolved"
+    Draft202012Validator(Catalog.load().tool("inspect").outputSchema).validate(result)
 
 
 def test_all_five_local_invalid_arguments_are_schema_valid() -> None:
