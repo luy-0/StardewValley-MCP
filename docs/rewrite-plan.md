@@ -248,9 +248,112 @@ query_runtime, query_world, query_inventory, query_ui, inspect
 
 ### 阶段 5：完成长时运行能力
 
-重写导航、交互与工具使用能力，集中验证并发、取消、超时、断线和未知结果收敛。工作流型能力不进入这一层。
+阶段 5 交付 `navigate`、`interact` 与 `use_tool`，并完成公开 V1 的十五项原语能力面。旧 StarCoplay 已经为这三项能力提供了足够多的实机行为、修复历史和可提炼算法，因此本阶段不是从零探索游戏机制；但旧实现仍与 Protocol 2.4.5、共享可变 Handler、旧 Scheduler、全局输入桥和并行 Legacy/V2 注册链绑定，不能整文件搬入新仓。
 
-退出条件：任意时刻最多一个变更命令；取消与 Deadline 可复现；断线不会自动重复执行变更；卡住恢复不会绕过安全边界。
+#### 旧仓审计结论
+
+| 旧资产 | 当前进度与价值 | 阶段 5 处理 |
+|---|---|---|
+| 正式 `MoveToProtoHandler` / `GoToProtoHandler` | 已实现同图精确/相邻移动、跨图 BFS、正常 Warp、门交互、地图稳定等待、取消与失败清理，并经历多轮实机修复 | 复用行为和失败用例；重写为唯一 `NavigateHandler`，不迁移旧 Handler 或子 Handler 调用结构 |
+| `MapData` / `GoToRoutePlanner` | 已能从运行时 Warp、Door 和建筑内部构造 Location 图 | 提炼为命令开始时的只读拓扑 Snapshot 与纯 Route Planner；删除静态全局状态、显示名表、兼容字段和配置型别名 |
+| `ActionExecutor.NavigateTo` | 已验证 `PathFindController` 可完成正常游戏寻路 | 保留 PFC 机制；重写严格到达判断。旧代码把距离目标两格内也视为成功，这一行为不得复用 |
+| `InteractProtoHandler` / `TileActionService` | 已验证“面朝 → Grab Tile 对齐/微移 → 提交一次动作”的时序 | 提炼对齐算法和提交阶段；删除 `no_observed_effect`、通用 `player_busy` 也算成功的错误准出 |
+| `UseToolProtoHandler` / 蓄力逻辑 | 已验证普通工具、Hoe/Watering Can 蓄力和输入释放的基本路径 | 提炼蓄力达到实际 `toolPower` 后释放的机制；重写实际工具锁存、动作接受、完成观察、取消和结果采集 |
+| `InputBridge` / `InputCombo` | 解决过失焦、按住、释放和 sticky key，但同时承担全局队列、SMAPI 私有反射和 simulator 重装 | 不迁移。优先调用游戏公开语义 API；确需按住时只建立命令私有的窄输入端口，不反射 SMAPI 内部状态，不建立第二套队列 |
+| 旧测试与实机脚本 | 提供了大量故障案例，但正式三个 Proto Handler 几乎没有可隔离自动化测试 | 把故障历史改写为新 Fixture、Fake Game Port 测试和逐条实机用例；旧测试结果不作为新仓完成证明 |
+
+审计后的直接复用边界很明确：新仓的 `CommandCoordinator`、`ICommandContinuation`、`OpaqueRefStore`、Descriptor Catalog、MCP Command Runtime 和 `DefaultCapabilitySet` 可以原样继续使用；旧仓没有一份阶段 5 生产文件适合整文件复制。旧代码仍然显著降低了重写风险，因为 PFC、出口图、两类 Warp、Grab Tile 对齐、蓄力与清理顺序都已经有真实失败记录可供实现和测试使用。
+
+#### 设计边界
+
+1. 三项能力各自只有一个公开 Handler，并继续由 `DefaultCapabilitySet` 编译期显式组装。`navigate` 内部可以使用同图移动、路由和门触发服务，但不能调用 `InteractHandler`；`interact` 与 `use_tool` 也不能隐式调用 `navigate` 或 `equip`。
+2. 每条命令只有现有 Coordinator 管理的一份生命周期、一个 Deadline 和一个 Command ID。Handler 只返回 continuation phase，不建立子命令、内部 Scheduler、第二套超时总钟或自动重放。
+3. 游戏机制与协议 Handler 分层。计划新增 `Game/Navigation` 保存拓扑、纯路由、PFC 与 Warp 驱动，新增 `Game/Actions` 保存动作提交和工具生命周期探针；这些服务不依赖 Transport、MCP 或 Runtime，也不持有跨命令的可变动作队列。
+4. `Capabilities/Actions` 负责请求校验、Ref 解析、命令私有状态机和结果组装。`Game` 服务只接收已经解析的 Location、Tile、方向和工具，不解析 Proto Ref，也不猜测显示名。
+5. 目标身份只接受公开 `WorldPosition` 或进程内不透明 Ref。Location 一律使用 `NameOrUniqueName` 并按 `StringComparison.OrdinalIgnoreCase` 比较；不引入字符串 TargetRef、中文地图名、模糊搜索或坐标 fallback。
+6. `SUCCEEDED` 只表示 Spec 中该能力自己的后置条件已经观察成立。输入已排队、PFC 已停止、玩家暂时 busy 或动画回到 idle，都不能单独作为成功。
+7. 首版主动接受少量清晰边界，不为覆盖所有罕见状态重建旧复杂度。卡住最多在同一合法路径上有限重算一次；失败后清理并返回稳定错误，不传送、不改碰撞、不追逐移动角色、不自动装备或自动接近目标。
+
+建议的内部依赖如下：
+
+```text
+DefaultCapabilitySet
+  ├─ NavigateHandler
+  │    └─ NavigateContinuation
+  │         ├─ ActionTargetResolver
+  │         ├─ WorldRouteSnapshot + RoutePlanner
+  │         ├─ LocalPathDriver
+  │         └─ WarpDriver
+  ├─ InteractHandler
+  │    └─ InteractContinuation
+  │         ├─ ActionTargetResolver
+  │         └─ PlayerActionDriver
+  └─ UseToolHandler
+       └─ UseToolContinuation
+            ├─ ActionTargetResolver
+            └─ PlayerActionDriver + ToolUseLifecycleProbe
+```
+
+这里的 `ActionTargetResolver` 是动作层对现有 `OpaqueRefStore` 的窄适配，不是新的 Ref 注册表。`PlayerActionDriver` 也只是调用游戏语义动作并暴露“是否提交、是否释放、是否收敛”的端口，不拥有全局队列；每个 continuation 保存自己的阶段与清理状态。
+
+#### 目标与 Ref 的首版语义
+
+- `WorldPosition` 在命令主线程启动时校验 Location 与 Tile；`navigate` 可以指向其他已知 Location，`interact` 与 `use_tool` 必须指向玩家当前 Location。
+- Ref 只允许 `WORLD_ENTITY` 或 `CHARACTER`。Resolver 必须从绑定的当前对象重新取得 Location 和动作 Tile，不能使用 Token 字符串、显示名或签发时缓存坐标猜测目标。
+- Ref 导航只允许 `ADJACENT`。首版在命令启动时固定一次目标 Location/Tile，并在提交动作或返回成功前重验同一对象仍存在且位置未变化；Character 在执行中移动时返回 `EXECUTION_FAILED`，不复制 Legacy 的定时追踪、次数上限或跨图追逐。后续若需要持续跟随，应作为新的版本化行为单独设计。
+- 启动前已经失效的 Ref 返回 `STALE_REF`，合法但找不到目标返回 `NOT_FOUND`，Kind 不适用返回 `INVALID_ARGUMENT`；启动后目标消失、移动或不再满足到达/作用条件返回 `EXECUTION_FAILED`，不得用旧位置成功收口。
+- `NavigateResult.resolved_destination` 表示本次实际锁定的玩家落脚 Tile；`route_location_ids` 记录实际到达的 Location 顺序，而不是尚未执行的规划路线。
+
+#### 三项能力的明确实现
+
+**`navigate`**
+
+- 同图 `EXACT` 使用 PFC 正常寻路，只有最终 Location 与 Tile 完全相等才能成功；PFC 提前结束但未到达必须失败。
+- `ADJACENT` 未指定 `stand_side` 时，从四个合法相邻 Tile 中选择可达项；指定后只允许该侧，不得悄悄换边。到达后再独立验证 `face_on_arrival`。
+- 跨图在命令开始时从当前已加载 Location、Warp、Door 和建筑内部构造拓扑 Snapshot，以纯 BFS 得到出口序列。每条边保留具体触发 Tile、目标 Location 和 `WalkThrough`/`InteractDoor` 类型，不把同一地图对的多个出口合并丢失。
+- `WalkThrough` 复用旧仓“候选 Warp Tile + 有界方向尝试”的经验；`InteractDoor` 通过内部 `PlayerActionDriver` 触发图中已确定的门 Tile，不调用公开 `interact`。只有观察到预期目标 Location 才算该边完成，进入错误地图立即失败。
+- 每次 Warp 后等待目标 Location、玩家可控、无阻塞 Menu/工具状态和连续稳定帧，再继续下一段。取消或 Deadline 必须清除 PFC、移动方向和尚未提交的输入；任何恢复都不得调用 `warpFarmer`。
+
+**`interact`**
+
+- 只作用于当前 Location 中游戏允许的 cardinal-adjacent Tile，不隐式导航。提交前依次完成目标重验、玩家状态检查、面朝、`GetGrabTile()` 对齐和必要的 Tile 内微移；微移不得让玩家离开起始 Tile。
+- 首版要求玩家空手或手持 Tool。手持食物、可放置物、礼物等非工具 Item 时返回 `NOT_READY`，避免通用 `interact` 暗中变成赠礼、食用或放置能力。
+- 优先使用游戏公开的动作语义提交一次交互，不复制固定 X 键、全局 InputBridge 或失焦反射。若实测证明只能通过输入路径保持原生语义，首版只实现命令私有、可确认提交与释放的窄 Adapter；失焦不可用时明确返回 `NOT_READY`，而不是恢复旧反射链。
+- 提交前捕获目标绑定、Location、UI Revision、Inventory Revision 和目标可读状态；提交后只有出现可关联的 Dialogue/Menu、Location、Inventory、Relationship 或目标状态变化时才成功。通用 `player_busy` 只能是中间证据，观察窗口结束仍无关联变化返回 `EXECUTION_FAILED`。
+- 提交动作前 `CanCancel=true`；游戏已经消费动作后 `CanCancel=false`，继续观察真实结果，不能把已经发生的副作用伪装为取消成功。
+
+**`use_tool`**
+
+- 不隐式导航或装备，提交前重新锁存当前 Tool 实例、Qualified Item ID、目标、实际可达蓄力和 Energy。工具在执行中被替换时失败，不得回显启动前的显示名冒充实际工具。
+- 首版白名单为 Axe、Pickaxe、Hoe、Watering Can 与 Scythe。Fishing Rod、Slingshot、Pan、Milk Pail、Shears、普通武器和未知 Mod Tool 暂不进入通用单次工具原语，以稳定 `INVALID_ARGUMENT` 拒绝；未来按各自目标、持续会话与取消语义单独扩展。
+- Axe、Pickaxe 与 Scythe 首版只允许 `charge_level=0`；Hoe 与 Watering Can 允许 `0..min(5, 当前工具实际支持等级)`。达到请求的实际 `toolPower` 后必须完成释放，不能复制旧仓互相漂移的 0..4、0..5 与多套帧数魔数。
+- 状态机至少区分 `resolve → face → press/charge → accepted → release → settle`。实现前先用真实游戏 Spike 找到不会漏掉瞬时工具动作的 acceptance latch；仅看到输入队列为空或玩家 idle 不得成功。
+- 成功要求游戏接受了本次工具动作且相关动画/工具状态已经收敛。空 Tile 可以成功，Energy 变化可以为零；结果仍必须回显实际目标、实际工具 Qualified Item ID、实际 charge 和 double Energy 差值。
+- 提交或蓄力释放前允许取消并幂等清理；动作已经接受并释放后 `CanCancel=false`。Deadline 仍需安全释放未完成输入，但不得强行改写 `UsingTool`、动画或工具内部状态。
+
+#### 开发顺序
+
+1. [ ] **阶段 5.0：契约收口与游戏 API Spike。** 在 `behavior.md`、Fixture 和测试中固化 Character Ref “启动时锁定、结束前重验、不持续追踪”、`resolved_destination`、Interact 手持物门禁、首版工具白名单、提交点与稳定错误；分别验证公开动作 API 在交互、普通工具、蓄力工具、聚焦和失焦状态下能否提供可靠的提交/释放证据。Spike 不通过时先缩小支持边界，不引入旧 InputBridge。
+2. [ ] **阶段 5.1：同图 `navigate` 纵向切片。** 实现共享 Target Resolver、严格 EXACT、ADJACENT、`stand_side`、`face_on_arrival`、PFC 清理与命令私有 continuation；同步交付 Fixture、Fake Game Port 测试、通用 MCP 调用和一条实机验证。
+3. [ ] **阶段 5.2：跨图 `navigate` 纵向切片。** 实现运行时拓扑 Snapshot、纯 BFS、WalkThrough、InteractDoor、预期 Location 校验和 Warp 后稳定门禁；先覆盖单 Warp/单 Door，再覆盖多跳，不加入传送 fallback。
+4. [ ] **阶段 5.3：`interact` 纵向切片。** 实现相邻目标、Grab Tile 对齐、手持物门禁、一次提交、关联后置条件和提交点取消语义；先验证 Dialogue/Menu/门，再验证一个对象状态或 Inventory 变化，不为未支持类型建立通用猜测器。
+5. [ ] **阶段 5.4：`use_tool` 纵向切片。** 先实现 uncharged Axe/Pickaxe/Scythe，再实现 Hoe/Watering Can 的普通与蓄力路径；由生命周期探针证明 accepted/released/settled，最后组装实际工具、charge 和 Energy 结果。
+6. [ ] **阶段 5.5：可靠性与实机收口。** 统一验证单变更并发、各阶段 Cancel、Deadline、断线后 Status 恢复、结果保留、stale Ref、目标移动、错误 Warp、无路径、输入释放和卡住失败；逐项调用真实 MCP Tool，并由后续查询证明实际位置、UI/目标状态或工具效果。
+
+每个子阶段继续遵循 `Spec/Fixture → 唯一 Mod Handler → 自动生成的 MCP Tool → 自动化测试 → 单条实机验收`。MCP 侧不新增能力特判、单 Tool Schema 或投影函数；只要公共 Manifest、生成 Catalog、Mod 握手公告和 `game:write` 权限形成交集，三项 Tool 就应自动出现。
+
+#### 最低测试矩阵
+
+| 能力 | 自动化必须覆盖 | 实机必须覆盖 |
+|---|---|---|
+| `navigate` | 同图 already-there/可达/无路/严格终点；Adjacent 自动侧/指定侧/显式朝向；单 Warp/门/多跳/错误地图；Ref stale/移动；walking、door、stable 阶段取消与 Deadline | 同图 EXACT、同图 ADJACENT、一次 WalkThrough、一次门、多跳、途中取消 |
+| `interact` | 异地图/非相邻/错误 Ref Kind/手持物拦截；Grab Tile 对齐；Dialogue/Menu/Location/Inventory/目标状态成功；无效果失败；提交前取消与提交后拒绝取消 | NPC 或对象对话、容器或门、一个对象/Inventory 变化、无效果失败 |
+| `use_tool` | 未装备/不支持工具/超 charge/工具替换；普通动作、蓄力达到与释放、瞬时动作、空 Tile、零 Energy；各阶段取消、Deadline 与幂等释放 | Axe、Pickaxe、Scythe、Hoe 普通/蓄力、Watering Can 普通/蓄力，以及空 Tile、错误工具和蓄力中取消 |
+| 共通运行时 | 单变更并发、读查询安全穿插、断线用原 Command ID 查询、终态保留/Tombstone、无自动重放 | 标准 MCP Session 中断并恢复一次长命令，确认没有重复副作用 |
+
+阶段 5 明确不实现持续追踪移动角色、自动装备、自动导航后交互、钓鱼/弹弓/畜牧专用动作、批量农务、工作流编排、进度百分比估算、隐藏传送恢复或兼容旧能力名。这些边界不阻止三项 V1 原语完成；它们应在真实需求出现后由 Skill 或新的版本化能力处理。
+
+退出条件：十五项公开能力在 `--allow-write` 下由同一 Catalog/握手交集完整暴露；三项新能力只通过唯一 Handler 和现有 Coordinator 执行；任意时刻最多一个变更命令；取消与 Deadline 在各关键阶段可复现；断线不会自动重复执行；严格到达、关联交互效果和工具接受/收敛均有真实游戏证据；所有失败都清理 PFC/输入且不绕过正常游戏访问边界；公共源码不包含 Legacy/V2、旧 Dispatcher、文件桥、机器绝对路径或私有平台依赖。
 
 ### 阶段 6：交付 Skill 开发面
 
@@ -305,7 +408,7 @@ CI 至少包含以下门禁：
 
 阶段 4 已完成，下一步进入阶段 5：
 
-1. 先冻结 `navigate`、`interact` 与 `use_tool` 的最小公共行为、失败边界和后置条件，不复制旧仓的复合编排或输入模拟架构。
-2. 以现有 Command Coordinator 验证长时运行、取消、Deadline、断线 Status 恢复与单变更并发，不建立第二套 Scheduler。
-3. 每项能力继续同步交付 Spec/Fixture、唯一 Mod Handler、MCP 调用、自动化测试和真实游戏效果证据。
-4. 阶段 6 的 Skill SDK 与阶段 7 的许可证、安全政策和安装文档可以独立推进，但不得反向扩张 Mod/MCP 原语。
+1. 先执行阶段 5.0，只修改契约、Fixture 和最小 Spike，裁决动作提交与工具 lifecycle 的可靠公共 API；在这个结论完成前不写三个正式 Handler。
+2. 按“同图导航 → 跨图导航 → 交互 → 工具”的顺序逐条完成纵向切片，不并行铺开三个半成品状态机。
+3. 每条切片继续使用现有 Coordinator、Ref Store、Catalog 和 Descriptor Projection；任何需要第二套 Scheduler、Handler 互调或全局输入队列的设计都应退回重画边界。
+4. 阶段 5.5 完成十五项能力的真实 MCP Session 验收后，再把主要精力转入阶段 6 的 Skill 开发面。
