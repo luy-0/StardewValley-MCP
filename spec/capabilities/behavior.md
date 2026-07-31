@@ -31,6 +31,8 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 
 所有 Revision 与 Ref 都只在创建它们的 `mod_instance_id` 对应的游戏进程中有效。实现可以在不透明值内部编码实例和 Guard，但这些编码不属于公共契约。
 
+使用 World Entity 或 Character Ref 启动 `navigate`、`interact` 或 `use_tool` 时，实现必须在命令开始的主线程安全点解析并锁定同一游戏对象、当时的 `NameOrUniqueName` 与动作 Tile。命令不会持续追踪移动目标；在提交动作或返回成功前必须重验同一对象仍存在且位置没有变化。命令开始前已经失效的绑定返回 `STALE_REF`，Kind 不适用于该能力返回 `INVALID_ARGUMENT`；命令开始后对象消失、换图或移动则返回 `EXECUTION_FAILED`，不得用旧坐标继续执行或成功收口。
+
 ### Inspect 不变量
 
 `inspect` 按请求顺序返回一项结果；输入不得为空、不得重复，数量为 `1..64`。每个 `InspectedRef` 必须满足：
@@ -85,20 +87,33 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 - `arrival` 必须为 `EXACT` 或 `ADJACENT`；Ref 目标只允许 `ADJACENT`。
 - `stand_side` 只允许和 `ADJACENT` 同时出现；`face_on_arrival` 出现时不得为 `UNSPECIFIED`。
 - 导航可以经过正常游戏 Warp，但不得传送、修改碰撞或绕过游戏访问条件。
+- `EXACT` 只有最终 Location 与 Tile 都完全相等才能成功。`ADJACENT` 指定 `stand_side` 后只能站在该侧，不得静默换边；未指定时实现可以从四个 cardinal-adjacent Tile 中选择一个可达位置。
 - 成功要求 Final Position 满足 Arrival，且最终朝向满足可选要求。路径不存在、目标消失或抵达条件不成立不能返回成功。
+- `resolved_destination` 是本次锁定并实际用于抵达判断的玩家落脚 Tile；它不是 Ref 指向对象自身的 Tile。`route_location_ids` 只记录玩家实际到达过的 Location，首项为起点、末项为终点，不得返回尚未执行的规划路线。
+- 提交 PFC 或门动作前允许取消；取消或 Deadline 必须清除当前 PFC、移动方向与尚未提交的门输入。已经触发地图切换时继续收敛到稳定 Location，再按 Coordinator 的停止信号结束，不能传送回滚。
 
 ### `interact`
 
 - 目标必须在玩家当前 `location_id`，并位于游戏交互允许的相邻 Tile；能力不会隐式导航。
 - Ref 必须解析为当前可交互的 World Entity 或 Character。
+- 首版要求游戏窗口处于前台；失焦时返回 `NOT_READY`，不得提交一个无法可靠观察后置条件的动作，也不得回退到全局输入注入。
+- 玩家提交动作时必须空手或手持 `Tool`。手持食物、礼物、可放置物或其他非工具 Item 时返回 `NOT_READY`，不得把通用交互隐式扩张为赠礼、食用或放置。
+- 提交前必须重验目标、面朝目标，并使 `GetGrabTile()` 与目标 Tile 对齐；为对齐进行的 Tile 内微移不得让玩家离开起始 Tile。
 - 成功要求观察到与本次交互关联的游戏后置条件，例如 Dialogue/Menu 打开、对象状态变化、物品变化或 Relationship 变化。没有任何可关联效果时返回 `EXECUTION_FAILED`。
+- 调用游戏动作 API 前允许取消；游戏已经消费本次动作后不得再报告取消成功，此时 `CanCancel=false` 并继续观察真实后置条件。输入 API 的返回值、玩家暂时 Busy 或动画回到 Idle 都不能单独证明交互成功。
 
 ### `use_tool`
 
 - 目标必须位于当前 Location 和当前工具的合法作用范围；能力不会隐式导航或装备工具。
-- `charge_level` 最大为 5，并且不得超过当前工具支持的等级。
-- 成功要求工具动作由游戏接受且相关动画完成；击中空 Tile 也可以成功，不要求一定改变世界状态。
+- 首版要求游戏窗口处于前台；失焦时返回 `NOT_READY`，不得提交一个无法正常结算的工具动作，也不得回退到全局输入注入。
+- 首版只支持 Axe、Pickaxe、Hoe、Watering Can 与 Scythe。Fishing Rod、Slingshot、Pan、Milk Pail、Shears、普通武器和无法识别的 Mod Tool 返回 `INVALID_ARGUMENT`；这些工具需要独立的持续会话或目标语义，不进入通用单次工具原语。
+- 当前没有装备 Tool 时返回 `NOT_READY`；能力不会代替调用方选择或装备工具。
+- Axe、Pickaxe 与 Scythe 只允许 `charge_level=0`。Hoe 与 Watering Can 允许 `0..min(5, 当前工具实际支持等级)`；超出范围返回 `INVALID_ARGUMENT`。
+- 命令开始时锁存当前 Tool 实例和 Qualified Item ID；提交前工具被替换时返回 `EXECUTION_FAILED`，不得自动重新装备。
+- 状态机至少区分 `resolve → face → press/charge → accepted → release → settle`。只有观察到本次工具动作被游戏接受、需要的释放已经完成且动画/工具状态收敛才能成功；输入调用返回、玩家短暂 `UsingTool` 或最终 Idle 不能单独作为完整证据。
+- 击中空 Tile 也可以成功，不要求一定改变世界状态，Energy 变化也可以为零。
 - Result 必须回显实际工具 Qualified Item ID、实际 Charge Level 和 Energy 变化。
+- 调用 `BeginUsingTool()` 前允许取消并幂等清理；该公开 API 会立即排队不可逆的游戏动作，因此调用前必须先设置 `CanCancel=false`。调用之后收到取消返回 `CONFLICT`；若此后触发 Deadline，实现仍必须安全释放并等待本次工具动作收敛，但不得直接改写游戏内部动画或工具状态伪造回滚。
 
 ### `equip`
 

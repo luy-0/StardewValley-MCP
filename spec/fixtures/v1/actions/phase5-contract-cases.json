@@ -1,0 +1,69 @@
+{
+  "schemaVersion": 1,
+  "cases": [
+    {
+      "id": "navigate_character_locked_success",
+      "capability": "navigate",
+      "condition": "目标在命令期间未移动",
+      "lockedDestination": {"locationId": "Town", "x": 30, "y": 55},
+      "expected": {
+        "state": "succeeded",
+        "resolvedDestination": {"locationId": "Town", "x": 30, "y": 55}
+      }
+    },
+    {
+      "id": "navigate_character_moved",
+      "capability": "navigate",
+      "condition": "目标在命令启动后移动",
+      "expected": {"state": "failed", "errorCode": "execution_failed"}
+    },
+    {
+      "id": "interact_held_non_tool",
+      "capability": "interact",
+      "condition": "玩家手持非工具物品",
+      "expected": {"state": "failed", "errorCode": "not_ready"}
+    },
+    {
+      "id": "unfocused_player_action",
+      "capabilities": ["interact", "use_tool"],
+      "condition": "游戏窗口不在前台",
+      "expected": {"state": "failed", "errorCode": "not_ready"}
+    },
+    {
+      "id": "use_tool_unsupported",
+      "capability": "use_tool",
+      "toolKinds": [
+        "fishing_rod",
+        "slingshot",
+        "pan",
+        "milk_pail",
+        "shears",
+        "weapon",
+        "unknown_mod_tool"
+      ],
+      "expected": {"state": "failed", "errorCode": "invalid_arguments"}
+    },
+    {
+      "id": "use_tool_charge_policy",
+      "capability": "use_tool",
+      "invalidCases": [
+        {"toolKind": "axe", "chargeLevel": 1},
+        {"toolKind": "pickaxe", "chargeLevel": 1},
+        {"toolKind": "scythe", "chargeLevel": 1},
+        {"toolKind": "hoe", "chargeLevel": 3, "supportedLevel": 2},
+        {"toolKind": "watering_can", "chargeLevel": 5, "supportedLevel": 4}
+      ],
+      "expected": {"state": "failed", "errorCode": "invalid_arguments"}
+    },
+    {
+      "id": "cancel_after_commit",
+      "capabilities": ["interact", "use_tool"],
+      "condition": "交互已被游戏消费，或工具 BeginUsingTool 已排队",
+      "expected": {
+        "accepted": false,
+        "errorCode": "conflict",
+        "terminalStateNot": "cancelled"
+      }
+    }
+  ]
+}

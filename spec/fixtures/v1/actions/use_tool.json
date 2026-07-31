@@ -1,0 +1,31 @@
+{
+  "capability": "use_tool",
+  "minimalInput": {
+    "position": {"locationId": "Farm", "x": 64, "y": 16}
+  },
+  "fullInput": {
+    "targetRef": {"value": "world-entity-ref-2"},
+    "chargeLevel": 5
+  },
+  "invalidInput": {
+    "position": {"locationId": "Farm", "x": 64, "y": 16},
+    "chargeLevel": 6
+  },
+  "accepted": {"state": "accepted", "phase": "queued"},
+  "succeeded": {
+    "status": "succeeded",
+    "commandId": "42000000-0000-4000-8000-000000000003",
+    "output": {
+      "target": {"locationId": "Farm", "x": 64, "y": 16},
+      "toolQualifiedItemId": "(T)WateringCan",
+      "chargeLevel": 5,
+      "energy": {"before": 270.0, "after": 262.0, "delta": -8.0},
+      "execution": {"elapsedTicks": 75, "completionReason": "tool_action_settled"}
+    }
+  },
+  "failed": {
+    "status": "failed",
+    "commandId": "42000000-0000-4000-8000-000000000003",
+    "error": {"code": "invalid_arguments", "message": "当前工具不属于 V1 支持范围", "retryable": false}
+  }
+}

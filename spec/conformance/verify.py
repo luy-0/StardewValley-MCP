@@ -290,11 +290,14 @@ def verify_action_fixtures() -> None:
     index = load_json(FIXTURE_ROOT / "index.json")
     catalog = load_json(SPEC / "mcp" / "tool-schemas.json")
     tools = {tool["capabilityId"]: tool for tool in catalog["tools"]}
-    expected = {"say", "emote", "face", "equip", "open_menu", "activate_ui", "close_menu"}
+    expected = {
+        "say", "emote", "face", "navigate", "interact",
+        "use_tool", "equip", "open_menu", "activate_ui", "close_menu",
+    }
     paths = index.get("actionFixtures", [])
     require(len(paths) == len(set(paths)), "动作 Fixture 路径重复")
     documents = [load_json(FIXTURE_ROOT / path) for path in paths]
-    require({document.get("capability") for document in documents} == expected, "阶段 4 动作 Fixture 集合不完整")
+    require({document.get("capability") for document in documents} == expected, "V1 变更能力 Fixture 集合不完整")
     for document in documents:
         capability = document["capability"]
         require(
@@ -319,6 +322,62 @@ def verify_action_fixtures() -> None:
                 REVISION_RE.fullmatch(transition["uiRevisionAfter"]) is not None,
                 f"动作 Fixture 的 uiRevisionAfter 无效: {capability}",
             )
+        if capability == "navigate":
+            output = document["succeeded"]["output"]
+            require(output["final"] == output["resolvedDestination"], "navigate Fixture 未严格到达 resolvedDestination")
+            require(
+                output["routeLocationIds"][0] == output["start"]["locationId"]
+                and output["routeLocationIds"][-1] == output["final"]["locationId"],
+                "navigate Fixture 的实际 Location 路线首尾不一致",
+            )
+        if capability == "interact":
+            require(
+                document["failed"]["error"]["code"] == "not_ready",
+                "interact Fixture 未固定非工具手持物门禁错误",
+            )
+        if capability == "use_tool":
+            output = document["succeeded"]["output"]
+            require(output["toolQualifiedItemId"] == "(T)WateringCan", "use_tool Fixture 未使用首版支持工具")
+            require(output["chargeLevel"] == document["fullInput"]["chargeLevel"] == 5, "use_tool Fixture 的实际蓄力不一致")
+            require(
+                document["failed"]["error"]["code"] == "invalid_arguments",
+                "use_tool Fixture 未固定不支持工具错误",
+            )
+
+
+def verify_phase5_contract_cases() -> None:
+    index = load_json(FIXTURE_ROOT / "index.json")
+    path = index.get("phase5ContractCases")
+    require(path == "actions/phase5-contract-cases.json", "阶段 5 行为向量路径无效")
+    document = load_json(FIXTURE_ROOT / path)
+    require(set(document) == {"schemaVersion", "cases"} and document["schemaVersion"] == 1, "阶段 5 行为向量结构无效")
+    cases = {case["id"]: case for case in document["cases"]}
+    expected = {
+        "navigate_character_locked_success",
+        "navigate_character_moved",
+        "interact_held_non_tool",
+        "unfocused_player_action",
+        "use_tool_unsupported",
+        "use_tool_charge_policy",
+        "cancel_after_commit",
+    }
+    require(set(cases) == expected, "阶段 5 行为向量集合不完整")
+    locked = cases["navigate_character_locked_success"]
+    require(locked["lockedDestination"] == locked["expected"]["resolvedDestination"], "锁定导航落脚格不一致")
+    require(cases["navigate_character_moved"]["expected"] == {"state": "failed", "errorCode": "execution_failed"}, "移动目标错误语义无效")
+    require(cases["interact_held_non_tool"]["expected"] == {"state": "failed", "errorCode": "not_ready"}, "交互手持物错误语义无效")
+    require(cases["unfocused_player_action"]["expected"] == {"state": "failed", "errorCode": "not_ready"}, "失焦玩家动作错误语义无效")
+    unsupported = cases["use_tool_unsupported"]
+    require(len(unsupported["toolKinds"]) == 7 and unsupported["expected"]["errorCode"] == "invalid_arguments", "工具白名单反例无效")
+    charges = cases["use_tool_charge_policy"]
+    require(all(case["chargeLevel"] > 0 for case in charges["invalidCases"][:3]), "非蓄力工具反例无效")
+    require(
+        all(case["chargeLevel"] > case["supportedLevel"] for case in charges["invalidCases"][3:]),
+        "蓄力工具支持等级反例无效",
+    )
+    require(charges["expected"] == {"state": "failed", "errorCode": "invalid_arguments"}, "工具蓄力错误语义无效")
+    cancelled = cases["cancel_after_commit"]["expected"]
+    require(cancelled == {"accepted": False, "errorCode": "conflict", "terminalStateNot": "cancelled"}, "提交后取消语义无效")
 
 
 def import_generated_python(python_out: Path) -> dict[str, Any]:
@@ -1067,6 +1126,7 @@ def main() -> None:
         run([sys.executable, str(SPEC / "conformance" / "generate_mcp_tool_schemas.py"), "--check"])
         verify_tool_schema_catalog(manifest)
         verify_action_fixtures()
+        verify_phase5_contract_cases()
         modules = import_generated_python(python_out)
         fixture_paths = verify_fixtures(modules["transport"], manifest, digest)
         index = load_json(FIXTURE_ROOT / "index.json")

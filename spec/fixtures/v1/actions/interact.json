@@ -1,0 +1,28 @@
+{
+  "capability": "interact",
+  "minimalInput": {
+    "position": {"locationId": "FarmHouse", "x": 4, "y": 9}
+  },
+  "fullInput": {
+    "targetRef": {"value": "world-entity-ref-1"}
+  },
+  "invalidInput": {
+    "position": {"locationId": "FarmHouse", "x": 4, "y": 9},
+    "targetRef": {"value": "world-entity-ref-1"}
+  },
+  "accepted": {"state": "accepted", "phase": "queued"},
+  "succeeded": {
+    "status": "succeeded",
+    "commandId": "42000000-0000-4000-8000-000000000002",
+    "output": {
+      "target": {"locationId": "FarmHouse", "x": 4, "y": 9},
+      "energy": {"before": 270.0, "after": 270.0, "delta": 0.0},
+      "execution": {"elapsedTicks": 12, "completionReason": "dialogue_opened"}
+    }
+  },
+  "failed": {
+    "status": "failed",
+    "commandId": "42000000-0000-4000-8000-000000000002",
+    "error": {"code": "not_ready", "message": "请先清空手持非工具物品", "retryable": true}
+  }
+}
