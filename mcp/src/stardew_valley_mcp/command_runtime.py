@@ -47,6 +47,7 @@ _TERMINAL = {
     capabilities_pb2.COMMAND_STATE_TIMED_OUT,
 }
 _FAILED_ERROR_CODES = {
+    common_pb2.ERROR_CODE_INVALID_ARGUMENT,
     common_pb2.ERROR_CODE_NOT_READY,
     common_pb2.ERROR_CODE_NOT_FOUND,
     common_pb2.ERROR_CODE_STALE_REF,

@@ -31,6 +31,7 @@ ERROR_MAP_PATH = SPEC / "mcp" / "error-map.yaml"
 FIXTURE_ROOT = SPEC / "fixtures" / "v1"
 PACKAGE = "stardew_valley.mcp.v1"
 UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
+REVISION_RE = re.compile(r"^[0-9a-f]{64}$")
 
 LEGACY_CANDIDATES = {
     "say", "emote", "face", "move_to", "go_to", "interact", "use_tool", "equip",
@@ -285,6 +286,41 @@ def verify_tool_schema_catalog(manifest: dict[str, Any]) -> None:
         Draft202012Validator(tool["outputSchema"]).validate(success)
 
 
+def verify_action_fixtures() -> None:
+    index = load_json(FIXTURE_ROOT / "index.json")
+    catalog = load_json(SPEC / "mcp" / "tool-schemas.json")
+    tools = {tool["capabilityId"]: tool for tool in catalog["tools"]}
+    expected = {"say", "emote", "face", "equip", "open_menu", "activate_ui", "close_menu"}
+    paths = index.get("actionFixtures", [])
+    require(len(paths) == len(set(paths)), "动作 Fixture 路径重复")
+    documents = [load_json(FIXTURE_ROOT / path) for path in paths]
+    require({document.get("capability") for document in documents} == expected, "阶段 4 动作 Fixture 集合不完整")
+    for document in documents:
+        capability = document["capability"]
+        require(
+            set(document) == {"capability", "minimalInput", "fullInput", "invalidInput", "accepted", "succeeded", "failed"},
+            f"动作 Fixture 字段不完整: {capability}",
+        )
+        input_validator = Draft202012Validator(tools[capability]["inputSchema"])
+        output_validator = Draft202012Validator(tools[capability]["outputSchema"])
+        input_validator.validate(document["minimalInput"])
+        input_validator.validate(document["fullInput"])
+        require(not input_validator.is_valid(document["invalidInput"]), f"非法动作输入被 Schema 接受: {capability}")
+        require(document["accepted"] == {"state": "accepted", "phase": "queued"}, f"动作 ACCEPTED Fixture 无效: {capability}")
+        output_validator.validate(document["succeeded"])
+        output_validator.validate(document["failed"])
+        if capability in {"open_menu", "activate_ui", "close_menu"}:
+            transition = document["succeeded"]["output"]["transition"]
+            require(
+                REVISION_RE.fullmatch(transition["uiRevisionBefore"]) is not None,
+                f"动作 Fixture 的 uiRevisionBefore 无效: {capability}",
+            )
+            require(
+                REVISION_RE.fullmatch(transition["uiRevisionAfter"]) is not None,
+                f"动作 Fixture 的 uiRevisionAfter 无效: {capability}",
+            )
+
+
 def import_generated_python(python_out: Path) -> dict[str, Any]:
     modules: dict[str, Any] = {}
     sys.path.insert(0, str(python_out))
@@ -344,7 +380,7 @@ def verify_event_shape(event: Any, expected_capability: str | None = None) -> No
     elif event.state == 6:
         require(event.error.code == 12, "TIMED_OUT 必须携带 ERROR_CODE_DEADLINE_EXCEEDED")
     elif event.state == 4:
-        allowed_failed = {10, 11, 14, 15, 17, 19}
+        allowed_failed = {1, 10, 11, 14, 15, 17, 19}
         require(event.error.code in allowed_failed, "FAILED 使用了非业务终态错误码")
 
 
@@ -1030,6 +1066,7 @@ def main() -> None:
         verify_error_map(enums)
         run([sys.executable, str(SPEC / "conformance" / "generate_mcp_tool_schemas.py"), "--check"])
         verify_tool_schema_catalog(manifest)
+        verify_action_fixtures()
         modules = import_generated_python(python_out)
         fixture_paths = verify_fixtures(modules["transport"], manifest, digest)
         index = load_json(FIXTURE_ROOT / "index.json")

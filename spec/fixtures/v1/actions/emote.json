@@ -1,0 +1,9 @@
+{
+  "capability": "emote",
+  "minimalInput": {"emote": "happy"},
+  "fullInput": {"emote": "heart"},
+  "invalidInput": {"emote": "wave"},
+  "accepted": {"state": "accepted", "phase": "queued"},
+  "succeeded": {"status": "succeeded", "commandId": "41000000-0000-4000-8000-000000000002", "output": {"emote": "heart"}},
+  "failed": {"status": "failed", "commandId": "41000000-0000-4000-8000-000000000002", "error": {"code": "not_ready", "message": "当前状态不能触发表情", "retryable": true}}
+}

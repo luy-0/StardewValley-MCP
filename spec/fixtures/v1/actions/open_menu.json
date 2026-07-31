@@ -1,0 +1,9 @@
+{
+  "capability": "open_menu",
+  "minimalInput": {"menu": "inventory"},
+  "fullInput": {"menu": "skills"},
+  "invalidInput": {"menu": "journal"},
+  "accepted": {"state": "accepted", "phase": "queued"},
+  "succeeded": {"status": "succeeded", "commandId": "41000000-0000-4000-8000-000000000005", "output": {"transition": {"menuTypeBefore": "", "menuTypeAfter": "GameMenu", "uiRevisionBefore": "0000000000000000000000000000000000000000000000000000000000000000", "uiRevisionAfter": "1111111111111111111111111111111111111111111111111111111111111111"}}},
+  "failed": {"status": "failed", "commandId": "41000000-0000-4000-8000-000000000005", "error": {"code": "not_ready", "message": "当前状态不能打开菜单", "retryable": true}}
+}

@@ -2,7 +2,7 @@
 
 状态：**公开 V1 候选契约**
 
-Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本文定义无法由普通 Proto 类型表达的参数约束、默认值、Ref/Revision 生命周期以及成功后置条件。违反输入约束的命令必须在接受前以 `INVALID_ARGUMENT` 拒绝，不能依赖具体 Handler 的偶然行为。
+Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本文定义无法由普通 Proto 类型表达的参数约束、默认值、Ref/Revision 生命周期以及成功后置条件。只依赖请求载荷即可判定的结构型输入错误必须在接受前以 `INVALID_ARGUMENT` 拒绝，不能依赖具体 Handler 的偶然行为。Ref Kind、Ref 来源以及 Revision 与当前游戏对象的关系只能在游戏主线程安全点判定；这类上下文型非法输入允许按线路协议在接受后以 `FAILED/INVALID_ARGUMENT` 返回。
 
 ## 1. 公共值约束
 

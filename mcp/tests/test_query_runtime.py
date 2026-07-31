@@ -273,6 +273,29 @@ def test_announced_action_enters_tools_through_catalog_snapshot_and_scope_inters
     assert "stardew_face" in {tool.name for tool in read_write}
 
 
+def test_descriptor_risk_order_is_not_protocol_semantics() -> None:
+    snapshot = transport_pb2.CapabilitySnapshot()
+    descriptor = snapshot.capabilities.add(
+        id="activate_ui",
+        contract_version="1.0.0",
+        side_effect=transport_pb2.SIDE_EFFECT_MUTATING,
+        execution=transport_pb2.EXECUTION_MODE_LONG_RUNNING,
+        cancellable=True,
+        default_timeout_ms=10_000,
+        max_timeout_ms=30_000,
+        request_type="ActivateUiRequest",
+        result_type="ActivateUiResult",
+        required_scope="game:write",
+        destructive=True,
+    )
+    descriptor.risks.extend(
+        ["changes_relationship", "spends_money", "consumes_item", "advances_time", "changes_save"]
+    )
+    snapshot.digest = descriptor_digest(snapshot.capabilities)
+
+    Catalog.load().validate_snapshot(snapshot)
+
+
 def test_catalog_unknown_enum_number_is_stable_value_error() -> None:
     ready = transport_pb2.TransportFrame()
     json_format.Parse((OBSERVATION_FIXTURES / "server-ready.json").read_text(), ready)

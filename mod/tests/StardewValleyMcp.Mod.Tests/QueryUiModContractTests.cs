@@ -30,6 +30,7 @@ public sealed class QueryUiModContractTests
             Assert.That(resolved.Status, Is.EqualTo(UiElementResolveStatus.Resolved));
             Assert.That(resolved.Kind, Is.EqualTo(RefKind.UiElement));
             Assert.That(resolved.Target?.Target, Is.SameAs(target));
+            Assert.That(resolved.Target?.Component, Is.SameAs(component));
             Assert.That(resolved.Target?.MenuEpoch, Is.EqualTo("menu-a"));
             Assert.That(resolved.Target?.Index, Is.EqualTo(3));
         });
@@ -312,12 +313,16 @@ public sealed class QueryUiModContractTests
     }
 
     [Test]
-    public void CapabilityRegistry_ExplicitlyAdvertisesSharedObservationSet()
+    public void CapabilityRegistry_AdvertisesImplementedObservationAndStageFourActions()
     {
-        var registry = new CapabilityRegistry(InstanceId);
+        var registry = DefaultCapabilitySet.Create(InstanceId);
         Assert.That(
             registry.Snapshot.Capabilities.Select(item => item.Id),
-            Is.EqualTo(new[] { "inspect", "query_inventory", "query_runtime", "query_ui", "query_world" })
+            Is.EqualTo(new[]
+            {
+                "activate_ui", "close_menu", "emote", "equip", "face", "inspect",
+                "open_menu", "query_inventory", "query_runtime", "query_ui", "query_world", "say",
+            })
         );
     }
 

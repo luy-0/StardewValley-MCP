@@ -360,6 +360,28 @@ def test_failed_event_rejects_error_code_outside_protocol_allowlist() -> None:
     asyncio.run(exercise())
 
 
+def test_failed_event_accepts_contextual_invalid_argument() -> None:
+    async def exercise() -> None:
+        connection = _QueueConnection()
+        runtime = CommandRuntime(connection, Catalog.load())
+        command_id = "abababab-abab-4bab-8bab-abababababab"
+        execute = asyncio.create_task(runtime.execute(command_id, "query_runtime", queries_pb2.QueryRuntimeRequest()))
+        await _until(lambda: len(connection.sent) == 1)
+        await connection.incoming.put(
+            _event(command_id, capabilities_pb2.COMMAND_STATE_ACCEPTED, reply_to=connection.sent[0].message_id)
+        )
+        failed = _event(command_id, capabilities_pb2.COMMAND_STATE_FAILED)
+        failed.command_event.error.code = common_pb2.ERROR_CODE_INVALID_ARGUMENT
+        failed.command_event.error.message = "引用类型与能力不匹配"
+        await connection.incoming.put(failed)
+
+        result = await execute
+        assert result["error"]["code"] == "invalid_arguments"
+        await runtime.aclose()
+
+    asyncio.run(exercise())
+
+
 def test_unsolicited_running_before_accepted_is_protocol_failure() -> None:
     async def exercise() -> None:
         connection = _QueueConnection()

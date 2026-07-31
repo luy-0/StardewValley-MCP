@@ -97,9 +97,12 @@ class Catalog:
                 "destructive": descriptor.destructive,
                 "side_effect": side_effect,
                 "execution": execution,
-                "risk": list(descriptor.risks),
+                "risk": sorted(descriptor.risks),
             }
-            if any(public[key] != value for key, value in expected.items()):
+            if any(
+                (sorted(public[key]) if key == "risk" else public[key]) != value
+                for key, value in expected.items()
+            ):
                 raise ValueError(f"Mod descriptor 与公共 Catalog 不一致: {descriptor.id}")
 
     def tools_for(self, snapshot: Any) -> list[types.Tool]:

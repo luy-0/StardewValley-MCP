@@ -1,0 +1,9 @@
+{
+  "capability": "face",
+  "minimalInput": {"direction": "up"},
+  "fullInput": {"direction": "left"},
+  "invalidInput": {"direction": "north"},
+  "accepted": {"state": "accepted", "phase": "queued"},
+  "succeeded": {"status": "succeeded", "commandId": "41000000-0000-4000-8000-000000000003", "output": {"finalDirection": "left", "changed": true}},
+  "failed": {"status": "failed", "commandId": "41000000-0000-4000-8000-000000000003", "error": {"code": "not_ready", "message": "当前状态不能改变朝向", "retryable": true}}
+}

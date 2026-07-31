@@ -1,6 +1,6 @@
 # 公开版本重写计划
 
-状态：**阶段 4.0 统一命令运行时已完成，下一步实现阶段 4.1 `face`**
+状态：**阶段 4 简单交互能力已完成，下一步进入阶段 5 长时运行能力**
 
 本计划定义如何以旧仓库已经验证的游戏行为为参考，重新实现一套适合公开发布、独立安装和长期维护的 Mod、MCP 服务端与 Skill 开发套件。它不是旧代码搬迁清单；旧仓库只提供行为证据、失败经验和测试素材，不是新版本的架构模板。
 
@@ -228,15 +228,19 @@ query_runtime, query_world, query_inventory, query_ui, inspect
 #### 开发顺序
 
 1. [x] **阶段 4.0：运行时基础。** 生成全量 C# Descriptor 和通用 Python Request 映射；拆出 Mod Command Coordinator 与 MCP 事件分发；实现 `RUNNING`、Cancel、Status、Deadline、Result retention/Tombstone。用 fake immediate 与 fake staged execution 覆盖状态竞争，不提前实现游戏动作。
-2. [ ] **阶段 4.1：`face`。** 作为第一个低风险 staged slice，验证 `RUNNING`、取消、Deadline、输入清理和最终朝向。
-3. [ ] **阶段 4.2：`say → emote`。** 验证 immediate mutation、`game:write`、外部沟通风险，以及“效果开始即成功”而非等待动画结束。
-4. [ ] **阶段 4.3：`equip`。** 验证 Slot/Item Ref 二选一、Inventory Revision、玩家背包来源、空 Slot、stale Ref 与 no-op。
-5. [ ] **阶段 4.4：`open_menu → close_menu → activate_ui`。** 先建立可恢复的菜单开闭，再处理带 Revision 的元素激活；覆盖 UI Scale、Modal、旧 Revision、不可见/禁用元素和潜在破坏性操作。
-6. [ ] 每个 slice 均按 `Spec/Fixture → 唯一 Mod Handler → MCP 调用 → 自动化 → 单条实机验收` 完成后再进入下一项；失败立即停在当前 slice 取证，不批量执行七项动作。
+2. [x] **阶段 4.1：`face`。** 作为第一个低风险 staged slice，验证 `RUNNING`、取消、Deadline、输入清理和最终朝向。
+3. [x] **阶段 4.2：`say → emote`。** 验证 immediate mutation、`game:write`、外部沟通风险，以及“效果开始即成功”而非等待动画结束。
+4. [x] **阶段 4.3：`equip`。** 验证 Slot/Item Ref 二选一、Inventory Revision、玩家背包来源、空 Slot、stale Ref 与 no-op。
+5. [x] **阶段 4.4：`open_menu → close_menu → activate_ui`。** 先建立可恢复的菜单开闭，再处理带 Revision 的元素激活；覆盖 UI Scale、Modal、旧 Revision、不可见/禁用元素和潜在破坏性操作。
+6. [x] 每个 slice 均按 `Spec/Fixture → 唯一 Mod Handler → MCP 调用 → 自动化 → 单条实机验收` 完成后再进入下一项；失败立即停在当前 slice 取证，不批量执行七项动作。
 
 阶段 4.0 完成记录：2026-07-27，Mod 已将唯一接受点、幂等账本、单变更并发、主线程 immediate/staged 推进、Deadline、Cancel、Status、300 秒结果保留与进程期 Tombstone 收敛到独立 `CommandCoordinator`；`LocalServer` 只保留认证、Fence、控制帧路由和单一有界写出队列，并通过接受响应门闩保证 `ACCEPTED` 一定先于后续主动事件入队。MCP 已由唯一 Reader 按 `command_id` 与 `reply_to` 分发重复 `RUNNING`、终态和控制响应；客户端取消已接受的可取消调用时发送内部 Cancel，断线后只用原 Command ID 查询 Status，`found=false` 与结果过期均收敛为 `unknown`，不会重放命令。Manifest/Proto 现在确定性生成 15 项 C# Descriptor、完整 Tool Catalog，并通过 `CommandRequest` Descriptor 动态取得 Python Request 类型；默认仍只授权 `game:read`，显式加入 `game:write` 且 Mod 公告动作 Handler 后才会暴露动作 Tool。本阶段未实现任何真实动作 Handler，也未修改 V1 Proto。
 
 验证结果：生成检查与 Spec conformance 通过，跨语言生命周期 Fixture 覆盖 `RUNNING`、`CANCELLED`、`TIMED_OUT` 和过期 Tombstone；Python 59 项、Protocol 10 项、Mod 64 项测试通过，Transport Spike、公共边界扫描、MCP Wheel/源码包与 Mod ZIP 审计、`git diff --check` 全部通过。最终独立交叉审查未发现 P0/P1/P2，阶段 4.1 可以直接以 `face` 验证首个真实 staged action。
+
+阶段 4 完成记录：2026-07-27，七项简单交互能力均通过公共 Manifest、唯一 Mod Handler 与通用 MCP Command Runtime 交付；默认 `serve` 仍只暴露五项只读能力，显式 `serve --allow-write` 后按 Manifest、MCP 支持集、Mod 公告和权限策略交集暴露十二项已实现能力。Mod 在收口时进一步按 `Bootstrap`、`Transport`、`Runtime`、`Capabilities/Queries`、`Capabilities/Actions`、`Projection` 与 `References` 建立职责目录，具体 Handler 只由 `Bootstrap/DefaultCapabilitySet` 组装，Registry 不再构造业务实现。
+
+实机验收使用隔离 SMAPI 进程加载 `TestAgent_434178162` 存档，玩家 `Sea` 位于 `FarmHouse`。标准 MCP Session 已验证中英文 `say`、心形与音乐 `emote`、`face` 朝向变化、按真实 Item Ref 与 Inventory Revision 装备 Scythe、打开背包、按 UI Ref 与 Revision 激活 Skills 页签、关闭菜单，以及 `equip`、`activate_ui` 的 stale Revision 失败路径；后续查询确认朝向、当前工具、菜单类型和 Revision 均发生预期变化。自动化最终结果为 MCP 63 项、Protocol 10 项、Mod 104 项测试通过，生成检查、Spec conformance、Transport Spike、公共边界扫描、Wheel/sdist、Mod ZIP、包审计与 `git diff --check` 全部通过。
 
 阶段 4 明确不实现 `navigate`、`interact`、`use_tool`、复合农务、持久队列、多变更并发、公开命令历史 Tool 或进度百分比估算。这些要么属于阶段 5，要么不进入 Mod/MCP 原语层。
 
@@ -299,10 +303,9 @@ CI 至少包含以下门禁：
 
 ## 十一、近期下一步
 
-阶段 4 的研究与方案已经完成，下一步按已冻结顺序进入实现：
+阶段 4 已完成，下一步进入阶段 5：
 
-1. 先完成阶段 4.0 Command Coordinator、MCP 事件分发、Cancel/Status/retention 和生成 Catalog 收敛；在此之前不注册真实动作 Handler。
-2. 再按 `face → say → emote → equip → open_menu → close_menu → activate_ui` 完成七条纵向切片，不因旧仓已有代码而批量复制。
-3. 每条切片同步交付 Spec/Fixture、唯一 Mod Handler、MCP 调用、自动化测试和真实游戏效果证据。
-4. 旧仓只用于查游戏 API 与失败经验；正式名称、Ref/Revision、状态机、错误与结果以当前 V1 Spec 为准。
-5. 阶段 6 的 Skill SDK 与阶段 7 的许可证、安全政策和安装文档可以独立推进，但不得反向扩张 Mod/MCP 原语。
+1. 先冻结 `navigate`、`interact` 与 `use_tool` 的最小公共行为、失败边界和后置条件，不复制旧仓的复合编排或输入模拟架构。
+2. 以现有 Command Coordinator 验证长时运行、取消、Deadline、断线 Status 恢复与单变更并发，不建立第二套 Scheduler。
+3. 每项能力继续同步交付 Spec/Fixture、唯一 Mod Handler、MCP 调用、自动化测试和真实游戏效果证据。
+4. 阶段 6 的 Skill SDK 与阶段 7 的许可证、安全政策和安装文档可以独立推进，但不得反向扩张 Mod/MCP 原语。

@@ -1,6 +1,6 @@
 # 快速开始
 
-当前预览版提供五项只读 Tool：`stardew_query_runtime`、`stardew_query_world`、`stardew_query_inventory`、`stardew_query_ui` 与 `stardew_inspect`。它们分别用于读取运行状态、局部世界、玩家或容器库存、当前 UI，以及解析查询结果返回的不透明 Ref；变更游戏状态的能力仍在重写中。
+当前预览版提供观察与简单交互 Tool。默认启动方式只暴露 `game:read` 能力；只有显式传入 `--allow-write`，才会暴露 Mod 同时公告的交互能力。
 
 ## 一、安装 Mod
 
@@ -37,6 +37,12 @@ export STARDEW_VALLEY_MCP_SHARED_SECRET='<Base64 共享秘密>'
 uv run --project mcp stardew-valley-mcp serve
 ```
 
+需要允许 MCP 操作游戏时，使用：
+
+```bash
+uv run --project mcp stardew-valley-mcp serve --allow-write
+```
+
 ## 三、配置 MCP 客户端
 
 安装命令行工具后，客户端不需要保存仓库路径。配置可以使用以下结构，并通过客户端的秘密管理能力填写共享秘密。
@@ -57,7 +63,9 @@ uv run --project mcp stardew-valley-mcp serve
 }
 ```
 
-MCP 只有在成功连接并验证 Mod 的能力快照后才会列出双方共同支持且获准读取的 Tool。当前 Mod 与 MCP 正常配对时会列出五项观察 Tool；游戏停留在标题界面时，查询会返回稳定的 `not_ready`，加载存档后会返回 `succeeded` 和结构化 Snapshot。`query_world`、`query_inventory` 与 `query_ui` 返回的 `ref` 是不透明值，调用方只能原样交给 `stardew_inspect` 或其他明确接受 Ref 的 Tool，不应解析或自行构造。
+以上配置保持只读。需要允许简单交互 Tool 时，将 `args` 改为 `["serve", "--allow-write"]`；客户端仍只能看到公共 Manifest、MCP、Mod 公告和权限策略共同允许的能力。
+
+MCP 只有在成功连接并验证 Mod 的能力快照后才会列出公共 Manifest、MCP 支持能力、Mod 公告能力与权限策略的交集。游戏停留在标题界面时，查询会返回稳定的 `not_ready`，加载存档后会返回 `succeeded` 和结构化 Snapshot。`query_world`、`query_inventory` 与 `query_ui` 返回的 `ref` 是不透明值，调用方只能原样交给明确接受 Ref 的 Tool，不应解析或自行构造。
 
 ## 四、本地验证
 

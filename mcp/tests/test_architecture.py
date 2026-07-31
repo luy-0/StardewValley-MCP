@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from pathlib import Path
 
 
@@ -45,30 +46,30 @@ def test_catalog_support_set_is_not_hardcoded_to_observation_capabilities() -> N
     assert "frozenset(self._capabilities)" in source
 
 
-def test_query_inventory_uses_registry_without_transport_or_server_branch() -> None:
-    registry = (MOD / "CapabilityRegistry.cs").read_text()
+def test_query_inventory_is_composed_without_transport_or_server_branch() -> None:
+    composition = (MOD / "Bootstrap" / "DefaultCapabilitySet.cs").read_text()
     transport = (PACKAGE / "transport.py").read_text()
-    local_server = (MOD / "LocalServer.cs").read_text()
+    local_server = (MOD / "Transport" / "LocalServer.cs").read_text()
 
-    assert "new QueryInventoryHandler(refs)" in registry
+    assert "new QueryInventoryHandler(refs)" in composition
     assert "query_inventory" not in transport
     assert "QueryInventory" not in local_server
 
 
 def test_chest_inventory_reader_never_creates_shared_backing() -> None:
-    source = (MOD / "ChestInventoryReader.cs").read_text()
+    source = (MOD / "Projection" / "ChestInventoryReader.cs").read_text()
     assert ".GetItemsForPlayer(" not in source
     assert ".GetOrCreateGlobalInventory(" not in source
 
 
-def test_query_ui_uses_registry_without_transport_server_or_projection_branch() -> None:
-    registry = (MOD / "CapabilityRegistry.cs").read_text()
+def test_query_ui_is_composed_without_transport_server_or_projection_branch() -> None:
+    composition = (MOD / "Bootstrap" / "DefaultCapabilitySet.cs").read_text()
     transport = (PACKAGE / "transport.py").read_text()
     server = (PACKAGE / "server.py").read_text()
     projection = (PACKAGE / "projection.py").read_text()
-    local_server = (MOD / "LocalServer.cs").read_text()
+    local_server = (MOD / "Transport" / "LocalServer.cs").read_text()
 
-    assert "new QueryUiHandler(refs)" in registry
+    assert "new QueryUiHandler(refs)" in composition
     assert "query_ui" not in transport
     assert "query_ui" not in server
     assert "query_ui" not in projection
@@ -76,7 +77,7 @@ def test_query_ui_uses_registry_without_transport_server_or_projection_branch() 
 
 
 def test_query_ui_runtime_has_no_generic_clickable_mutation_or_callback_invocation() -> None:
-    source = (MOD / "UiRuntimeProjector.cs").read_text()
+    source = (MOD / "Projection" / "UiRuntimeProjector.cs").read_text()
     forbidden = (
         "allClickableComponents",
         "populateClickableComponentList",
@@ -99,3 +100,32 @@ def test_query_ui_runtime_has_no_generic_clickable_mutation_or_callback_invocati
     assert source.count("getCurrentString(") == 1
     assert "GetType().Assembly" not in source
     assert "IsExactActivationKnownType" in source
+
+
+def test_default_capability_set_is_the_unique_concrete_handler_composition_root() -> None:
+    composition_path = MOD / "Bootstrap" / "DefaultCapabilitySet.cs"
+    registry = (MOD / "Runtime" / "CapabilityRegistry.cs").read_text()
+    handlers = {
+        "SayHandler",
+        "EmoteHandler",
+        "FaceHandler",
+        "EquipHandler",
+        "OpenMenuHandler",
+        "ActivateUiHandler",
+        "CloseMenuHandler",
+        "QueryRuntimeHandler",
+        "QueryWorldHandler",
+        "QueryInventoryHandler",
+        "QueryUiHandler",
+        "InspectHandler",
+    }
+
+    assert "CapabilityRegistry(IEnumerable<ICapabilityHandler> handlers)" in registry
+    assert not re.findall(r"new\s+\w*Handler\s*\(", registry)
+
+    for source_path in MOD.rglob("*.cs"):
+        constructions = set(re.findall(r"new\s+(\w*Handler)\s*\(", source_path.read_text()))
+        if source_path == composition_path:
+            assert constructions == handlers
+        else:
+            assert not constructions, source_path.relative_to(MOD)

@@ -1,0 +1,9 @@
+{
+  "capability": "activate_ui",
+  "minimalInput": {"elementRef": {"value": "ui-ref-1"}, "uiRevision": "2222222222222222222222222222222222222222222222222222222222222222"},
+  "fullInput": {"elementRef": {"value": "ui-ref-2"}, "uiRevision": "3333333333333333333333333333333333333333333333333333333333333333"},
+  "invalidInput": {"elementRef": {"value": "ui-ref-1"}, "uiRevision": "old"},
+  "accepted": {"state": "accepted", "phase": "queued"},
+  "succeeded": {"status": "succeeded", "commandId": "41000000-0000-4000-8000-000000000006", "output": {"elementRef": {"value": "ui-ref-2"}, "transition": {"menuTypeBefore": "GameMenu", "menuTypeAfter": "GameMenu", "uiRevisionBefore": "3333333333333333333333333333333333333333333333333333333333333333", "uiRevisionAfter": "4444444444444444444444444444444444444444444444444444444444444444"}}},
+  "failed": {"status": "failed", "commandId": "41000000-0000-4000-8000-000000000006", "error": {"code": "stale_ref", "message": "UI Ref 或 Revision 已失效", "retryable": false}}
+}

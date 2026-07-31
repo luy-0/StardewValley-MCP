@@ -1,0 +1,9 @@
+{
+  "capability": "say",
+  "minimalInput": {"content": "你"},
+  "fullInput": {"content": "阶段四冒烟测试 🌱"},
+  "invalidInput": {"content": ""},
+  "accepted": {"state": "accepted", "phase": "queued"},
+  "succeeded": {"status": "succeeded", "commandId": "41000000-0000-4000-8000-000000000001", "output": {"contentLength": 9}},
+  "failed": {"status": "failed", "commandId": "41000000-0000-4000-8000-000000000001", "error": {"code": "not_ready", "message": "游戏聊天系统尚未就绪", "retryable": true}}
+}

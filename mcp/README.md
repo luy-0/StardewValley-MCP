@@ -17,7 +17,7 @@ MCP 服务端不拥有游戏状态，不嵌入私有平台身份，也不要求�
 
 ## 当前实现状态
 
-当前已建立独立 Python 包、CLI 和由 `../spec/proto/` 生成的协议类型。`serve` 会启动真正的 MCP stdio Server；它连接本地 Mod、验证 HMAC 与能力摘要，并按公共 Manifest、MCP 支持集、Mod 公告集和权限策略的交集暴露五项观察 Tool：`stardew_query_runtime`、`stardew_query_world`、`stardew_query_inventory`、`stardew_query_ui` 与 `stardew_inspect`。
+当前已建立独立 Python 包、CLI 和由 `../spec/proto/` 生成的协议类型。`serve` 会启动真正的 MCP stdio Server；它连接本地 Mod、验证 HMAC 与能力摘要，并按公共 Manifest、MCP 支持集、Mod 公告集和权限策略的交集暴露 Tool。默认只允许 `game:read`；需要操作游戏时必须显式增加 `--allow-write`。
 
 推荐使用 `uv` 按锁文件安装、测试并构建：
 
@@ -25,6 +25,8 @@ MCP 服务端不拥有游戏状态，不嵌入私有平台身份，也不要求�
 ./mcp/scripts/test.sh
 uv run --project mcp stardew-valley-mcp doctor
 uv run --project mcp stardew-valley-mcp serve
+# 显式允许操作游戏
+uv run --project mcp stardew-valley-mcp serve --allow-write
 ```
 
 只重新生成或检查协议代码：

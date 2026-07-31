@@ -19,6 +19,15 @@
     {"path": "commands/navigate.timed-out.json", "message": "TransportFrame", "sender": "mod"},
     {"path": "commands/navigate.status-expired.json", "message": "TransportFrame", "sender": "mod"}
   ],
+  "actionFixtures": [
+    "actions/say.json",
+    "actions/emote.json",
+    "actions/face.json",
+    "actions/equip.json",
+    "actions/open_menu.json",
+    "actions/activate_ui.json",
+    "actions/close_menu.json"
+  ],
   "authVectors": [
     {"path": "auth/hmac-sha256.json", "algorithm": "v1_hmac_sha256"},
     {"path": "auth/hmac-minor-downgrade.synthetic.json", "algorithm": "v1_hmac_sha256_minor_downgrade"}

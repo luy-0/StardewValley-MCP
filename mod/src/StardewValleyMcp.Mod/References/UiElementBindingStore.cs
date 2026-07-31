@@ -200,6 +200,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
     public int Index { get; }
     public long ObservedGeneration { get; set; }
     public bool Stale { get; set; }
+    public object? ResolvedComponent { get; private set; }
 
     public bool Matches(
         IUiElementRefOwner owner,
@@ -222,6 +223,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
     public OpaqueBindingCurrentStatus ResolveCurrent(out object? target)
     {
         target = null;
+        ResolvedComponent = null;
         if (Stale
             || !_menu.TryGetTarget(out var menu)
             || !_component.TryGetTarget(out var component)
@@ -248,6 +250,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
             || !string.Equals(_guard, current.Guard, StringComparison.Ordinal))
             return OpaqueBindingCurrentStatus.Stale;
         target = current.SemanticTarget;
+        ResolvedComponent = current.Component;
         return OpaqueBindingCurrentStatus.Resolved;
     }
 }
@@ -269,6 +272,7 @@ internal enum UiElementResolveStatus
 
 internal sealed record ResolvedUiElementRef(
     object Target,
+    object Component,
     string MenuEpoch,
     UiExtractorKind Extractor,
     UiElementKind PublicKind,

@@ -1,0 +1,9 @@
+{
+  "capability": "close_menu",
+  "minimalInput": {},
+  "fullInput": {},
+  "invalidInput": {"force": true},
+  "accepted": {"state": "accepted", "phase": "queued"},
+  "succeeded": {"status": "succeeded", "commandId": "41000000-0000-4000-8000-000000000007", "output": {"transition": {"menuTypeBefore": "GameMenu", "menuTypeAfter": "", "uiRevisionBefore": "5555555555555555555555555555555555555555555555555555555555555555", "uiRevisionAfter": "6666666666666666666666666666666666666666666666666666666666666666"}, "alreadyClosed": false}},
+  "failed": {"status": "failed", "commandId": "41000000-0000-4000-8000-000000000007", "error": {"code": "not_ready", "message": "当前菜单尚不能关闭", "retryable": true}}
+}

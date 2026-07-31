@@ -311,7 +311,8 @@ internal sealed class CommandCoordinator
         else if (terminal.State is CommandState.Cancelled or CommandState.TimedOut
             || terminal.Error.Code is ErrorCode.Cancelled or ErrorCode.DeadlineExceeded)
             return Failed(record.CommandId, ErrorCode.Internal, "Handler 不得构造取消或超时终态", "failed");
-        else if (terminal.Error.Code is not (ErrorCode.NotReady
+        else if (terminal.Error.Code is not (ErrorCode.InvalidArgument
+            or ErrorCode.NotReady
             or ErrorCode.NotFound
             or ErrorCode.StaleRef
             or ErrorCode.OutOfRange

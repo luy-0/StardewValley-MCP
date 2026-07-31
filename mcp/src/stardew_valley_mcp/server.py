@@ -11,6 +11,7 @@ from mcp.server.lowlevel import NotificationOptions, Server
 from mcp.server.stdio import stdio_server
 
 from . import __version__
+from .catalog import Catalog, CatalogPolicy
 from .client import StardewClient
 from .transport import ConfigurationError, ConnectionConfig
 
@@ -36,8 +37,15 @@ def create_server(client: Any) -> Server:
     return server
 
 
-async def run_stdio(config: ConnectionConfig) -> None:
-    client = StardewClient(config)
+def catalog_for(*, allow_write: bool) -> Catalog:
+    scopes = {"game:read"}
+    if allow_write:
+        scopes.add("game:write")
+    return Catalog.load(CatalogPolicy(None, frozenset(scopes)))
+
+
+async def run_stdio(config: ConnectionConfig, *, allow_write: bool = False) -> None:
+    client = StardewClient(config, catalog_for(allow_write=allow_write))
     server = create_server(client)
     try:
         async with stdio_server() as (read_stream, write_stream):
@@ -50,11 +58,11 @@ async def run_stdio(config: ConnectionConfig) -> None:
         await client.aclose()
 
 
-def main() -> int:
+def main(*, allow_write: bool = False) -> int:
     try:
         config = ConnectionConfig.from_env()
     except ConfigurationError as error:
         print(str(error), file=sys.stderr)
         return 2
-    asyncio.run(run_stdio(config))
+    asyncio.run(run_stdio(config, allow_write=allow_write))
     return 0

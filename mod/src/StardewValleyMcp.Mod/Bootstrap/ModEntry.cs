@@ -49,7 +49,7 @@ public sealed class ModEntry : StardewModdingAPI.Mod
         }
 
         var modInstanceId = Guid.NewGuid().ToString("D");
-        var registry = new CapabilityRegistry(modInstanceId);
+        var registry = DefaultCapabilitySet.Create(modInstanceId);
         _server = new LocalServer(address, config.Port, secret, Monitor, registry, modInstanceId);
         CryptographicOperations.ZeroMemory(secret);
         _server.Start();

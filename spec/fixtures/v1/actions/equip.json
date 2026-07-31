@@ -1,0 +1,9 @@
+{
+  "capability": "equip",
+  "minimalInput": {"slotIndex": 0},
+  "fullInput": {"itemRef": {"value": "item-ref-1"}, "inventoryRevision": "0000000000000000000000000000000000000000000000000000000000000000"},
+  "invalidInput": {"itemRef": {"value": "item-ref-1"}},
+  "accepted": {"state": "accepted", "phase": "queued"},
+  "succeeded": {"status": "succeeded", "commandId": "41000000-0000-4000-8000-000000000004", "output": {"slotIndex": 0, "item": {"qualifiedItemId": "(T)Axe", "displayName": "斧头", "stack": 1, "quality": 0, "category": "-99", "tool": true, "toolLevel": 0}, "changed": true}},
+  "failed": {"status": "failed", "commandId": "41000000-0000-4000-8000-000000000004", "error": {"code": "stale_ref", "message": "玩家背包或目标物品已变化", "retryable": false}}
+}

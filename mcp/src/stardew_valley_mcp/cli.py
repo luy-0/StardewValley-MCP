@@ -12,7 +12,12 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--version", action="version", version=__version__)
     subcommands = parser.add_subparsers(dest="command")
     subcommands.add_parser("doctor", help="检查本地 Python 包和协议生成物")
-    subcommands.add_parser("serve", help="以 stdio 启动 MCP 服务端")
+    serve = subcommands.add_parser("serve", help="以 stdio 启动 MCP 服务端")
+    serve.add_argument(
+        "--allow-write",
+        action="store_true",
+        help="允许暴露需要 game:write 权限的操作能力",
+    )
     return parser
 
 
@@ -26,6 +31,6 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "serve":
         from .server import main as run_server
 
-        return run_server()
+        return run_server(allow_write=args.allow_write)
     parser.print_help()
     return 0

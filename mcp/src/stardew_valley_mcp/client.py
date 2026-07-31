@@ -1,4 +1,4 @@
-"""观察能力的统一运行调用器。"""
+"""公共能力的统一运行调用器。"""
 
 from __future__ import annotations
 

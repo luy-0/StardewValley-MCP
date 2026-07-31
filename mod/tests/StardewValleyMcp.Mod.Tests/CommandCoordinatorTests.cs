@@ -215,6 +215,25 @@ public sealed class CommandCoordinatorTests
     }
 
     [Test]
+    public void ContextualInvalidArgumentRemainsACommandFailure()
+    {
+        var coordinator = NewCoordinator(new FakeClock(), new ContextualInvalidArgumentHandler());
+        var events = new List<CommandEvent>();
+        coordinator.EventPublished += events.Add;
+        var request = RuntimeRequest("12121212-1212-4212-8212-121212121212");
+
+        coordinator.Submit(request);
+        coordinator.ReleaseAccepted(request.CommandId);
+        coordinator.Tick();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(events.Single().State, Is.EqualTo(CommandState.Failed));
+            Assert.That(events.Single().Error.Code, Is.EqualTo(ErrorCode.InvalidArgument));
+        });
+    }
+
+    [Test]
     public void ActiveMutationTickAlsoAdvancesOneQueuedReadOnlyCommand()
     {
         var clock = new FakeClock();
@@ -335,6 +354,19 @@ public sealed class CommandCoordinatorTests
         public FakeContinuation Continuation { get; } = new();
         public Error? Validate(CommandRequest request) => request.OperationCase == Operation ? null : new Error { Code = ErrorCode.InvalidArgument };
         public ICommandContinuation Start(string commandId, CommandRequest request) => Continuation;
+    }
+
+    private sealed class ContextualInvalidArgumentHandler : IImmediateCapabilityHandler
+    {
+        public string Id => "query_runtime";
+        public CommandRequest.OperationOneofCase Operation => CommandRequest.OperationOneofCase.QueryRuntime;
+        public Error? Validate(CommandRequest request) => null;
+        public CommandEvent Execute(string commandId, CommandRequest request) => new()
+        {
+            CommandId = commandId,
+            State = CommandState.Failed,
+            Error = new Error { Code = ErrorCode.InvalidArgument, Message = "引用类型与能力不匹配" },
+        };
     }
 
     private sealed class FakeContinuation : ICommandContinuation
