@@ -1,6 +1,6 @@
 # 公开版本重写计划
 
-状态：**阶段 4 简单交互能力已完成，下一步进入阶段 5 长时运行能力**
+状态：**阶段 5.4 三项长时能力已完成，下一步执行阶段 5.5 可靠性与实机收口**
 
 本计划定义如何以旧仓库已经验证的游戏行为为参考，重新实现一套适合公开发布、独立安装和长期维护的 Mod、MCP 服务端与 Skill 开发套件。它不是旧代码搬迁清单；旧仓库只提供行为证据、失败经验和测试素材，不是新版本的架构模板。
 
@@ -338,7 +338,7 @@ DefaultCapabilitySet
 2. [x] **阶段 5.1：同图 `navigate` 纵向切片。** 已实现三项动作共享的 Target Resolver、严格 EXACT、ADJACENT、`stand_side`、`face_on_arrival`、命令私有 PFC 驱动与取消/Deadline 清理。自动化覆盖坐标与 Ref、严格落点、选边、朝向、目标移动和失败清理；实机在 `FarmHouse` 依次验证坐标 EXACT、指定侧 ADJACENT 和 World Entity Ref ADJACENT，并由 `query_runtime` 独立确认最终位置与朝向。此项只代表同图切片完成，不代表阶段五的完整导航能力完成。
 3. [x] **阶段 5.2：跨图 `navigate` 纵向切片。** 已实现运行时拓扑 Snapshot、保留具体出口身份及平行出口回退的纯 BFS、地图边界 WalkThrough 有界方向探测、室内门 InteractDoor、预期 Location 校验、Warp pending 等待、稳定门禁和跨段 Handoff；所有地图身份统一使用 `NameOrUniqueName`，不加入传送 fallback。自动化覆盖具体 Edge、多跳、方向回退、门单次提交、错误地图、稳定与清理；失焦实机依次完成 `FarmHouse → Farm`、`Farm → BusStop`，并在含玩家自建设施的存档中完成 `Farm → Coop UUID` 及 `Coop UUID → Farm → Cabin UUID`。后续真实多跳复验又修复了边界方向只写一次和中继地图瞬时不可用两项竞态，最终由 `FarmHouse → Farm → Forest → Town` 连续编排及后置查询确认精确终点。至此阶段五的完整 `navigate` 能力完成。
 4. [x] **阶段 5.3：`interact` 纵向切片。** 已实现当前地图 cardinal-adjacent 门禁、Grab Tile 对齐、手持物门禁、一次原生动作提交、关联后置条件和提交点取消语义；提交后以已观察到的 Location、UI、Inventory、Relationship 或目标状态变化收口，不因一次性目标被消费而把真实效果改判为失败。自动化覆盖参数、相邻与手持物门禁、有界微移、六类成功后置条件、无效果失败和取消边界；实机完成容器对话、Town 医院门切图、无效果失败以及 Forest 普通蘑菇拾取，后置 `query_ui`、`query_runtime`、`query_inventory` 分别确认对话内容、医院精确落点和背包新增物品。
-5. [ ] **阶段 5.4：`use_tool` 纵向切片。** 先实现 uncharged Axe/Pickaxe/Scythe，再实现 Hoe/Watering Can 的普通与蓄力路径；由生命周期探针证明 accepted/released/settled，最后组装实际工具、charge 和 Energy 结果。
+5. [x] **阶段 5.4：`use_tool` 纵向切片。** 已实现 Axe/Pickaxe/Scythe 的非蓄力路径，以及 Hoe/Watering Can 的普通与蓄力路径；独立 Driver 只通过游戏工具 API 推进动作，Handler 以 `swingTicker` 边沿、Busy、释放与稳定帧证明 accepted/released/settled，不引入全局 InputBridge。自动化覆盖未装备、不支持工具、实际 charge 上限、工具替换、普通/蓄力/瞬时工具、提交前取消和 Deadline 安全释放；失焦实机完成五类工具调用，其中 Axe、Pickaxe、Scythe 与 charged Hoe/Watering Can 均返回实际 Qualified Item ID、实际 charge 与 Energy 差值，并验证错误工具和越界目标稳定失败。
 6. [ ] **阶段 5.5：可靠性与实机收口。** 统一验证单变更并发、各阶段 Cancel、Deadline、断线后 Status 恢复、结果保留、stale Ref、目标移动、错误 Warp、无路径、输入释放和卡住失败；逐项调用真实 MCP Tool，并由后续查询证明实际位置、UI/目标状态或工具效果。
 
 每个子阶段继续遵循 `Spec/Fixture → 唯一 Mod Handler → 自动生成的 MCP Tool → 自动化测试 → 单条实机验收`。MCP 侧不新增能力特判、单 Tool Schema 或投影函数；只要公共 Manifest、生成 Catalog、Mod 握手公告和 `game:write` 权限形成交集，三项 Tool 就应自动出现。
@@ -407,9 +407,8 @@ CI 至少包含以下门禁：
 
 ## 十一、近期下一步
 
-阶段 4 已完成，下一步进入阶段 5：
+阶段 5.0 至 5.4 已完成，下一步只做阶段 5.5 收口：
 
-1. 先执行阶段 5.0，只修改契约、Fixture 和最小 Spike，裁决动作提交与工具 lifecycle 的可靠公共 API；在这个结论完成前不写三个正式 Handler。
-2. 按“同图导航 → 跨图导航 → 交互 → 工具”的顺序逐条完成纵向切片，不并行铺开三个半成品状态机。
-3. 每条切片继续使用现有 Coordinator、Ref Store、Catalog 和 Descriptor Projection；任何需要第二套 Scheduler、Handler 互调或全局输入队列的设计都应退回重画边界。
-4. 阶段 5.5 完成十五项能力的真实 MCP Session 验收后，再把主要精力转入阶段 6 的 Skill 开发面。
+1. 复验三项长时能力在单变更并发、Cancel、Deadline、错误目标与断线恢复下仍由同一 Coordinator 正确收口，不新增第二套 Scheduler 或兼容分支。
+2. 通过标准 MCP Session 逐项调用十五项能力，并用后续只读查询证明位置、UI、目标状态或工具效果；实机允许保留不阻塞主路径的已知边界，但必须如实记录。
+3. 确认公共 Manifest、MCP 支持集、Mod 握手公告与权限交集一致，清理测试痕迹后提交阶段 5 基线，再进入阶段 6 Skill 开发面。

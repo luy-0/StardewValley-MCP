@@ -12,6 +12,7 @@ internal static class DefaultCapabilitySet
             new FaceHandler(),
             new NavigateHandler(refs),
             new InteractHandler(refs),
+            new UseToolHandler(refs),
             new EquipHandler(refs),
             new OpenMenuHandler(refs),
             new ActivateUiHandler(refs),
