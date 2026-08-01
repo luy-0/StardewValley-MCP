@@ -13,7 +13,7 @@ from jsonschema import Draft202012Validator, ValidationError
 from .catalog import Catalog
 from .projection import project_message
 from .protocol import capabilities_pb2, common_pb2, transport_pb2
-from .transport import ProtocolError, TransportConnection
+from .transport import HandshakeRejectedError, ProtocolError, TransportConnection
 
 
 _ERRORS = {
@@ -91,6 +91,7 @@ class _CommandWaiter:
     current: capabilities_pb2.CommandEvent | None = None
     accepted: bool = False
     sent: bool = False
+    pending_events: list[capabilities_pb2.CommandEvent] = field(default_factory=list)
 
 
 @dataclass
@@ -333,8 +334,20 @@ class CommandRuntime:
                 and not waiter.accepted
                 and frame.reply_to != waiter.request_id
             ):
-                raise ProtocolError("未关联 CommandRequest 的状态事件无效")
+                # Mod 的直接接受响应与主线程主动事件由不同生产者写入。
+                # 正常情况下门闩保证 ACCEPTED 先入队；会话切换或缓存状态竞争时，
+                # 线路仍可能先交付已知 command_id 的主动事件。暂存到关联响应
+                # 到达后按原顺序校验，既不误报已执行命令，也不凭主动事件单独
+                # 建立接受证据。
+                if len(waiter.pending_events) >= 8:
+                    raise ProtocolError("接受响应前的状态事件过多")
+                waiter.pending_events.append(_clone(frame.command_event))
+                return
             self._apply_event(waiter, frame.command_event)
+            if waiter.accepted and waiter.pending_events:
+                pending, waiter.pending_events = waiter.pending_events, []
+                for event in pending:
+                    self._apply_event(waiter, event)
             return
 
         control = self._controls.get(frame.reply_to)
@@ -456,7 +469,7 @@ class CommandRuntime:
                 return _unknown(waiter.command_id)
             async with asyncio.timeout(remaining):
                 waiter.disconnected.clear()
-                status = await self.get_status(waiter.command_id)
+                status = await self._get_status_after_disconnect(waiter.command_id)
                 if status is None:
                     return _unknown(waiter.command_id)
                 if waiter.terminal.done():
@@ -473,6 +486,21 @@ class CommandRuntime:
             return self._protocol_failure(waiter.command_id)
         except (_ConnectionLost, OSError, asyncio.IncompleteReadError, asyncio.TimeoutError):
             return _unknown(waiter.command_id)
+
+    async def _get_status_after_disconnect(self, command_id: str) -> capabilities_pb2.CommandEvent | None:
+        """等待旧 Socket 在 Mod 端完成清理，再用原 Session 与 Command ID 查询。
+
+        这里只重试形状合法的 BUSY 握手；命令本身绝不重新提交。外层命令
+        Deadline 为整个恢复循环提供硬上限。
+        """
+        while True:
+            try:
+                return await self.get_status(command_id)
+            except HandshakeRejectedError as error:
+                if error.code != common_pb2.ERROR_CODE_BUSY:
+                    raise
+                await self._connection.close()
+                await asyncio.sleep(0.05)
 
     def _project_terminal(self, waiter: _CommandWaiter, event: capabilities_pb2.CommandEvent) -> dict[str, object]:
         if event.state != capabilities_pb2.COMMAND_STATE_SUCCEEDED:

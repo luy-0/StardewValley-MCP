@@ -8,6 +8,7 @@ from google.protobuf import json_format
 from stardew_valley_mcp.catalog import Catalog, CatalogPolicy, descriptor_digest
 from stardew_valley_mcp.command_runtime import CommandRuntime
 from stardew_valley_mcp.protocol import actions_pb2, capabilities_pb2, common_pb2, queries_pb2, transport_pb2
+from stardew_valley_mcp.transport import HandshakeRejectedError
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -70,9 +71,12 @@ class _QueueConnection:
         self.connect_count = 0
         self.closed = False
         self.reader_tasks: set[asyncio.Task[object]] = set()
+        self.connect_errors: list[BaseException] = []
 
     async def connect(self):
         self.connect_count += 1
+        if self.connect_errors:
+            raise self.connect_errors.pop(0)
         self.closed = False
         return self.snapshot
 
@@ -168,7 +172,11 @@ def test_disconnect_recovers_by_status_with_same_command_id_only() -> None:
         command_id = "44444444-4444-4444-8444-444444444444"
         execute = asyncio.create_task(runtime.execute(command_id, "query_runtime", queries_pb2.QueryRuntimeRequest()))
         await _until(lambda: len(connection.sent) == 1)
+        connection.connect_errors.append(
+            HandshakeRejectedError(common_pb2.ERROR_CODE_BUSY, "旧连接仍在清理")
+        )
         await connection.incoming.put(asyncio.IncompleteReadError(partial=b"", expected=1))
+        await asyncio.sleep(0.06)
         await _until(lambda: len(connection.sent) == 2)
         status = connection.sent[1]
         assert status.WhichOneof("body") == "get_command_status_request"
@@ -184,7 +192,7 @@ def test_disconnect_recovers_by_status_with_same_command_id_only() -> None:
         result = await execute
         assert result["status"] == "succeeded"
         assert [frame.WhichOneof("body") for frame in connection.sent] == ["command_request", "get_command_status_request"]
-        assert connection.connect_count == 2
+        assert connection.connect_count == 3
         await runtime.aclose()
 
     asyncio.run(exercise())
@@ -382,7 +390,7 @@ def test_failed_event_accepts_contextual_invalid_argument() -> None:
     asyncio.run(exercise())
 
 
-def test_unsolicited_running_before_accepted_is_protocol_failure() -> None:
+def test_proactive_events_wait_for_correlated_acceptance_then_keep_order() -> None:
     async def exercise() -> None:
         connection = _QueueConnection()
         runtime = CommandRuntime(connection, Catalog.load())
@@ -390,6 +398,36 @@ def test_unsolicited_running_before_accepted_is_protocol_failure() -> None:
         execute = asyncio.create_task(runtime.execute(command_id, "query_runtime", queries_pb2.QueryRuntimeRequest()))
         await _until(lambda: len(connection.sent) == 1)
         await connection.incoming.put(_event(command_id, capabilities_pb2.COMMAND_STATE_RUNNING))
+        await connection.incoming.put(_terminal(command_id))
+        await asyncio.sleep(0)
+
+        assert not execute.done()
+        assert runtime._commands[command_id].pending_events
+        await connection.incoming.put(
+            _event(command_id, capabilities_pb2.COMMAND_STATE_ACCEPTED, reply_to=connection.sent[0].message_id)
+        )
+
+        result = await execute
+        assert result["status"] == "succeeded"
+        await runtime.aclose()
+
+    asyncio.run(exercise())
+
+
+def test_invalid_buffered_event_remains_protocol_failure_after_acceptance() -> None:
+    async def exercise() -> None:
+        connection = _QueueConnection()
+        runtime = CommandRuntime(connection, Catalog.load())
+        command_id = "bcbcbcbc-bcbc-4bcb-8bcb-bcbcbcbcbcbc"
+        execute = asyncio.create_task(runtime.execute(command_id, "query_runtime", queries_pb2.QueryRuntimeRequest()))
+        await _until(lambda: len(connection.sent) == 1)
+        invalid = _event(command_id, capabilities_pb2.COMMAND_STATE_RUNNING)
+        invalid.command_event.error.code = common_pb2.ERROR_CODE_INTERNAL
+        invalid.command_event.error.message = "running must not have an outcome"
+        await connection.incoming.put(invalid)
+        await connection.incoming.put(
+            _event(command_id, capabilities_pb2.COMMAND_STATE_ACCEPTED, reply_to=connection.sent[0].message_id)
+        )
 
         result = await execute
         assert result["error"]["code"] == "upstream_protocol_error"

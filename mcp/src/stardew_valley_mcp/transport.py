@@ -28,6 +28,14 @@ class ProtocolError(ValueError):
     pass
 
 
+class HandshakeRejectedError(ProtocolError):
+    """形状合法、但 Mod 以稳定 Error 拒绝本次握手。"""
+
+    def __init__(self, code: int, message: str):
+        super().__init__(message or "握手被拒绝")
+        self.code = code
+
+
 @dataclass(frozen=True)
 class ConnectionConfig:
     host: str
@@ -130,7 +138,12 @@ class TransportConnection:
                 await write_frame(self._writer, transport_pb2.TransportFrame(message_id=request_id, reply_to=hello_frame.message_id, client_hello=client_hello))
             ready_frame = await read_frame(self._reader)
             if ready_frame.WhichOneof("body") == "handshake_rejected":
-                raise ProtocolError("握手被拒绝")
+                if ready_frame.HasField("fence") or ready_frame.reply_to != request_id:
+                    raise ProtocolError("HandshakeRejected 关联无效")
+                raise HandshakeRejectedError(
+                    ready_frame.handshake_rejected.error.code,
+                    ready_frame.handshake_rejected.error.message,
+                )
             if ready_frame.WhichOneof("body") != "server_ready" or ready_frame.HasField("fence") or ready_frame.reply_to != request_id:
                 raise ProtocolError("需要 ServerReady")
             ready = ready_frame.server_ready

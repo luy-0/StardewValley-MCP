@@ -524,17 +524,24 @@ def test_cached_terminal_direct_response_succeeds_without_accepted() -> None:
     Draft202012Validator(Catalog.load().tool("query_runtime").outputSchema).validate(result)
 
 
-def test_unsolicited_terminal_without_accepted_is_rejected() -> None:
+def test_proactive_terminal_can_arrive_before_correlated_accepted() -> None:
     snapshot = fixture("server-ready.json").server_ready.capability_snapshot
     command_id = "55555555-5555-4555-8555-555555555555"
     terminal = fixture("query-runtime.succeeded.json")
     terminal.message_id = "s-unsolicited"
     terminal.reply_to = ""
     terminal.command_event.command_id = command_id
-    runtime = CommandRuntime(_FakeConnection(snapshot, [terminal]), Catalog.load())
+    accepted = transport_pb2.TransportFrame(
+        message_id="s-accepted",
+        reply_to="c-1",
+        command_event=capabilities_pb2.CommandEvent(
+            command_id=command_id,
+            state=capabilities_pb2.COMMAND_STATE_ACCEPTED,
+        ),
+    )
+    runtime = CommandRuntime(_FakeConnection(snapshot, [terminal, accepted]), Catalog.load())
     result = asyncio.run(runtime.execute(command_id, "query_runtime", queries_pb2.QueryRuntimeRequest()))
-    assert result["status"] == "failed"
-    assert result["error"]["code"] == "upstream_protocol_error"
+    assert result["status"] == "succeeded"
 
 
 def test_mcp_server_exposes_and_calls_only_query_runtime() -> None:
