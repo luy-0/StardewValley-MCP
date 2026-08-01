@@ -16,7 +16,7 @@ Mod 不实现 MCP，不加载 Skill，不拥有智能体身份，也不定义私
 
 ## 当前实现状态
 
-当前已建立独立的 .NET 6 Solution、公共 Proto 生成项目和 SMAPI Host。Host 只在配置的 loopback 地址启动 Proto TCP Listener，通过共享秘密完成 HMAC 认证。Registry 当前显式注册五项观察 Handler 与七项简单交互 Handler；`navigate`、`interact` 和 `use_tool` 尚未注册。
+当前已建立独立的 .NET 6 Solution、公共 Proto 生成项目和 SMAPI Host。Host 只在配置的 loopback 地址启动 Proto TCP Listener，通过共享秘密完成 HMAC 认证。Registry 当前显式注册五项观察 Handler、七项简单交互 Handler，以及 `navigate`、`interact` 两项长时 Handler；`use_tool` 尚未注册。
 
 生成并测试公共协议：
 

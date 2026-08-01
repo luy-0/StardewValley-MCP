@@ -53,7 +53,7 @@ Skill 开发入口，只包含接口定义、编写模板、最小示例和一�
 
 ## 项目状态
 
-当前预览版已经具备独立的 Mod、MCP Python 包、五项观察能力，以及 `say`、`emote`、`face`、`equip`、`open_menu`、`activate_ui`、`close_menu` 七项简单交互能力。默认 MCP 启动方式仍只读，只有显式启用写权限才会暴露交互 Tool；`navigate`、`interact` 与 `use_tool` 尚未实现，因此本仓库仍不是完整 V1 正式版。
+当前预览版已经具备独立的 Mod、MCP Python 包、五项观察能力、`say`、`emote`、`face`、`equip`、`open_menu`、`activate_ui`、`close_menu` 七项简单交互能力，以及 `navigate` 与 `interact` 两项长时能力。默认 MCP 启动方式仍只读，只有显式启用写权限才会暴露交互 Tool；`use_tool` 尚未实现，因此本仓库仍不是完整 V1 正式版。
 
 首次安装与调用方法见[快速开始](docs/getting-started.md)，本地完整回归入口为：
 

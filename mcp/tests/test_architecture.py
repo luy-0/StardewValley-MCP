@@ -110,6 +110,7 @@ def test_default_capability_set_is_the_unique_concrete_handler_composition_root(
         "EmoteHandler",
         "FaceHandler",
         "NavigateHandler",
+        "InteractHandler",
         "EquipHandler",
         "OpenMenuHandler",
         "ActivateUiHandler",
