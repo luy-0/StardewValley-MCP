@@ -313,14 +313,14 @@ public sealed class QueryUiModContractTests
     }
 
     [Test]
-    public void CapabilityRegistry_AdvertisesImplementedObservationAndStageFourActions()
+    public void CapabilityRegistry_AdvertisesImplementedCapabilitiesThroughSameMapNavigate()
     {
         var registry = DefaultCapabilitySet.Create(InstanceId);
         Assert.That(
             registry.Snapshot.Capabilities.Select(item => item.Id),
             Is.EqualTo(new[]
             {
-                "activate_ui", "close_menu", "emote", "equip", "face", "inspect",
+                "activate_ui", "close_menu", "emote", "equip", "face", "inspect", "navigate",
                 "open_menu", "query_inventory", "query_runtime", "query_ui", "query_world", "say",
             })
         );

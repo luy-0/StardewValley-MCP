@@ -335,8 +335,8 @@ DefaultCapabilitySet
 #### 开发顺序
 
 1. [x] **阶段 5.0：契约收口与游戏 API Spike。** 已在 `behavior.md`、Fixture 和测试中固化 Character Ref “启动时锁定、结束前重验、不持续追踪”、`resolved_destination`、Interact 手持物门禁、首版工具白名单、提交点、前台门禁与稳定错误；实机分别验证交互、普通工具、瞬时工具、蓄力工具在聚焦和失焦状态下的提交、释放与收敛证据。Spike 代码未进入产品实现，也未引入旧 InputBridge。
-2. [ ] **阶段 5.1：同图 `navigate` 纵向切片。** 实现共享 Target Resolver、严格 EXACT、ADJACENT、`stand_side`、`face_on_arrival`、PFC 清理与命令私有 continuation；同步交付 Fixture、Fake Game Port 测试、通用 MCP 调用和一条实机验证。
-3. [ ] **阶段 5.2：跨图 `navigate` 纵向切片。** 实现运行时拓扑 Snapshot、纯 BFS、WalkThrough、InteractDoor、预期 Location 校验和 Warp 后稳定门禁；先覆盖单 Warp/单 Door，再覆盖多跳，不加入传送 fallback。
+2. [x] **阶段 5.1：同图 `navigate` 纵向切片。** 已实现三项动作共享的 Target Resolver、严格 EXACT、ADJACENT、`stand_side`、`face_on_arrival`、命令私有 PFC 驱动与取消/Deadline 清理。自动化覆盖坐标与 Ref、严格落点、选边、朝向、目标移动和失败清理；实机在 `FarmHouse` 依次验证坐标 EXACT、指定侧 ADJACENT 和 World Entity Ref ADJACENT，并由 `query_runtime` 独立确认最终位置与朝向。此项只代表同图切片完成，不代表阶段五的完整导航能力完成。
+3. [ ] **阶段 5.2：跨图 `navigate` 纵向切片。** 实现运行时拓扑 Snapshot、保留具体出口身份的纯 BFS、地图边界 WalkThrough、室内门 InteractDoor、预期 Location 校验和 Warp 后稳定门禁；所有地图身份统一使用 `NameOrUniqueName`，覆盖多个 Coop、Barn、Cabin、Shed 等玩家自建设施的 UUID 唯一定位。先覆盖单 Warp/单 Door，再覆盖多跳，不加入传送 fallback。只有本项通过自动化与实机验收后，阶段五的 `navigate` 才可标记完成。
 4. [ ] **阶段 5.3：`interact` 纵向切片。** 实现相邻目标、Grab Tile 对齐、手持物门禁、一次提交、关联后置条件和提交点取消语义；先验证 Dialogue/Menu/门，再验证一个对象状态或 Inventory 变化，不为未支持类型建立通用猜测器。
 5. [ ] **阶段 5.4：`use_tool` 纵向切片。** 先实现 uncharged Axe/Pickaxe/Scythe，再实现 Hoe/Watering Can 的普通与蓄力路径；由生命周期探针证明 accepted/released/settled，最后组装实际工具、charge 和 Energy 结果。
 6. [ ] **阶段 5.5：可靠性与实机收口。** 统一验证单变更并发、各阶段 Cancel、Deadline、断线后 Status 恢复、结果保留、stale Ref、目标移动、错误 Warp、无路径、输入释放和卡住失败；逐项调用真实 MCP Tool，并由后续查询证明实际位置、UI/目标状态或工具效果。

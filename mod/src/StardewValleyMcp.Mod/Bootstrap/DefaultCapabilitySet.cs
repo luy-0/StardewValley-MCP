@@ -10,6 +10,7 @@ internal static class DefaultCapabilitySet
             new SayHandler(),
             new EmoteHandler(),
             new FaceHandler(),
+            new NavigateHandler(refs),
             new EquipHandler(refs),
             new OpenMenuHandler(refs),
             new ActivateUiHandler(refs),
