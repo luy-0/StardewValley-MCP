@@ -38,7 +38,7 @@ dotnet test mod/tests/StardewValleyMcp.Protocol.Tests/StardewValleyMcp.Protocol.
 
 ## 自动进入指定存档
 
-`AutoLoadSave` 是默认关闭的一次性启动能力。启用后，Mod 会等待标题菜单，复用游戏原生存档扫描菜单精确匹配 `AutoLoadSaveName`，并在 `SaveLoaded` 事件中核对实际载入的存档目录；它不会模拟鼠标点击，也不会选择“最近存档”。加载期间会临时关闭失焦暂停，完成或失败后恢复原设置。
+`AutoLoadSave` 是默认关闭的一次性启动能力。启用后，Mod 会等待标题菜单，复用游戏原生存档扫描菜单精确匹配 `AutoLoadSaveName`，并在 `SaveLoaded` 事件中核对实际载入的存档目录；它不会模拟鼠标点击，也不会选择“最近存档”。加载期间会临时关闭失焦暂停。存档世界就绪后，本地控制服务也会在运行期保持游戏 Update，不要求游戏窗口始终位于前台；返回标题界面时恢复用户原设置。
 
 ```json
 {

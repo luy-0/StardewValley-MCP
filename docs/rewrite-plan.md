@@ -318,7 +318,7 @@ DefaultCapabilitySet
 
 - 只作用于当前 Location 中游戏允许的 cardinal-adjacent Tile，不隐式导航。提交前依次完成目标重验、玩家状态检查、面朝、`GetGrabTile()` 对齐和必要的 Tile 内微移；微移不得让玩家离开起始 Tile。
 - 首版要求玩家空手或手持 Tool。手持食物、可放置物、礼物等非工具 Item 时返回 `NOT_READY`，避免通用 `interact` 暗中变成赠礼、食用或放置能力。
-- 优先使用游戏公开的动作语义提交一次交互，不复制固定 X 键、全局 InputBridge 或失焦反射。实机 Spike 已证明失焦时虽然 API 可以返回已接受，但关联效果不能可靠推进，因此首版要求游戏窗口处于前台；失焦明确返回 `NOT_READY`。
+- 优先使用游戏公开的动作语义提交一次交互，不复制固定 X 键、全局 InputBridge 或失焦反射。阶段 5.0 的失焦停滞后来确认是自动加载完成后恢复了 `pauseWhenOutOfFocus`，使单机游戏停止 Update；新仓应在世界就绪的控制运行期保持 Update 推进，失焦本身不再作为 `NOT_READY` 门禁。
 - 提交前捕获目标绑定、Location、UI Revision、Inventory Revision 和目标可读状态；提交后只有出现可关联的 Dialogue/Menu、Location、Inventory、Relationship 或目标状态变化时才成功。通用 `player_busy` 只能是中间证据，观察窗口结束仍无关联变化返回 `EXECUTION_FAILED`。
 - 提交动作前 `CanCancel=true`；游戏已经消费动作后 `CanCancel=false`，继续观察真实结果，不能把已经发生的副作用伪装为取消成功。
 
@@ -329,14 +329,14 @@ DefaultCapabilitySet
 - Axe、Pickaxe 与 Scythe 首版只允许 `charge_level=0`；Hoe 与 Watering Can 允许 `0..min(5, 当前工具实际支持等级)`。达到请求的实际 `toolPower` 后必须完成释放，不能复制旧仓互相漂移的 0..4、0..5 与多套帧数魔数。
 - 状态机至少区分 `resolve → face → press/charge → accepted → release → settle`。实机 Spike 已确认以 `swingTicker` 边沿、Busy 状态和完成收敛组合观察普通、瞬时与蓄力工具动作；仅看到输入队列为空或玩家 idle 不得成功。
 - 成功要求游戏接受了本次工具动作且相关动画/工具状态已经收敛。空 Tile 可以成功，Energy 变化可以为零；结果仍必须回显实际目标、实际工具 Qualified Item ID、实际 charge 和 double Energy 差值。
-- 首版要求游戏窗口处于前台；实机 Spike 证明失焦状态能提交却无法正常结算，必须在提交前返回 `NOT_READY`，不得恢复旧 InputBridge。
+- 失焦时仍需完成与聚焦相同的 accepted、release 与 settle 后置条件。运行期只解决 `pauseWhenOutOfFocus` 的游戏更新门，不恢复旧 InputBridge；若公开工具 API 在持续 Update 下仍不能收敛，再以实机证据收缩该工具，而不是预设统一前台门禁。
 - `BeginUsingTool()` 会立即排队不可逆动作，因此只允许在调用它之前取消，并在调用前先设置 `CanCancel=false`。调用之后取消返回 `CONFLICT`；Deadline 仍需安全释放并等待已提交动作收敛，但不得强行改写 `UsingTool`、动画或工具内部状态。
 
 #### 开发顺序
 
-1. [x] **阶段 5.0：契约收口与游戏 API Spike。** 已在 `behavior.md`、Fixture 和测试中固化 Character Ref “启动时锁定、结束前重验、不持续追踪”、`resolved_destination`、Interact 手持物门禁、首版工具白名单、提交点、前台门禁与稳定错误；实机分别验证交互、普通工具、瞬时工具、蓄力工具在聚焦和失焦状态下的提交、释放与收敛证据。Spike 代码未进入产品实现，也未引入旧 InputBridge。
+1. [x] **阶段 5.0：契约收口与游戏 API Spike。** 已在 `behavior.md`、Fixture 和测试中固化 Character Ref “启动时锁定、结束前重验、不持续追踪”、`resolved_destination`、Interact 手持物门禁、首版工具白名单、提交点与稳定错误；实机分别验证交互、普通工具、瞬时工具、蓄力工具的提交、释放与收敛证据。后续结合旧仓 `6bec6fe → b4b961c` 演进确认，失焦停滞的直接原因是 `pauseWhenOutOfFocus` 阻止游戏 Update，因此修正为运行期保证 Update 推进，而不是前台门禁或恢复旧 InputBridge。
 2. [x] **阶段 5.1：同图 `navigate` 纵向切片。** 已实现三项动作共享的 Target Resolver、严格 EXACT、ADJACENT、`stand_side`、`face_on_arrival`、命令私有 PFC 驱动与取消/Deadline 清理。自动化覆盖坐标与 Ref、严格落点、选边、朝向、目标移动和失败清理；实机在 `FarmHouse` 依次验证坐标 EXACT、指定侧 ADJACENT 和 World Entity Ref ADJACENT，并由 `query_runtime` 独立确认最终位置与朝向。此项只代表同图切片完成，不代表阶段五的完整导航能力完成。
-3. [ ] **阶段 5.2：跨图 `navigate` 纵向切片。** 实现运行时拓扑 Snapshot、保留具体出口身份的纯 BFS、地图边界 WalkThrough、室内门 InteractDoor、预期 Location 校验和 Warp 后稳定门禁；所有地图身份统一使用 `NameOrUniqueName`，覆盖多个 Coop、Barn、Cabin、Shed 等玩家自建设施的 UUID 唯一定位。先覆盖单 Warp/单 Door，再覆盖多跳，不加入传送 fallback。只有本项通过自动化与实机验收后，阶段五的 `navigate` 才可标记完成。
+3. [x] **阶段 5.2：跨图 `navigate` 纵向切片。** 已实现运行时拓扑 Snapshot、保留具体出口身份及平行出口回退的纯 BFS、地图边界 WalkThrough 有界方向探测、室内门 InteractDoor、预期 Location 校验、Warp pending 等待、稳定门禁和跨段 Handoff；所有地图身份统一使用 `NameOrUniqueName`，不加入传送 fallback。自动化覆盖具体 Edge、多跳、方向回退、门单次提交、错误地图、稳定与清理；失焦实机依次完成 `FarmHouse → Farm`、`Farm → BusStop`，并在含玩家自建设施的存档中完成 `Farm → Coop UUID` 及 `Coop UUID → Farm → Cabin UUID`，后置查询确认精确 UUID、Tile 和可移动状态。至此阶段五的完整 `navigate` 能力完成。
 4. [ ] **阶段 5.3：`interact` 纵向切片。** 实现相邻目标、Grab Tile 对齐、手持物门禁、一次提交、关联后置条件和提交点取消语义；先验证 Dialogue/Menu/门，再验证一个对象状态或 Inventory 变化，不为未支持类型建立通用猜测器。
 5. [ ] **阶段 5.4：`use_tool` 纵向切片。** 先实现 uncharged Axe/Pickaxe/Scythe，再实现 Hoe/Watering Can 的普通与蓄力路径；由生命周期探针证明 accepted/released/settled，最后组装实际工具、charge 和 Energy 结果。
 6. [ ] **阶段 5.5：可靠性与实机收口。** 统一验证单变更并发、各阶段 Cancel、Deadline、断线后 Status 恢复、结果保留、stale Ref、目标移动、错误 Warp、无路径、输入释放和卡住失败；逐项调用真实 MCP Tool，并由后续查询证明实际位置、UI/目标状态或工具效果。
@@ -349,7 +349,7 @@ DefaultCapabilitySet
 |---|---|---|
 | `navigate` | 同图 already-there/可达/无路/严格终点；Adjacent 自动侧/指定侧/显式朝向；单 Warp/门/多跳/错误地图；Ref stale/移动；walking、door、stable 阶段取消与 Deadline | 同图 EXACT、同图 ADJACENT、一次 WalkThrough、一次门、多跳、途中取消 |
 | `interact` | 异地图/非相邻/错误 Ref Kind/手持物拦截；Grab Tile 对齐；Dialogue/Menu/Location/Inventory/目标状态成功；无效果失败；提交前取消与提交后拒绝取消 | NPC 或对象对话、容器或门、一个对象/Inventory 变化、无效果失败 |
-| `use_tool` | 未装备/失焦/不支持工具/超 charge/工具替换；普通动作、蓄力达到与释放、瞬时动作、空 Tile、零 Energy；提交前取消、提交后冲突、Deadline 与幂等释放 | Axe、Pickaxe、Scythe、Hoe 普通/蓄力、Watering Can 普通/蓄力，以及空 Tile、错误工具、提交前取消与提交后冲突 |
+| `use_tool` | 未装备/不支持工具/超 charge/工具替换；聚焦与失焦下的普通动作、蓄力达到与释放、瞬时动作、空 Tile、零 Energy；提交前取消、提交后冲突、Deadline 与幂等释放 | Axe、Pickaxe、Scythe、Hoe 普通/蓄力、Watering Can 普通/蓄力，以及空 Tile、错误工具、失焦运行、提交前取消与提交后冲突 |
 | 共通运行时 | 单变更并发、读查询安全穿插、断线用原 Command ID 查询、终态保留/Tombstone、无自动重放 | 标准 MCP Session 中断并恢复一次长命令，确认没有重复副作用 |
 
 阶段 5 明确不实现持续追踪移动角色、自动装备、自动导航后交互、钓鱼/弹弓/畜牧专用动作、批量农务、工作流编排、进度百分比估算、隐藏传送恢复或兼容旧能力名。这些边界不阻止三项 V1 原语完成；它们应在真实需求出现后由 Skill 或新的版本化能力处理。

@@ -356,7 +356,7 @@ def verify_phase5_contract_cases() -> None:
         "navigate_character_locked_success",
         "navigate_character_moved",
         "interact_held_non_tool",
-        "unfocused_player_action",
+        "unfocused_player_action_supported",
         "use_tool_unsupported",
         "use_tool_charge_policy",
         "cancel_after_commit",
@@ -366,7 +366,11 @@ def verify_phase5_contract_cases() -> None:
     require(locked["lockedDestination"] == locked["expected"]["resolvedDestination"], "锁定导航落脚格不一致")
     require(cases["navigate_character_moved"]["expected"] == {"state": "failed", "errorCode": "execution_failed"}, "移动目标错误语义无效")
     require(cases["interact_held_non_tool"]["expected"] == {"state": "failed", "errorCode": "not_ready"}, "交互手持物错误语义无效")
-    require(cases["unfocused_player_action"]["expected"] == {"state": "failed", "errorCode": "not_ready"}, "失焦玩家动作错误语义无效")
+    require(
+        cases["unfocused_player_action_supported"]["expected"]
+        == {"focusGate": "allowed", "globalInputBridge": False},
+        "失焦玩家动作支持语义无效",
+    )
     unsupported = cases["use_tool_unsupported"]
     require(len(unsupported["toolKinds"]) == 7 and unsupported["expected"]["errorCode"] == "invalid_arguments", "工具白名单反例无效")
     charges = cases["use_tool_charge_policy"]

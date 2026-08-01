@@ -65,6 +65,8 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 
 ## 4. 操作能力
 
+Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机游戏在窗口失焦时仍继续推进游戏 Update；窗口失焦本身不是操作能力返回 `NOT_READY` 的理由。实现可以在该运行期临时关闭游戏的 `pauseWhenOutOfFocus`，但必须在返回标题界面时恢复原值。这个保证只负责游戏时钟和动作生命周期继续推进，不授权实现伪造 `IsActive`、安装全局输入队列、反射 SMAPI 输入状态或绕过各能力自己的后置条件。
+
 ### `say`
 
 - `content` 为 `1..500` 个 Unicode Scalar Value。
@@ -96,7 +98,7 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 
 - 目标必须在玩家当前 `location_id`，并位于游戏交互允许的相邻 Tile；能力不会隐式导航。
 - Ref 必须解析为当前可交互的 World Entity 或 Character。
-- 首版要求游戏窗口处于前台；失焦时返回 `NOT_READY`，不得提交一个无法可靠观察后置条件的动作，也不得回退到全局输入注入。
+- 窗口失焦时仍按相同契约执行；实现必须使用游戏语义动作并观察真实后置条件，不得回退到全局输入注入。若游戏世界本身尚未进入可推进状态，仍返回 `NOT_READY`。
 - 玩家提交动作时必须空手或手持 `Tool`。手持食物、礼物、可放置物或其他非工具 Item 时返回 `NOT_READY`，不得把通用交互隐式扩张为赠礼、食用或放置。
 - 提交前必须重验目标、面朝目标，并使 `GetGrabTile()` 与目标 Tile 对齐；为对齐进行的 Tile 内微移不得让玩家离开起始 Tile。
 - 成功要求观察到与本次交互关联的游戏后置条件，例如 Dialogue/Menu 打开、对象状态变化、物品变化或 Relationship 变化。没有任何可关联效果时返回 `EXECUTION_FAILED`。
@@ -105,7 +107,7 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 ### `use_tool`
 
 - 目标必须位于当前 Location 和当前工具的合法作用范围；能力不会隐式导航或装备工具。
-- 首版要求游戏窗口处于前台；失焦时返回 `NOT_READY`，不得提交一个无法正常结算的工具动作，也不得回退到全局输入注入。
+- 窗口失焦时仍按相同契约执行；实现必须让工具动作在持续 Update 中完成 accepted、release 与 settle，不得回退到全局输入注入。若游戏世界本身尚未进入可推进状态，仍返回 `NOT_READY`。
 - 首版只支持 Axe、Pickaxe、Hoe、Watering Can 与 Scythe。Fishing Rod、Slingshot、Pan、Milk Pail、Shears、普通武器和无法识别的 Mod Tool 返回 `INVALID_ARGUMENT`；这些工具需要独立的持续会话或目标语义，不进入通用单次工具原语。
 - 当前没有装备 Tool 时返回 `NOT_READY`；能力不会代替调用方选择或装备工具。
 - Axe、Pickaxe 与 Scythe 只允许 `charge_level=0`。Hoe 与 Watering Can 允许 `0..min(5, 当前工具实际支持等级)`；超出范围返回 `INVALID_ARGUMENT`。

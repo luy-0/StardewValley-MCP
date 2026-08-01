@@ -9,6 +9,7 @@ public sealed class ModEntry : StardewModdingAPI.Mod
 {
     private LocalServer? _server;
     private SaveAutoLoader? _saveAutoLoader;
+    private GameAdvancePolicy? _gameAdvancePolicy;
 
     public override void Entry(IModHelper helper)
     {
@@ -53,6 +54,7 @@ public sealed class ModEntry : StardewModdingAPI.Mod
         _server = new LocalServer(address, config.Port, secret, Monitor, registry, modInstanceId);
         CryptographicOperations.ZeroMemory(secret);
         _server.Start();
+        _gameAdvancePolicy = new GameAdvancePolicy(helper);
         helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
         Monitor.Log(
             $"Stardew Valley MCP 已注册能力：{string.Join(", ", registry.Snapshot.Capabilities.Select(item => item.Id))}",

@@ -202,15 +202,9 @@ public sealed class NavigateHandlerTests
     }
 
     [Test]
-    public void MovedRefAndCrossLocationFailWithoutPretendingSuccess()
+    public void MovedRefFailsWithoutPretendingSuccess()
     {
         var handler = NewHandler(out var resolver, out var navigation);
-        resolver.Target = Target("Town", 5, 6, hasRef: true);
-        navigation.State = Player("Farm", 5, 6);
-        var crossLocation = (ContinuationStep.Failed)handler
-            .Start(CommandId, RefRequest(ArrivalMode.Adjacent))
-            .Tick(ContinuationStopSignal.None);
-
         resolver.Target = Target("Farm", 5, 6, hasRef: true);
         resolver.RevalidateError = new Error
         {
@@ -224,7 +218,6 @@ public sealed class NavigateHandlerTests
 
         Assert.Multiple(() =>
         {
-            Assert.That(crossLocation.Error.Code, Is.EqualTo(ErrorCode.NotReady));
             Assert.That(moved.Error.Code, Is.EqualTo(ErrorCode.ExecutionFailed));
         });
     }
@@ -265,7 +258,12 @@ public sealed class NavigateHandlerTests
     {
         resolver = new FakeTargetResolver();
         navigation = new FakeNavigationDriver();
-        return new NavigateHandler(resolver, navigation);
+        return new NavigateHandler(
+            resolver,
+            navigation,
+            new FakeRouteSnapshotBuilder(),
+            new FakeWarpTransitionDriver()
+        );
     }
 
     private static CommandRequest PositionRequest(
@@ -368,6 +366,21 @@ public sealed class NavigateHandlerTests
         {
             StopCalls++;
             State = State with { OwnedPathActive = false };
+        }
+    }
+
+    private sealed class FakeRouteSnapshotBuilder : IWorldRouteSnapshotBuilder
+    {
+        public WorldRouteSnapshot Build() => WorldRouteSnapshot.Create(Array.Empty<NavigationLocationSource>());
+    }
+
+    private sealed class FakeWarpTransitionDriver : IWarpTransitionDriver
+    {
+        public bool IsTransitionPending => false;
+        public bool BeginWalkThrough(int direction) => true;
+        public bool SubmitDoor(int x, int y) => true;
+        public void Stop()
+        {
         }
     }
 }

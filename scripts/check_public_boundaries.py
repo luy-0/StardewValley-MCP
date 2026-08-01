@@ -35,6 +35,10 @@ FORBIDDEN = {
     "private Python package": re.compile(r"\b(?:agent\.protocol|runtime_manager)\b"),
     "Hosted Credential": re.compile(r"\bHostedCredential\b|hosted[ _-]?credential", re.IGNORECASE),
     "old repository import": re.compile(r"\bstar[-_.]?coplay(?:[-_.]?hosted[-_.]?agent[-_.]?runtime)?\b", re.IGNORECASE),
+    "old global input bridge": re.compile(r"\bInputBridge(?:Simulator)?\b|\bInputCombo\b"),
+    "global input simulator": re.compile(r"\bIInputSimulator\b|\bGame1\.inputSimulator\b"),
+    "SMAPI input override reflection": re.compile(r"\bOverrideButton\b|\bApplyOverrides\b"),
+    "IsActive patch": re.compile(r"\bIsActivePatch\b"),
 }
 PRIVATE_PATHS = {
     "macOS 用户目录": re.compile("/" + r"Users/[^/\s\"']+/"),
