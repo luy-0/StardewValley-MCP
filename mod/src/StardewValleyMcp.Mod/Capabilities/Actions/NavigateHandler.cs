@@ -371,10 +371,19 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
                 if (_edge.Kind == NavigationEdgeKind.InteractDoor)
                     return new ContinuationStep.Pending();
                 _walkTransitionProbeTicks++;
-                if (_walkTransitionProbeTicks < WalkTransitionProbeTicks)
-                    return new ContinuationStep.Pending();
-                _warp.Stop();
-                return StartNextEdgeApproach(current);
+                if (_walkTransitionProbeTicks >= WalkTransitionProbeTicks)
+                {
+                    _warp.Stop();
+                    return StartNextEdgeApproach(current);
+                }
+                if (_approach is null)
+                    return StopAndFail(ErrorCode.Internal, "walk-through 出口状态无效");
+                if (!_warp.BeginWalkThrough(_approach.Direction))
+                    return StopAndFail(ErrorCode.NotReady, "当前状态不能继续触发 walk-through Warp");
+                var after = _navigation.Capture();
+                return after.IsReady && !SameLocation(after.LocationId, _edge.SourceLocationId)
+                    ? AcceptTransition(after)
+                    : new ContinuationStep.Pending();
             }
             return AcceptTransition(current);
         }

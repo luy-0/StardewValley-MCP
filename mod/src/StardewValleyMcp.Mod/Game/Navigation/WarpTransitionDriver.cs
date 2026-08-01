@@ -43,7 +43,13 @@ internal sealed class StardewWarpTransitionDriver : IWarpTransitionDriver
                 player.SetMovingLeft(true);
                 break;
         }
-        return player.movementDirections.Contains(direction);
+        if (!player.movementDirections.Contains(direction))
+            return false;
+        player.MovePosition(Game1.currentGameTime, Game1.viewport, Game1.currentLocation);
+        player.movementDirections.Clear();
+        player.Halt();
+        player.faceDirection(direction);
+        return true;
     }
 
     public bool SubmitDoor(int x, int y)

@@ -130,7 +130,8 @@ public sealed class NavigateCrossMapNavigationTests
         {
             Assert.That(fallback, Is.TypeOf<ContinuationStep.Pending>());
             Assert.That(fixture.Navigation.StartedTiles, Is.EqualTo(new[] { (1, 5), (0, 6) }));
-            Assert.That(fixture.Warp.WalkDirections, Is.EqualTo(new[] { 3, 0 }));
+            Assert.That(fixture.Warp.WalkDirections.Count(direction => direction == 3), Is.EqualTo(30));
+            Assert.That(fixture.Warp.WalkDirections[^1], Is.EqualTo(0));
             Assert.That(fixture.Warp.StopCalls, Is.GreaterThanOrEqualTo(1));
         });
     }
@@ -165,7 +166,8 @@ public sealed class NavigateCrossMapNavigationTests
         Assert.Multiple(() =>
         {
             Assert.That(succeeded.Result.Navigate.RouteLocationIds, Is.EqualTo(new[] { "Farm", "Town" }));
-            Assert.That(fixture.Warp.WalkDirections, Is.EqualTo(new[] { 3 }));
+            Assert.That(fixture.Warp.WalkDirections, Has.All.EqualTo(3));
+            Assert.That(fixture.Warp.WalkDirections, Has.Count.EqualTo(30));
             Assert.That(fixture.Navigation.StartedTiles, Is.EqualTo(new[] { (1, 5), (2, 2) }));
         });
     }
