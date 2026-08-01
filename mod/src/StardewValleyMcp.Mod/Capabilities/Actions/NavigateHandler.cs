@@ -105,6 +105,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
             WaitingTransition,
             WaitingStable,
             Handoff,
+            WaitingEdgeReady,
             WalkingFinal,
             Facing,
             Done,
@@ -158,6 +159,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
                 : "walk_through_transition",
             NavigationPhase.WaitingStable => "waiting_location_stable",
             NavigationPhase.Handoff => "waiting_handoff",
+            NavigationPhase.WaitingEdgeReady => "waiting_edge_ready",
             NavigationPhase.WalkingFinal => "walking",
             NavigationPhase.Facing => "facing",
             NavigationPhase.Done => "completed",
@@ -181,6 +183,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
                 NavigationPhase.WaitingTransition => TickWaitingTransition(),
                 NavigationPhase.WaitingStable => TickWaitingStable(),
                 NavigationPhase.Handoff => TickHandoff(),
+                NavigationPhase.WaitingEdgeReady => TickWaitingEdgeReady(),
                 NavigationPhase.WalkingFinal => TickWalkingFinal(),
                 _ => new ContinuationStep.Pending(),
             };
@@ -294,10 +297,14 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
             _navigation.Stop();
             while (_edgeApproaches.Count > 0)
             {
-                var approach = _edgeApproaches.Dequeue();
+                var approach = _edgeApproaches.Peek();
                 var start = _navigation.Start(approach.X, approach.Y);
                 if (start == LocalNavigationStart.NotReady)
-                    return StopAndFail(ErrorCode.NotReady, "玩家当前不能前往 Warp 入口");
+                {
+                    _phase = NavigationPhase.WaitingEdgeReady;
+                    return new ContinuationStep.Pending();
+                }
+                _edgeApproaches.Dequeue();
                 if (start == LocalNavigationStart.NoPath)
                     continue;
                 _approach = approach;
@@ -307,6 +314,25 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
                 return TriggerEdge(current);
             }
             return BeginNextEdge(current);
+        }
+
+        private ContinuationStep TickWaitingEdgeReady()
+        {
+            var current = _navigation.Capture();
+            if (!current.IsReady || !current.CanMove)
+                return new ContinuationStep.Pending();
+            if (_edge is null)
+                return StopAndFail(ErrorCode.Internal, "等待 Warp 入口时路线状态无效");
+            if (!SameLocation(current.LocationId, _edge.SourceLocationId))
+            {
+                if (SameLocation(current.LocationId, _edge.TargetLocationId))
+                    return AcceptTransition(current);
+                return StopAndFail(
+                    ErrorCode.ExecutionFailed,
+                    "等待 Warp 入口可用期间 Location 已偏离路线"
+                );
+            }
+            return StartNextEdgeApproach(current);
         }
 
         private ContinuationStep TickWalkingToEdge()

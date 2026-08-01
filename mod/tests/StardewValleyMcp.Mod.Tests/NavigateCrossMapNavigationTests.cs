@@ -258,6 +258,71 @@ public sealed class NavigateCrossMapNavigationTests
     }
 
     [Test]
+    public void NextLegRetriesWhenNavigationDriverIsBrieflyNotReady()
+    {
+        var fixture = Fixture(
+            Target("House", 2, 2),
+            Snapshot(
+                Location("Farm", Exit(NavigationEdgeKind.WalkThrough, 0, 5, "Town", 1, 5)),
+                Location("Town", Exit(NavigationEdgeKind.WalkThrough, 19, 5, "House", 1, 5)),
+                Location("House")
+            ),
+            Player("Farm", 4, 5)
+        );
+        fixture.Navigation.StartResults.Enqueue(LocalNavigationStart.Started);
+        fixture.Navigation.StartResults.Enqueue(LocalNavigationStart.NotReady);
+        fixture.Navigation.StartResults.Enqueue(LocalNavigationStart.Started);
+        var continuation = fixture.Handler.Start(CommandId, Request("House", 2, 2));
+
+        continuation.Tick(ContinuationStopSignal.None);
+        fixture.Navigation.State = Player("Farm", 1, 5, facing: 3);
+        continuation.Tick(ContinuationStopSignal.None);
+        fixture.Navigation.State = Player("Town", 1, 5);
+        continuation.Tick(ContinuationStopSignal.None);
+        AdvanceStability(continuation);
+
+        Assert.That(continuation.Tick(ContinuationStopSignal.None), Is.TypeOf<ContinuationStep.Pending>());
+        Assert.That(continuation.Phase, Is.EqualTo("waiting_edge_ready"));
+        Assert.That(continuation.Tick(ContinuationStopSignal.None), Is.TypeOf<ContinuationStep.Pending>());
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(continuation.Phase, Is.EqualTo("walking_to_exit"));
+            Assert.That(
+                fixture.Navigation.StartedTiles,
+                Is.EqualTo(new[] { (1, 5), (18, 5), (18, 5) })
+            );
+        });
+    }
+
+    [Test]
+    public void EdgeTransitionObservedWhileWaitingForDriverIsAccepted()
+    {
+        var fixture = Fixture(
+            Target("Town", 2, 2),
+            Snapshot(
+                Location("Farm", Exit(NavigationEdgeKind.WalkThrough, 0, 5, "Town", 1, 5)),
+                Location("Town")
+            ),
+            Player("Farm", 4, 5)
+        );
+        fixture.Navigation.StartResults.Enqueue(LocalNavigationStart.NotReady);
+        fixture.Navigation.StartResults.Enqueue(LocalNavigationStart.AlreadyThere);
+        var continuation = fixture.Handler.Start(CommandId, Request("Town", 2, 2));
+
+        Assert.That(continuation.Tick(ContinuationStopSignal.None), Is.TypeOf<ContinuationStep.Pending>());
+        Assert.That(continuation.Phase, Is.EqualTo("waiting_edge_ready"));
+        fixture.Navigation.State = Player("Town", 2, 2);
+        Assert.That(continuation.Tick(ContinuationStopSignal.None), Is.TypeOf<ContinuationStep.Pending>());
+
+        var succeeded = CompleteStability(continuation);
+        Assert.That(
+            succeeded.Result.Navigate.RouteLocationIds,
+            Is.EqualTo(new[] { "Farm", "Town" })
+        );
+    }
+
+    [Test]
     public void WrongTransitionLocationFailsAndCleansBothMovementOwners()
     {
         var fixture = Fixture(
