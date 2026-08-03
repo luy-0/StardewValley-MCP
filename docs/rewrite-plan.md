@@ -259,7 +259,7 @@ query_runtime, query_world, query_inventory, query_ui, inspect
 | `ActionExecutor.NavigateTo` | 已验证 `PathFindController` 可完成正常游戏寻路 | 保留 PFC 机制；重写严格到达判断。旧代码把距离目标两格内也视为成功，这一行为不得复用 |
 | `InteractProtoHandler` / `TileActionService` | 已验证“面朝 → Grab Tile 对齐/微移 → 提交一次动作”的时序 | 提炼对齐算法和提交阶段；删除 `no_observed_effect`、通用 `player_busy` 也算成功的错误准出 |
 | `UseToolProtoHandler` / 蓄力逻辑 | 已验证普通工具、Hoe/Watering Can 蓄力和输入释放的基本路径 | 提炼蓄力达到实际 `toolPower` 后释放的机制；重写实际工具锁存、动作接受、完成观察、取消和结果采集 |
-| `InputBridge` / `InputCombo` | 解决过失焦、按住、释放和 sticky key，但同时承担全局队列、SMAPI 私有反射和 simulator 重装 | 不迁移。优先调用游戏公开语义 API；确需按住时只建立命令私有的窄输入端口，不反射 SMAPI 内部状态，不建立第二套队列 |
+| `InputBridge` / `InputCombo` | 解决过失焦、按住、释放和 sticky key，但同时承担全局队列、SMAPI 私有反射和 simulator 重装 | 不迁移整套架构。优先调用游戏公开语义 API；若游戏原生目标检查明确依赖动作键边沿，只迁移命令私有的 Press/Release 原语，不建立第二套队列或 simulator 生命周期 |
 | 旧测试与实机脚本 | 提供了大量故障案例，但正式三个 Proto Handler 几乎没有可隔离自动化测试 | 把故障历史改写为新 Fixture、Fake Game Port 测试和逐条实机用例；旧测试结果不作为新仓完成证明 |
 
 审计后的直接复用边界很明确：新仓的 `CommandCoordinator`、`ICommandContinuation`、`OpaqueRefStore`、Descriptor Catalog、MCP Command Runtime 和 `DefaultCapabilitySet` 可以原样继续使用；旧仓没有一份阶段 5 生产文件适合整文件复制。旧代码仍然显著降低了重写风险，因为 PFC、出口图、两类 Warp、Grab Tile 对齐、蓄力与清理顺序都已经有真实失败记录可供实现和测试使用。
@@ -318,7 +318,7 @@ DefaultCapabilitySet
 
 - 只作用于当前 Location 中游戏允许的 cardinal-adjacent Tile，不隐式导航。提交前依次完成目标重验、玩家状态检查、面朝、`GetGrabTile()` 对齐和必要的 Tile 内微移；微移不得让玩家离开起始 Tile。
 - 首版要求玩家空手或手持 Tool。手持食物、可放置物、礼物等非工具 Item 时返回 `NOT_READY`，避免通用 `interact` 暗中变成赠礼、食用或放置能力。
-- 优先使用游戏公开的动作语义提交一次交互，不复制固定 X 键、全局 InputBridge 或失焦反射。阶段 5.0 的失焦停滞后来确认是自动加载完成后恢复了 `pauseWhenOutOfFocus`，使单机游戏停止 Update；新仓应在世界就绪的控制运行期保持 Update 推进，失焦本身不再作为 `NOT_READY` 门禁。
+- 优先使用游戏公开的动作语义提交一次交互。实机确认玩家箱子的原生 `checkForAction` 额外依赖动作键刚按下边沿，因此新仓以窄职责 `ActionButtonInput` 在原生检查期间通过 SMAPI `OverrideButton`/`ApplyOverrides` 按下并在 `finally` 中释放 `SButton.X`；它不持有跨命令队列、不安装 input simulator，也不恢复全局 InputBridge。阶段 5.0 的失焦停滞则由运行期保持 `pauseWhenOutOfFocus=false` 解决，失焦本身不作为 `NOT_READY` 门禁。
 - 提交前捕获目标绑定、Location、UI Revision、Inventory Revision 和目标可读状态；提交后只有出现可关联的 Dialogue/Menu、Location、Inventory、Relationship 或目标状态变化时才成功。通用 `player_busy` 只能是中间证据，观察窗口结束仍无关联变化返回 `EXECUTION_FAILED`。
 - 提交动作前 `CanCancel=true`；游戏已经消费动作后 `CanCancel=false`，继续观察真实结果，不能把已经发生的副作用伪装为取消成功。
 
@@ -337,7 +337,7 @@ DefaultCapabilitySet
 1. [x] **阶段 5.0：契约收口与游戏 API Spike。** 已在 `behavior.md`、Fixture 和测试中固化 Character Ref “启动时锁定、结束前重验、不持续追踪”、`resolved_destination`、Interact 手持物门禁、首版工具白名单、提交点与稳定错误；实机分别验证交互、普通工具、瞬时工具、蓄力工具的提交、释放与收敛证据。后续结合旧仓 `6bec6fe → b4b961c` 演进确认，失焦停滞的直接原因是 `pauseWhenOutOfFocus` 阻止游戏 Update，因此修正为运行期保证 Update 推进，而不是前台门禁或恢复旧 InputBridge。
 2. [x] **阶段 5.1：同图 `navigate` 纵向切片。** 已实现三项动作共享的 Target Resolver、严格 EXACT、ADJACENT、`stand_side`、`face_on_arrival`、命令私有 PFC 驱动与取消/Deadline 清理。自动化覆盖坐标与 Ref、严格落点、选边、朝向、目标移动和失败清理；实机在 `FarmHouse` 依次验证坐标 EXACT、指定侧 ADJACENT 和 World Entity Ref ADJACENT，并由 `query_runtime` 独立确认最终位置与朝向。此项只代表同图切片完成，不代表阶段五的完整导航能力完成。
 3. [x] **阶段 5.2：跨图 `navigate` 纵向切片。** 已实现运行时拓扑 Snapshot、保留具体出口身份及平行出口回退的纯 BFS、地图边界 WalkThrough 有界方向探测、室内门 InteractDoor、预期 Location 校验、Warp pending 等待、稳定门禁和跨段 Handoff；所有地图身份统一使用 `NameOrUniqueName`，不加入传送 fallback。自动化覆盖具体 Edge、多跳、方向回退、门单次提交、错误地图、稳定与清理；失焦实机依次完成 `FarmHouse → Farm`、`Farm → BusStop`，并在含玩家自建设施的存档中完成 `Farm → Coop UUID` 及 `Coop UUID → Farm → Cabin UUID`。后续真实多跳复验又修复了边界方向只写一次和中继地图瞬时不可用两项竞态，最终由 `FarmHouse → Farm → Forest → Town` 连续编排及后置查询确认精确终点。至此阶段五的完整 `navigate` 能力完成。
-4. [x] **阶段 5.3：`interact` 纵向切片。** 已实现当前地图 cardinal-adjacent 门禁、Grab Tile 对齐、手持物门禁、一次原生动作提交、关联后置条件和提交点取消语义；提交后以已观察到的 Location、UI、Inventory、Relationship 或目标状态变化收口，不因一次性目标被消费而把真实效果改判为失败。自动化覆盖参数、相邻与手持物门禁、有界微移、六类成功后置条件、无效果失败和取消边界；实机完成容器对话、Town 医院门切图、无效果失败以及 Forest 普通蘑菇拾取，后置 `query_ui`、`query_runtime`、`query_inventory` 分别确认对话内容、医院精确落点和背包新增物品。
+4. [x] **阶段 5.3：`interact` 纵向切片。** 已实现当前地图 cardinal-adjacent 门禁、Grab Tile 对齐、手持物门禁、一次原生动作提交、关联后置条件和提交点取消语义；提交后以已观察到的 Location、UI、Inventory、Relationship 或目标状态变化收口，不因一次性目标被消费而把真实效果改判为失败。自动化覆盖参数、相邻与手持物门禁、有界微移、动作键 Press/Release、六类成功后置条件、无效果失败和取消边界；实机完成玩家箱子 `ItemGrabMenu`、Town 医院门切图、无效果失败以及 Forest 普通蘑菇拾取，后置 `query_ui`、`query_runtime`、`query_inventory` 分别确认菜单出现、医院精确落点和背包新增物品。`ItemGrabMenu` 的槽位 UI 投影仍是观察能力扩展项，不影响 `interact` 后置条件成立。
 5. [x] **阶段 5.4：`use_tool` 纵向切片。** 已实现 Axe/Pickaxe/Scythe 的非蓄力路径，以及 Hoe/Watering Can 的普通与蓄力路径；独立 Driver 只通过游戏工具 API 推进动作，Handler 以 `swingTicker` 边沿、Busy、释放与稳定帧证明 accepted/released/settled，不引入全局 InputBridge。自动化覆盖未装备、不支持工具、实际 charge 上限、工具替换、普通/蓄力/瞬时工具、提交前取消和 Deadline 安全释放；失焦实机完成五类工具调用，其中 Axe、Pickaxe、Scythe 与 charged Hoe/Watering Can 均返回实际 Qualified Item ID、实际 charge 与 Energy 差值，并验证错误工具和越界目标稳定失败。
 6. [x] **阶段 5.5：可靠性与实机收口。** Coordinator 与三项 Handler 的既有测试覆盖单变更并发、关键阶段 Cancel、Deadline、结果保留、stale Ref、目标移动、错误 Warp、无路径及控制清理；本阶段进一步修复两项线路竞态：主动 RUNNING/终态早于关联 ACCEPTED 时先有界暂存并在接受证据到达后按序校验，断线恢复撞上旧 Socket 清理窗口的合法 BUSY 握手时有界等待后只用原 Session 与 Command ID 查询，均不重放命令。实机在导航运行中断开 TCP 后，以原 Command ID 完成 `Farm → Forest → Town` 并由 `query_runtime` 确认 `Town (30,60)`；另一条运行中导航稳定拒绝第二个变更为 `BUSY`，接受取消并返回 `command_cancelled`，后置查询确认玩家仍可移动且没有残留方向。
 
@@ -410,5 +410,6 @@ CI 至少包含以下门禁：
 阶段 5 已完成，下一步进入阶段 6：
 
 1. 建立 Skill SDK 的最小公共接口、Manifest 校验器与测试 Harness，只依赖公开 `spec/` 和 MCP Tool，不引用 Mod/MCP 实现内部结构。
-2. 提供一个只读模板、一个受控变更模板与最小示例，明确权限、风险、输入输出和测试方式，不扩张为完整官方玩法技能集合。
-3. 在阶段 6 完成后进入阶段 7，补齐许可证、安全政策、第三方许可证、安装诊断与干净机器发布验收。
+2. 在编写变更型示例前裁决 `ItemGrabMenu` 的 UI 槽位、Inventory Ref/Revision 关联和安全转移动作；继续由 `query_inventory(containerRef)` 提供箱内事实，避免在 `query_ui` 重复定义物品模型。
+3. 提供一个只读模板、一个受控变更模板与最小示例，明确权限、风险、输入输出和测试方式，不扩张为完整官方玩法技能集合。
+4. 在阶段 6 完成后进入阶段 7，补齐许可证、安全政策、第三方许可证、安装诊断与干净机器发布验收。

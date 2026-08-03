@@ -43,6 +43,18 @@ internal interface IInteractionDriver
 /// </summary>
 internal sealed class StardewInteractionDriver : IInteractionDriver
 {
+    private readonly ActionButtonInput _actionButton;
+
+    internal StardewInteractionDriver()
+        : this(new ActionButtonInput())
+    {
+    }
+
+    internal StardewInteractionDriver(ActionButtonInput actionButton)
+    {
+        _actionButton = actionButton;
+    }
+
     public InteractionObservation Observe(int targetX, int targetY)
     {
         if (!Context.IsWorldReady
@@ -125,7 +137,9 @@ internal sealed class StardewInteractionDriver : IInteractionDriver
             || Game1.player is not { } player
             || Game1.currentLocation is null)
             throw new InvalidOperationException("游戏世界尚未就绪");
-        Game1.tryToCheckAt(new Vector2(targetX, targetY), player);
+        _actionButton.Submit(() =>
+            Game1.tryToCheckAt(new Vector2(targetX, targetY), player)
+        );
     }
 
     private static bool CanControlPlayer(int direction, out Farmer player)
