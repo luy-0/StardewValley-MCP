@@ -5,7 +5,7 @@ usage() {
   cat <<'USAGE'
 用法：./mod/scripts/launch-autoload-smapi.sh --save <存档目录名> [--port <端口>] [--timeout <秒>]
 
-启动一个只加载当前构建产物的独立 SMAPI 进程，并等待 Mod 自动进入指定存档。
+仅用于 macOS 隔离 E2E：启动一个只加载当前构建产物的独立 SMAPI 进程，并等待 Mod 自动进入指定存档。
 脚本不会终止或复用任何已经运行的游戏进程。
 USAGE
 }

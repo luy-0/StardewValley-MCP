@@ -23,9 +23,9 @@ python3 -m venv /tmp/sdvmcp-spec-venv
 
 只有缺少 .NET SDK 的环境才允许临时使用 `--skip-csharp`；CI 与发布验收不得跳过 C# Fixture、Descriptor、Digest 与 HMAC 检查。`verify.py` 是阶段 0 的静态契约验证器，不宣称能够替代阶段 1 之后针对真实 Mod/MCP 实现的运行时 Conformance Harness。
 
-## 阶段 0 Transport 门禁
+## Transport 基础门禁
 
-阶段 0 由 `verify.py` 和 `transport-spike/` 可执行验证：长度前缀、短读、粘包、非法长度、短 Header/Payload EOF、真实 Proto Wire 往返、HMAC 正反向量、Descriptor 摘要、跨握手 Fixture 关联和 Fence 一致性。当前开发机结果记录在传输 ADR；跨 OS 自动矩阵在阶段 1 建立 CI 后执行。
+`verify.py` 和 `transport-spike/` 持续验证长度前缀、短读、粘包、非法长度、短 Header/Payload EOF、真实 Proto Wire 往返、HMAC 正反向量、Descriptor 摘要、跨握手 Fixture 关联和 Fence 一致性。历史实验结果记录在传输 ADR；Windows 实机矩阵不属于当前发布门禁。
 
 ## 实现期 Transport 门禁
 

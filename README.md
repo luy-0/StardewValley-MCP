@@ -53,15 +53,15 @@ Skill 开发入口，只包含接口定义、编写模板、最小示例和一�
 
 ## 项目状态
 
-当前预览版已经具备独立的 Mod、MCP Python 包，以及公共 V1 契约定义的十五项原语能力：五项观察能力、七项简单交互能力，以及 `navigate`、`interact`、`use_tool` 三项长时能力。默认 MCP 启动方式仍只读；只有显式启用写权限，并且公共 Manifest、MCP 支持集与 Mod 握手公告同时包含对应能力时，才会暴露交互 Tool。阶段 6 已以 Agent `SKILL.md` 指引层交付模板、两个最小示例和静态校验工具；公开发布准备仍未完成，因此本仓库仍是预览版。
+当前预览版已经具备独立的 Mod、MCP Python 包，以及公共 V1 契约定义的十五项原语能力：五项只读能力和十项需要明确授权的变更能力。十项变更能力包括七项简单交互，以及 `navigate`、`interact`、`use_tool` 三项长时能力。默认 MCP 启动方式仍只读；只有显式启用写权限，并且公共 Manifest、MCP 支持集与 Mod 握手公告同时包含对应能力时，才会暴露操作 Tool。阶段 6 已以 Agent `SKILL.md` 指引层交付模板、两个最小示例和静态校验工具；阶段 7 正在完成公开发布准备，因此本仓库仍是预览版。
 
-首次安装与调用方法见[快速开始](docs/getting-started.md)，本地完整回归入口为：
+普通用户的源码安装与调用方法见[快速开始](docs/getting-started.md)；Agent 从干净检出执行安装与验收时使用 [AGENT-GUIDE.md](AGENT-GUIDE.md)。本地完整回归入口为：
 
 ```bash
 ./scripts/verify.sh
 ```
 
-项目尚未选定许可证。在加入许可证前，不授予复制、修改或再分发仓库内容的许可。
+本项目采用 [Apache License 2.0](LICENSE)；第三方组件与发行边界见 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md)。Stardew Valley 与 SMAPI 是用户自行取得的外部前置条件，不随本项目分发。
 
 ## 参与贡献
 

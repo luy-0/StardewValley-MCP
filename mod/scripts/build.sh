@@ -1,6 +1,20 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+usage() {
+  cat <<'USAGE'
+用法：./mod/scripts/build.sh [--deploy] [--package]
+
+恢复锁定依赖，运行 Protocol 与 Mod 测试，然后构建 Release 版本。
+  --deploy   把 Mod 安装到游戏目录的 Mods/StardewValleyMCP/
+  --package  生成包含许可证文件的 Mod ZIP
+  -h, --help 显示本帮助
+
+默认不写入游戏目录。非标准位置通过 STARDEW_VALLEY_GAME_PATH 指定。
+依赖：.NET 6 SDK、Stardew Valley 1.6 与 SMAPI 4.1.0 或更高版本。
+USAGE
+}
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 mod_root="$(cd "$script_dir/.." && pwd -P)"
 solution="$mod_root/StardewValleyMcp.sln"
@@ -14,9 +28,15 @@ for argument in "$@"; do
   case "$argument" in
     --deploy) deploy=true ;;
     --package) package=true ;;
-    *) echo "未知参数: $argument" >&2; exit 2 ;;
+    -h|--help) usage; exit 0 ;;
+    *) echo "未知参数: $argument" >&2; usage >&2; exit 2 ;;
   esac
 done
+
+if ! command -v dotnet >/dev/null 2>&1; then
+  echo "缺少 .NET 6 SDK：https://dotnet.microsoft.com/download/dotnet/6.0" >&2
+  exit 1
+fi
 
 game_path="${STARDEW_VALLEY_GAME_PATH:-}"
 if [[ -z "$game_path" && "${OSTYPE:-}" == darwin* ]]; then

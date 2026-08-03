@@ -2,7 +2,7 @@
 
 状态：**公开 V1 候选契约**
 
-MCP 服务端将已授权能力和已挂载 Skill 投影为 MCP Tool。MCP 是公开能力契约之上的 Adapter，不拥有游戏状态，不重新定义 Proto 语义，也不把 Mod 线路协议版本当成 MCP 自身的协议版本。
+MCP 服务端将已授权的公共能力投影为 MCP Tool。Agent Skill 由 Agent Runtime 读取并调用这些 Tool，不由 MCP 挂载。MCP 是公开能力契约之上的 Adapter，不拥有游戏状态，不重新定义 Proto 语义，也不把 Mod 线路协议版本当成 MCP 自身的协议版本。
 
 MCP 端必须遵循其所声明支持的正式 MCP 版本。Tool 的 `inputSchema`、`outputSchema`、`structuredContent` 和 Annotation 行为以 [MCP 官方 Tool 规范](https://modelcontextprotocol.io/specification/2025-11-25/server/tools)为上位协议；本文件只规定 StardewValley MCP 的确定性投影。
 
@@ -41,9 +41,9 @@ MCP 可以在 Server 配置中设置调用超时，但模型不得直接扩大 M
 重新生成或检查生成物：
 
 ```bash
-python3 -m pip install -r spec/conformance/requirements.txt
-python3 spec/conformance/generate_mcp_tool_schemas.py
-python3 spec/conformance/generate_mcp_tool_schemas.py --check
+uv sync --project mcp --locked
+uv run --project mcp python spec/conformance/generate_mcp_tool_schemas.py
+uv run --project mcp python spec/conformance/generate_mcp_tool_schemas.py --check
 ```
 
 生成结果使用 JSON Schema Draft 2020-12。所有输入对象均设置 `additionalProperties: false`；Proto `int64`/`uint64` 投影为十进制字符串，避免 JSON Number 精度丢失。

@@ -4,7 +4,7 @@
 
 ## 职责
 
-- 向兼容 MCP 的客户端暴露 Tool、Resource 和 Prompt；
+- 向兼容 MCP 的客户端暴露 Tool；
 - 根据公共规范校验调用；
 - 解析允许暴露的能力集合；
 - 将命令路由到已连接的 Mod；
@@ -19,7 +19,7 @@ MCP 服务端不拥有游戏状态，不嵌入私有平台身份，也不要求�
 
 当前已建立独立 Python 包、CLI 和由 `../spec/proto/` 生成的协议类型。`serve` 会启动真正的 MCP stdio Server；它连接本地 Mod、验证 HMAC 与能力摘要，并按公共 Manifest、MCP 支持集、Mod 公告集和权限策略的交集暴露 Tool。默认只允许 `game:read`；需要操作游戏时必须显式增加 `--allow-write`。
 
-推荐使用 `uv` 按锁文件安装、测试并构建：
+以下命令均从仓库根目录执行。推荐使用 `uv` 按锁文件安装、测试并构建：
 
 ```bash
 ./mcp/scripts/test.sh
@@ -32,8 +32,8 @@ uv run --project mcp stardew-valley-mcp serve --allow-write
 只重新生成或检查协议代码：
 
 ```bash
-python3 scripts/generate_protocol.py
-python3 scripts/generate_protocol.py --check
+uv run --project mcp python scripts/generate_protocol.py
+uv run --project mcp python scripts/generate_protocol.py --check
 ```
 
 Python 包不依赖私有平台仓库。当前稳定依赖锁定在 MCP Python SDK v1 系列，避免自动升级到不兼容的主版本。

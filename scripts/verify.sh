@@ -1,6 +1,18 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+usage() {
+  cat <<'USAGE'
+用法：./scripts/verify.sh [--with-mod]
+
+运行公共契约、Skill、MCP、Mod Protocol 与发行包门禁。
+  --with-mod  额外构建并审计 Mod ZIP；需要已安装 Stardew Valley 与 SMAPI
+  -h, --help  显示本帮助
+
+依赖：uv、.NET 6 SDK。可通过 UV_BIN 指定 uv 可执行文件。
+USAGE
+}
+
 script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd -P)"
 repo_root="$(cd "$script_dir/.." && pwd -P)"
 uv_bin="${UV_BIN:-uv}"
@@ -9,12 +21,17 @@ with_mod=false
 for argument in "$@"; do
   case "$argument" in
     --with-mod) with_mod=true ;;
-    *) echo "未知参数: $argument" >&2; exit 2 ;;
+    -h|--help) usage; exit 0 ;;
+    *) echo "未知参数: $argument" >&2; usage >&2; exit 2 ;;
   esac
 done
 
 if ! command -v "$uv_bin" >/dev/null 2>&1; then
   echo "缺少 uv：https://docs.astral.sh/uv/" >&2
+  exit 1
+fi
+if ! command -v dotnet >/dev/null 2>&1; then
+  echo "缺少 .NET 6 SDK：https://dotnet.microsoft.com/download/dotnet/6.0" >&2
   exit 1
 fi
 

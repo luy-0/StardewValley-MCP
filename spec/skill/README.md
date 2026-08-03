@@ -1,8 +1,8 @@
 # Agent Skill 依赖边界
 
-状态：**阶段 6 依赖边界说明**
+状态：**公开 V1 Agent Skill 依赖边界**
 
-当前阶段的 Skill 是供 Agent 读取的操作指引，不是由 MCP 动态加载的可执行插件。Agent 按 `SKILL.md` 描述的步骤直接调用现有 Stardew Valley MCP Tool；MCP 与 Mod 不感知 Skill，也不增加新的运行时、协议分支或能力注册。
+当前公开版本的 Skill 是供 Agent 读取的操作指引，不是由 MCP 动态加载的可执行插件。Agent 按 `SKILL.md` 描述的步骤直接调用现有 Stardew Valley MCP Tool；MCP 与 Mod 不感知 Skill，也不增加新的运行时、协议分支或能力注册。
 
 ## 最小目录
 
@@ -37,6 +37,6 @@
 
 ## 当前交付与未来演进
 
-阶段 6 当前只交付约定、模板、两个最小示例和静态校验工具，不交付 Python SDK、Skill Host、动态挂载、插件依赖管理或独立生命周期。
+当前公开版本只交付依赖边界、模板、两个最小示例和静态校验工具，不交付 Python SDK、Skill Host、动态挂载、插件依赖管理或独立生命周期。
 
 未来如果 Agent 指引无法满足确定性执行、独立分发或复用需求，可以在新的版本化阶段演进为可执行 SDK 与 MCP Skill Host。该方向必须复用现有 Catalog、Command Runtime 和 Transport，且不能反向改变当前 Mod–MCP 原子能力契约。

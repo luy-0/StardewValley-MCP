@@ -16,13 +16,13 @@ Mod 不实现 MCP，不加载 Skill，不拥有智能体身份，也不定义私
 
 ## 当前实现状态
 
-当前已建立独立的 .NET 6 Solution、公共 Proto 生成项目和 SMAPI Host。Host 只在配置的 loopback 地址启动 Proto TCP Listener，通过共享秘密完成 HMAC 认证。Registry 当前显式注册五项观察 Handler、七项简单交互 Handler，以及 `navigate`、`interact`、`use_tool` 三项长时 Handler，共十五项公共能力。`use_tool` 首版只支持 Axe、Pickaxe、Scythe、Hoe 与 Watering Can，并由独立 Driver 观察工具的接受、释放和收敛生命周期；它不恢复旧仓的全局输入桥或私有按键状态。
+当前已建立独立的 .NET 6 Solution、公共 Proto 生成项目和 SMAPI Host。Host 只在配置的 loopback 地址启动 Proto TCP Listener，通过共享秘密完成 HMAC 认证。Registry 当前显式注册五项只读 Handler 和十项需要明确授权的变更 Handler，共十五项公共能力；变更能力包括七项简单交互，以及 `navigate`、`interact`、`use_tool` 三项长时能力。`use_tool` 首版只支持 Axe、Pickaxe、Scythe、Hoe 与 Watering Can，并由独立 Driver 观察工具的接受、释放和收敛生命周期；它不恢复旧仓的全局输入桥或私有按键状态。
 
-生成并测试公共协议：
+以下命令均从仓库根目录执行。生成并测试公共协议：
 
 ```bash
-python3 -m pip install -r spec/conformance/requirements.txt
-python3 scripts/generate_protocol.py --check
+uv sync --project mcp --locked
+uv run --project mcp python scripts/generate_protocol.py --check
 dotnet test mod/tests/StardewValleyMcp.Protocol.Tests/StardewValleyMcp.Protocol.Tests.csproj -p:RestoreLockedMode=true
 ```
 

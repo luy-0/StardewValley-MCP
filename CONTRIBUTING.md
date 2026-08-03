@@ -29,4 +29,16 @@
 
 每个 Pull Request 应只解决一个问题，并说明修改内容、所属边界、兼容性影响以及验证方式。
 
-可运行实现迁入后，构建与测试命令将在本仓库中补充。
+提交前至少运行：
+
+```bash
+./scripts/verify.sh
+```
+
+涉及真实 Mod 构建或发行包时，在已安装 Stardew Valley 与 SMAPI 的机器上运行：
+
+```bash
+./scripts/verify.sh --with-mod
+```
+
+新增或升级依赖时，必须按实际发行内容同步检查 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 与包审计规则。贡献默认依照仓库的 [Apache License 2.0](LICENSE) 提交。
