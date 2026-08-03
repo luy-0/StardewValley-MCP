@@ -32,7 +32,9 @@ dotnet test mod/tests/StardewValleyMcp.Protocol.Tests/StardewValleyMcp.Protocol.
 ./mod/scripts/build.sh --package
 ```
 
-只有明确需要本地部署时才使用 `--deploy`。非标准游戏位置通过 `STARDEW_VALLEY_GAME_PATH` 指定；新脚本不会调用或引用旧仓库。
+生成的 Mod ZIP 会携带项目 Apache-2.0 许可证、第三方声明和随包 `Google.Protobuf.dll` 的 BSD-3-Clause 许可证。只有明确需要本地安装时才使用 `--deploy`。
+
+非标准游戏位置通过 `STARDEW_VALLEY_GAME_PATH` 指定；新脚本不会调用或引用旧仓库。
 
 首次加载 Mod 时会在自身 `config.json` 中生成至少 32 字节的随机共享秘密。该文件不得提交、公开或写入日志；MCP 通过 `STARDEW_VALLEY_MCP_SHARED_SECRET` 读取同一个 Base64 值。
 

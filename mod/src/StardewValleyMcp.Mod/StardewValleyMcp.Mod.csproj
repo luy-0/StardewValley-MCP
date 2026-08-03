@@ -15,5 +15,8 @@
   </ItemGroup>
   <ItemGroup>
     <None Update="manifest.json" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../LICENSE" Link="LICENSE" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../THIRD_PARTY_NOTICES.md" Link="THIRD_PARTY_NOTICES.md" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="../../../licenses/Google.Protobuf-BSD-3-Clause.txt" Link="licenses/Google.Protobuf-BSD-3-Clause.txt" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

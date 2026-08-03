@@ -8,6 +8,8 @@ version = "0.1.0a1"
 description = "连接本地 Stardew Valley SMAPI Mod 的 MCP 服务端"
 readme = "README.md"
 requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
 dependencies = [
   "jsonschema>=4.25,<5",
   "mcp>=1.27.2,<2",
