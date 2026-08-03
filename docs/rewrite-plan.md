@@ -1,6 +1,6 @@
 # 公开版本重写计划
 
-状态：**阶段 5 长时能力与可靠性收口已完成，下一步进入阶段 6 Skill 开发面**
+状态：**阶段 6 Agent Skill 指引层已完成，下一步进入阶段 7 公开发布准备**
 
 本计划定义如何以旧仓库已经验证的游戏行为为参考，重新实现一套适合公开发布、独立安装和长期维护的 Mod、MCP 服务端与 Skill 开发套件。它不是旧代码搬迁清单；旧仓库只提供行为证据、失败经验和测试素材，不是新版本的架构模板。
 
@@ -37,7 +37,7 @@
 spec    公共契约和代码生成输入
 mod     SMAPI 内的游戏侧运行时
 mcp     独立 MCP 服务端
-skill   第三方 Skill SDK、模板、最小示例和测试工具
+skill   Agent 指引、模板、最小示例和测试工具
 docs    安装、使用、架构和贡献文档
 ```
 
@@ -99,7 +99,6 @@ MCP 建议划分为以下层次：
 | Projection | Proto 参数/结果与 MCP Schema/结果之间的转换 |
 | Runtime | 命令身份、等待、取消、结果收敛与稳定错误 |
 | Transport | 连接 Mod，不了解 MCP Tool 定义 |
-| Skill Runtime | 校验和执行第三方 Skill，只依赖公共 SDK |
 
 新 MCP 必须是可独立安装的软件包，不得导入旧仓库中的 `agent.protocol`、`runtime_manager`、私有观测模块或 Hosted Credential。平台接入能力留在仓库之外。
 
@@ -358,16 +357,11 @@ DefaultCapabilitySet
 
 ### 阶段 6：交付 Skill 开发面
 
-阶段 6 不再增加一批新的 Mod 原子能力，而是把阶段 1—5 已经交付的十五项能力变成第三方可以安全编排的开发面。这里的 Skill 是一个显式声明输入、输出、依赖能力和风险的本地 Python 工作流包；它通过受限 `SkillContext` 调用 MCP Tool，把“查询 → 判断 → 动作 → 复查 → 停止”组织成一个可复用 Tool。它不是新的游戏服务、不是另一套线路协议，也不允许直接访问 Mod、MCP 内部对象或游戏内存。
-
-一个最小 Skill 的运行关系如下：
+阶段 6 当前采用最简单的 Agent 指引策略：Skill 是标准 `SKILL.md`，由 Codex、Claude 或其他 Agent Runtime 读取，然后直接调用阶段 1—5 已经交付的 MCP Tool。MCP 与 Mod 不加载 Skill，也不增加新 Tool、新协议分支或第二套命令生命周期。
 
 ```text
-Agent / MCP Client
-        │ 调用 Skill Tool
-        ▼
-MCP Skill Host ── 校验输入、权限、风险、Deadline 与取消
-        │ 仅允许调用 skill.yaml 已声明的原子 Tool
+Agent 读取 SKILL.md
+        │ 按步骤调用现有 stardew_* Tool
         ▼
 现有 MCP Catalog / Command Runtime
         │
@@ -375,33 +369,18 @@ MCP Skill Host ── 校验输入、权限、风险、Deadline 与取消
 Mod 的十五项公共原子能力
 ```
 
-阶段 6 的边界保持克制：`spec/skill/` 仍是包格式、执行语义和测试向量的唯一权威；`skill/` 只放公共 SDK、模板、两个最小示例和测试工具；加载、挂载和执行第三方 Skill 的生产实现归 MCP 的独立 Skill Host 模块。Skill ID 不进入公共能力 Manifest、Proto `CommandRequest` 或 Mod Registry；Host 必须逐项验证 Skill 声明的原子能力依赖，不能把 Skill 注册成“第十六项 Mod 能力”。仓库不提供完整官方玩法 Skill 集合，不恢复旧 `v2_skills`、文件桥、自动扫描内置目录或面向具体模型的私有 Agent 层。
+本阶段只交付四类内容：`spec/skill/` 中的依赖边界说明、一个可复制模板、一个只读示例、一个受控变更示例，以及检查目录、Frontmatter、本仓库安全章节和 Tool 名的静态校验器。五段式正文是 Stardew Valley MCP 示例的编写剖面，不是新的通用 Agent Skill 标准；权限、Ref/Revision、错误和副作用仍完全服从现有 MCP Tool 契约。
 
-阶段 6.0 应先把以下 V1 选择写入正式 Spec，再允许 SDK 和 Host 开工：
+1. [x] **阶段 6.0：收缩 Skill 约定。** 删除 `skill.yaml`、`implementation.py` 和可执行插件候选 Schema，改为标准 `SKILL.md` Frontmatter 与本仓库五段式安全编写剖面；明确 Skill 不进入 Proto、Capability Manifest 或 Mod Registry。
+2. [x] **阶段 6.1：交付模板与静态校验器。** 模板只含 `SKILL.md` 和可选 `agents/openai.yaml`；校验器使用生成的公共 Tool Catalog 检查 Skill 引用，不连接游戏、不执行工作流，也不建立 SDK。
+3. [x] **阶段 6.2：交付两个最小示例。** 只读示例组合 `query_runtime`/`query_world` 生成附近概览；变更示例组合查询、`inspect` 与单次 `use_tool`，通过 Agent 循环复查目标并在 stale、无变化、低体力、错误或次数上限时停止。
+4. [x] **阶段 6.3：验证与收口。** 模板和示例通过标准 Skill 校验、仓库静态校验与单元测试；生产源码继续保持没有 Skill Host、动态加载、文件桥或私有平台依赖。
 
-| 决策点 | V1 选择 |
-|---|---|
-| SDK | 独立发行 `stardew-valley-skill-sdk`，公共 import 为 `stardew_valley_skill`，不得依赖 `stardew_valley_mcp` 内部模块 |
-| Context | Skill 只使用稳定 capability ID 调用 `ctx.call(id, arguments)`；成功返回能力结果，失败、未知终态、取消和 Deadline 使用 SDK 稳定异常，不把 Python traceback 暴露给调用方 |
-| 执行 | 固定 `async run(ctx, input)`；输入、能力参数、能力结果和最终输出都必须是 JSON-compatible value，并分别通过公开 Schema 校验 |
-| 有效策略 | Scope、只读/变更属性、风险、destructive 与 MCP Annotation 全部由依赖能力逐项派生；Skill 风险声明只能补充、不能弱化。V1 的风险用于闭包校验和 Tool 元数据，不另造一套按风险标签授权系统 |
-| Deadline 与取消 | 每次 Skill 调用只有一个绝对 Deadline；每个原子调用使用剩余时间。取消当前原子调用后不得继续发起动作；`retry: never` 禁止 Host 重启 Skill 或重放调用，但不禁止现有 Runtime 用同一 Command ID 查询断线结果 |
-| 包与依赖 | 包根必须含 `skill.yaml`、`implementation.py`、`README.md`，测试放 `tests/`；V1 运行依赖只允许 Python 标准库和公共 SDK，暂不处理任意第三方依赖的安装与冲突隔离 |
-| 信任模型 | Skill 是用户明确选择的可信本地 Python，不是沙箱。路径与声明门禁只限制装载边界和游戏能力调用，不能阻止恶意代码访问同一 OS 用户权限范围 |
-| 挂载 | 使用可重复的显式 `--skill <包根>`，V1 只在 MCP 启动时装载，不递归扫描、不热重载；无效包、重复 ID、重复 Tool 名或路径越界均拒绝启动 |
+阶段 6 的退出条件是：第三方可以复制模板，只编辑 `SKILL.md` 就描述一条基于公共 MCP Tool 的可复用 Agent 工作流；校验器能够发现无效 Frontmatter、缺失章节和不存在的 Tool；两个示例提供可直接阅读和调用的完整步骤。当前阶段不承诺 Skill 自动安装、自动挂载或确定性代码执行。
 
-计划按以下纵向切片实施：
+此前设计的独立 SDK、可执行 Python Skill、MCP Skill Host、显式挂载与确定性 Harness 保留为未来演进方向。当真实需求证明 Agent 指引不足以支持独立分发或确定性执行时，再建立新的版本化阶段；未来实现仍必须复用现有 Catalog、Command Runtime 与 Transport，不能把编排重新下沉到 Mod。
 
-1. [ ] **阶段 6.0：冻结 Skill V1 执行契约。** 在 `spec/skill/` 补齐 `format_version`、调用签名、Skill Tool 命名、成功/失败信封、稳定错误、唯一版本范围语法、Deadline、取消终态和 `retry: never` 语义；同目录提供有效/无效包测试向量。Host 与开发者工具必须复用同一 Validator 核心，不能各自解释契约。
-2. [ ] **阶段 6.1：实现独立 Python SDK、校验器与开发者 CLI。** SDK 只暴露 `SkillContext` Protocol、通用能力调用、取消检查、剩余 Deadline 和稳定异常，不为十五项能力手写十五套包装方法。校验分为 JSON Schema 形状校验与基于公共能力 Manifest 的语义校验，输出稳定诊断码、相对文件和字段路径；提供唯一的 `new`、`validate`、`test` 命令链。
-3. [ ] **阶段 6.2：实现 MCP Skill Host。** `--skill` 指定的每个包，其全部能力依赖都必须同时存在于公共 Manifest、MCP 支持集和当前 Mod 公告，版本匹配且 Scope 已授权，随后才投影 Skill Tool。Host 与原子 Tool 共享同一个 `StardewClient`、Catalog、Command Runtime 和 Transport，只新增能力级窄调用口；禁止递归调用本 MCP stdio、创建第二条连接或建立 Skill 命令账本。加载期通过后，每次 `ctx.call` 仍重新执行声明与当前能力门禁。
-4. [ ] **阶段 6.3：交付模板与确定性无游戏 Harness。** 提供可复制包骨架、与生产相同的 `SkillContext` Protocol、脚本化能力结果/错误、调用顺序与参数断言、假的单调时钟和取消点。Harness 必须执行真实输入/输出与 Tool 参数 Schema 校验；出现未声明调用、脚本耗尽、顺序错误、未消费步骤或循环越界时立即失败，全程不读取 Secret、不连接 Socket、不要求游戏。
-5. [ ] **阶段 6.4：交付两个最小示例。** 只读示例依赖 `query_runtime`/`query_world`，返回玩家附近目标摘要并保留截断与 Warning。变更示例只接受当前地图相邻的普通 Tree Ref，依赖 `query_runtime`/`inspect`/`use_tool`，要求调用前已经装备斧头；每轮执行“检查取消与体力 → 单次动作 → 复查”，在至少一次动作成功后 Ref 变为 stale 时成功，在一次无状态变化、达到上限、低体力、取消或 Deadline 时立即停止。当前能力无法零成本查询已装备工具，因此错误工具最多可能产生一次无效动作；示例必须返回实际 Tool ID、尝试次数、累计 Energy 变化、最后事实与停止原因，不得隐瞒这项边界。
-6. [ ] **阶段 6.5：集成、Clean-room 与实机收口。** 先在仓库外临时环境只用已构建 SDK Wheel 完成“创建 → 校验 → 无游戏测试”，再用已构建 MCP Wheel 显式挂载。默认只读 MCP 下只读 Skill 可见而变更 Skill 不可用；显式写权限下两者按声明挂载，并各完成一次可由原子查询独立复核的真实调用。最终执行 SDK 包审计、Manifest/Spec 一致性、MCP/Mod 回归、公共边界、绝对路径与秘密扫描以及 `git diff --check`。
-
-`ItemGrabMenu` 槽位投影、Inventory Ref/Revision 关联和安全物品转移继续保留为公共能力扩展项，但不再阻塞阶段 6。只有未来选定“箱子搬运”类 Skill 时，才先扩展 Spec、Mod 投影与 MCP Tool，再让 Skill 依赖该版本化能力；当前示例不得绕过公共能力直接操作 UI。
-
-退出条件：第三方能够在仓库外从模板创建包，只安装独立 SDK 即可编写、校验和无游戏测试，再由 MCP 显式挂载运行；整个过程无需引用 MCP 内部模块、设置仓库 `PYTHONPATH` 或理解 Proto。未声明能力、未授权 Scope、版本不匹配、风险声明不完整、输入输出不合法或路径越界时默认拒绝；两个示例的 Harness 测试覆盖错误、取消、Deadline 与停止边界，真实结果可由原子查询独立复核。
+`ItemGrabMenu` 槽位投影、Inventory Ref/Revision 关联和安全物品转移继续作为公共能力扩展项，不阻塞当前 Agent Skill 层。只有未来编写箱子搬运工作流时，才先扩展版本化公共能力，Skill 不得绕过 MCP 直接操作游戏 UI。
 
 ### 阶段 7：公开发布准备
 
@@ -448,9 +427,9 @@ CI 至少包含以下门禁：
 
 ## 十一、近期下一步
 
-阶段 5 已完成，下一步进入阶段 6：
+阶段 6 的 Agent Skill 指引层已经完成，下一步进入阶段 7：
 
-1. 先完成阶段 6.0，冻结 Skill V1 的调用签名、Tool 命名、风险闭包、取消与错误语义，避免 SDK 和 Host 各自猜测。
-2. 再完成阶段 6.1—6.3，依次交付独立 SDK/校验器、MCP Skill Host 和无游戏测试 Harness。
-3. 最后完成阶段 6.4—6.5，用一个只读示例和一个“重复使用工具直到目标消失”的受控变更示例完成自动化与实机验收。
-4. 阶段 6 完成后进入阶段 7，补齐许可证、安全政策、第三方许可证、安装诊断与干净机器发布验收。
+1. 补齐许可证、安全政策与第三方许可证清单。
+2. 完成安装步骤、MCP 客户端配置与故障诊断。
+3. 从干净机器验证第一次只读调用和第一次显式授权操作。
+4. 保留可执行 Skill SDK/Host 为后续独立版本方向，不并入当前发布门禁。

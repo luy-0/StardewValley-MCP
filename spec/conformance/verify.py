@@ -90,8 +90,7 @@ def capability_digest(capabilities: list[dict[str, Any]]) -> str:
 
 
 def verify_json_schemas(manifest: dict[str, Any]) -> None:
-    for relative in ["capabilities/manifest.schema.json", "skill/skill.schema.json"]:
-        Draft202012Validator.check_schema(load_json(SPEC / relative))
+    Draft202012Validator.check_schema(load_json(SPEC / "capabilities/manifest.schema.json"))
     Draft202012Validator(load_json(SPEC / "capabilities/manifest.schema.json")).validate(manifest)
 
 

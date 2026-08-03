@@ -21,7 +21,7 @@
 1. 规范性契约变更；
 2. 兼容性判断和迁移说明；
 3. 对应的 fixture 或一致性测试；
-4. 必要的 Mod、MCP 或 Skill SDK 修改。
+4. 必要的 Mod、MCP 或 Agent Skill 指引、模板与示例修改。
 
 破坏性变更必须在合并前作出明确的版本决策。具体规则见 [spec/VERSIONING.md](spec/VERSIONING.md)。
 

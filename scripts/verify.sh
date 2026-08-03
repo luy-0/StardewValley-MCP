@@ -23,6 +23,8 @@ fi
 "$uv_bin" run --project "$repo_root/mcp" python "$repo_root/spec/conformance/verify.py"
 "$uv_bin" run --project "$repo_root/mcp" python "$repo_root/spec/conformance/transport-spike/run_spike.py"
 "$uv_bin" run --project "$repo_root/mcp" python "$repo_root/scripts/check_public_boundaries.py"
+"$uv_bin" run --project "$repo_root/mcp" python "$repo_root/skill/scripts/validate_skills.py"
+"$uv_bin" run --project "$repo_root/mcp" python -m unittest discover -s "$repo_root/skill/tests" -v
 dotnet test "$repo_root/mod/tests/StardewValleyMcp.Protocol.Tests/StardewValleyMcp.Protocol.Tests.csproj" \
   --configuration Release \
   -p:RestoreLockedMode=true

@@ -20,7 +20,7 @@
 | Mod–MCP 传输、认证与命令生命周期 | `mod-mcp-protocol.md` |
 | Mod 公开运行边界 | `mod.md` |
 | MCP 投影与稳定错误 | `mcp/README.md` |
-| Skill 包格式 | `skill/skill.schema.json` 与 `skill/README.md` |
+| Agent Skill 依赖边界 | `skill/README.md` |
 | 兼容性与版本变更 | `VERSIONING.md` |
 | 可观测的一致性要求 | `conformance/` 与 `fixtures/` |
 
@@ -77,7 +77,7 @@ Fixture 只展示有效或无效交互。如果示例与机器可读契约或规
 - [能力裁决记录](capabilities/decisions.md)
 - [能力行为契约](capabilities/behavior.md)
 - [MCP 投影](mcp/README.md)
-- [Skill 包契约](skill/README.md)
+- [Agent Skill 依赖边界](skill/README.md)
 - [契约 Fixture](fixtures/README.md)
 - [一致性要求](conformance/README.md)
 

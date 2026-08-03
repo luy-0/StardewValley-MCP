@@ -1,0 +1,4 @@
+interface:
+  display_name: "星露谷附近概览"
+  short_description: "查询并整理当前玩家位置、时间以及附近可见的结构化游戏事实"
+  default_prompt: "使用 $stardew-nearby-overview 查询并总结当前玩家附近的环境。"

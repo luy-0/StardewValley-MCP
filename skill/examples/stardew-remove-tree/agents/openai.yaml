@@ -1,0 +1,4 @@
+interface:
+  display_name: "星露谷移除树木"
+  short_description: "安全地重复砍伐当前相邻普通树，并在目标消失或受阻时停止"
+  default_prompt: "使用 $stardew-remove-tree 砍倒并移除当前相邻的普通树。"

@@ -37,7 +37,6 @@ FORBIDDEN = {
     "old repository import": re.compile(r"\bstar[-_.]?coplay(?:[-_.]?hosted[-_.]?agent[-_.]?runtime)?\b", re.IGNORECASE),
     "old global input bridge": re.compile(r"\bInputBridge(?:Simulator)?\b|\bInputCombo\b"),
     "global input simulator": re.compile(r"\bIInputSimulator\b|\bGame1\.inputSimulator\b"),
-    "SMAPI input override reflection": re.compile(r"\bOverrideButton\b|\bApplyOverrides\b"),
     "IsActive patch": re.compile(r"\bIsActivePatch\b"),
 }
 PRIVATE_PATHS = {

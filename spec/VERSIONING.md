@@ -6,7 +6,6 @@
 |---|---:|---|
 | Mod–MCP 线路协议 | `1.0` | `ProtocolVersion` 与 Proto package |
 | 公开能力契约 | `1.0.0` | `capabilities/manifest.yaml` |
-| Skill 包格式 | `1` | `skill/skill.schema.json` |
 
 仓库产品版本独立于上述契约版本。实现完成前产品使用 `0.x` 预览版本；这不改变已经冻结的候选契约编号。
 
@@ -26,11 +25,9 @@
 - 收窄输入、删除结果字段、改变副作用、弱化风险声明、改变取消语义或扩大默认权限属于破坏性变更。
 - 能力的 `contract_version` 与线路版本独立；实现只暴露 Manifest、Mod Registry、MCP Projection 和本地授权的交集。
 
-## Skill 兼容规则
+## Agent Skill 指引兼容规则
 
-- Skill 包格式版本管理目录与 Manifest 结构，不是单个 Skill 的版本。
-- `skill.yaml.version` 严格采用 `MAJOR.MINOR.PATCH`。
-- Skill 依赖范围针对能力契约版本，不针对 Mod、MCP 或仓库产品版本。
+当前 Agent Skill 是开发指引，不参与 Mod–MCP 线路协商，也没有独立运行时版本。模板或正文约定发生变化时随仓库产品版本发布；Skill 引用的 MCP Tool 行为仍以对应公开能力契约版本为准。
 
 ## 变更流程
 
