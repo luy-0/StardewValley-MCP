@@ -1,0 +1,17 @@
+# 公开 HMAC/握手测试向量；只豁免已经人工核对的历史指纹。
+2c55cd79c0ba0cdc3d1c8455f13c7283f9105106:spec/fixtures/v1/bootstrap/hmac-sha256.json:generic-api-key:18
+2c55cd79c0ba0cdc3d1c8455f13c7283f9105106:spec/fixtures/v1/bootstrap/hmac-sha256.json:generic-api-key:19
+2c55cd79c0ba0cdc3d1c8455f13c7283f9105106:spec/fixtures/v1/bootstrap/hmac-sha256.json:generic-api-key:3
+2c55cd79c0ba0cdc3d1c8455f13c7283f9105106:spec/fixtures/v1/bootstrap/server-ready.json:generic-api-key:16
+60dd68e35c814705b22f70fa9e9ce68916225df4:spec/fixtures/v1/auth/hmac-minor-downgrade.synthetic.json:generic-api-key:19
+60dd68e35c814705b22f70fa9e9ce68916225df4:spec/fixtures/v1/auth/hmac-minor-downgrade.synthetic.json:generic-api-key:20
+60dd68e35c814705b22f70fa9e9ce68916225df4:spec/fixtures/v1/auth/hmac-minor-downgrade.synthetic.json:generic-api-key:4
+60dd68e35c814705b22f70fa9e9ce68916225df4:spec/fixtures/v1/auth/hmac-sha256.json:generic-api-key:18
+60dd68e35c814705b22f70fa9e9ce68916225df4:spec/fixtures/v1/auth/hmac-sha256.json:generic-api-key:19
+60dd68e35c814705b22f70fa9e9ce68916225df4:spec/fixtures/v1/auth/hmac-sha256.json:generic-api-key:3
+60dd68e35c814705b22f70fa9e9ce68916225df4:spec/fixtures/v1/transport/client-hello.json:generic-api-key:8
+60dd68e35c814705b22f70fa9e9ce68916225df4:spec/fixtures/v1/transport/server-ready.json:generic-api-key:30
+836881814a5eb55c06bfeee37dfc170ec5ef677b:spec/fixtures/v1/observation/hmac-sha256.json:generic-api-key:1
+836881814a5eb55c06bfeee37dfc170ec5ef677b:spec/fixtures/v1/observation/server-ready.json:generic-api-key:1
+f47bd4e6a1e0df65d66b4b95aa549ffd14b9fcce:spec/fixtures/v1/observation/hmac-sha256.json:generic-api-key:1
+f47bd4e6a1e0df65d66b4b95aa549ffd14b9fcce:spec/fixtures/v1/observation/server-ready.json:generic-api-key:1
