@@ -358,9 +358,50 @@ DefaultCapabilitySet
 
 ### 阶段 6：交付 Skill 开发面
 
-实现 Skill SDK、Manifest 校验器、模板、一个只读最小示例、一个变更型最小示例和测试 Harness。示例只证明接口使用方法，不扩张为官方玩法库。
+阶段 6 不再增加一批新的 Mod 原子能力，而是把阶段 1—5 已经交付的十五项能力变成第三方可以安全编排的开发面。这里的 Skill 是一个显式声明输入、输出、依赖能力和风险的本地 Python 工作流包；它通过受限 `SkillContext` 调用 MCP Tool，把“查询 → 判断 → 动作 → 复查 → 停止”组织成一个可复用 Tool。它不是新的游戏服务、不是另一套线路协议，也不允许直接访问 Mod、MCP 内部对象或游戏内存。
 
-退出条件：第三方无需引用 MCP 内部模块即可创建、校验和测试 Skill；未授权能力与风险声明不完整时默认拒绝。
+一个最小 Skill 的运行关系如下：
+
+```text
+Agent / MCP Client
+        │ 调用 Skill Tool
+        ▼
+MCP Skill Host ── 校验输入、权限、风险、Deadline 与取消
+        │ 仅允许调用 skill.yaml 已声明的原子 Tool
+        ▼
+现有 MCP Catalog / Command Runtime
+        │
+        ▼
+Mod 的十五项公共原子能力
+```
+
+阶段 6 的边界保持克制：`spec/skill/` 仍是包格式、执行语义和测试向量的唯一权威；`skill/` 只放公共 SDK、模板、两个最小示例和测试工具；加载、挂载和执行第三方 Skill 的生产实现归 MCP 的独立 Skill Host 模块。Skill ID 不进入公共能力 Manifest、Proto `CommandRequest` 或 Mod Registry；Host 必须逐项验证 Skill 声明的原子能力依赖，不能把 Skill 注册成“第十六项 Mod 能力”。仓库不提供完整官方玩法 Skill 集合，不恢复旧 `v2_skills`、文件桥、自动扫描内置目录或面向具体模型的私有 Agent 层。
+
+阶段 6.0 应先把以下 V1 选择写入正式 Spec，再允许 SDK 和 Host 开工：
+
+| 决策点 | V1 选择 |
+|---|---|
+| SDK | 独立发行 `stardew-valley-skill-sdk`，公共 import 为 `stardew_valley_skill`，不得依赖 `stardew_valley_mcp` 内部模块 |
+| Context | Skill 只使用稳定 capability ID 调用 `ctx.call(id, arguments)`；成功返回能力结果，失败、未知终态、取消和 Deadline 使用 SDK 稳定异常，不把 Python traceback 暴露给调用方 |
+| 执行 | 固定 `async run(ctx, input)`；输入、能力参数、能力结果和最终输出都必须是 JSON-compatible value，并分别通过公开 Schema 校验 |
+| 有效策略 | Scope、只读/变更属性、风险、destructive 与 MCP Annotation 全部由依赖能力逐项派生；Skill 风险声明只能补充、不能弱化。V1 的风险用于闭包校验和 Tool 元数据，不另造一套按风险标签授权系统 |
+| Deadline 与取消 | 每次 Skill 调用只有一个绝对 Deadline；每个原子调用使用剩余时间。取消当前原子调用后不得继续发起动作；`retry: never` 禁止 Host 重启 Skill 或重放调用，但不禁止现有 Runtime 用同一 Command ID 查询断线结果 |
+| 包与依赖 | 包根必须含 `skill.yaml`、`implementation.py`、`README.md`，测试放 `tests/`；V1 运行依赖只允许 Python 标准库和公共 SDK，暂不处理任意第三方依赖的安装与冲突隔离 |
+| 信任模型 | Skill 是用户明确选择的可信本地 Python，不是沙箱。路径与声明门禁只限制装载边界和游戏能力调用，不能阻止恶意代码访问同一 OS 用户权限范围 |
+| 挂载 | 使用可重复的显式 `--skill <包根>`，V1 只在 MCP 启动时装载，不递归扫描、不热重载；无效包、重复 ID、重复 Tool 名或路径越界均拒绝启动 |
+
+计划按以下纵向切片实施：
+
+1. [ ] **阶段 6.0：冻结 Skill V1 执行契约。** 在 `spec/skill/` 补齐 `format_version`、调用签名、Skill Tool 命名、成功/失败信封、稳定错误、唯一版本范围语法、Deadline、取消终态和 `retry: never` 语义；同目录提供有效/无效包测试向量。Host 与开发者工具必须复用同一 Validator 核心，不能各自解释契约。
+2. [ ] **阶段 6.1：实现独立 Python SDK、校验器与开发者 CLI。** SDK 只暴露 `SkillContext` Protocol、通用能力调用、取消检查、剩余 Deadline 和稳定异常，不为十五项能力手写十五套包装方法。校验分为 JSON Schema 形状校验与基于公共能力 Manifest 的语义校验，输出稳定诊断码、相对文件和字段路径；提供唯一的 `new`、`validate`、`test` 命令链。
+3. [ ] **阶段 6.2：实现 MCP Skill Host。** `--skill` 指定的每个包，其全部能力依赖都必须同时存在于公共 Manifest、MCP 支持集和当前 Mod 公告，版本匹配且 Scope 已授权，随后才投影 Skill Tool。Host 与原子 Tool 共享同一个 `StardewClient`、Catalog、Command Runtime 和 Transport，只新增能力级窄调用口；禁止递归调用本 MCP stdio、创建第二条连接或建立 Skill 命令账本。加载期通过后，每次 `ctx.call` 仍重新执行声明与当前能力门禁。
+4. [ ] **阶段 6.3：交付模板与确定性无游戏 Harness。** 提供可复制包骨架、与生产相同的 `SkillContext` Protocol、脚本化能力结果/错误、调用顺序与参数断言、假的单调时钟和取消点。Harness 必须执行真实输入/输出与 Tool 参数 Schema 校验；出现未声明调用、脚本耗尽、顺序错误、未消费步骤或循环越界时立即失败，全程不读取 Secret、不连接 Socket、不要求游戏。
+5. [ ] **阶段 6.4：交付两个最小示例。** 只读示例依赖 `query_runtime`/`query_world`，返回玩家附近目标摘要并保留截断与 Warning。变更示例只接受当前地图相邻的普通 Tree Ref，依赖 `query_runtime`/`inspect`/`use_tool`，要求调用前已经装备斧头；每轮执行“检查取消与体力 → 单次动作 → 复查”，在至少一次动作成功后 Ref 变为 stale 时成功，在一次无状态变化、达到上限、低体力、取消或 Deadline 时立即停止。当前能力无法零成本查询已装备工具，因此错误工具最多可能产生一次无效动作；示例必须返回实际 Tool ID、尝试次数、累计 Energy 变化、最后事实与停止原因，不得隐瞒这项边界。
+6. [ ] **阶段 6.5：集成、Clean-room 与实机收口。** 先在仓库外临时环境只用已构建 SDK Wheel 完成“创建 → 校验 → 无游戏测试”，再用已构建 MCP Wheel 显式挂载。默认只读 MCP 下只读 Skill 可见而变更 Skill 不可用；显式写权限下两者按声明挂载，并各完成一次可由原子查询独立复核的真实调用。最终执行 SDK 包审计、Manifest/Spec 一致性、MCP/Mod 回归、公共边界、绝对路径与秘密扫描以及 `git diff --check`。
+
+`ItemGrabMenu` 槽位投影、Inventory Ref/Revision 关联和安全物品转移继续保留为公共能力扩展项，但不再阻塞阶段 6。只有未来选定“箱子搬运”类 Skill 时，才先扩展 Spec、Mod 投影与 MCP Tool，再让 Skill 依赖该版本化能力；当前示例不得绕过公共能力直接操作 UI。
+
+退出条件：第三方能够在仓库外从模板创建包，只安装独立 SDK 即可编写、校验和无游戏测试，再由 MCP 显式挂载运行；整个过程无需引用 MCP 内部模块、设置仓库 `PYTHONPATH` 或理解 Proto。未声明能力、未授权 Scope、版本不匹配、风险声明不完整、输入输出不合法或路径越界时默认拒绝；两个示例的 Harness 测试覆盖错误、取消、Deadline 与停止边界，真实结果可由原子查询独立复核。
 
 ### 阶段 7：公开发布准备
 
@@ -409,7 +450,7 @@ CI 至少包含以下门禁：
 
 阶段 5 已完成，下一步进入阶段 6：
 
-1. 建立 Skill SDK 的最小公共接口、Manifest 校验器与测试 Harness，只依赖公开 `spec/` 和 MCP Tool，不引用 Mod/MCP 实现内部结构。
-2. 在编写变更型示例前裁决 `ItemGrabMenu` 的 UI 槽位、Inventory Ref/Revision 关联和安全转移动作；继续由 `query_inventory(containerRef)` 提供箱内事实，避免在 `query_ui` 重复定义物品模型。
-3. 提供一个只读模板、一个受控变更模板与最小示例，明确权限、风险、输入输出和测试方式，不扩张为完整官方玩法技能集合。
-4. 在阶段 6 完成后进入阶段 7，补齐许可证、安全政策、第三方许可证、安装诊断与干净机器发布验收。
+1. 先完成阶段 6.0，冻结 Skill V1 的调用签名、Tool 命名、风险闭包、取消与错误语义，避免 SDK 和 Host 各自猜测。
+2. 再完成阶段 6.1—6.3，依次交付独立 SDK/校验器、MCP Skill Host 和无游戏测试 Harness。
+3. 最后完成阶段 6.4—6.5，用一个只读示例和一个“重复使用工具直到目标消失”的受控变更示例完成自动化与实机验收。
+4. 阶段 6 完成后进入阶段 7，补齐许可证、安全政策、第三方许可证、安装诊断与干净机器发布验收。
