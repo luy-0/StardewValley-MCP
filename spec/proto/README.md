@@ -22,6 +22,6 @@ Proto 只定义“可以编码什么”，不单独定义“何时发送、谁�
 - 生成结果过期时 CI 必须失败。
 - MCP Tool 的 Input/Output Schema 只能从 Manifest 选中的 Request/Result 消息生成。
 - `message_id`、Session Fence、Command ID 和认证字段不得出现在模型提供的 Tool 参数中。
-- 公共 V1 Proto 不得包含隐藏能力、私有平台身份或兼容协议分支。
+- 公共 V1 Proto 只描述 Mod 与 MCP 之间的能力和命令协议，不承载外部身份或部署环境字段。
 
 生成文件属于 `mod/` 和 `mcp/` 的构建产物，不得作为契约源码手工修改。

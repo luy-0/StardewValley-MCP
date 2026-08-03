@@ -25,7 +25,7 @@
 ## 安全边界
 ```
 
-这五个标题是本仓库的安全编写剖面，不是新的通用 Agent Skill 格式。`可用工具` 只列出公共 Catalog 中真实存在的 `stardew_*` MCP Tool。正文不得要求 Agent 调用 Mod 内部类型、MCP 内部 Python 模块、私有平台接口、旧协议别名或文件桥。
+这五个标题是本仓库的安全编写剖面，不是新的通用 Agent Skill 格式。`可用工具` 只列出公共 Catalog 中真实存在的 `stardew_*` MCP Tool，正文步骤也只能调用这些公共 Tool。
 
 ## 执行边界
 

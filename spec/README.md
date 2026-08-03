@@ -1,6 +1,6 @@
 # StardewValley MCP 公开规范
 
-状态：**公开 V1 候选契约**
+状态：**公开 V1 契约**
 
 本目录是 Mod、MCP 服务端与 Skill 开发套件共享的公共契约权威来源，包含数据定义、能力边界、生命周期规则、安全与兼容策略，以及不依赖具体实现的一致性测试。它不是运行时组件，`spec/` 下没有任何需要作为服务启动的内容。
 
@@ -16,7 +16,6 @@
 |---|---|
 | 线路消息结构、字段编号、枚举 | `proto/*.proto` |
 | 公开能力清单及策略 | `capabilities/manifest.yaml` 及其 Schema |
-| 能力取舍理由 | `capabilities/decisions.md` |
 | Mod–MCP 传输、认证与命令生命周期 | `mod-mcp-protocol.md` |
 | Mod 公开运行边界 | `mod.md` |
 | MCP 投影与稳定错误 | `mcp/README.md` |
@@ -48,9 +47,9 @@ Proto 定义实现之间可以交换的消息；Manifest 定义公开、受支�
 
 Fixture 只展示有效或无效交互。如果示例与机器可读契约或规范性规则冲突，以机器可读契约和规范性规则为准。
 
-### 8. 排除私有产品概念
+### 8. 保持公共边界最小化
 
-公共规范不定义 Platform 用户、Agent 身份、Persona、配额、计费、托管数据库记录或特定 Agent Provider。私有平台只能通过公开端口成为消费者。
+公共规范只定义 Mod、MCP 与 Agent Skill 互操作所需的数据和行为，不纳入与该互操作无关的部署、账号或运营字段。
 
 ### 9. 说明性文档优先使用中文
 
@@ -58,11 +57,10 @@ Fixture 只展示有效或无效交互。如果示例与机器可读契约或规
 
 ## V1 设计结论
 
-- 新协议 package 为 `stardew_valley.mcp.v1`，不继承内部 Protocol `2.4.5` 的兼容历史。
-- 公共能力从 18 项历史候选收敛为 15 项正交能力。
+- 协议 package 为 `stardew_valley.mcp.v1`。
+- 公共能力由 Manifest 定义为 15 项正交能力。
 - 本地链路使用 Mod Listener、MCP Client 和长度前缀二进制 Proto。
-- 认证只保留本地安全需要的 Session、Lease 与 Capability Digest，不包含 Hosted Identity。
-- 文件消息桥、运行时 Rendezvous、V2 JSON 和兼容 Handler 不属于 V1。
+- 认证使用本地连接所需的 Session、Lease 与 Capability Digest。
 
 ## 索引
 
@@ -74,13 +72,12 @@ Fixture 只展示有效或无效交互。如果示例与机器可读契约或规
 - [Proto 线路数据模型](proto/README.md)
 - [Mod 公开实现契约](mod.md)
 - [公开能力模型](capabilities/README.md)
-- [能力裁决记录](capabilities/decisions.md)
 - [能力行为契约](capabilities/behavior.md)
 - [MCP 投影](mcp/README.md)
 - [Agent Skill 依赖边界](skill/README.md)
 - [契约 Fixture](fixtures/README.md)
 - [一致性要求](conformance/README.md)
 
-## V1 候选冻结含义
+## V1 契约维护
 
-“候选冻结”表示阶段 1 的实现必须以这里的契约为输入，不能继续从旧源码反推接口。首个公开稳定版本发布前，实机验证仍可能触发显式 Spec 变更；任何变更都必须同步修改权威定义、Fixture、兼容判断和一致性测试，不能在实现中建立隐式例外。
+实现必须以这里的契约为输入。任何公共行为变更都必须同步修改权威定义、Fixture、兼容判断和一致性测试，不能只在某一端实现中建立隐式例外。

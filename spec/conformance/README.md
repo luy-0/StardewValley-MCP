@@ -10,22 +10,21 @@
 4. C# 与 Python 生成产物各自导出的 Descriptor 字节一致，并由两种语言独立计算出同一 Capability Digest 与 HMAC。
 5. 15 项 MCP Input/Output Schema 可由 Proto Descriptor、Manifest、显式 Override 与 Error Map 确定重建，生成物逐字节一致。
 6. Fixture 能由生成的 C# 与 Python Proto 严格解析，序列化后再次解析保持语义相等，并通过跨帧身份、Fence、Command、Result 与状态关联检查。
-7. 18 项历史能力均有机器可读裁决，公共 Proto 不包含未列入 Manifest 的能力分支。
+7. 公共 Proto 不包含未列入 Manifest 的能力分支。
 
-当前机器可读门禁执行方式：
+机器可读一致性检查从仓库根目录执行：
 
 ```bash
-python3 -m venv /tmp/sdvmcp-spec-venv
-/tmp/sdvmcp-spec-venv/bin/pip install -r spec/conformance/requirements.txt
-/tmp/sdvmcp-spec-venv/bin/python spec/conformance/verify.py
-./spec/conformance/transport-spike/run.sh
+uv sync --project mcp --locked --extra dev
+uv run --project mcp python spec/conformance/verify.py
+uv run --project mcp python spec/conformance/transport-spike/run_spike.py
 ```
 
-只有缺少 .NET SDK 的环境才允许临时使用 `--skip-csharp`；CI 与发布验收不得跳过 C# Fixture、Descriptor、Digest 与 HMAC 检查。`verify.py` 是阶段 0 的静态契约验证器，不宣称能够替代阶段 1 之后针对真实 Mod/MCP 实现的运行时 Conformance Harness。
+只有缺少 .NET SDK 的环境才允许临时使用 `--skip-csharp`；CI 与发布验证不得跳过 C# Fixture、Descriptor、Digest 与 HMAC 检查。`verify.py` 是静态契约验证器，不能替代针对真实 Mod/MCP 实现的运行时 Conformance Harness。
 
 ## Transport 基础门禁
 
-`verify.py` 和 `transport-spike/` 持续验证长度前缀、短读、粘包、非法长度、短 Header/Payload EOF、真实 Proto Wire 往返、HMAC 正反向量、Descriptor 摘要、跨握手 Fixture 关联和 Fence 一致性。历史实验结果记录在传输 ADR；Windows 实机矩阵不属于当前发布门禁。
+`verify.py` 和 `transport-spike/` 持续验证长度前缀、短读、粘包、非法长度、短 Header/Payload EOF、真实 Proto Wire 往返、HMAC 正反向量、Descriptor 摘要、跨握手 Fixture 关联和 Fence 一致性。
 
 ## 实现期 Transport 门禁
 
@@ -50,24 +49,16 @@ python3 -m venv /tmp/sdvmcp-spec-venv
 2. 受保护字段不能通过 initialize metadata 或 Tool 参数注入。
 3. Input/Output Schema、Enum 映射和结构化结果符合 `../mcp/README.md`。
 4. `failed` 与 `unknown` 不得包装为成功 Tool Result；未知变更结果不得自动重放。
-5. 软件包无需私有平台仓库即可安装和测试。
+5. 软件包能够从本仓库源码独立安装和测试。
 
 ## 实现期 Mod 门禁
 
 1. 每项宣告能力只有一个编译期 Handler。
-2. Scheduler 不查询或初始化第二套命令处理器。
+2. 实现只有一套命令处理器与状态机。
 3. 变更执行前最后检查 Session、Lease 与 Capability Digest。
 4. 每个已接受命令到达唯一终态，或者在 MCP 侧保持可观测 `UNKNOWN`。
 5. Socket 线程不得访问 Stardew Valley 对象。
 
-## 禁止依赖门禁
+## 依赖边界门禁
 
-生产源码与机器可读协议不得依赖或提供：
-
-```text
-AdapterV2, V2Command, V2Result, CommandProcessor, CompoundDispatcher,
-FallbackToLegacyMapper, v2-json, Legacy namespace, File Bridge,
-runtime Rendezvous, agent.protocol, runtime_manager, Hosted Credential
-```
-
-ADR、迁移计划和能力裁决可以提及被删除系统，禁止词扫描不得把历史说明误判为运行时依赖。
+生产源码只能依赖仓库内声明的公共项目与锁定的第三方包。Mod 与 MCP 必须能够从本仓库源码独立构建、安装和测试；任何额外运行时依赖都必须进入包元数据、许可证声明与安装文档。

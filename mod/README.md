@@ -12,11 +12,11 @@
 
 ## 非职责
 
-Mod 不实现 MCP，不加载 Skill，不拥有智能体身份，也不定义私有平台概念。
+Mod 不实现 MCP，不加载 Skill，也不拥有智能体身份。
 
 ## 当前实现状态
 
-当前已建立独立的 .NET 6 Solution、公共 Proto 生成项目和 SMAPI Host。Host 只在配置的 loopback 地址启动 Proto TCP Listener，通过共享秘密完成 HMAC 认证。Registry 当前显式注册五项只读 Handler 和十项需要明确授权的变更 Handler，共十五项公共能力；变更能力包括七项简单交互，以及 `navigate`、`interact`、`use_tool` 三项长时能力。`use_tool` 首版只支持 Axe、Pickaxe、Scythe、Hoe 与 Watering Can，并由独立 Driver 观察工具的接受、释放和收敛生命周期；它不恢复旧仓的全局输入桥或私有按键状态。
+当前已建立独立的 .NET 6 Solution、公共 Proto 生成项目和 SMAPI Host。Host 只在配置的 loopback 地址启动 Proto TCP Listener，通过共享秘密完成 HMAC 认证。Registry 当前显式注册五项只读 Handler 和十项需要明确授权的变更 Handler，共十五项公共能力；变更能力包括七项简单交互，以及 `navigate`、`interact`、`use_tool` 三项长时能力。`use_tool` 支持 Axe、Pickaxe、Scythe、Hoe 与 Watering Can，并由独立 Driver 观察工具的接受、释放和收敛生命周期。
 
 以下命令均从仓库根目录执行。生成并测试公共协议：
 
@@ -34,7 +34,7 @@ dotnet test mod/tests/StardewValleyMcp.Protocol.Tests/StardewValleyMcp.Protocol.
 
 生成的 Mod ZIP 会携带项目 Apache-2.0 许可证、第三方声明和随包 `Google.Protobuf.dll` 的 BSD-3-Clause 许可证。只有明确需要本地安装时才使用 `--deploy`。
 
-非标准游戏位置通过 `STARDEW_VALLEY_GAME_PATH` 指定；新脚本不会调用或引用旧仓库。
+非标准游戏位置通过 `STARDEW_VALLEY_GAME_PATH` 指定。
 
 首次加载 Mod 时会在自身 `config.json` 中生成至少 32 字节的随机共享秘密。该文件不得提交、公开或写入日志；MCP 通过 `STARDEW_VALLEY_MCP_SHARED_SECRET` 读取同一个 Base64 值。
 

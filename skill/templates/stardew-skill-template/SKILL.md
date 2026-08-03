@@ -28,4 +28,4 @@ description: 创建或改写一个只通过公开 Stardew Valley MCP Tool 工作
 
 ## 安全边界
 
-说明 Skill 是只读还是会改变存档，并列出可能消耗的体力、物品、金钱、时间或关系。变更 Skill 必须提醒使用者显式启用 `--allow-write`；不得调用 MCP/Mod 内部模块、文件桥、私有平台接口或旧能力别名。
+说明 Skill 是只读还是会改变存档，并列出可能消耗的体力、物品、金钱、时间或关系。变更 Skill 必须提醒使用者显式启用 `--allow-write`；所有步骤只能调用公共 Catalog 中声明的 MCP Tool。

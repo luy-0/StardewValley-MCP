@@ -2,7 +2,7 @@
 
 当前预览版提供十五项公共 Tool：五项观察能力、七项简单交互能力，以及 `navigate`、`interact`、`use_tool` 三项长时能力。MCP 默认只暴露只读能力；只有显式加入 `--allow-write`，才会暴露当前 Mod 同时公告的操作能力。
 
-本阶段采用源码优先发布方式，不提供预编译 Mod 或安装器。Agent 从干净源码自动安装时，请使用根目录的 [`AGENT-GUIDE.md`](../AGENT-GUIDE.md)。
+当前采用源码优先发布方式，不提供预编译 Mod 或安装器。Agent 从源码自动安装时，请使用根目录的 [`AGENT-GUIDE.md`](../AGENT-GUIDE.md)。
 
 ## 一、前置条件
 
@@ -30,7 +30,7 @@ export STARDEW_VALLEY_GAME_PATH="$HOME/Library/Application Support/Steam/steamap
 
 ### Windows
 
-Windows 当前提供源码安装说明，但尚未列入本阶段实机验证矩阵。安装 Git for Windows 后，在 Git Bash 中执行：
+安装 Git for Windows 后，在 Git Bash 中执行：
 
 ```bash
 export STARDEW_VALLEY_GAME_PATH='C:/Program Files (x86)/Steam/steamapps/common/Stardew Valley'

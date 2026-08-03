@@ -5,17 +5,17 @@
 
 ## 背景
 
-旧 Local Direct 由 MCP 持有临时 WebSocket Listener，再通过一次性 Rendezvous 文件通知 Mod 连接。虽然业务命令已经不通过普通文件轮询，但 Endpoint、Proof 和所有权交接仍依赖运行时文件，这与公开版本彻底移除文件桥的目标冲突。
+MCP 服务端通常由客户端按需启动，而 Mod 与游戏进程具有更稳定的生命周期。本地传输需要在 macOS 与 Windows 上使用同一连接模型，并在不引入额外 Endpoint 发现服务的情况下完成认证、单 Owner 管理和断线恢复。
 
 ## 备选方案
 
 ### A. MCP Listener，Mod Client
 
-优点是接近旧 Local Direct，也方便 MCP 控制连接生命周期。缺点是 MCP 通常由客户端按需启动，每次端口变化都需要额外发现机制；如果不使用固定端口，就会重新引入文件、平台或手工控制面。
+优点是 MCP 可以直接控制连接生命周期。缺点是 MCP 通常由客户端按需启动，每次端口变化都需要额外发现机制；如果不使用固定端口，就需要另一个控制面协调 Endpoint。
 
 ### B. Mod Listener，MCP Client
 
-Mod 与游戏共同启动，天然拥有稳定生命周期。MCP 可以在任意时刻主动连接固定配置的 loopback Endpoint，不需要运行时 Rendezvous。Mod 还可以在最接近游戏执行的位置维护单 Owner Lease 和命令结果缓存。
+Mod 与游戏共同启动，天然拥有稳定生命周期。MCP 可以在任意时刻主动连接固定配置的 loopback Endpoint。Mod 还可以在最接近游戏执行的位置维护单 Owner Lease 和命令结果缓存。
 
 ### C. 命名管道或 Unix Domain Socket
 
@@ -25,7 +25,7 @@ Mod 与游戏共同启动，天然拥有稳定生命周期。MCP 可以在任意
 
 采用方案 B：Mod 持有 loopback TCP Listener，MCP 作为 Client。线路使用 4 字节大端无符号长度前缀加一个序列化的 `TransportFrame` protobuf；帧长必须在 `1..1,048,576` 字节之间。
 
-V1 不使用 WebSocket、JSON 业务帧或运行时 Rendezvous 文件。静态 `config.json` 和日志文件仍可存在，但不得承载命令、结果、事件、能力快照或所有权转移。
+V1 不使用 WebSocket、JSON 业务帧或运行时 Endpoint 发现文件。静态 `config.json` 和日志文件仍可存在，但不得承载命令、结果、事件、能力快照或所有权转移。
 
 ## 认证与所有权
 
@@ -36,9 +36,9 @@ V1 不使用 WebSocket、JSON 业务帧或运行时 Rendezvous 文件。静态 `
 5. 同一时刻只允许一个 Owner。连接中断进入短暂 Suspended 状态；相同 Session 可在 Grace Period 内恢复，其他 Owner 必须被拒绝。
 6. Mod 在公布的有界保留期内缓存完整终态 Result，并把已使用 Command ID 的 Tombstone 与请求摘要保留到本次 Mod 进程结束，使断线后的 MCP 能收敛未知结果且不会在 Result 淘汰后重复执行。
 
-## Spike 证据
+## 一致性证据
 
-2026-07-26 在当前开发机上用 .NET SDK `6.0.136` 的 `TcpListener` 与 Python `3.14.3` 标准库 Socket 完成跨语言长度前缀收发。可重复运行的 Harness 已固化到 [`../conformance/transport-spike/`](../conformance/transport-spike/)：它往返真实 `TransportFrame { message_id, ping }` Proto Wire Payload，并覆盖确定性短读、两帧粘包、零长度、超过 1 MiB、短 Header EOF 与短 Payload EOF。第一次实验使用 `Stream.ReadExactlyAsync` 编译失败，因为该 API 不属于当前 .NET 6 目标；固化版本改用显式分段读取循环。因此 V1 实现不得依赖 `ReadExactlyAsync`，必须自行处理短读和 EOF。
+可重复运行的 Harness 位于 [`../conformance/transport-spike/`](../conformance/transport-spike/)。它往返真实 `TransportFrame { message_id, ping }` Proto Wire Payload，并覆盖确定性短读、两帧粘包、零长度、超过 1 MiB、短 Header EOF 与短 Payload EOF。实现必须使用适用于 .NET 6 的分段读取循环，正确处理短读和 EOF。
 
 ## 后果
 

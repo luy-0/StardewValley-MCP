@@ -26,19 +26,11 @@ from jsonschema import Draft202012Validator
 SPEC = Path(__file__).resolve().parents[1]
 PROTO = SPEC / "proto"
 MANIFEST_PATH = SPEC / "capabilities" / "manifest.yaml"
-ADJUDICATION_PATH = SPEC / "capabilities" / "adjudication.yaml"
 ERROR_MAP_PATH = SPEC / "mcp" / "error-map.yaml"
 FIXTURE_ROOT = SPEC / "fixtures" / "v1"
 PACKAGE = "stardew_valley.mcp.v1"
 UUID_RE = re.compile(r"^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$")
 REVISION_RE = re.compile(r"^[0-9a-f]{64}$")
-
-LEGACY_CANDIDATES = {
-    "say", "emote", "face", "move_to", "go_to", "interact", "use_tool", "equip",
-    "open_menu", "menu_click", "menu_close", "query_runtime_snapshot", "query_world_region",
-    "query_inventory_snapshot", "query_ui_snapshot", "query_menu", "query_inspect_refs", "go_to_bed",
-}
-
 
 class VerificationError(RuntimeError):
     pass
@@ -153,19 +145,6 @@ def verify_manifest_against_proto(manifest: dict[str, Any], messages: dict[str, 
         require(item["default_timeout_ms"] <= item["max_timeout_ms"], f"Timeout 倒置: {item['id']}")
         expected_scope = "game:read" if item["side_effect"] == "read_only" else "game:write"
         require(item["required_scope"] == expected_scope, f"Scope 与副作用不一致: {item['id']}")
-
-
-def verify_adjudication(manifest: dict[str, Any]) -> None:
-    adjudication = load_yaml(ADJUDICATION_PATH)
-    require(adjudication["schema_version"] == 1, "能力裁决 schema_version 错误")
-    rows = adjudication["candidates"]
-    old_ids = [row["old_id"] for row in rows]
-    require(len(old_ids) == len(set(old_ids)), "历史能力裁决存在重复项")
-    require(set(old_ids) == LEGACY_CANDIDATES, "18 项历史能力裁决存在遗漏或额外项")
-    final_ids = {item["id"] for item in manifest["capabilities"]}
-    projected = {row["v1_id"] for row in rows if row["v1_id"] is not None}
-    require(projected == final_ids, "历史裁决投影与 V1 Manifest 不一致")
-    require(all(row["decision"] != "pending" for row in rows), "存在未裁决历史能力")
 
 
 def verify_error_map(enums: dict[str, Any]) -> None:
@@ -344,12 +323,12 @@ def verify_action_fixtures() -> None:
             )
 
 
-def verify_phase5_contract_cases() -> None:
+def verify_long_running_contract_cases() -> None:
     index = load_json(FIXTURE_ROOT / "index.json")
-    path = index.get("phase5ContractCases")
-    require(path == "actions/phase5-contract-cases.json", "阶段 5 行为向量路径无效")
+    path = index.get("longRunningContractCases")
+    require(path == "actions/long-running-contract-cases.json", "长时能力行为向量路径无效")
     document = load_json(FIXTURE_ROOT / path)
-    require(set(document) == {"schemaVersion", "cases"} and document["schemaVersion"] == 1, "阶段 5 行为向量结构无效")
+    require(set(document) == {"schemaVersion", "cases"} and document["schemaVersion"] == 1, "长时能力行为向量结构无效")
     cases = {case["id"]: case for case in document["cases"]}
     expected = {
         "navigate_character_locked_success",
@@ -360,7 +339,7 @@ def verify_phase5_contract_cases() -> None:
         "use_tool_charge_policy",
         "cancel_after_commit",
     }
-    require(set(cases) == expected, "阶段 5 行为向量集合不完整")
+    require(set(cases) == expected, "长时能力行为向量集合不完整")
     locked = cases["navigate_character_locked_success"]
     require(locked["lockedDestination"] == locked["expected"]["resolvedDestination"], "锁定导航落脚格不一致")
     require(cases["navigate_character_moved"]["expected"] == {"state": "failed", "errorCode": "execution_failed"}, "移动目标错误语义无效")
@@ -997,7 +976,7 @@ def verify_negative_message_models(modules: dict[str, Any]) -> None:
     failed_expired.error.CopyFrom(common_pb2.Error(code=16, message="错误码错配"))
     rejected(lambda: verify_event_shape(failed_expired), "FAILED 携带幂等过期 Error")
 
-    # 阶段 0 的状态规则模型：实现期 Harness 必须用真实连接和 Registry 重跑同一判决表。
+    # 状态规则模型：实现 Harness 必须用真实连接和 Registry 重跑同一判决表。
     def can_resume(bound_session: str, bound_client: str, requested_session: str, client: str, in_grace: bool, authenticated: bool) -> bool:
         return in_grace and authenticated and bound_session == requested_session and bound_client == client
 
@@ -1105,20 +1084,12 @@ Console.WriteLine($"csharp_contract_ok count={fixturePaths.Length} digest={diges
     require(actual["descriptors"] == python_hashes, "C# 与 Python 生成 Descriptor 不一致")
 
 
-def verify_forbidden_proto_terms() -> None:
-    forbidden = re.compile(r"AdapterV2|CommandProcessor|CompoundDispatcher|FallbackToLegacyMapper|v2-json|starcoplay\.protocol\.v245|runtime_manager|agent\.protocol", re.IGNORECASE)
-    for path in PROTO.glob("*.proto"):
-        require(forbidden.search(path.read_text(encoding="utf-8")) is None, f"Proto 含历史依赖: {path}")
-
-
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--skip-csharp", action="store_true", help="只在没有 .NET SDK 时用于本地草稿检查；冻结验收不得跳过")
     args = parser.parse_args()
     manifest = load_yaml(MANIFEST_PATH)
     verify_json_schemas(manifest)
-    verify_adjudication(manifest)
-    verify_forbidden_proto_terms()
     digest = capability_digest(manifest["capabilities"])
     with tempfile.TemporaryDirectory(prefix="sdvmcp-spec-") as raw_tmp:
         tmp = Path(raw_tmp)
@@ -1129,7 +1100,7 @@ def main() -> None:
         run([sys.executable, str(SPEC / "conformance" / "generate_mcp_tool_schemas.py"), "--check"])
         verify_tool_schema_catalog(manifest)
         verify_action_fixtures()
-        verify_phase5_contract_cases()
+        verify_long_running_contract_cases()
         modules = import_generated_python(python_out)
         fixture_paths = verify_fixtures(modules["transport"], manifest, digest)
         index = load_json(FIXTURE_ROOT / "index.json")

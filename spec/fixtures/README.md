@@ -1,6 +1,6 @@
 # V1 契约 Fixture
 
-本目录中的线路 Fixture 采用官方 Proto JSON Mapping，便于 C# 与 Python 测试读取；V1 实际线路只传输二进制 Proto，不传输 JSON。`actions/` 中的阶段 4 文件是 MCP Tool 输入、输出与生命周期检查点的聚合向量，由 JSON Schema 和一致性验证器读取，不在线路上传输。
+本目录中的线路 Fixture 采用官方 Proto JSON Mapping，便于 C# 与 Python 测试读取；V1 实际线路只传输二进制 Proto，不传输 JSON。`actions/` 中的文件是 MCP Tool 输入、输出与生命周期检查点的聚合向量，由 JSON Schema 和一致性验证器读取，不在线路上传输。
 
 ## 目录
 
@@ -43,11 +43,11 @@ fixtures/v1/
 
 `hmac-minor-downgrade.synthetic.json` 只验证未来同 Major 下的 Minor 协商与 HMAC 字段选择，不表示仓库已经定义或发布 V1.1；当前真实握手 Fixture 始终使用 V1.0。
 
-`v1/index.json` 的 `profiles.bootstrap` 是第一阶段的可实现能力子集：它只公告并允许 `query_runtime`，而不是把完整 V1 Manifest 摘要伪装成已实现能力。该 profile 用两个独立场景固定同一请求的成功终态与 `ERROR_CODE_NOT_READY` 失败终态；场景彼此独立，因此不会把一个 Command ID 串成两个终态。Bootstrap 复用完整 V1 的 ServerHello/ClientHello 身份和 Nonce，但使用自己的 singleton CapabilitySnapshot digest、ServerReady HMAC 与 Fence。
+`v1/index.json` 的 `profiles.bootstrap` 是只包含 `query_runtime` 的最小能力子集，而不是把完整 V1 Manifest 摘要伪装成已实现能力。该 profile 用两个独立场景固定同一请求的成功终态与 `ERROR_CODE_NOT_READY` 失败终态；场景彼此独立，因此不会把一个 Command ID 串成两个终态。Bootstrap 复用完整 V1 的 ServerHello/ClientHello 身份和 Nonce，但使用自己的 singleton CapabilitySnapshot digest、ServerReady HMAC 与 Fence。
 
-`profiles.observation` 固定阶段 3 的五项观察能力集合（`query_runtime`、`query_world`、`query_inventory`、`query_ui`、`inspect`）及其独立 digest/HMAC/Fence。每项都有独立成功与失败生命周期；world、inventory、inspect 分别保留最小和完整成功投影，UI 同时覆盖无菜单和有菜单 Snapshot。它是协议 Contract Fixture，不表示阶段 2.5 的运行时已经公告这些能力；实际 ServerReady 必须仅由已注册 Handler ID 从静态 Catalog 生成。
+`profiles.observation` 固定五项观察能力集合（`query_runtime`、`query_world`、`query_inventory`、`query_ui`、`inspect`）及其独立 digest/HMAC/Fence。每项都有独立成功与失败生命周期；world、inventory、inspect 分别保留最小和完整成功投影，UI 同时覆盖无菜单和有菜单 Snapshot。它是协议 Contract Fixture；实际 ServerReady 必须仅由已注册 Handler ID 从静态 Catalog 生成。
 
-`actionFixtures` 为 V1 的十项变更能力各保留一个聚合文件。每个文件固定最小输入、完整输入、非法输入、`ACCEPTED` 检查点、成功 Tool 结果和失败 Tool 结果；这样可以覆盖能力契约，又不会演变成每项能力六个平铺文件。`navigate`、`interact` 与 `use_tool` 的文件还固定阶段 5 首版的严格落点、手持物门禁和工具白名单错误语义。
+`actionFixtures` 为 V1 的十项变更能力各保留一个聚合文件。每个文件固定最小输入、完整输入、非法输入、`ACCEPTED` 检查点、成功 Tool 结果和失败 Tool 结果；这样可以覆盖能力契约，又不会演变成每项能力六个平铺文件。`navigate`、`interact` 与 `use_tool` 的文件还固定严格落点、手持物门禁和工具白名单错误语义。
 
 ## 为什么包含 HMAC Fixture
 

@@ -12,7 +12,7 @@
 MCP 客户端 -> MCP stdio 服务端 -> loopback TCP -> SMAPI Mod -> 游戏主线程
 ```
 
-Mod 必须只监听 IPv4/IPv6 loopback，MCP 必须作为 Client 主动连接。V1 不支持远程地址、WebSocket、JSON 业务帧、命令文件、状态文件、事件文件或运行时 Rendezvous。传输选择及 Spike 证据见 [`decisions/0002-local-transport.md`](decisions/0002-local-transport.md)。
+Mod 必须只监听 IPv4/IPv6 loopback，MCP 必须作为 Client 主动连接。V1 不支持远程地址、WebSocket、JSON 业务帧、命令文件、状态文件、事件文件或运行时 Endpoint 发现文件。传输选择及一致性证据见 [`decisions/0002-local-transport.md`](decisions/0002-local-transport.md)。
 
 ## 2. TCP 帧
 
@@ -208,7 +208,7 @@ MCP 自己的等待 Deadline 可以更短；本地等待超时只产生 `UNKNOWN
 
 只有 Manifest 声明 `cancellable: true`、尚未越过能力不可逆提交点的活动命令接受取消。`cancellable: true` 表示命令至少存在一个可取消阶段，不表示已经产生的游戏效果可以回滚。`CancelCommandResponse.accepted=true` 只表示取消意图已经记入命令账本，最终状态仍以 `CommandEvent` 为准；Handler 在游戏主线程完成输入或控制清理后才能写入 `CANCELLED`。
 
-未知 Command ID 返回 `accepted=false/NOT_FOUND`。Manifest 不可取消、当前阶段已越过提交点或命令已经终态时返回 `accepted=false/CONFLICT`；已知命令必须在 `current` 回显当前事件。多个相同取消请求必须幂等，不得把已成功或已经提交效果的命令改写为 `CANCELLED`。取消语义的架构裁决见 [`decisions/0003-unified-command-runtime.md`](decisions/0003-unified-command-runtime.md)。
+未知 Command ID 返回 `accepted=false/NOT_FOUND`。Manifest 不可取消、命令已越过提交点或已经终态时返回 `accepted=false/CONFLICT`；已知命令必须在 `current` 回显当前事件。多个相同取消请求必须幂等，不得把已成功或已经提交效果的命令改写为 `CANCELLED`。取消语义的架构裁决见 [`decisions/0003-unified-command-runtime.md`](decisions/0003-unified-command-runtime.md)。
 
 ## 14. 状态查询与结果保留
 

@@ -23,7 +23,7 @@
 - Registry 必须在编译期显式注册，不得通过扫描程序集、配置字符串或网络返回动态加载 Handler。
 - 每个公开能力 ID 在一个构建中必须且只能对应一个 Handler。
 - Mod 宣告的 Capability Snapshot 只能是公共 Manifest 与本构建 Registry 的交集；Descriptor 的 Request、Result、Scope、风险和超时必须与 Manifest 完全一致。
-- 未注册能力必须拒绝，不能转交第二套 Processor、Dispatcher、Legacy Handler 或通用反射执行入口。
+- 未注册能力必须拒绝，不能转交第二套命令运行时或通用反射执行入口。
 - Capability Digest 改变时必须建立新 Session，不能在活动 Session 中静默扩大能力面。
 
 ## 4. 命令接受与调度
@@ -42,17 +42,9 @@
 - 连接断开不得自动取消或重放已接受命令。Mod 应继续收敛终态，恢复连接后允许授权 Owner 查询。
 - Ref、Revision 和 Snapshot 必须由同一 Mod 实例在游戏主线程生成，并遵守各自的失效条件与原子性。
 
-## 6. 禁止兼容面
+## 6. 单一运行路径
 
-公开 V1 Mod 不得初始化或提供以下运行路径：
-
-```text
-AdapterV2, CommandProcessor, CompoundDispatcher, Legacy Handler,
-FallbackToLegacyMapper, v2-json, WebSocket fallback, File Bridge,
-runtime Rendezvous, Hosted Identity Adapter
-```
-
-旧仓库可以作为行为证据，但上述类型和通道不能因为新实现尚未补齐依赖而重新进入启动链。
+公开 V1 Mod 只能通过本 Spec 定义的 Proto Transport、Capability Registry 与 Command Coordinator 接受命令。实现不得提供绕过认证、能力协商、单变更约束或统一状态机的平行命令入口。
 
 ## 7. 可替换的内部实现
 

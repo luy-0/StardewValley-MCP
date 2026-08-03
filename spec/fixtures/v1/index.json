@@ -31,7 +31,7 @@
     "actions/activate_ui.json",
     "actions/close_menu.json"
   ],
-  "phase5ContractCases": "actions/phase5-contract-cases.json",
+  "longRunningContractCases": "actions/long-running-contract-cases.json",
   "authVectors": [
     {"path": "auth/hmac-sha256.json", "algorithm": "v1_hmac_sha256"},
     {"path": "auth/hmac-minor-downgrade.synthetic.json", "algorithm": "v1_hmac_sha256_minor_downgrade"}

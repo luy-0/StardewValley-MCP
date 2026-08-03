@@ -39,4 +39,4 @@ uv run --project mcp python skill/scripts/validate_skills.py path/to/my-skill
 
 ## 未来方向
 
-如果未来需要确定性代码执行或独立安装，可以在新的版本化阶段增加可执行 SDK 与 Skill Host。当前目录刻意不包含 `skill.yaml`、`implementation.py`、动态加载器、插件依赖管理或第二套命令生命周期。
+如果未来需要确定性代码执行或独立安装，可以在新的主要版本中增加可执行 SDK 与 Skill Host。当前目录只提供 Agent 指引，不包含动态加载器、插件依赖管理或独立命令生命周期。

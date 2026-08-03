@@ -13,7 +13,7 @@
 
 ## 非职责
 
-MCP 服务端不拥有游戏状态，不嵌入私有平台身份，也不要求本地开源链路依赖托管的 StarCoPlay 平台。
+MCP 服务端不拥有游戏状态，也不定义游戏内事实；游戏状态始终以 Mod 在主线程读取的结果为准。
 
 ## 当前实现状态
 
@@ -36,7 +36,7 @@ uv run --project mcp python scripts/generate_protocol.py
 uv run --project mcp python scripts/generate_protocol.py --check
 ```
 
-Python 包不依赖私有平台仓库。当前稳定依赖锁定在 MCP Python SDK v1 系列，避免自动升级到不兼容的主版本。
+当前依赖锁定在 MCP Python SDK v1 系列，避免自动升级到不兼容的主版本。
 
 Python 发行包通过 PEP 639 声明 `Apache-2.0`，并在 wheel 与 sdist 中携带许可证文本。仓库级第三方组件与分发边界见 [`../THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md)。
 

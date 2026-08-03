@@ -9,7 +9,7 @@ MCP 端必须遵循其所声明支持的正式 MCP 版本。Tool 的 `inputSchem
 ## Tool 命名与能力面
 
 - 原子能力 Tool 名固定为 `stardew_<capability_id>`，例如 `stardew_query_runtime`。
-- `title` 与 `description` 直接来自公共 Manifest，不得从 Handler Docstring 或私有平台元数据覆盖。
+- `title` 与 `description` 直接来自公共 Manifest，不得由实现侧元数据覆盖。
 - Tool 列表等于公共 Manifest、Mod 能力快照、MCP Projection、本地 Scope 与风险策略的交集。
 - 当前 Session 内能力快照变化时，MCP 必须断开 Mod Session、重新握手并通知 MCP 客户端 Tool List 已变化；不得原地静默增加 Tool。
 
@@ -93,7 +93,7 @@ MCP Tool 调用默认等待 Mod 终态。若本地等待期限先到，MCP 返�
 | `execution_failed` | 游戏侧已确认执行失败 |
 | `internal_error` | MCP 内部未分类错误 |
 
-`StardewToolError` 至少包含 `code`、`message`、`retryable`，可选 `retryAfterMs`。MCP Tool JSON 统一使用 `lowerCamelCase`，与官方 Proto JSON Mapping 保持一致。错误不得泄露共享秘密、HMAC、完整配置、绝对路径、堆栈或私有平台字段。
+`StardewToolError` 至少包含 `code`、`message`、`retryable`，可选 `retryAfterMs`。MCP Tool JSON 统一使用 `lowerCamelCase`，与官方 Proto JSON Mapping 保持一致。错误不得泄露共享秘密、HMAC、完整配置、绝对路径或堆栈。
 
 Proto `ErrorCode` 到上述错误的唯一、穷尽映射由 [`error-map.yaml`](error-map.yaml) 定义。实现不得根据错误消息文本推断 `tool_code`、`outcome` 或 `retryable`；`unknown` 结果也不得自动重放变更命令。
 

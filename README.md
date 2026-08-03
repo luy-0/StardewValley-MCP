@@ -34,13 +34,11 @@ Skill 开发入口，只包含接口定义、编写模板、最小示例和一�
 
 公共规范的权威来源，定义 Mod 与 MCP 服务端的消息、Schema、能力、错误和生命周期，也说明 Agent Skill 依赖这些公共 Tool 时必须遵守的边界。它不是运行时组件，也不是需要启动的服务。
 
-公开 V1 候选契约的索引位于 [`spec/README.md`](spec/README.md)。它以旧实现的可验证行为为证据重新设计，只定义新的 V1 Proto 主链，不提供任何历史协议回退。
+公开 V1 契约的索引位于 [`spec/README.md`](spec/README.md)。公共接口只以该契约及其机器可读定义为准。
 
 ### `docs/`
 
 面向使用者和贡献者的安装、配置、使用、排障与开发文档。
-
-当前开发按[公开版本重写计划](docs/rewrite-plan.md)推进。
 
 ## 边界规则
 
@@ -53,9 +51,9 @@ Skill 开发入口，只包含接口定义、编写模板、最小示例和一�
 
 ## 项目状态
 
-当前预览版已经具备独立的 Mod、MCP Python 包，以及公共 V1 契约定义的十五项原语能力：五项只读能力和十项需要明确授权的变更能力。十项变更能力包括七项简单交互，以及 `navigate`、`interact`、`use_tool` 三项长时能力。默认 MCP 启动方式仍只读；只有显式启用写权限，并且公共 Manifest、MCP 支持集与 Mod 握手公告同时包含对应能力时，才会暴露操作 Tool。阶段 6 已以 Agent `SKILL.md` 指引层交付模板、两个最小示例和静态校验工具；阶段 7 的法律文件、源码安装指南、发行包审计与干净源码实机验收也已完成。仓库仍以源码优先的预览版形式交付。
+当前预览版已经具备独立的 Mod、MCP Python 包，以及公共 V1 契约定义的十五项原语能力：五项只读能力和十项需要明确授权的变更能力。十项变更能力包括七项简单交互，以及 `navigate`、`interact`、`use_tool` 三项长时能力。默认 MCP 启动方式仍只读；只有显式启用写权限，并且公共 Manifest、MCP 支持集与 Mod 握手公告同时包含对应能力时，才会暴露操作 Tool。仓库同时提供 Agent `SKILL.md` 模板、两个最小示例、静态校验工具和源码安装指南。
 
-普通用户的源码安装与调用方法见[快速开始](docs/getting-started.md)；Agent 从干净检出执行安装与验收时使用 [AGENT-GUIDE.md](AGENT-GUIDE.md)。本地完整回归入口为：
+普通用户的源码安装与调用方法见[快速开始](docs/getting-started.md)；需要自动完成安装的 Agent 使用 [AGENT-GUIDE.md](AGENT-GUIDE.md)。本地完整回归入口为：
 
 ```bash
 ./scripts/verify.sh
