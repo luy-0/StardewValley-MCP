@@ -189,7 +189,7 @@ Mod 只允许以下状态转换：
 事件约束：
 
 - `SUCCEEDED` 必须携带与请求能力同分支的 `CapabilityResult`，且不得携带 Error。
-- `FAILED`、`CANCELLED`、`TIMED_OUT` 必须携带 Error，且不得携带 Result。`CANCELLED` 只能携带 `ERROR_CODE_CANCELLED`，`TIMED_OUT` 只能携带 `ERROR_CODE_DEADLINE_EXCEEDED`，`FAILED` 不得携带这两个专用错误码。
+- `FAILED`、`CANCELLED`、`TIMED_OUT` 必须携带 Error，且不得携带 Result。`CANCELLED` 只能携带 `ERROR_CODE_CANCELLED`，`TIMED_OUT` 只能携带 `ERROR_CODE_DEADLINE_EXCEEDED`，`FAILED` 不得携带这两个专用错误码。Error 的可选结构化上下文只用于补充终态诊断，不改变 ErrorCode，也不得携带成功 Result。
 - `ACCEPTED`、`RUNNING` 不得携带 Outcome。
 - `progress_percent` 只能是 `0..100`，仅作观测；调用方不能据此推断终态。
 - Mod 不使用 `UNKNOWN` 作为命令状态。`UNKNOWN` 是 MCP 在失去线路证据时的本地观测状态。

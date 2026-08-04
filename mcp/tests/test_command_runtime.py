@@ -40,6 +40,26 @@ def _snapshot_with_face() -> transport_pb2.CapabilitySnapshot:
     return snapshot
 
 
+def _snapshot_with_navigate() -> transport_pb2.CapabilitySnapshot:
+    snapshot = _snapshot()
+    snapshot.capabilities.add(
+        id="navigate",
+        contract_version="1.0.0",
+        side_effect=transport_pb2.SIDE_EFFECT_MUTATING,
+        execution=transport_pb2.EXECUTION_MODE_LONG_RUNNING,
+        cancellable=True,
+        default_timeout_ms=60_000,
+        max_timeout_ms=180_000,
+        request_type="NavigateRequest",
+        result_type="NavigateResult",
+        required_scope="game:write",
+        risks=["changes_position"],
+        destructive=False,
+    )
+    snapshot.digest = descriptor_digest(snapshot.capabilities)
+    return snapshot
+
+
 def _success(command_id: str) -> capabilities_pb2.CommandEvent:
     frame = transport_pb2.TransportFrame()
     json_format.Parse((FIXTURES / "query-runtime.succeeded.json").read_text(), frame)
@@ -160,6 +180,61 @@ def test_cancel_current_snapshot_does_not_repeat_accepted_transition() -> None:
         await connection.incoming.put(cancelled)
         assert (await cancel).accepted is True
         assert (await execute)["error"]["code"] == "command_cancelled"
+        await runtime.aclose()
+
+    asyncio.run(exercise())
+
+
+def test_navigation_failure_projects_last_confirmed_position() -> None:
+    async def exercise() -> None:
+        connection = _QueueConnection()
+        connection.snapshot = _snapshot_with_navigate()
+        runtime = CommandRuntime(
+            connection,
+            Catalog.load(CatalogPolicy(None, frozenset({"game:read", "game:write"}))),
+        )
+        command_id = "36363636-3636-4636-8636-363636363636"
+        execute = asyncio.create_task(
+            runtime.execute(
+                command_id,
+                "navigate",
+                actions_pb2.NavigateRequest(
+                    position=common_pb2.WorldPosition(location_id="Farm", x=9, y=6),
+                    arrival=actions_pb2.ARRIVAL_MODE_EXACT,
+                ),
+            )
+        )
+        await _until(lambda: len(connection.sent) == 1)
+        await connection.incoming.put(
+            _event(command_id, capabilities_pb2.COMMAND_STATE_ACCEPTED, reply_to=connection.sent[0].message_id)
+        )
+        failed = _event(command_id, capabilities_pb2.COMMAND_STATE_FAILED)
+        failed.command_event.error.CopyFrom(
+            common_pb2.Error(
+                code=common_pb2.ERROR_CODE_EXECUTION_FAILED,
+                message="寻路结束但未严格到达目标 Tile",
+                navigation=common_pb2.NavigationFailureContext(
+                    last_confirmed_position=common_pb2.WorldPosition(location_id="Farm", x=8, y=6)
+                ),
+            )
+        )
+        await connection.incoming.put(failed)
+
+        result = await execute
+        assert result == {
+            "status": "failed",
+            "commandId": command_id,
+            "error": {
+                "code": "execution_failed",
+                "message": "寻路结束但未严格到达目标 Tile",
+                "retryable": False,
+                "details": {
+                    "navigation": {
+                        "lastConfirmedPosition": {"locationId": "Farm", "x": 8, "y": 6}
+                    }
+                },
+            },
+        }
         await runtime.aclose()
 
     asyncio.run(exercise())

@@ -131,6 +131,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
         private uint _elapsedTicks;
         private int _stableFrames;
         private NavigationTile? _lastStableTile;
+        private WorldPosition? _lastConfirmedPosition;
         private bool _doorSubmitted;
         private int _walkTransitionProbeTicks;
         private ContinuationStopSignal _deferredStop;
@@ -198,7 +199,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
             }
             if (_phase == NavigationPhase.WaitingTransition)
             {
-                var current = _navigation.Capture();
+                var current = Capture();
                 if (current.IsReady
                     && _edge is not null
                     && !SameLocation(current.LocationId, _edge.SourceLocationId))
@@ -213,7 +214,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
 
         private ContinuationStep ResolveAndStart()
         {
-            var start = _navigation.Capture();
+            var start = Capture();
             if (!start.IsReady)
                 return StopAndFail(ErrorCode.NotReady, "游戏世界尚未就绪");
             if (!start.CanMove)
@@ -318,7 +319,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
 
         private ContinuationStep TickWaitingEdgeReady()
         {
-            var current = _navigation.Capture();
+            var current = Capture();
             if (!current.IsReady || !current.CanMove)
                 return new ContinuationStep.Pending();
             if (_edge is null)
@@ -337,7 +338,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
 
         private ContinuationStep TickWalkingToEdge()
         {
-            var current = _navigation.Capture();
+            var current = Capture();
             if (!current.IsReady)
                 return StopAndFail(ErrorCode.NotReady, "游戏世界尚未就绪");
             if (_edge is null || _approach is null)
@@ -377,7 +378,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
             }
 
             _phase = NavigationPhase.WaitingTransition;
-            var after = _navigation.Capture();
+            var after = Capture();
             return after.IsReady && !SameLocation(after.LocationId, _edge.SourceLocationId)
                 ? AcceptTransition(after)
                 : new ContinuationStep.Pending();
@@ -385,7 +386,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
 
         private ContinuationStep TickWaitingTransition()
         {
-            var current = _navigation.Capture();
+            var current = Capture();
             if (!current.IsReady)
                 return new ContinuationStep.Pending();
             if (_edge is null)
@@ -406,7 +407,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
                     return StopAndFail(ErrorCode.Internal, "walk-through 出口状态无效");
                 if (!_warp.BeginWalkThrough(_approach.Direction))
                     return StopAndFail(ErrorCode.NotReady, "当前状态不能继续触发 walk-through Warp");
-                var after = _navigation.Capture();
+                var after = Capture();
                 return after.IsReady && !SameLocation(after.LocationId, _edge.SourceLocationId)
                     ? AcceptTransition(after)
                     : new ContinuationStep.Pending();
@@ -435,7 +436,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
 
         private ContinuationStep TickWaitingStable()
         {
-            var current = _navigation.Capture();
+            var current = Capture();
             if (!current.IsReady)
             {
                 ResetStable();
@@ -481,7 +482,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
 
         private ContinuationStep TickHandoff()
         {
-            var current = _navigation.Capture();
+            var current = Capture();
             if (!current.IsReady || !current.CanMove)
                 return new ContinuationStep.Pending();
             if (_edge is null || !SameLocation(current.LocationId, _edge.TargetLocationId))
@@ -516,7 +517,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
 
         private ContinuationStep TickWalkingFinal()
         {
-            var current = _navigation.Capture();
+            var current = Capture();
             if (!current.IsReady)
                 return StopAndFail(ErrorCode.NotReady, "游戏世界尚未就绪");
             if (_target is null || !SameLocation(current.LocationId, _target.LocationId))
@@ -552,7 +553,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
                 _phase = NavigationPhase.Facing;
                 if (current.FacingDirection != direction && !_navigation.TryFace(direction))
                     return StopAndFail(ErrorCode.NotReady, "当前状态不能完成抵达朝向");
-                current = _navigation.Capture();
+                current = Capture();
                 if (current.FacingDirection != direction)
                     return StopAndFail(ErrorCode.ExecutionFailed, "抵达朝向后置条件未成立");
             }
@@ -588,12 +589,12 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
         private ContinuationStep StopAndFail(ErrorCode code, string message)
         {
             Cleanup();
-            return Fail(code, message);
+            return Fail(code, message, _lastConfirmedPosition);
         }
 
         private ContinuationStep FailOrStop(ErrorCode code, string message) =>
             _deferredStop == ContinuationStopSignal.None
-                ? Fail(code, message)
+                ? Fail(code, message, _lastConfirmedPosition)
                 : new ContinuationStep.Stopped();
 
         private void Cleanup()
@@ -608,11 +609,34 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
             _lastStableTile = null;
         }
 
-        private static ContinuationStep.Failed Fail(ErrorCode code, string message) =>
-            new(Error(code, message));
+        private NavigationPlayerState Capture()
+        {
+            var current = _navigation.Capture();
+            if (current.IsReady && !string.IsNullOrWhiteSpace(current.LocationId))
+                _lastConfirmedPosition = Position(current.LocationId, current.X, current.Y);
+            return current;
+        }
 
-        private static Error Error(ErrorCode code, string message) =>
-            new() { Code = code, Message = message };
+        private static ContinuationStep.Failed Fail(
+            ErrorCode code,
+            string message,
+            WorldPosition? lastConfirmedPosition = null
+        ) => new(Error(code, message, lastConfirmedPosition));
+
+        private static Error Error(
+            ErrorCode code,
+            string message,
+            WorldPosition? lastConfirmedPosition = null
+        )
+        {
+            var error = new Error { Code = code, Message = message };
+            if (lastConfirmedPosition is not null)
+                error.Navigation = new NavigationFailureContext
+                {
+                    LastConfirmedPosition = lastConfirmedPosition.Clone(),
+                };
+            return error;
+        }
 
         private static WorldPosition Position(string locationId, int x, int y) =>
             new() { LocationId = locationId, X = x, Y = y };

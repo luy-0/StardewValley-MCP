@@ -2,6 +2,13 @@ schema_version: 1
 package: stardew_valley.mcp.v1
 tool_name_prefix: stardew_
 
+# Error 的可选结构化上下文从公共 Proto 生成。它们只能补充错误，不能替代
+# ErrorCode、Message 或命令终态；未声明的 Error 字段不得投影到 Tool JSON。
+error_contexts:
+  navigate:
+    navigation:
+      message: NavigationFailureContext
+
 # Proto 负责字段、类型、编号、oneof 与嵌套结构；本文件显式定义 Proto 无法表达的
 # MCP JSON 投影策略。未列出的请求消息保持封闭空对象或只使用通用约束。
 messages:

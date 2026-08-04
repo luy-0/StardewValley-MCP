@@ -80,6 +80,8 @@ public sealed class NavigateHandlerTests
             Assert.That(started, Is.TypeOf<ContinuationStep.Pending>());
             Assert.That(walking, Is.TypeOf<ContinuationStep.Pending>());
             Assert.That(failed.Error.Code, Is.EqualTo(ErrorCode.ExecutionFailed));
+            Assert.That(failed.Error.Navigation, Is.Not.Null);
+            Assert.That(failed.Error.Navigation.LastConfirmedPosition, Is.EqualTo(Position("Farm", 8, 6)));
             Assert.That(navigation.StopCalls, Is.EqualTo(1));
         });
     }

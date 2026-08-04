@@ -92,6 +92,7 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 - `EXACT` 只有最终 Location 与 Tile 都完全相等才能成功。`ADJACENT` 指定 `stand_side` 后只能站在该侧，不得静默换边；未指定时实现可以从四个 cardinal-adjacent Tile 中选择一个可达位置。
 - 成功要求 Final Position 满足 Arrival，且最终朝向满足可选要求。路径不存在、目标消失或抵达条件不成立不能返回成功。
 - `resolved_destination` 是本次锁定并实际用于抵达判断的玩家落脚 Tile；它不是 Ref 指向对象自身的 Tile。`route_location_ids` 只记录玩家实际到达过的 Location，首项为起点、末项为终点，不得返回尚未执行的规划路线。
+- 导航在已确认过玩家位置后以 `FAILED` 结束时，Error 必须在 `navigation.last_confirmed_position` 返回最后一次主线程确认的 `location_id` 与 Tile；该上下文只描述停止位置，不把失败伪装为 `NavigateResult`，也不承诺未确认的移动已经完成。
 - 提交 PFC 或门动作前允许取消；取消或 Deadline 必须清除当前 PFC、移动方向与尚未提交的门输入。已经触发地图切换时继续收敛到稳定 Location，再按 Coordinator 的停止信号结束，不能传送回滚。
 
 ### `interact`

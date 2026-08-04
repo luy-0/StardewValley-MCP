@@ -5708,6 +5708,9 @@
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
                 "type": "string"
+              },
+              "navigation": {
+                "$ref": "#/$defs/NavigationFailureContext"
               }
             },
             "required": [
@@ -6922,6 +6925,15 @@
               "health",
               "maxHealth"
             ],
+            "type": "object"
+          },
+          "NavigationFailureContext": {
+            "additionalProperties": false,
+            "properties": {
+              "lastConfirmedPosition": {
+                "$ref": "#/$defs/WorldPosition"
+              }
+            },
             "type": "object"
           },
           "NpcFact": {
@@ -9653,6 +9665,22 @@
                   "code": {
                     "const": "busy"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -9679,6 +9707,22 @@
                 "properties": {
                   "code": {
                     "const": "capability_changed"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -9707,6 +9751,22 @@
                   "code": {
                     "const": "capability_denied"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -9728,6 +9788,22 @@
                 "properties": {
                   "code": {
                     "const": "command_cancelled"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -9751,6 +9827,22 @@
                   "code": {
                     "const": "command_timeout"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -9773,6 +9865,22 @@
                   "code": {
                     "const": "conflict"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -9794,6 +9902,22 @@
                 "properties": {
                   "code": {
                     "const": "context_expired"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -9822,6 +9946,22 @@
                   "code": {
                     "const": "execution_failed"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -9843,6 +9983,22 @@
                 "properties": {
                   "code": {
                     "const": "internal_error"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -9866,6 +10022,22 @@
                   "code": {
                     "const": "invalid_arguments"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -9888,6 +10060,22 @@
                   "code": {
                     "const": "not_found"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -9909,6 +10097,22 @@
                 "properties": {
                   "code": {
                     "const": "not_ready"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -9937,6 +10141,22 @@
                   "code": {
                     "const": "out_of_range"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -9958,6 +10178,22 @@
                 "properties": {
                   "code": {
                     "const": "route_unavailable"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -9986,6 +10222,22 @@
                   "code": {
                     "const": "stale_ref"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -10007,6 +10259,22 @@
                 "properties": {
                   "code": {
                     "const": "unauthenticated"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -10034,6 +10302,22 @@
                 "properties": {
                   "code": {
                     "const": "upstream_protocol_error"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -10086,6 +10370,15 @@
             ],
             "type": "object"
           },
+          "NavigationFailureContext": {
+            "additionalProperties": false,
+            "properties": {
+              "lastConfirmedPosition": {
+                "$ref": "#/$defs/WorldPosition"
+              }
+            },
+            "type": "object"
+          },
           "StardewToolError": {
             "oneOf": [
               {
@@ -10093,6 +10386,22 @@
                 "properties": {
                   "code": {
                     "const": "busy"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -10121,6 +10430,22 @@
                   "code": {
                     "const": "capability_changed"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -10148,6 +10473,22 @@
                   "code": {
                     "const": "capability_denied"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -10169,6 +10510,22 @@
                 "properties": {
                   "code": {
                     "const": "command_cancelled"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -10192,6 +10549,22 @@
                   "code": {
                     "const": "command_timeout"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -10214,6 +10587,22 @@
                   "code": {
                     "const": "conflict"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -10235,6 +10624,22 @@
                 "properties": {
                   "code": {
                     "const": "context_expired"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -10263,6 +10668,22 @@
                   "code": {
                     "const": "execution_failed"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -10284,6 +10705,22 @@
                 "properties": {
                   "code": {
                     "const": "internal_error"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -10307,6 +10744,22 @@
                   "code": {
                     "const": "invalid_arguments"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -10329,6 +10782,22 @@
                   "code": {
                     "const": "not_found"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -10350,6 +10819,22 @@
                 "properties": {
                   "code": {
                     "const": "not_ready"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -10378,6 +10863,22 @@
                   "code": {
                     "const": "out_of_range"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -10399,6 +10900,22 @@
                 "properties": {
                   "code": {
                     "const": "route_unavailable"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -10427,6 +10944,22 @@
                   "code": {
                     "const": "stale_ref"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -10448,6 +10981,22 @@
                 "properties": {
                   "code": {
                     "const": "unauthenticated"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -10476,6 +11025,22 @@
                   "code": {
                     "const": "unknown_outcome"
                   },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
                   "message": {
                     "maxLength": 512,
                     "minLength": 1,
@@ -10497,6 +11062,22 @@
                 "properties": {
                   "code": {
                     "const": "upstream_protocol_error"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,
@@ -10523,6 +11104,22 @@
                 "properties": {
                   "code": {
                     "const": "unknown_outcome"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
                   },
                   "message": {
                     "maxLength": 512,

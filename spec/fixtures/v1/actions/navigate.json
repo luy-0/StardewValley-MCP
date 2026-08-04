@@ -29,6 +29,15 @@
   "failed": {
     "status": "failed",
     "commandId": "42000000-0000-4000-8000-000000000001",
-    "error": {"code": "execution_failed", "message": "目标在命令执行中移动", "retryable": false}
+    "error": {
+      "code": "execution_failed",
+      "message": "目标在命令执行中移动",
+      "retryable": false,
+      "details": {
+        "navigation": {
+          "lastConfirmedPosition": {"locationId": "Farm", "x": 63, "y": 15}
+        }
+      }
+    }
   }
 }

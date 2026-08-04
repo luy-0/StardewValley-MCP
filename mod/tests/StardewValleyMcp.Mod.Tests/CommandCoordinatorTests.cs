@@ -230,6 +230,11 @@ public sealed class CommandCoordinatorTests
         {
             Assert.That(events.Single().State, Is.EqualTo(CommandState.Failed));
             Assert.That(events.Single().Error.Code, Is.EqualTo(ErrorCode.InvalidArgument));
+            Assert.That(events.Single().Error.Navigation, Is.Not.Null);
+            Assert.That(
+                events.Single().Error.Navigation.LastConfirmedPosition,
+                Is.EqualTo(new WorldPosition { LocationId = "Farm", X = 3, Y = 4 })
+            );
         });
     }
 
@@ -365,7 +370,15 @@ public sealed class CommandCoordinatorTests
         {
             CommandId = commandId,
             State = CommandState.Failed,
-            Error = new Error { Code = ErrorCode.InvalidArgument, Message = "引用类型与能力不匹配" },
+            Error = new Error
+            {
+                Code = ErrorCode.InvalidArgument,
+                Message = "引用类型与能力不匹配",
+                Navigation = new NavigationFailureContext
+                {
+                    LastConfirmedPosition = new WorldPosition { LocationId = "Farm", X = 3, Y = 4 },
+                },
+            },
         };
     }
 

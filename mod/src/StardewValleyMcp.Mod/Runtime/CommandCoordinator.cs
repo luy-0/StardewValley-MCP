@@ -244,7 +244,7 @@ internal sealed class CommandCoordinator
             case ContinuationStep.Failed failure when stop == ContinuationStopSignal.None:
                 Complete(record, NormalizeTerminal(
                     record,
-                    Failed(record.CommandId, failure.Error.Code, failure.Error.Message, "failed")
+                    Failed(record.CommandId, failure.Error, "failed")
                 ), events);
                 break;
             case ContinuationStep.Stopped when stop != ContinuationStopSignal.None:
@@ -388,6 +388,14 @@ internal sealed class CommandCoordinator
         State = CommandState.Failed,
         Phase = phase,
         Error = NewError(code, message),
+    };
+
+    private static CommandEvent Failed(string commandId, Error error, string phase) => new()
+    {
+        CommandId = commandId,
+        State = CommandState.Failed,
+        Phase = phase,
+        Error = error.Clone(),
     };
 
     private static Error NewError(ErrorCode code, string message) => new() { Code = code, Message = message };

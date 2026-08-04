@@ -227,6 +227,31 @@ def verify_tool_schema_catalog(manifest: dict[str, Any]) -> None:
         validator.validate(failed)
         validator.validate(unknown)
 
+    navigation_failure = {
+        "status": "failed",
+        "commandId": command_id,
+        "error": {
+            "code": "execution_failed",
+            "message": "最终路径未抵达目标",
+            "retryable": False,
+            "details": {
+                "navigation": {
+                    "lastConfirmedPosition": {"locationId": "Farm", "x": 8, "y": 6}
+                }
+            },
+        },
+    }
+    require(
+        Draft202012Validator(tools["stardew_navigate"]["outputSchema"]).is_valid(navigation_failure),
+        "navigate 错误 Schema 未接受最后确认位置",
+    )
+    for name, tool in tools.items():
+        if name != "stardew_navigate":
+            require(
+                not Draft202012Validator(tool["outputSchema"]).is_valid(navigation_failure),
+                f"非导航 Tool 不得接受导航错误上下文: {name}",
+            )
+
     def synthesize(schema: dict[str, Any], root: dict[str, Any]) -> Any:
         if "$ref" in schema:
             target: Any = root

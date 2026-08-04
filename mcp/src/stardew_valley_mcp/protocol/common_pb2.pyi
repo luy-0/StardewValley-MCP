@@ -82,12 +82,20 @@ ERROR_CODE_PROTOCOL_VIOLATION: ErrorCode
 ERROR_CODE_INTERNAL: ErrorCode
 
 class Error(_message.Message):
-    __slots__ = ("code", "message")
+    __slots__ = ("code", "message", "navigation")
     CODE_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    NAVIGATION_FIELD_NUMBER: _ClassVar[int]
     code: ErrorCode
     message: str
-    def __init__(self, code: _Optional[_Union[ErrorCode, str]] = ..., message: _Optional[str] = ...) -> None: ...
+    navigation: NavigationFailureContext
+    def __init__(self, code: _Optional[_Union[ErrorCode, str]] = ..., message: _Optional[str] = ..., navigation: _Optional[_Union[NavigationFailureContext, _Mapping]] = ...) -> None: ...
+
+class NavigationFailureContext(_message.Message):
+    __slots__ = ("last_confirmed_position",)
+    LAST_CONFIRMED_POSITION_FIELD_NUMBER: _ClassVar[int]
+    last_confirmed_position: WorldPosition
+    def __init__(self, last_confirmed_position: _Optional[_Union[WorldPosition, _Mapping]] = ...) -> None: ...
 
 class GameDate(_message.Message):
     __slots__ = ("season", "day_of_month", "year")

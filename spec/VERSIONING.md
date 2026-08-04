@@ -25,6 +25,10 @@
 - 收窄输入、删除结果字段、改变副作用、弱化风险声明、改变取消语义或扩大默认权限属于破坏性变更。
 - 能力的 `contract_version` 与线路版本独立；实现只暴露 Manifest、Mod Registry、MCP Projection 和本地授权的交集。
 
+### 当前 V1 的兼容性增补
+
+- `Error.navigation` 是可选的 `NavigationFailureContext`，用于失败导航的最后确认位置。它是旧接收方可安全忽略的附加线路字段，也是 MCP `error.details.navigation` 的可选附加字段，因此属于 V1 Minor 兼容增补；调用方不得要求所有错误或所有导航失败都存在该字段。
+
 ## Agent Skill 指引兼容规则
 
 当前 Agent Skill 是开发指引，不参与 Mod–MCP 线路协商，也没有独立运行时版本。模板或正文约定发生变化时随仓库产品版本发布；Skill 引用的 MCP Tool 行为仍以对应公开能力契约版本为准。
