@@ -55,7 +55,8 @@ internal static class InspectFactProjector
                 item.Character = WorldProjector.ProjectResolvedCharacter(
                     character.Value,
                     reference,
-                    context.Refs
+                    context.Refs,
+                    warnings
                 );
                 break;
             case InventoryItemInspectTarget inventoryItem:

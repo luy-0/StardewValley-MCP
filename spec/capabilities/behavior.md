@@ -193,7 +193,7 @@ UI warning 使用以下稳定 code：`UI_MENU_UNSUPPORTED` 表示只有 shell；
 
 V1 为常见树木、作物、空的已耕地、资源、机器、容器、床、家具、掉落物、门、Warp 和角色提供类型化 Fact。没有作物的 `HoeDirt` 必须投影为 `ENTITY_KIND_HOE_DIRT` 与 `HoeDirtFact`，其中 `watered` 表示该格当前是否已浇水；同一 Ref 经 `query_world` 与 `inspect` 读取时必须得到一致的 `HoeDirtFact`。带作物的 `HoeDirt` 继续投影为 `ENTITY_KIND_CROP` 与 `CropFact`，其含水状态仍以 `CropFact.watered` 表达，不得同时附加 `HoeDirtFact`。其他原版或第三方 Mod 地图对象使用 `ENTITY_KIND_GENERIC_OBJECT` 与 `GenericObjectFact` 提供最小 Runtime Type、Qualified Item ID、位置、显示名和可交互性；实现不得静默丢弃无法类型化但位于查询区域的可见对象。
 
-单个 Character 或 FarmAnimal 的第三方 getter 抛出异常时，实现必须保留只由已知枚举位置、opaque Ref，以及可由安全 CLR 类型判断的现有 `CharacterKind` 构成的最小 `CharacterFact`，并附 `CHARACTER_PROJECTION_FALLBACK` warning；不得继续猜测名称、朝向或类型详情，也不得输出 Proto 中不存在的 runtime type 字段。如果连枚举位置也不可读，则跳过该角色并附不带 Ref 的 `CHARACTER_PROJECTION_SKIPPED` warning，不得编造坐标。Location 的 `GetFridgePosition`/`GetFridge` 抛出异常时，只跳过该冰箱并附不带 Ref 的 `FRIDGE_DISCOVERY_FAILED` warning，不得中止其他实体投影或生成悬空 Ref。
+单个 Character 或 FarmAnimal 的第三方 getter 抛出异常时，实现必须保留只由已知枚举位置、opaque Ref，以及可由安全 CLR 类型判断的现有 `CharacterKind` 构成的最小 `CharacterFact`，并附 `CHARACTER_PROJECTION_FALLBACK` warning；不得继续猜测名称、朝向或类型详情，也不得输出 Proto 中不存在的 runtime type 字段。同一 World Entity 或 Character 已由 `query_world` 生成安全 fallback 后，`inspect` 必须保留调用方传入的 Ref，并返回相同语义的最小 Fact 与 fallback warning；不得重试已知失败 getter、重新签发 Ref 或降级为 `FACT_UNAVAILABLE`。如果连枚举位置也不可读，则跳过该角色并附不带 Ref 的 `CHARACTER_PROJECTION_SKIPPED` warning，不得编造坐标。Location 的 `GetFridgePosition`/`GetFridge` 抛出异常时，只跳过该冰箱并附不带 Ref 的 `FRIDGE_DISCOVERY_FAILED` warning，不得中止其他实体投影或生成悬空 Ref。
 
 `ItemFact.category` 是 `Item.Category` 使用 invariant culture 格式化得到的十进制整数字符串；它不是本地化分类名称。
 
