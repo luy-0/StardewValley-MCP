@@ -22,6 +22,7 @@ public sealed class QueryInventoryRefStoreTests
         Assert.Multiple(() =>
         {
             Assert.That(second.Value, Is.EqualTo(first.Value));
+            Assert.That(first.Value, Does.Match($"^r1_{InstanceId}_[0-9a-f]{{48}}$"));
             Assert.That(resolved.Status, Is.EqualTo(InventoryItemResolveStatus.Resolved));
             Assert.That(resolved.Target?.Target, Is.SameAs(item));
             Assert.That(resolved.Target?.Slot, Is.EqualTo(0));
@@ -153,6 +154,12 @@ public sealed class QueryInventoryRefStoreTests
             out _,
             out _
         );
+        var unauthenticated = store.ResolveAllowedKinds(
+            new Ref { Value = $"r1_{InstanceId}_0000000000000001{new string('0', 32)}" },
+            allowed,
+            out _,
+            out _
+        );
         var foreign = store.ResolveAllowedKinds(
             new Ref { Value = OpaqueRefTokenCodec.NewToken("22222222-2222-4222-8222-222222222222") },
             allowed,
@@ -169,6 +176,7 @@ public sealed class QueryInventoryRefStoreTests
             Assert.That(unsupported.Kind, Is.EqualTo(RefKind.InventoryItem));
             Assert.That(unsupported.Error?.Code, Is.EqualTo(ErrorCode.InvalidArgument));
             Assert.That(unknown.Status, Is.EqualTo(RefStatus.NotFound));
+            Assert.That(unauthenticated.Status, Is.EqualTo(RefStatus.NotFound));
             Assert.That(foreign.Status, Is.EqualTo(RefStatus.Stale));
             Assert.That(foreign.Kind, Is.EqualTo(RefKind.Unspecified));
         });
@@ -177,10 +185,15 @@ public sealed class QueryInventoryRefStoreTests
     [Test]
     public void CentralTokenRegistryRetriesCollisionWithoutAliasingBindings()
     {
-        var collision = OpaqueRefTokenCodec.NewToken(InstanceId);
-        var unique = OpaqueRefTokenCodec.NewToken(InstanceId);
+        var signingKey = Enumerable.Range(0, 32).Select(value => (byte)value).ToArray();
+        var collision = OpaqueRefTokenCodec.NewIssuedToken(InstanceId, 1, signingKey);
+        var unique = OpaqueRefTokenCodec.NewIssuedToken(InstanceId, 2, signingKey);
         var tokens = new Queue<string>(new[] { collision, collision, unique });
-        var store = new OpaqueRefStore(InstanceId, () => tokens.Dequeue());
+        var store = new OpaqueRefStore(
+            InstanceId,
+            () => tokens.Dequeue(),
+            tokenSigningKey: signingKey
+        );
         var firstOwner = new FakeOwner(InventoryItemProvenance.Player, 1);
         var secondOwner = new FakeOwner(InventoryItemProvenance.Container, 1);
         var firstItem = new object();
@@ -205,8 +218,13 @@ public sealed class QueryInventoryRefStoreTests
     [Test]
     public void CentralTokenRegistryFailsClosedWhenCollisionRetriesAreExhausted()
     {
-        var collision = OpaqueRefTokenCodec.NewToken(InstanceId);
-        var store = new OpaqueRefStore(InstanceId, () => collision);
+        var signingKey = Enumerable.Range(0, 32).Select(value => (byte)value).ToArray();
+        var collision = OpaqueRefTokenCodec.NewIssuedToken(InstanceId, 1, signingKey);
+        var store = new OpaqueRefStore(
+            InstanceId,
+            () => collision,
+            tokenSigningKey: signingKey
+        );
         var firstOwner = new FakeOwner(InventoryItemProvenance.Player, 1);
         var secondOwner = new FakeOwner(InventoryItemProvenance.Container, 1);
         var firstItem = new object();
@@ -220,6 +238,172 @@ public sealed class QueryInventoryRefStoreTests
             Throws.TypeOf<InvalidOperationException>()
         );
         Assert.That(store.ResolveInventoryItem(new Ref { Value = collision }).Target?.Target, Is.SameAs(firstItem));
+    }
+
+    [Test]
+    public void CentralTokenRegistryRejectsFactoryWithUntruthfulIssuanceSequence()
+    {
+        var signingKey = Enumerable.Range(0, 32).Select(value => (byte)value).ToArray();
+        var skipped = OpaqueRefTokenCodec.NewIssuedToken(InstanceId, 2, signingKey);
+        var store = new OpaqueRefStore(
+            InstanceId,
+            () => skipped,
+            tokenSigningKey: signingKey
+        );
+        var owner = new FakeOwner(InventoryItemProvenance.Player, 1);
+        var item = new object();
+        owner.Set(0, item, "item");
+
+        Assert.That(
+            () => store.ObserveInventoryItem(owner, 0, item, "item"),
+            Throws.TypeOf<InvalidOperationException>()
+        );
+        Assert.That(store.RegisteredBindingCount, Is.Zero);
+    }
+
+    [Test]
+    public void CentralTokenRegistryKeepsEvictedInjectedTokenPermanentlyStale()
+    {
+        var signingKey = Enumerable.Range(0, 32).Select(value => (byte)value).ToArray();
+        var tokens = new Queue<string>(new[]
+        {
+            OpaqueRefTokenCodec.NewIssuedToken(InstanceId, 1, signingKey),
+            OpaqueRefTokenCodec.NewIssuedToken(InstanceId, 2, signingKey),
+        });
+        var store = new OpaqueRefStore(
+            InstanceId,
+            () => tokens.Dequeue(),
+            capacity: 1,
+            tokenSigningKey: signingKey
+        );
+        var owner = new FakeOwner(InventoryItemProvenance.Player, 2);
+        var firstItem = new object();
+        var secondItem = new object();
+        owner.Set(0, firstItem, "first");
+        owner.Set(1, secondItem, "second");
+        var first = store.ObserveInventoryItem(owner, 0, firstItem, "first");
+        store.ObserveInventoryItem(owner, 1, secondItem, "second");
+
+        Assert.That(store.ResolveInventoryItem(first).Status, Is.EqualTo(InventoryItemResolveStatus.Stale));
+    }
+
+    [Test]
+    public void CentralTokenRegistryBoundsCapacityAndTouchesLruOnAccess()
+    {
+        var store = new OpaqueRefStore(InstanceId, capacity: 2);
+        var owner = new FakeOwner(InventoryItemProvenance.Player, 3);
+        var firstItem = new object();
+        var secondItem = new object();
+        var thirdItem = new object();
+        owner.Set(0, firstItem, "first");
+        owner.Set(1, secondItem, "second");
+        owner.Set(2, thirdItem, "third");
+        var first = store.ObserveInventoryItem(owner, 0, firstItem, "first");
+        var second = store.ObserveInventoryItem(owner, 1, secondItem, "second");
+
+        Assert.That(store.ResolveInventoryItem(first).Status, Is.EqualTo(InventoryItemResolveStatus.Resolved));
+        var third = store.ObserveInventoryItem(owner, 2, thirdItem, "third");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(store.RegisteredBindingCount, Is.EqualTo(2));
+            Assert.That(store.ResolveInventoryItem(first).Status, Is.EqualTo(InventoryItemResolveStatus.Resolved));
+            Assert.That(store.ResolveInventoryItem(second).Status, Is.EqualTo(InventoryItemResolveStatus.Stale));
+            Assert.That(store.ResolveInventoryItem(second).Error?.Code, Is.EqualTo(ErrorCode.StaleRef));
+            Assert.That(store.ResolveInventoryItem(third).Status, Is.EqualTo(InventoryItemResolveStatus.Resolved));
+        });
+
+        var reissued = store.ObserveInventoryItem(owner, 1, secondItem, "second");
+        Assert.Multiple(() =>
+        {
+            Assert.That(reissued.Value, Is.Not.EqualTo(second.Value));
+            Assert.That(store.RegisteredBindingCount, Is.EqualTo(2));
+            Assert.That(store.ResolveInventoryItem(second).Status, Is.EqualTo(InventoryItemResolveStatus.Stale));
+            Assert.That(store.ResolveInventoryItem(reissued).Status, Is.EqualTo(InventoryItemResolveStatus.Resolved));
+        });
+    }
+
+    [Test]
+    public void CentralTokenRegistryReclaimsRecentStaleBeforeOldestLive()
+    {
+        var store = new OpaqueRefStore(InstanceId, capacity: 2);
+        var owner = new FakeOwner(InventoryItemProvenance.Player, 3);
+        var firstItem = new object();
+        var secondItem = new object();
+        var thirdItem = new object();
+        owner.Set(0, firstItem, "first");
+        owner.Set(1, secondItem, "second");
+        owner.Set(2, thirdItem, "third");
+        var first = store.ObserveInventoryItem(owner, 0, firstItem, "first");
+        var second = store.ObserveInventoryItem(owner, 1, secondItem, "second");
+
+        Assert.That(store.ResolveInventoryItem(first).Status, Is.EqualTo(InventoryItemResolveStatus.Resolved));
+        store.ObserveEmptyInventorySlot(owner, 0);
+        var third = store.ObserveInventoryItem(owner, 2, thirdItem, "third");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(store.RegisteredBindingCount, Is.EqualTo(2));
+            Assert.That(store.ResolveInventoryItem(first).Status, Is.EqualTo(InventoryItemResolveStatus.Stale));
+            Assert.That(store.ResolveInventoryItem(second).Status, Is.EqualTo(InventoryItemResolveStatus.Resolved));
+            Assert.That(store.ResolveInventoryItem(third).Status, Is.EqualTo(InventoryItemResolveStatus.Resolved));
+        });
+    }
+
+    [Test]
+    public void CentralTokenRegistryCapacityOneEvictsExactlyOneBindingPerIssuance()
+    {
+        var store = new OpaqueRefStore(InstanceId, capacity: 1);
+        var owner = new FakeOwner(InventoryItemProvenance.Player, 2);
+        var firstItem = new object();
+        var secondItem = new object();
+        owner.Set(0, firstItem, "first");
+        owner.Set(1, secondItem, "second");
+        var first = store.ObserveInventoryItem(owner, 0, firstItem, "first");
+        var second = store.ObserveInventoryItem(owner, 1, secondItem, "second");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(store.RegisteredBindingCount, Is.EqualTo(1));
+            Assert.That(store.ResolveInventoryItem(first).Status, Is.EqualTo(InventoryItemResolveStatus.Stale));
+            Assert.That(store.ResolveInventoryItem(second).Status, Is.EqualTo(InventoryItemResolveStatus.Resolved));
+        });
+    }
+
+    [Test]
+    public void CentralTokenRegistryTreatsUnavailableBindingAsOrdinaryLiveLruEntry()
+    {
+        var store = new OpaqueRefStore(InstanceId, capacity: 2);
+        var owner = new FakeOwner(InventoryItemProvenance.Player, 3);
+        var firstItem = new object();
+        var unavailableItem = new object();
+        var thirdItem = new object();
+        owner.Set(0, firstItem, "first");
+        owner.Set(1, unavailableItem, "unavailable");
+        owner.Set(2, thirdItem, "third");
+        var first = store.ObserveInventoryItem(owner, 0, firstItem, "first");
+        var temporarilyUnavailable = store.ObserveInventoryItem(
+            owner,
+            1,
+            unavailableItem,
+            "unavailable"
+        );
+
+        owner.Unavailable = true;
+        Assert.That(
+            store.ResolveInventoryItem(temporarilyUnavailable).Status,
+            Is.EqualTo(InventoryItemResolveStatus.Unavailable)
+        );
+        var third = store.ObserveInventoryItem(owner, 2, thirdItem, "third");
+        owner.Unavailable = false;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(store.RegisteredBindingCount, Is.EqualTo(2));
+            Assert.That(store.ResolveInventoryItem(first).Status, Is.EqualTo(InventoryItemResolveStatus.Stale));
+            Assert.That(store.ResolveInventoryItem(temporarilyUnavailable).Status, Is.EqualTo(InventoryItemResolveStatus.Resolved));
+            Assert.That(store.ResolveInventoryItem(third).Status, Is.EqualTo(InventoryItemResolveStatus.Resolved));
+        });
     }
 
     private sealed class FakeOwner : IInventoryRefOwner

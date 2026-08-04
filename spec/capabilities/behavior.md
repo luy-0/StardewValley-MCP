@@ -31,6 +31,8 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 
 所有 Revision 与 Ref 都只在创建它们的 `mod_instance_id` 对应的游戏进程中有效。实现可以在不透明值内部编码实例和 Guard，但这些编码不属于公共契约。
 
+实现必须为活动 Ref Binding Registry 设置硬容量上限，且容量至少覆盖一次最大合法公开查询可能签发的 Ref。容量不足时先回收已经 stale 的 Binding；仍不足时才回收最久未使用的 live Binding，并在移除前把它标记为 stale，使同一 owner 后续再次观察该对象时签发新 Ref。访问已注册 Ref 和再次观察同一 Binding 都必须更新最近使用顺序。回收不改变分类单调性：当前 Mod 实例曾签发的 Ref 被回收后仍必须稳定返回 `STALE/STALE_REF`，不得变成 `NOT_FOUND` 或重新分配给其他对象；当前实例从未签发的合法外形值返回 `NOT_FOUND`，其他 Mod 实例的 Ref 返回 `STALE/STALE_REF`。实现可以用经进程内密钥认证的单调签发序号等有界判据区分已回收与从未签发的值，不得为此保留无界 tombstone，也不得把内部编码变成调用方可依赖的格式。
+
 使用 World Entity 或 Character Ref 启动 `navigate`、`interact` 或 `use_tool` 时，实现必须在命令开始的主线程安全点解析并锁定同一游戏对象、当时的 `NameOrUniqueName` 与动作 Tile。命令不会持续追踪移动目标；在提交动作或返回成功前必须重验同一对象仍存在且位置没有变化。命令开始前已经失效的绑定返回 `STALE_REF`，Kind 不适用于该能力返回 `INVALID_ARGUMENT`；命令开始后对象消失、换图或移动则返回 `EXECUTION_FAILED`，不得用旧坐标继续执行或成功收口。
 
 ### Inspect 不变量
@@ -55,7 +57,7 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 | `UNSUPPORTED` | 已知时提供 | 不得存在 | `INVALID_ARGUMENT` |
 | `FACT_UNAVAILABLE` | 非 `UNSPECIFIED` | 不得存在 | `INTERNAL`，消息固定为“当前 Ref 事实不可用” |
 
-`STALE` 只在对象或 owner 生命周期已由肯定证据终止时产生，并保持单调不复活。getter、关键字段、typed projector 或完整 UI capture 本次不可读，但 Binding 身份仍可验证时，必须逐项返回 `FACT_UNAVAILABLE`；该项不改变 Binding、不产生 warning，也不得拖垮同批其他 Ref。对于 UI Ref，只有菜单关闭或被替换、完整且可信的当前公开元素集合明确不含该元素，或同一身份槽位已由不同组件或语义对象替换，才构成 stale 证据；不完整捕获不得淘汰本轮未观察到的 Binding。既有安全 fallback 若已形成完整公开 Fact，仍返回 `RESOLVED` 及对应 warning。
+`STALE` 由对象或 owner 生命周期已由肯定证据终止，或上述有界 Registry 明确执行容量回收而产生，并保持单调不复活。getter、关键字段、typed projector 或完整 UI capture 本次不可读，但 Binding 身份仍可验证时，必须逐项返回 `FACT_UNAVAILABLE`；该项不改变 Binding，不得被视为 stale 或获得 stale 优先回收资格，不产生 warning，也不得拖垮同批其他 Ref。对于 UI Ref，只有菜单关闭或被替换、完整且可信的当前公开元素集合明确不含该元素、同一身份槽位已由不同组件或语义对象替换，或 Registry 明确执行容量回收，才构成 stale 证据；不完整捕获不得淘汰本轮未观察到的 Binding。既有安全 fallback 若已形成完整公开 Fact，仍返回 `RESOLVED` 及对应 warning。
 
 ## 3. 成功终态的统一含义
 
