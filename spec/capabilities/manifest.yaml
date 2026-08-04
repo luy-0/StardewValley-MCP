@@ -114,6 +114,20 @@ capabilities:
     required_scope: game:write
     risk: []
     destructive: false
+  - id: transfer_inventory_item
+    title: 转移箱子物品
+    description: 在当前受支持的箱子菜单中原子转移一项明确物品的指定数量。
+    contract_version: 1.0.0
+    request: TransferInventoryItemRequest
+    result: TransferInventoryItemResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: [changes_save]
+    destructive: true
   - id: activate_ui
     title: 激活界面元素
     description: 在匹配的 UI Revision 上激活 query_ui 返回的可交互元素。

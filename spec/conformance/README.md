@@ -8,7 +8,7 @@
 2. Manifest 通过 JSON Schema，能力 ID 唯一，并与 `CommandRequest.operation` 和 `CapabilityResult.result` 分支一一对应。
 3. 每项 Manifest Request/Result 消息存在，默认超时不大于最大超时，只读/变更 Scope 匹配。
 4. C# 与 Python 生成产物各自导出的 Descriptor 字节一致，并由两种语言独立计算出同一 Capability Digest 与 HMAC。
-5. 15 项 MCP Input/Output Schema 可由 Proto Descriptor、Manifest、显式 Override 与 Error Map 确定重建，生成物逐字节一致。
+5. 16 项 MCP Input/Output Schema 可由 Proto Descriptor、Manifest、显式 Override 与 Error Map 确定重建，生成物逐字节一致。
 6. Fixture 能由生成的 C# 与 Python Proto 严格解析，序列化后再次解析保持语义相等，并通过跨帧身份、Fence、Command、Result 与状态关联检查。
 7. 公共 Proto 不包含未列入 Manifest 的能力分支。
 

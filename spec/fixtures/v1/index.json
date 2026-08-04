@@ -27,6 +27,7 @@
     "actions/interact.json",
     "actions/use_tool.json",
     "actions/equip.json",
+    "actions/transfer-inventory-item.json",
     "actions/open_menu.json",
     "actions/activate_ui.json",
     "actions/close_menu.json"

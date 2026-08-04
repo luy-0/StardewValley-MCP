@@ -27,7 +27,7 @@ COMMAND_STATE_CANCELLED: CommandState
 COMMAND_STATE_TIMED_OUT: CommandState
 
 class CommandRequest(_message.Message):
-    __slots__ = ("command_id", "timeout_ms", "say", "emote", "face", "navigate", "interact", "use_tool", "equip", "open_menu", "activate_ui", "close_menu", "query_runtime", "query_world", "query_inventory", "query_ui", "inspect")
+    __slots__ = ("command_id", "timeout_ms", "say", "emote", "face", "navigate", "interact", "use_tool", "equip", "open_menu", "activate_ui", "close_menu", "transfer_inventory_item", "query_runtime", "query_world", "query_inventory", "query_ui", "inspect")
     COMMAND_ID_FIELD_NUMBER: _ClassVar[int]
     TIMEOUT_MS_FIELD_NUMBER: _ClassVar[int]
     SAY_FIELD_NUMBER: _ClassVar[int]
@@ -40,6 +40,7 @@ class CommandRequest(_message.Message):
     OPEN_MENU_FIELD_NUMBER: _ClassVar[int]
     ACTIVATE_UI_FIELD_NUMBER: _ClassVar[int]
     CLOSE_MENU_FIELD_NUMBER: _ClassVar[int]
+    TRANSFER_INVENTORY_ITEM_FIELD_NUMBER: _ClassVar[int]
     QUERY_RUNTIME_FIELD_NUMBER: _ClassVar[int]
     QUERY_WORLD_FIELD_NUMBER: _ClassVar[int]
     QUERY_INVENTORY_FIELD_NUMBER: _ClassVar[int]
@@ -57,15 +58,16 @@ class CommandRequest(_message.Message):
     open_menu: _actions_pb2.OpenMenuRequest
     activate_ui: _actions_pb2.ActivateUiRequest
     close_menu: _actions_pb2.CloseMenuRequest
+    transfer_inventory_item: _actions_pb2.TransferInventoryItemRequest
     query_runtime: _queries_pb2.QueryRuntimeRequest
     query_world: _queries_pb2.QueryWorldRequest
     query_inventory: _queries_pb2.QueryInventoryRequest
     query_ui: _queries_pb2.QueryUiRequest
     inspect: _queries_pb2.InspectRequest
-    def __init__(self, command_id: _Optional[str] = ..., timeout_ms: _Optional[int] = ..., say: _Optional[_Union[_actions_pb2.SayRequest, _Mapping]] = ..., emote: _Optional[_Union[_actions_pb2.EmoteRequest, _Mapping]] = ..., face: _Optional[_Union[_actions_pb2.FaceRequest, _Mapping]] = ..., navigate: _Optional[_Union[_actions_pb2.NavigateRequest, _Mapping]] = ..., interact: _Optional[_Union[_actions_pb2.InteractRequest, _Mapping]] = ..., use_tool: _Optional[_Union[_actions_pb2.UseToolRequest, _Mapping]] = ..., equip: _Optional[_Union[_actions_pb2.EquipRequest, _Mapping]] = ..., open_menu: _Optional[_Union[_actions_pb2.OpenMenuRequest, _Mapping]] = ..., activate_ui: _Optional[_Union[_actions_pb2.ActivateUiRequest, _Mapping]] = ..., close_menu: _Optional[_Union[_actions_pb2.CloseMenuRequest, _Mapping]] = ..., query_runtime: _Optional[_Union[_queries_pb2.QueryRuntimeRequest, _Mapping]] = ..., query_world: _Optional[_Union[_queries_pb2.QueryWorldRequest, _Mapping]] = ..., query_inventory: _Optional[_Union[_queries_pb2.QueryInventoryRequest, _Mapping]] = ..., query_ui: _Optional[_Union[_queries_pb2.QueryUiRequest, _Mapping]] = ..., inspect: _Optional[_Union[_queries_pb2.InspectRequest, _Mapping]] = ...) -> None: ...
+    def __init__(self, command_id: _Optional[str] = ..., timeout_ms: _Optional[int] = ..., say: _Optional[_Union[_actions_pb2.SayRequest, _Mapping]] = ..., emote: _Optional[_Union[_actions_pb2.EmoteRequest, _Mapping]] = ..., face: _Optional[_Union[_actions_pb2.FaceRequest, _Mapping]] = ..., navigate: _Optional[_Union[_actions_pb2.NavigateRequest, _Mapping]] = ..., interact: _Optional[_Union[_actions_pb2.InteractRequest, _Mapping]] = ..., use_tool: _Optional[_Union[_actions_pb2.UseToolRequest, _Mapping]] = ..., equip: _Optional[_Union[_actions_pb2.EquipRequest, _Mapping]] = ..., open_menu: _Optional[_Union[_actions_pb2.OpenMenuRequest, _Mapping]] = ..., activate_ui: _Optional[_Union[_actions_pb2.ActivateUiRequest, _Mapping]] = ..., close_menu: _Optional[_Union[_actions_pb2.CloseMenuRequest, _Mapping]] = ..., transfer_inventory_item: _Optional[_Union[_actions_pb2.TransferInventoryItemRequest, _Mapping]] = ..., query_runtime: _Optional[_Union[_queries_pb2.QueryRuntimeRequest, _Mapping]] = ..., query_world: _Optional[_Union[_queries_pb2.QueryWorldRequest, _Mapping]] = ..., query_inventory: _Optional[_Union[_queries_pb2.QueryInventoryRequest, _Mapping]] = ..., query_ui: _Optional[_Union[_queries_pb2.QueryUiRequest, _Mapping]] = ..., inspect: _Optional[_Union[_queries_pb2.InspectRequest, _Mapping]] = ...) -> None: ...
 
 class CapabilityResult(_message.Message):
-    __slots__ = ("say", "emote", "face", "navigate", "interact", "use_tool", "equip", "open_menu", "activate_ui", "close_menu", "query_runtime", "query_world", "query_inventory", "query_ui", "inspect")
+    __slots__ = ("say", "emote", "face", "navigate", "interact", "use_tool", "equip", "open_menu", "activate_ui", "close_menu", "transfer_inventory_item", "query_runtime", "query_world", "query_inventory", "query_ui", "inspect")
     SAY_FIELD_NUMBER: _ClassVar[int]
     EMOTE_FIELD_NUMBER: _ClassVar[int]
     FACE_FIELD_NUMBER: _ClassVar[int]
@@ -76,6 +78,7 @@ class CapabilityResult(_message.Message):
     OPEN_MENU_FIELD_NUMBER: _ClassVar[int]
     ACTIVATE_UI_FIELD_NUMBER: _ClassVar[int]
     CLOSE_MENU_FIELD_NUMBER: _ClassVar[int]
+    TRANSFER_INVENTORY_ITEM_FIELD_NUMBER: _ClassVar[int]
     QUERY_RUNTIME_FIELD_NUMBER: _ClassVar[int]
     QUERY_WORLD_FIELD_NUMBER: _ClassVar[int]
     QUERY_INVENTORY_FIELD_NUMBER: _ClassVar[int]
@@ -91,12 +94,13 @@ class CapabilityResult(_message.Message):
     open_menu: _actions_pb2.OpenMenuResult
     activate_ui: _actions_pb2.ActivateUiResult
     close_menu: _actions_pb2.CloseMenuResult
+    transfer_inventory_item: _actions_pb2.TransferInventoryItemResult
     query_runtime: _queries_pb2.QueryRuntimeResult
     query_world: _queries_pb2.QueryWorldResult
     query_inventory: _queries_pb2.QueryInventoryResult
     query_ui: _queries_pb2.QueryUiResult
     inspect: _queries_pb2.InspectResult
-    def __init__(self, say: _Optional[_Union[_actions_pb2.SayResult, _Mapping]] = ..., emote: _Optional[_Union[_actions_pb2.EmoteResult, _Mapping]] = ..., face: _Optional[_Union[_actions_pb2.FaceResult, _Mapping]] = ..., navigate: _Optional[_Union[_actions_pb2.NavigateResult, _Mapping]] = ..., interact: _Optional[_Union[_actions_pb2.InteractResult, _Mapping]] = ..., use_tool: _Optional[_Union[_actions_pb2.UseToolResult, _Mapping]] = ..., equip: _Optional[_Union[_actions_pb2.EquipResult, _Mapping]] = ..., open_menu: _Optional[_Union[_actions_pb2.OpenMenuResult, _Mapping]] = ..., activate_ui: _Optional[_Union[_actions_pb2.ActivateUiResult, _Mapping]] = ..., close_menu: _Optional[_Union[_actions_pb2.CloseMenuResult, _Mapping]] = ..., query_runtime: _Optional[_Union[_queries_pb2.QueryRuntimeResult, _Mapping]] = ..., query_world: _Optional[_Union[_queries_pb2.QueryWorldResult, _Mapping]] = ..., query_inventory: _Optional[_Union[_queries_pb2.QueryInventoryResult, _Mapping]] = ..., query_ui: _Optional[_Union[_queries_pb2.QueryUiResult, _Mapping]] = ..., inspect: _Optional[_Union[_queries_pb2.InspectResult, _Mapping]] = ...) -> None: ...
+    def __init__(self, say: _Optional[_Union[_actions_pb2.SayResult, _Mapping]] = ..., emote: _Optional[_Union[_actions_pb2.EmoteResult, _Mapping]] = ..., face: _Optional[_Union[_actions_pb2.FaceResult, _Mapping]] = ..., navigate: _Optional[_Union[_actions_pb2.NavigateResult, _Mapping]] = ..., interact: _Optional[_Union[_actions_pb2.InteractResult, _Mapping]] = ..., use_tool: _Optional[_Union[_actions_pb2.UseToolResult, _Mapping]] = ..., equip: _Optional[_Union[_actions_pb2.EquipResult, _Mapping]] = ..., open_menu: _Optional[_Union[_actions_pb2.OpenMenuResult, _Mapping]] = ..., activate_ui: _Optional[_Union[_actions_pb2.ActivateUiResult, _Mapping]] = ..., close_menu: _Optional[_Union[_actions_pb2.CloseMenuResult, _Mapping]] = ..., transfer_inventory_item: _Optional[_Union[_actions_pb2.TransferInventoryItemResult, _Mapping]] = ..., query_runtime: _Optional[_Union[_queries_pb2.QueryRuntimeResult, _Mapping]] = ..., query_world: _Optional[_Union[_queries_pb2.QueryWorldResult, _Mapping]] = ..., query_inventory: _Optional[_Union[_queries_pb2.QueryInventoryResult, _Mapping]] = ..., query_ui: _Optional[_Union[_queries_pb2.QueryUiResult, _Mapping]] = ..., inspect: _Optional[_Union[_queries_pb2.InspectResult, _Mapping]] = ...) -> None: ...
 
 class CommandEvent(_message.Message):
     __slots__ = ("command_id", "state", "phase", "progress_percent", "result", "error")

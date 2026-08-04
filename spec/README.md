@@ -58,7 +58,7 @@ Fixture 只展示有效或无效交互。如果示例与机器可读契约或规
 ## V1 设计结论
 
 - 协议 package 为 `stardew_valley.mcp.v1`。
-- 公共能力由 Manifest 定义为 15 项正交能力。
+- 公共能力由 Manifest 定义为 16 项正交能力。
 - 本地链路使用 Mod Listener、MCP Client 和长度前缀二进制 Proto。
 - 认证使用本地连接所需的 Session、Lease 与 Capability Digest。
 

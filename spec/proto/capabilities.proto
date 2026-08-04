@@ -35,6 +35,7 @@ message CommandRequest {
     OpenMenuRequest open_menu = 17;
     ActivateUiRequest activate_ui = 18;
     CloseMenuRequest close_menu = 19;
+    TransferInventoryItemRequest transfer_inventory_item = 20;
 
     QueryRuntimeRequest query_runtime = 30;
     QueryWorldRequest query_world = 31;
@@ -56,6 +57,7 @@ message CapabilityResult {
     OpenMenuResult open_menu = 17;
     ActivateUiResult activate_ui = 18;
     CloseMenuResult close_menu = 19;
+    TransferInventoryItemResult transfer_inventory_item = 20;
 
     QueryRuntimeResult query_runtime = 30;
     QueryWorldResult query_world = 31;

@@ -119,6 +119,29 @@ message EquipResult {
   bool changed = 3;
 }
 
+enum InventoryTransferDirection {
+  INVENTORY_TRANSFER_DIRECTION_UNSPECIFIED = 0;
+  INVENTORY_TRANSFER_DIRECTION_PLAYER_TO_CONTAINER = 1;
+  INVENTORY_TRANSFER_DIRECTION_CONTAINER_TO_PLAYER = 2;
+}
+
+message TransferInventoryItemRequest {
+  InventoryTransferDirection direction = 1;
+  Ref item_ref = 2;
+  uint32 quantity = 3;
+  string ui_revision = 4;
+  string player_inventory_revision = 5;
+  string container_inventory_revision = 6;
+}
+
+message TransferInventoryItemResult {
+  uint32 transferred_quantity = 1;
+  uint32 source_slot_index = 2;
+  uint32 source_remaining_quantity = 3;
+  string player_inventory_revision = 4;
+  string container_inventory_revision = 5;
+}
+
 message OpenMenuRequest {
   MenuKind menu = 1;
 }

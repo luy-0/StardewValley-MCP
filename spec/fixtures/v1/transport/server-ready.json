@@ -6,7 +6,7 @@
     "sessionId": "f2d85b2e-4d60-4e32-bf42-fedcba654321",
     "leaseEpoch": "7",
     "capabilitySnapshot": {
-      "digest": "e9a8d2f14250d45f6fe89d844d03543a3e613e351f3156117cd60c600a08092d",
+      "digest": "091cd56d3a326d4df2227789ff0a96f0a2d54a7d4e5c0c8853d737c8daa47290",
       "capabilities": [
         {"id":"activate_ui","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"ActivateUiRequest","resultType":"ActivateUiResult","requiredScope":"game:write","risks":["advances_time","changes_relationship","changes_save","consumes_item","spends_money"],"destructive":true},
         {"id":"close_menu","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"CloseMenuRequest","resultType":"CloseMenuResult","requiredScope":"game:write","destructive":false},
@@ -22,11 +22,12 @@
         {"id":"query_ui","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_READ_ONLY","execution":"EXECUTION_MODE_IMMEDIATE","cancellable":false,"defaultTimeoutMs":5000,"maxTimeoutMs":15000,"requestType":"QueryUiRequest","resultType":"QueryUiResult","requiredScope":"game:read","destructive":false},
         {"id":"query_world","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_READ_ONLY","execution":"EXECUTION_MODE_IMMEDIATE","cancellable":false,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"QueryWorldRequest","resultType":"QueryWorldResult","requiredScope":"game:read","destructive":false},
         {"id":"say","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_IMMEDIATE","cancellable":false,"defaultTimeoutMs":5000,"maxTimeoutMs":15000,"requestType":"SayRequest","resultType":"SayResult","requiredScope":"game:write","risks":["external_communication"],"destructive":false},
+        {"id":"transfer_inventory_item","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"TransferInventoryItemRequest","resultType":"TransferInventoryItemResult","requiredScope":"game:write","risks":["changes_save"],"destructive":true},
         {"id":"use_tool","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":15000,"maxTimeoutMs":60000,"requestType":"UseToolRequest","resultType":"UseToolResult","requiredScope":"game:write","risks":["changes_save","consumes_energy"],"destructive":true}
       ]
     },
     "resultRetentionMs": 300000,
     "reconnectGraceMs": 10000,
-    "authTag": "hgZNwY5gH3GqQzkrxBKTlpbhbYRK1uww6lVW+W+GPPg="
+    "authTag": "G93B5eujtnoqFKvOYKbKL+MUO6fjvDl46dhppdQuQUk="
   }
 }

@@ -125,7 +125,7 @@ internal static class ItemGrabMenuProjector
         && candidate.SpecialChestType is Chest.SpecialChestTypes.None
             or Chest.SpecialChestTypes.BigChest;
 
-    private static bool TryLocateSupportedContainer(
+    internal static bool TryLocateSupportedContainer(
         ItemGrabMenu menu,
         Farmer player,
         out Chest chest,
@@ -179,7 +179,7 @@ internal static class ItemGrabMenuProjector
         return true;
     }
 
-    private static bool IsCompleteInventoryMenu(
+    internal static bool IsCompleteInventoryMenu(
         InventoryMenu? menu,
         ReadableInventoryView view,
         bool allowVisualSuperset

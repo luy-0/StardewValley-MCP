@@ -27,6 +27,12 @@ class ArrivalMode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     ARRIVAL_MODE_UNSPECIFIED: _ClassVar[ArrivalMode]
     ARRIVAL_MODE_EXACT: _ClassVar[ArrivalMode]
     ARRIVAL_MODE_ADJACENT: _ClassVar[ArrivalMode]
+
+class InventoryTransferDirection(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    INVENTORY_TRANSFER_DIRECTION_UNSPECIFIED: _ClassVar[InventoryTransferDirection]
+    INVENTORY_TRANSFER_DIRECTION_PLAYER_TO_CONTAINER: _ClassVar[InventoryTransferDirection]
+    INVENTORY_TRANSFER_DIRECTION_CONTAINER_TO_PLAYER: _ClassVar[InventoryTransferDirection]
 EMOTE_KIND_UNSPECIFIED: EmoteKind
 EMOTE_KIND_HAPPY: EmoteKind
 EMOTE_KIND_SAD: EmoteKind
@@ -39,6 +45,9 @@ EMOTE_KIND_MUSIC: EmoteKind
 ARRIVAL_MODE_UNSPECIFIED: ArrivalMode
 ARRIVAL_MODE_EXACT: ArrivalMode
 ARRIVAL_MODE_ADJACENT: ArrivalMode
+INVENTORY_TRANSFER_DIRECTION_UNSPECIFIED: InventoryTransferDirection
+INVENTORY_TRANSFER_DIRECTION_PLAYER_TO_CONTAINER: InventoryTransferDirection
+INVENTORY_TRANSFER_DIRECTION_CONTAINER_TO_PLAYER: InventoryTransferDirection
 
 class SayRequest(_message.Message):
     __slots__ = ("content",)
@@ -167,6 +176,36 @@ class EquipResult(_message.Message):
     item: _facts_pb2.ItemFact
     changed: bool
     def __init__(self, slot_index: _Optional[int] = ..., item: _Optional[_Union[_facts_pb2.ItemFact, _Mapping]] = ..., changed: _Optional[bool] = ...) -> None: ...
+
+class TransferInventoryItemRequest(_message.Message):
+    __slots__ = ("direction", "item_ref", "quantity", "ui_revision", "player_inventory_revision", "container_inventory_revision")
+    DIRECTION_FIELD_NUMBER: _ClassVar[int]
+    ITEM_REF_FIELD_NUMBER: _ClassVar[int]
+    QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    CONTAINER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    direction: InventoryTransferDirection
+    item_ref: _refs_pb2.Ref
+    quantity: int
+    ui_revision: str
+    player_inventory_revision: str
+    container_inventory_revision: str
+    def __init__(self, direction: _Optional[_Union[InventoryTransferDirection, str]] = ..., item_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., quantity: _Optional[int] = ..., ui_revision: _Optional[str] = ..., player_inventory_revision: _Optional[str] = ..., container_inventory_revision: _Optional[str] = ...) -> None: ...
+
+class TransferInventoryItemResult(_message.Message):
+    __slots__ = ("transferred_quantity", "source_slot_index", "source_remaining_quantity", "player_inventory_revision", "container_inventory_revision")
+    TRANSFERRED_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    SOURCE_SLOT_INDEX_FIELD_NUMBER: _ClassVar[int]
+    SOURCE_REMAINING_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    CONTAINER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    transferred_quantity: int
+    source_slot_index: int
+    source_remaining_quantity: int
+    player_inventory_revision: str
+    container_inventory_revision: str
+    def __init__(self, transferred_quantity: _Optional[int] = ..., source_slot_index: _Optional[int] = ..., source_remaining_quantity: _Optional[int] = ..., player_inventory_revision: _Optional[str] = ..., container_inventory_revision: _Optional[str] = ...) -> None: ...
 
 class OpenMenuRequest(_message.Message):
     __slots__ = ("menu",)

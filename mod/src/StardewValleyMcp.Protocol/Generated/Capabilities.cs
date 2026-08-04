@@ -25,7 +25,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChJjYXBhYmlsaXRpZXMucHJvdG8SFXN0YXJkZXdfdmFsbGV5Lm1jcC52MRoN",
-            "YWN0aW9ucy5wcm90bxoMY29tbW9uLnByb3RvGg1xdWVyaWVzLnByb3RvIssH",
+            "YWN0aW9ucy5wcm90bxoMY29tbW9uLnByb3RvGg1xdWVyaWVzLnByb3RvIqMI",
             "Cg5Db21tYW5kUmVxdWVzdBISCgpjb21tYW5kX2lkGAEgASgJEhIKCnRpbWVv",
             "dXRfbXMYAiABKA0SMAoDc2F5GAogASgLMiEuc3RhcmRld192YWxsZXkubWNw",
             "LnYxLlNheVJlcXVlc3RIABI0CgVlbW90ZRgLIAEoCzIjLnN0YXJkZXdfdmFs",
@@ -40,61 +40,64 @@ namespace StardewValleyMcp.Protocol.V1 {
             "bnVSZXF1ZXN0SAASPwoLYWN0aXZhdGVfdWkYEiABKAsyKC5zdGFyZGV3X3Zh",
             "bGxleS5tY3AudjEuQWN0aXZhdGVVaVJlcXVlc3RIABI9CgpjbG9zZV9tZW51",
             "GBMgASgLMicuc3RhcmRld192YWxsZXkubWNwLnYxLkNsb3NlTWVudVJlcXVl",
-            "c3RIABJDCg1xdWVyeV9ydW50aW1lGB4gASgLMiouc3RhcmRld192YWxsZXku",
-            "bWNwLnYxLlF1ZXJ5UnVudGltZVJlcXVlc3RIABI/CgtxdWVyeV93b3JsZBgf",
-            "IAEoCzIoLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5RdWVyeVdvcmxkUmVxdWVz",
-            "dEgAEkcKD3F1ZXJ5X2ludmVudG9yeRggIAEoCzIsLnN0YXJkZXdfdmFsbGV5",
-            "Lm1jcC52MS5RdWVyeUludmVudG9yeVJlcXVlc3RIABI5CghxdWVyeV91aRgh",
-            "IAEoCzIlLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5RdWVyeVVpUmVxdWVzdEgA",
-            "EjgKB2luc3BlY3QYIiABKAsyJS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuSW5z",
-            "cGVjdFJlcXVlc3RIAEILCglvcGVyYXRpb24ikwcKEENhcGFiaWxpdHlSZXN1",
-            "bHQSLwoDc2F5GAogASgLMiAuc3RhcmRld192YWxsZXkubWNwLnYxLlNheVJl",
-            "c3VsdEgAEjMKBWVtb3RlGAsgASgLMiIuc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LkVtb3RlUmVzdWx0SAASMQoEZmFjZRgMIAEoCzIhLnN0YXJkZXdfdmFsbGV5",
-            "Lm1jcC52MS5GYWNlUmVzdWx0SAASOQoIbmF2aWdhdGUYDSABKAsyJS5zdGFy",
-            "ZGV3X3ZhbGxleS5tY3AudjEuTmF2aWdhdGVSZXN1bHRIABI5CghpbnRlcmFj",
-            "dBgOIAEoCzIlLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5JbnRlcmFjdFJlc3Vs",
-            "dEgAEjgKCHVzZV90b29sGA8gASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LlVzZVRvb2xSZXN1bHRIABIzCgVlcXVpcBgQIAEoCzIiLnN0YXJkZXdfdmFs",
-            "bGV5Lm1jcC52MS5FcXVpcFJlc3VsdEgAEjoKCW9wZW5fbWVudRgRIAEoCzIl",
-            "LnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5PcGVuTWVudVJlc3VsdEgAEj4KC2Fj",
-            "dGl2YXRlX3VpGBIgASgLMicuc3RhcmRld192YWxsZXkubWNwLnYxLkFjdGl2",
-            "YXRlVWlSZXN1bHRIABI8CgpjbG9zZV9tZW51GBMgASgLMiYuc3RhcmRld192",
-            "YWxsZXkubWNwLnYxLkNsb3NlTWVudVJlc3VsdEgAEkIKDXF1ZXJ5X3J1bnRp",
-            "bWUYHiABKAsyKS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUXVlcnlSdW50aW1l",
-            "UmVzdWx0SAASPgoLcXVlcnlfd29ybGQYHyABKAsyJy5zdGFyZGV3X3ZhbGxl",
-            "eS5tY3AudjEuUXVlcnlXb3JsZFJlc3VsdEgAEkYKD3F1ZXJ5X2ludmVudG9y",
-            "eRggIAEoCzIrLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5RdWVyeUludmVudG9y",
-            "eVJlc3VsdEgAEjgKCHF1ZXJ5X3VpGCEgASgLMiQuc3RhcmRld192YWxsZXku",
-            "bWNwLnYxLlF1ZXJ5VWlSZXN1bHRIABI3CgdpbnNwZWN0GCIgASgLMiQuc3Rh",
-            "cmRld192YWxsZXkubWNwLnYxLkluc3BlY3RSZXN1bHRIAEIICgZyZXN1bHQi",
-            "jgIKDENvbW1hbmRFdmVudBISCgpjb21tYW5kX2lkGAEgASgJEjIKBXN0YXRl",
-            "GAIgASgOMiMuc3RhcmRld192YWxsZXkubWNwLnYxLkNvbW1hbmRTdGF0ZRIN",
-            "CgVwaGFzZRgDIAEoCRIdChBwcm9ncmVzc19wZXJjZW50GAQgASgNSAGIAQES",
-            "OQoGcmVzdWx0GAogASgLMicuc3RhcmRld192YWxsZXkubWNwLnYxLkNhcGFi",
-            "aWxpdHlSZXN1bHRIABItCgVlcnJvchgLIAEoCzIcLnN0YXJkZXdfdmFsbGV5",
-            "Lm1jcC52MS5FcnJvckgAQgkKB291dGNvbWVCEwoRX3Byb2dyZXNzX3BlcmNl",
-            "bnQiOgoUQ2FuY2VsQ29tbWFuZFJlcXVlc3QSEgoKY29tbWFuZF9pZBgBIAEo",
-            "CRIOCgZyZWFzb24YAiABKAkirwEKFUNhbmNlbENvbW1hbmRSZXNwb25zZRIS",
-            "Cgpjb21tYW5kX2lkGAEgASgJEhAKCGFjY2VwdGVkGAIgASgIEjQKB2N1cnJl",
-            "bnQYAyABKAsyIy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQ29tbWFuZEV2ZW50",
-            "EjAKBWVycm9yGAQgASgLMhwuc3RhcmRld192YWxsZXkubWNwLnYxLkVycm9y",
-            "SACIAQFCCAoGX2Vycm9yIi0KF0dldENvbW1hbmRTdGF0dXNSZXF1ZXN0EhIK",
-            "CmNvbW1hbmRfaWQYASABKAkihAEKGEdldENvbW1hbmRTdGF0dXNSZXNwb25z",
-            "ZRISCgpjb21tYW5kX2lkGAEgASgJEg0KBWZvdW5kGAIgASgIEjkKB2N1cnJl",
-            "bnQYAyABKAsyIy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQ29tbWFuZEV2ZW50",
-            "SACIAQFCCgoIX2N1cnJlbnQq1QEKDENvbW1hbmRTdGF0ZRIdChlDT01NQU5E",
-            "X1NUQVRFX1VOU1BFQ0lGSUVEEAASGgoWQ09NTUFORF9TVEFURV9BQ0NFUFRF",
-            "RBABEhkKFUNPTU1BTkRfU1RBVEVfUlVOTklORxACEhsKF0NPTU1BTkRfU1RB",
-            "VEVfU1VDQ0VFREVEEAMSGAoUQ09NTUFORF9TVEFURV9GQUlMRUQQBBIbChdD",
-            "T01NQU5EX1NUQVRFX0NBTkNFTExFRBAFEhsKF0NPTU1BTkRfU1RBVEVfVElN",
-            "RURfT1VUEAZCH6oCHFN0YXJkZXdWYWxsZXlNY3AuUHJvdG9jb2wuVjFiBnBy",
-            "b3RvMw=="));
+            "c3RIABJWChd0cmFuc2Zlcl9pbnZlbnRvcnlfaXRlbRgUIAEoCzIzLnN0YXJk",
+            "ZXdfdmFsbGV5Lm1jcC52MS5UcmFuc2ZlckludmVudG9yeUl0ZW1SZXF1ZXN0",
+            "SAASQwoNcXVlcnlfcnVudGltZRgeIAEoCzIqLnN0YXJkZXdfdmFsbGV5Lm1j",
+            "cC52MS5RdWVyeVJ1bnRpbWVSZXF1ZXN0SAASPwoLcXVlcnlfd29ybGQYHyAB",
+            "KAsyKC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUXVlcnlXb3JsZFJlcXVlc3RI",
+            "ABJHCg9xdWVyeV9pbnZlbnRvcnkYICABKAsyLC5zdGFyZGV3X3ZhbGxleS5t",
+            "Y3AudjEuUXVlcnlJbnZlbnRvcnlSZXF1ZXN0SAASOQoIcXVlcnlfdWkYISAB",
+            "KAsyJS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUXVlcnlVaVJlcXVlc3RIABI4",
+            "CgdpbnNwZWN0GCIgASgLMiUuc3RhcmRld192YWxsZXkubWNwLnYxLkluc3Bl",
+            "Y3RSZXF1ZXN0SABCCwoJb3BlcmF0aW9uIuoHChBDYXBhYmlsaXR5UmVzdWx0",
+            "Ei8KA3NheRgKIAEoCzIgLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5TYXlSZXN1",
+            "bHRIABIzCgVlbW90ZRgLIAEoCzIiLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5F",
+            "bW90ZVJlc3VsdEgAEjEKBGZhY2UYDCABKAsyIS5zdGFyZGV3X3ZhbGxleS5t",
+            "Y3AudjEuRmFjZVJlc3VsdEgAEjkKCG5hdmlnYXRlGA0gASgLMiUuc3RhcmRl",
+            "d192YWxsZXkubWNwLnYxLk5hdmlnYXRlUmVzdWx0SAASOQoIaW50ZXJhY3QY",
+            "DiABKAsyJS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuSW50ZXJhY3RSZXN1bHRI",
+            "ABI4Cgh1c2VfdG9vbBgPIAEoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5V",
+            "c2VUb29sUmVzdWx0SAASMwoFZXF1aXAYECABKAsyIi5zdGFyZGV3X3ZhbGxl",
+            "eS5tY3AudjEuRXF1aXBSZXN1bHRIABI6CglvcGVuX21lbnUYESABKAsyJS5z",
+            "dGFyZGV3X3ZhbGxleS5tY3AudjEuT3Blbk1lbnVSZXN1bHRIABI+CgthY3Rp",
+            "dmF0ZV91aRgSIAEoCzInLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5BY3RpdmF0",
+            "ZVVpUmVzdWx0SAASPAoKY2xvc2VfbWVudRgTIAEoCzImLnN0YXJkZXdfdmFs",
+            "bGV5Lm1jcC52MS5DbG9zZU1lbnVSZXN1bHRIABJVChd0cmFuc2Zlcl9pbnZl",
+            "bnRvcnlfaXRlbRgUIAEoCzIyLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5UcmFu",
+            "c2ZlckludmVudG9yeUl0ZW1SZXN1bHRIABJCCg1xdWVyeV9ydW50aW1lGB4g",
+            "ASgLMikuc3RhcmRld192YWxsZXkubWNwLnYxLlF1ZXJ5UnVudGltZVJlc3Vs",
+            "dEgAEj4KC3F1ZXJ5X3dvcmxkGB8gASgLMicuc3RhcmRld192YWxsZXkubWNw",
+            "LnYxLlF1ZXJ5V29ybGRSZXN1bHRIABJGCg9xdWVyeV9pbnZlbnRvcnkYICAB",
+            "KAsyKy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUXVlcnlJbnZlbnRvcnlSZXN1",
+            "bHRIABI4CghxdWVyeV91aRghIAEoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
+            "MS5RdWVyeVVpUmVzdWx0SAASNwoHaW5zcGVjdBgiIAEoCzIkLnN0YXJkZXdf",
+            "dmFsbGV5Lm1jcC52MS5JbnNwZWN0UmVzdWx0SABCCAoGcmVzdWx0Io4CCgxD",
+            "b21tYW5kRXZlbnQSEgoKY29tbWFuZF9pZBgBIAEoCRIyCgVzdGF0ZRgCIAEo",
+            "DjIjLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5Db21tYW5kU3RhdGUSDQoFcGhh",
+            "c2UYAyABKAkSHQoQcHJvZ3Jlc3NfcGVyY2VudBgEIAEoDUgBiAEBEjkKBnJl",
+            "c3VsdBgKIAEoCzInLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5DYXBhYmlsaXR5",
+            "UmVzdWx0SAASLQoFZXJyb3IYCyABKAsyHC5zdGFyZGV3X3ZhbGxleS5tY3Au",
+            "djEuRXJyb3JIAEIJCgdvdXRjb21lQhMKEV9wcm9ncmVzc19wZXJjZW50IjoK",
+            "FENhbmNlbENvbW1hbmRSZXF1ZXN0EhIKCmNvbW1hbmRfaWQYASABKAkSDgoG",
+            "cmVhc29uGAIgASgJIq8BChVDYW5jZWxDb21tYW5kUmVzcG9uc2USEgoKY29t",
+            "bWFuZF9pZBgBIAEoCRIQCghhY2NlcHRlZBgCIAEoCBI0CgdjdXJyZW50GAMg",
+            "ASgLMiMuc3RhcmRld192YWxsZXkubWNwLnYxLkNvbW1hbmRFdmVudBIwCgVl",
+            "cnJvchgEIAEoCzIcLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5FcnJvckgAiAEB",
+            "QggKBl9lcnJvciItChdHZXRDb21tYW5kU3RhdHVzUmVxdWVzdBISCgpjb21t",
+            "YW5kX2lkGAEgASgJIoQBChhHZXRDb21tYW5kU3RhdHVzUmVzcG9uc2USEgoK",
+            "Y29tbWFuZF9pZBgBIAEoCRINCgVmb3VuZBgCIAEoCBI5CgdjdXJyZW50GAMg",
+            "ASgLMiMuc3RhcmRld192YWxsZXkubWNwLnYxLkNvbW1hbmRFdmVudEgAiAEB",
+            "QgoKCF9jdXJyZW50KtUBCgxDb21tYW5kU3RhdGUSHQoZQ09NTUFORF9TVEFU",
+            "RV9VTlNQRUNJRklFRBAAEhoKFkNPTU1BTkRfU1RBVEVfQUNDRVBURUQQARIZ",
+            "ChVDT01NQU5EX1NUQVRFX1JVTk5JTkcQAhIbChdDT01NQU5EX1NUQVRFX1NV",
+            "Q0NFRURFRBADEhgKFENPTU1BTkRfU1RBVEVfRkFJTEVEEAQSGwoXQ09NTUFO",
+            "RF9TVEFURV9DQU5DRUxMRUQQBRIbChdDT01NQU5EX1NUQVRFX1RJTUVEX09V",
+            "VBAGQh+qAhxTdGFyZGV3VmFsbGV5TWNwLlByb3RvY29sLlYxYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.CommonReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.CommandState), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CommandRequest), global::StardewValleyMcp.Protocol.V1.CommandRequest.Parser, new[]{ "CommandId", "TimeoutMs", "Say", "Emote", "Face", "Navigate", "Interact", "UseTool", "Equip", "OpenMenu", "ActivateUi", "CloseMenu", "QueryRuntime", "QueryWorld", "QueryInventory", "QueryUi", "Inspect" }, new[]{ "Operation" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CapabilityResult), global::StardewValleyMcp.Protocol.V1.CapabilityResult.Parser, new[]{ "Say", "Emote", "Face", "Navigate", "Interact", "UseTool", "Equip", "OpenMenu", "ActivateUi", "CloseMenu", "QueryRuntime", "QueryWorld", "QueryInventory", "QueryUi", "Inspect" }, new[]{ "Result" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CommandRequest), global::StardewValleyMcp.Protocol.V1.CommandRequest.Parser, new[]{ "CommandId", "TimeoutMs", "Say", "Emote", "Face", "Navigate", "Interact", "UseTool", "Equip", "OpenMenu", "ActivateUi", "CloseMenu", "TransferInventoryItem", "QueryRuntime", "QueryWorld", "QueryInventory", "QueryUi", "Inspect" }, new[]{ "Operation" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CapabilityResult), global::StardewValleyMcp.Protocol.V1.CapabilityResult.Parser, new[]{ "Say", "Emote", "Face", "Navigate", "Interact", "UseTool", "Equip", "OpenMenu", "ActivateUi", "CloseMenu", "TransferInventoryItem", "QueryRuntime", "QueryWorld", "QueryInventory", "QueryUi", "Inspect" }, new[]{ "Result" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CommandEvent), global::StardewValleyMcp.Protocol.V1.CommandEvent.Parser, new[]{ "CommandId", "State", "Phase", "ProgressPercent", "Result", "Error" }, new[]{ "Outcome", "ProgressPercent" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CancelCommandRequest), global::StardewValleyMcp.Protocol.V1.CancelCommandRequest.Parser, new[]{ "CommandId", "Reason" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CancelCommandResponse), global::StardewValleyMcp.Protocol.V1.CancelCommandResponse.Parser, new[]{ "CommandId", "Accepted", "Current", "Error" }, new[]{ "Error" }, null, null, null),
@@ -186,6 +189,9 @@ namespace StardewValleyMcp.Protocol.V1 {
           break;
         case OperationOneofCase.CloseMenu:
           CloseMenu = other.CloseMenu.Clone();
+          break;
+        case OperationOneofCase.TransferInventoryItem:
+          TransferInventoryItem = other.TransferInventoryItem.Clone();
           break;
         case OperationOneofCase.QueryRuntime:
           QueryRuntime = other.QueryRuntime.Clone();
@@ -363,6 +369,18 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "transfer_inventory_item" field.</summary>
+    public const int TransferInventoryItemFieldNumber = 20;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest TransferInventoryItem {
+      get { return operationCase_ == OperationOneofCase.TransferInventoryItem ? (global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest) operation_ : null; }
+      set {
+        operation_ = value;
+        operationCase_ = value == null ? OperationOneofCase.None : OperationOneofCase.TransferInventoryItem;
+      }
+    }
+
     /// <summary>Field number for the "query_runtime" field.</summary>
     public const int QueryRuntimeFieldNumber = 30;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -437,6 +455,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       OpenMenu = 17,
       ActivateUi = 18,
       CloseMenu = 19,
+      TransferInventoryItem = 20,
       QueryRuntime = 30,
       QueryWorld = 31,
       QueryInventory = 32,
@@ -484,6 +503,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (!object.Equals(OpenMenu, other.OpenMenu)) return false;
       if (!object.Equals(ActivateUi, other.ActivateUi)) return false;
       if (!object.Equals(CloseMenu, other.CloseMenu)) return false;
+      if (!object.Equals(TransferInventoryItem, other.TransferInventoryItem)) return false;
       if (!object.Equals(QueryRuntime, other.QueryRuntime)) return false;
       if (!object.Equals(QueryWorld, other.QueryWorld)) return false;
       if (!object.Equals(QueryInventory, other.QueryInventory)) return false;
@@ -509,6 +529,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (operationCase_ == OperationOneofCase.OpenMenu) hash ^= OpenMenu.GetHashCode();
       if (operationCase_ == OperationOneofCase.ActivateUi) hash ^= ActivateUi.GetHashCode();
       if (operationCase_ == OperationOneofCase.CloseMenu) hash ^= CloseMenu.GetHashCode();
+      if (operationCase_ == OperationOneofCase.TransferInventoryItem) hash ^= TransferInventoryItem.GetHashCode();
       if (operationCase_ == OperationOneofCase.QueryRuntime) hash ^= QueryRuntime.GetHashCode();
       if (operationCase_ == OperationOneofCase.QueryWorld) hash ^= QueryWorld.GetHashCode();
       if (operationCase_ == OperationOneofCase.QueryInventory) hash ^= QueryInventory.GetHashCode();
@@ -580,6 +601,10 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (operationCase_ == OperationOneofCase.CloseMenu) {
         output.WriteRawTag(154, 1);
         output.WriteMessage(CloseMenu);
+      }
+      if (operationCase_ == OperationOneofCase.TransferInventoryItem) {
+        output.WriteRawTag(162, 1);
+        output.WriteMessage(TransferInventoryItem);
       }
       if (operationCase_ == OperationOneofCase.QueryRuntime) {
         output.WriteRawTag(242, 1);
@@ -659,6 +684,10 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(154, 1);
         output.WriteMessage(CloseMenu);
       }
+      if (operationCase_ == OperationOneofCase.TransferInventoryItem) {
+        output.WriteRawTag(162, 1);
+        output.WriteMessage(TransferInventoryItem);
+      }
       if (operationCase_ == OperationOneofCase.QueryRuntime) {
         output.WriteRawTag(242, 1);
         output.WriteMessage(QueryRuntime);
@@ -724,6 +753,9 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (operationCase_ == OperationOneofCase.CloseMenu) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(CloseMenu);
+      }
+      if (operationCase_ == OperationOneofCase.TransferInventoryItem) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(TransferInventoryItem);
       }
       if (operationCase_ == OperationOneofCase.QueryRuntime) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(QueryRuntime);
@@ -818,6 +850,12 @@ namespace StardewValleyMcp.Protocol.V1 {
             CloseMenu = new global::StardewValleyMcp.Protocol.V1.CloseMenuRequest();
           }
           CloseMenu.MergeFrom(other.CloseMenu);
+          break;
+        case OperationOneofCase.TransferInventoryItem:
+          if (TransferInventoryItem == null) {
+            TransferInventoryItem = new global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest();
+          }
+          TransferInventoryItem.MergeFrom(other.TransferInventoryItem);
           break;
         case OperationOneofCase.QueryRuntime:
           if (QueryRuntime == null) {
@@ -966,6 +1004,15 @@ namespace StardewValleyMcp.Protocol.V1 {
             }
             input.ReadMessage(subBuilder);
             CloseMenu = subBuilder;
+            break;
+          }
+          case 162: {
+            global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest();
+            if (operationCase_ == OperationOneofCase.TransferInventoryItem) {
+              subBuilder.MergeFrom(TransferInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            TransferInventoryItem = subBuilder;
             break;
           }
           case 242: {
@@ -1130,6 +1177,15 @@ namespace StardewValleyMcp.Protocol.V1 {
             CloseMenu = subBuilder;
             break;
           }
+          case 162: {
+            global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest();
+            if (operationCase_ == OperationOneofCase.TransferInventoryItem) {
+              subBuilder.MergeFrom(TransferInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            TransferInventoryItem = subBuilder;
+            break;
+          }
           case 242: {
             global::StardewValleyMcp.Protocol.V1.QueryRuntimeRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.QueryRuntimeRequest();
             if (operationCase_ == OperationOneofCase.QueryRuntime) {
@@ -1247,6 +1303,9 @@ namespace StardewValleyMcp.Protocol.V1 {
           break;
         case ResultOneofCase.CloseMenu:
           CloseMenu = other.CloseMenu.Clone();
+          break;
+        case ResultOneofCase.TransferInventoryItem:
+          TransferInventoryItem = other.TransferInventoryItem.Clone();
           break;
         case ResultOneofCase.QueryRuntime:
           QueryRuntime = other.QueryRuntime.Clone();
@@ -1394,6 +1453,18 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "transfer_inventory_item" field.</summary>
+    public const int TransferInventoryItemFieldNumber = 20;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult TransferInventoryItem {
+      get { return resultCase_ == ResultOneofCase.TransferInventoryItem ? (global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult) result_ : null; }
+      set {
+        result_ = value;
+        resultCase_ = value == null ? ResultOneofCase.None : ResultOneofCase.TransferInventoryItem;
+      }
+    }
+
     /// <summary>Field number for the "query_runtime" field.</summary>
     public const int QueryRuntimeFieldNumber = 30;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1468,6 +1539,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       OpenMenu = 17,
       ActivateUi = 18,
       CloseMenu = 19,
+      TransferInventoryItem = 20,
       QueryRuntime = 30,
       QueryWorld = 31,
       QueryInventory = 32,
@@ -1513,6 +1585,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (!object.Equals(OpenMenu, other.OpenMenu)) return false;
       if (!object.Equals(ActivateUi, other.ActivateUi)) return false;
       if (!object.Equals(CloseMenu, other.CloseMenu)) return false;
+      if (!object.Equals(TransferInventoryItem, other.TransferInventoryItem)) return false;
       if (!object.Equals(QueryRuntime, other.QueryRuntime)) return false;
       if (!object.Equals(QueryWorld, other.QueryWorld)) return false;
       if (!object.Equals(QueryInventory, other.QueryInventory)) return false;
@@ -1536,6 +1609,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (resultCase_ == ResultOneofCase.OpenMenu) hash ^= OpenMenu.GetHashCode();
       if (resultCase_ == ResultOneofCase.ActivateUi) hash ^= ActivateUi.GetHashCode();
       if (resultCase_ == ResultOneofCase.CloseMenu) hash ^= CloseMenu.GetHashCode();
+      if (resultCase_ == ResultOneofCase.TransferInventoryItem) hash ^= TransferInventoryItem.GetHashCode();
       if (resultCase_ == ResultOneofCase.QueryRuntime) hash ^= QueryRuntime.GetHashCode();
       if (resultCase_ == ResultOneofCase.QueryWorld) hash ^= QueryWorld.GetHashCode();
       if (resultCase_ == ResultOneofCase.QueryInventory) hash ^= QueryInventory.GetHashCode();
@@ -1599,6 +1673,10 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (resultCase_ == ResultOneofCase.CloseMenu) {
         output.WriteRawTag(154, 1);
         output.WriteMessage(CloseMenu);
+      }
+      if (resultCase_ == ResultOneofCase.TransferInventoryItem) {
+        output.WriteRawTag(162, 1);
+        output.WriteMessage(TransferInventoryItem);
       }
       if (resultCase_ == ResultOneofCase.QueryRuntime) {
         output.WriteRawTag(242, 1);
@@ -1670,6 +1748,10 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(154, 1);
         output.WriteMessage(CloseMenu);
       }
+      if (resultCase_ == ResultOneofCase.TransferInventoryItem) {
+        output.WriteRawTag(162, 1);
+        output.WriteMessage(TransferInventoryItem);
+      }
       if (resultCase_ == ResultOneofCase.QueryRuntime) {
         output.WriteRawTag(242, 1);
         output.WriteMessage(QueryRuntime);
@@ -1729,6 +1811,9 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (resultCase_ == ResultOneofCase.CloseMenu) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(CloseMenu);
+      }
+      if (resultCase_ == ResultOneofCase.TransferInventoryItem) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(TransferInventoryItem);
       }
       if (resultCase_ == ResultOneofCase.QueryRuntime) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(QueryRuntime);
@@ -1817,6 +1902,12 @@ namespace StardewValleyMcp.Protocol.V1 {
             CloseMenu = new global::StardewValleyMcp.Protocol.V1.CloseMenuResult();
           }
           CloseMenu.MergeFrom(other.CloseMenu);
+          break;
+        case ResultOneofCase.TransferInventoryItem:
+          if (TransferInventoryItem == null) {
+            TransferInventoryItem = new global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult();
+          }
+          TransferInventoryItem.MergeFrom(other.TransferInventoryItem);
           break;
         case ResultOneofCase.QueryRuntime:
           if (QueryRuntime == null) {
@@ -1957,6 +2048,15 @@ namespace StardewValleyMcp.Protocol.V1 {
             }
             input.ReadMessage(subBuilder);
             CloseMenu = subBuilder;
+            break;
+          }
+          case 162: {
+            global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult subBuilder = new global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult();
+            if (resultCase_ == ResultOneofCase.TransferInventoryItem) {
+              subBuilder.MergeFrom(TransferInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            TransferInventoryItem = subBuilder;
             break;
           }
           case 242: {
@@ -2111,6 +2211,15 @@ namespace StardewValleyMcp.Protocol.V1 {
             }
             input.ReadMessage(subBuilder);
             CloseMenu = subBuilder;
+            break;
+          }
+          case 162: {
+            global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult subBuilder = new global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult();
+            if (resultCase_ == ResultOneofCase.TransferInventoryItem) {
+              subBuilder.MergeFrom(TransferInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            TransferInventoryItem = subBuilder;
             break;
           }
           case 242: {

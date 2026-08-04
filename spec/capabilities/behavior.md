@@ -23,7 +23,7 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 
 ### Inventory Revision
 
-以下任一内容变化都必须生成新 `inventory_revision`：Slot 数量、Slot 中的物品身份、堆叠、品质、工具等级或当前选中 Slot。所有 `QueryInventoryResult.snapshot.slots[].item.ref` 都是可用于 `inspect` 的 `INVENTORY_ITEM` Ref，包括玩家背包与可读容器中的非空 Slot。只有由 `player_inventory` 选择器（或其缺省等价形式）生成、且调用时仍匹配当前玩家背包与 `inventory_revision` 的 Item Ref 可以用于 `equip`；容器库存 Item Ref 不得用于 `equip`。Machine、Loose Item 和 UI 中嵌套的 `ItemFact` 可以没有 Ref；即使存在，是否可用于 `inspect` 仍由服务端 Ref Binding 决定，且不得据此获得 `equip` 权限。
+以下任一内容变化都必须生成新 `inventory_revision`：Slot 数量、Slot 中的物品身份、堆叠、品质、工具等级或当前选中 Slot。所有 `QueryInventoryResult.snapshot.slots[].item.ref` 都是可用于 `inspect` 的 `INVENTORY_ITEM` Ref，包括玩家背包与可读容器中的非空 Slot。只有由 `player_inventory` 选择器（或其缺省等价形式）生成、且调用时仍匹配当前玩家背包与 `inventory_revision` 的 Item Ref 可以用于 `equip`；容器库存 Item Ref 不得用于 `equip`。当前受支持箱子菜单两侧的 Item Ref 可以按下述 `transfer_inventory_item` 规则用于单次转移。Machine、Loose Item 和 UI 中嵌套的 `ItemFact` 可以没有 Ref；即使存在，是否可用于 `inspect` 仍由服务端 Ref Binding 决定，且不得据此获得变更权限。
 
 ### World Revision 与普通 Ref
 
@@ -128,6 +128,15 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 - 使用 `item_ref` 时必须同时提供产生该 Ref 的当前 `inventory_revision`；Ref 必须来自玩家背包 Snapshot，容器库存 Item Ref 即使可被 `inspect` 解析也必须以 `INVALID_ARGUMENT` 拒绝。
 - 使用 Slot 时如果提供 Revision，也必须匹配当前背包。
 - 成功要求当前选中 Slot 和 Item 与 Result 一致；已经装备目标时返回 `changed=false`。
+
+### `transfer_inventory_item`
+
+- 请求必须提供非 `UNSPECIFIED` 的方向、源 `item_ref`、`1..2147483647` 的数量、当前 `ui_revision`，以及玩家与容器两侧的当前 Inventory Revision。方向必须与 Item Ref 的玩家或容器来源一致。
+- 只允许当前仍打开且由 `query_ui` 完整支持的精确原版普通 Chest、Big Chest 或内置 Fridge `ItemGrabMenu`；菜单对象、当前玩家、Location、父 Chest attachment、Container Ref、双方 backing/capacity、Chest Mutex 持有权和空 `heldItem` 必须在预检与提交前都成立。其他来源或特殊物品以明确错误拒绝。
+- 实现必须分两个 Tick 完成预检与提交；提交前重新验证 UI Revision、双方 Inventory Revision、源对象身份、Slot 与 Stack。取消只能在同步内存提交开始前接受。
+- 调用方不指定目标 Slot。实现必须按目标 Slot 从低到高先填满所有兼容的非满堆叠，再依次使用空 Slot；只有目标能够完整容纳请求数量时才允许提交。容量不足返回 `NOT_READY` 并提示减少数量或整理目标库存后重新查询，双方保持不变，不允许部分成功、地面掉落或把余量留在 `heldItem`。
+- 提交不得模拟坐标、按键或左右键，也不得调用菜单 click/callback。成功必须返回实际转移数量、原源 Slot、源剩余数量和双方新 Revision；实际数量必须等于请求数量，双方完整库存的源减少、目标增加与总数量守恒必须通过后置验证。成功后旧 Item Ref 不代表新位置，调用方应重新查询取得新 Ref。
+- Recipe、Stardrop、矮人语翻译指南及其他会被原生 ItemGrabMenu 消费或触发特殊效果的物品必须拒绝。数量超过源 Stack 返回 `OUT_OF_RANGE`；任一 Revision、Ref 或对象身份变化返回 `STALE_REF`；无菜单、不支持菜单、`heldItem` 非空、Mutex 未就绪或容量不足返回 `NOT_READY`；不可读事实返回 `INTERNAL`；同步提交或后置条件失败必须先回滚本 Tick 的库存内容变更，再返回 `EXECUTION_FAILED`。罕见的“提交后投影失败”已经观察过空源 Slot 时，旧源 Item Ref 可以按单调生命周期变为 stale，即使原物品对象与堆叠已回滚；调用方必须重新查询，不得要求旧 Ref 复活。
 
 ### `open_menu`
 

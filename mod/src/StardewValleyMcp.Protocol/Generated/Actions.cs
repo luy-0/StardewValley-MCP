@@ -69,29 +69,43 @@ namespace StardewValleyMcp.Protocol.V1 {
             "EmludmVudG9yeV9yZXZpc2lvbhgDIAEoCUgBiAEBQgoKCHNlbGVjdG9yQhUK",
             "E19pbnZlbnRvcnlfcmV2aXNpb24iYQoLRXF1aXBSZXN1bHQSEgoKc2xvdF9p",
             "bmRleBgBIAEoDRItCgRpdGVtGAIgASgLMh8uc3RhcmRld192YWxsZXkubWNw",
-            "LnYxLkl0ZW1GYWN0Eg8KB2NoYW5nZWQYAyABKAgiQAoPT3Blbk1lbnVSZXF1",
-            "ZXN0Ei0KBG1lbnUYASABKA4yHy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuTWVu",
-            "dUtpbmQiSwoOT3Blbk1lbnVSZXN1bHQSOQoKdHJhbnNpdGlvbhgBIAEoCzIl",
-            "LnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5NZW51VHJhbnNpdGlvbiJZChFBY3Rp",
-            "dmF0ZVVpUmVxdWVzdBIvCgtlbGVtZW50X3JlZhgBIAEoCzIaLnN0YXJkZXdf",
-            "dmFsbGV5Lm1jcC52MS5SZWYSEwoLdWlfcmV2aXNpb24YAiABKAkihAEKEEFj",
-            "dGl2YXRlVWlSZXN1bHQSLwoLZWxlbWVudF9yZWYYASABKAsyGi5zdGFyZGV3",
-            "X3ZhbGxleS5tY3AudjEuUmVmEjkKCnRyYW5zaXRpb24YAiABKAsyJS5zdGFy",
-            "ZGV3X3ZhbGxleS5tY3AudjEuTWVudVRyYW5zaXRpb25KBAgDEAQiEgoQQ2xv",
-            "c2VNZW51UmVxdWVzdCJkCg9DbG9zZU1lbnVSZXN1bHQSOQoKdHJhbnNpdGlv",
-            "bhgBIAEoCzIlLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5NZW51VHJhbnNpdGlv",
-            "bhIWCg5hbHJlYWR5X2Nsb3NlZBgCIAEoCCreAQoJRW1vdGVLaW5kEhoKFkVN",
-            "T1RFX0tJTkRfVU5TUEVDSUZJRUQQABIUChBFTU9URV9LSU5EX0hBUFBZEAES",
-            "EgoORU1PVEVfS0lORF9TQUQQAhIUChBFTU9URV9LSU5EX0hFQVJUEAMSGgoW",
-            "RU1PVEVfS0lORF9FWENMQU1BVElPThAEEhcKE0VNT1RFX0tJTkRfUVVFU1RJ",
-            "T04QBRIUChBFTU9URV9LSU5EX0FOR1JZEAYSFAoQRU1PVEVfS0lORF9TTEVF",
-            "UBAHEhQKEEVNT1RFX0tJTkRfTVVTSUMQCCpeCgtBcnJpdmFsTW9kZRIcChhB",
-            "UlJJVkFMX01PREVfVU5TUEVDSUZJRUQQABIWChJBUlJJVkFMX01PREVfRVhB",
-            "Q1QQARIZChVBUlJJVkFMX01PREVfQURKQUNFTlQQAkIfqgIcU3RhcmRld1Zh",
-            "bGxleU1jcC5Qcm90b2NvbC5WMWIGcHJvdG8z"));
+            "LnYxLkl0ZW1GYWN0Eg8KB2NoYW5nZWQYAyABKAgiggIKHFRyYW5zZmVySW52",
+            "ZW50b3J5SXRlbVJlcXVlc3QSRAoJZGlyZWN0aW9uGAEgASgOMjEuc3RhcmRl",
+            "d192YWxsZXkubWNwLnYxLkludmVudG9yeVRyYW5zZmVyRGlyZWN0aW9uEiwK",
+            "CGl0ZW1fcmVmGAIgASgLMhouc3RhcmRld192YWxsZXkubWNwLnYxLlJlZhIQ",
+            "CghxdWFudGl0eRgDIAEoDRITCgt1aV9yZXZpc2lvbhgEIAEoCRIhChlwbGF5",
+            "ZXJfaW52ZW50b3J5X3JldmlzaW9uGAUgASgJEiQKHGNvbnRhaW5lcl9pbnZl",
+            "bnRvcnlfcmV2aXNpb24YBiABKAkiwgEKG1RyYW5zZmVySW52ZW50b3J5SXRl",
+            "bVJlc3VsdBIcChR0cmFuc2ZlcnJlZF9xdWFudGl0eRgBIAEoDRIZChFzb3Vy",
+            "Y2Vfc2xvdF9pbmRleBgCIAEoDRIhChlzb3VyY2VfcmVtYWluaW5nX3F1YW50",
+            "aXR5GAMgASgNEiEKGXBsYXllcl9pbnZlbnRvcnlfcmV2aXNpb24YBCABKAkS",
+            "JAocY29udGFpbmVyX2ludmVudG9yeV9yZXZpc2lvbhgFIAEoCSJACg9PcGVu",
+            "TWVudVJlcXVlc3QSLQoEbWVudRgBIAEoDjIfLnN0YXJkZXdfdmFsbGV5Lm1j",
+            "cC52MS5NZW51S2luZCJLCg5PcGVuTWVudVJlc3VsdBI5Cgp0cmFuc2l0aW9u",
+            "GAEgASgLMiUuc3RhcmRld192YWxsZXkubWNwLnYxLk1lbnVUcmFuc2l0aW9u",
+            "IlkKEUFjdGl2YXRlVWlSZXF1ZXN0Ei8KC2VsZW1lbnRfcmVmGAEgASgLMhou",
+            "c3RhcmRld192YWxsZXkubWNwLnYxLlJlZhITCgt1aV9yZXZpc2lvbhgCIAEo",
+            "CSKEAQoQQWN0aXZhdGVVaVJlc3VsdBIvCgtlbGVtZW50X3JlZhgBIAEoCzIa",
+            "LnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWYSOQoKdHJhbnNpdGlvbhgCIAEo",
+            "CzIlLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5NZW51VHJhbnNpdGlvbkoECAMQ",
+            "BCISChBDbG9zZU1lbnVSZXF1ZXN0ImQKD0Nsb3NlTWVudVJlc3VsdBI5Cgp0",
+            "cmFuc2l0aW9uGAEgASgLMiUuc3RhcmRld192YWxsZXkubWNwLnYxLk1lbnVU",
+            "cmFuc2l0aW9uEhYKDmFscmVhZHlfY2xvc2VkGAIgASgIKt4BCglFbW90ZUtp",
+            "bmQSGgoWRU1PVEVfS0lORF9VTlNQRUNJRklFRBAAEhQKEEVNT1RFX0tJTkRf",
+            "SEFQUFkQARISCg5FTU9URV9LSU5EX1NBRBACEhQKEEVNT1RFX0tJTkRfSEVB",
+            "UlQQAxIaChZFTU9URV9LSU5EX0VYQ0xBTUFUSU9OEAQSFwoTRU1PVEVfS0lO",
+            "RF9RVUVTVElPThAFEhQKEEVNT1RFX0tJTkRfQU5HUlkQBhIUChBFTU9URV9L",
+            "SU5EX1NMRUVQEAcSFAoQRU1PVEVfS0lORF9NVVNJQxAIKl4KC0Fycml2YWxN",
+            "b2RlEhwKGEFSUklWQUxfTU9ERV9VTlNQRUNJRklFRBAAEhYKEkFSUklWQUxf",
+            "TU9ERV9FWEFDVBABEhkKFUFSUklWQUxfTU9ERV9BREpBQ0VOVBACKrYBChpJ",
+            "bnZlbnRvcnlUcmFuc2ZlckRpcmVjdGlvbhIsCihJTlZFTlRPUllfVFJBTlNG",
+            "RVJfRElSRUNUSU9OX1VOU1BFQ0lGSUVEEAASNAowSU5WRU5UT1JZX1RSQU5T",
+            "RkVSX0RJUkVDVElPTl9QTEFZRVJfVE9fQ09OVEFJTkVSEAESNAowSU5WRU5U",
+            "T1JZX1RSQU5TRkVSX0RJUkVDVElPTl9DT05UQUlORVJfVE9fUExBWUVSEAJC",
+            "H6oCHFN0YXJkZXdWYWxsZXlNY3AuUHJvdG9jb2wuVjFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::StardewValleyMcp.Protocol.V1.CommonReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.RefsReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.EmoteKind), typeof(global::StardewValleyMcp.Protocol.V1.ArrivalMode), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.EmoteKind), typeof(global::StardewValleyMcp.Protocol.V1.ArrivalMode), typeof(global::StardewValleyMcp.Protocol.V1.InventoryTransferDirection), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.SayRequest), global::StardewValleyMcp.Protocol.V1.SayRequest.Parser, new[]{ "Content" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.SayResult), global::StardewValleyMcp.Protocol.V1.SayResult.Parser, new[]{ "ContentLength" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.EmoteRequest), global::StardewValleyMcp.Protocol.V1.EmoteRequest.Parser, new[]{ "Emote" }, null, null, null, null),
@@ -106,6 +120,8 @@ namespace StardewValleyMcp.Protocol.V1 {
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.UseToolResult), global::StardewValleyMcp.Protocol.V1.UseToolResult.Parser, new[]{ "Target", "ToolQualifiedItemId", "ChargeLevel", "Energy", "Execution" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.EquipRequest), global::StardewValleyMcp.Protocol.V1.EquipRequest.Parser, new[]{ "SlotIndex", "ItemRef", "InventoryRevision" }, new[]{ "Selector", "InventoryRevision" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.EquipResult), global::StardewValleyMcp.Protocol.V1.EquipResult.Parser, new[]{ "SlotIndex", "Item", "Changed" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest), global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest.Parser, new[]{ "Direction", "ItemRef", "Quantity", "UiRevision", "PlayerInventoryRevision", "ContainerInventoryRevision" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult), global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult.Parser, new[]{ "TransferredQuantity", "SourceSlotIndex", "SourceRemainingQuantity", "PlayerInventoryRevision", "ContainerInventoryRevision" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.OpenMenuRequest), global::StardewValleyMcp.Protocol.V1.OpenMenuRequest.Parser, new[]{ "Menu" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.OpenMenuResult), global::StardewValleyMcp.Protocol.V1.OpenMenuResult.Parser, new[]{ "Transition" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.ActivateUiRequest), global::StardewValleyMcp.Protocol.V1.ActivateUiRequest.Parser, new[]{ "ElementRef", "UiRevision" }, null, null, null, null),
@@ -134,6 +150,12 @@ namespace StardewValleyMcp.Protocol.V1 {
     [pbr::OriginalName("ARRIVAL_MODE_UNSPECIFIED")] Unspecified = 0,
     [pbr::OriginalName("ARRIVAL_MODE_EXACT")] Exact = 1,
     [pbr::OriginalName("ARRIVAL_MODE_ADJACENT")] Adjacent = 2,
+  }
+
+  public enum InventoryTransferDirection {
+    [pbr::OriginalName("INVENTORY_TRANSFER_DIRECTION_UNSPECIFIED")] Unspecified = 0,
+    [pbr::OriginalName("INVENTORY_TRANSFER_DIRECTION_PLAYER_TO_CONTAINER")] PlayerToContainer = 1,
+    [pbr::OriginalName("INVENTORY_TRANSFER_DIRECTION_CONTAINER_TO_PLAYER")] ContainerToPlayer = 2,
   }
 
   #endregion
@@ -4109,6 +4131,744 @@ namespace StardewValleyMcp.Protocol.V1 {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class TransferInventoryItemRequest : pb::IMessage<TransferInventoryItemRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<TransferInventoryItemRequest> _parser = new pb::MessageParser<TransferInventoryItemRequest>(() => new TransferInventoryItemRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<TransferInventoryItemRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[14]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TransferInventoryItemRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TransferInventoryItemRequest(TransferInventoryItemRequest other) : this() {
+      direction_ = other.direction_;
+      itemRef_ = other.itemRef_ != null ? other.itemRef_.Clone() : null;
+      quantity_ = other.quantity_;
+      uiRevision_ = other.uiRevision_;
+      playerInventoryRevision_ = other.playerInventoryRevision_;
+      containerInventoryRevision_ = other.containerInventoryRevision_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TransferInventoryItemRequest Clone() {
+      return new TransferInventoryItemRequest(this);
+    }
+
+    /// <summary>Field number for the "direction" field.</summary>
+    public const int DirectionFieldNumber = 1;
+    private global::StardewValleyMcp.Protocol.V1.InventoryTransferDirection direction_ = global::StardewValleyMcp.Protocol.V1.InventoryTransferDirection.Unspecified;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.InventoryTransferDirection Direction {
+      get { return direction_; }
+      set {
+        direction_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "item_ref" field.</summary>
+    public const int ItemRefFieldNumber = 2;
+    private global::StardewValleyMcp.Protocol.V1.Ref itemRef_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.Ref ItemRef {
+      get { return itemRef_; }
+      set {
+        itemRef_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "quantity" field.</summary>
+    public const int QuantityFieldNumber = 3;
+    private uint quantity_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint Quantity {
+      get { return quantity_; }
+      set {
+        quantity_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "ui_revision" field.</summary>
+    public const int UiRevisionFieldNumber = 4;
+    private string uiRevision_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string UiRevision {
+      get { return uiRevision_; }
+      set {
+        uiRevision_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "player_inventory_revision" field.</summary>
+    public const int PlayerInventoryRevisionFieldNumber = 5;
+    private string playerInventoryRevision_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string PlayerInventoryRevision {
+      get { return playerInventoryRevision_; }
+      set {
+        playerInventoryRevision_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "container_inventory_revision" field.</summary>
+    public const int ContainerInventoryRevisionFieldNumber = 6;
+    private string containerInventoryRevision_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ContainerInventoryRevision {
+      get { return containerInventoryRevision_; }
+      set {
+        containerInventoryRevision_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as TransferInventoryItemRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(TransferInventoryItemRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Direction != other.Direction) return false;
+      if (!object.Equals(ItemRef, other.ItemRef)) return false;
+      if (Quantity != other.Quantity) return false;
+      if (UiRevision != other.UiRevision) return false;
+      if (PlayerInventoryRevision != other.PlayerInventoryRevision) return false;
+      if (ContainerInventoryRevision != other.ContainerInventoryRevision) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Direction != global::StardewValleyMcp.Protocol.V1.InventoryTransferDirection.Unspecified) hash ^= Direction.GetHashCode();
+      if (itemRef_ != null) hash ^= ItemRef.GetHashCode();
+      if (Quantity != 0) hash ^= Quantity.GetHashCode();
+      if (UiRevision.Length != 0) hash ^= UiRevision.GetHashCode();
+      if (PlayerInventoryRevision.Length != 0) hash ^= PlayerInventoryRevision.GetHashCode();
+      if (ContainerInventoryRevision.Length != 0) hash ^= ContainerInventoryRevision.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Direction != global::StardewValleyMcp.Protocol.V1.InventoryTransferDirection.Unspecified) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) Direction);
+      }
+      if (itemRef_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(ItemRef);
+      }
+      if (Quantity != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(Quantity);
+      }
+      if (UiRevision.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(UiRevision);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(PlayerInventoryRevision);
+      }
+      if (ContainerInventoryRevision.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(ContainerInventoryRevision);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Direction != global::StardewValleyMcp.Protocol.V1.InventoryTransferDirection.Unspecified) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) Direction);
+      }
+      if (itemRef_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(ItemRef);
+      }
+      if (Quantity != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(Quantity);
+      }
+      if (UiRevision.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(UiRevision);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(PlayerInventoryRevision);
+      }
+      if (ContainerInventoryRevision.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(ContainerInventoryRevision);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Direction != global::StardewValleyMcp.Protocol.V1.InventoryTransferDirection.Unspecified) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Direction);
+      }
+      if (itemRef_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(ItemRef);
+      }
+      if (Quantity != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Quantity);
+      }
+      if (UiRevision.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(UiRevision);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PlayerInventoryRevision);
+      }
+      if (ContainerInventoryRevision.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ContainerInventoryRevision);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(TransferInventoryItemRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Direction != global::StardewValleyMcp.Protocol.V1.InventoryTransferDirection.Unspecified) {
+        Direction = other.Direction;
+      }
+      if (other.itemRef_ != null) {
+        if (itemRef_ == null) {
+          ItemRef = new global::StardewValleyMcp.Protocol.V1.Ref();
+        }
+        ItemRef.MergeFrom(other.ItemRef);
+      }
+      if (other.Quantity != 0) {
+        Quantity = other.Quantity;
+      }
+      if (other.UiRevision.Length != 0) {
+        UiRevision = other.UiRevision;
+      }
+      if (other.PlayerInventoryRevision.Length != 0) {
+        PlayerInventoryRevision = other.PlayerInventoryRevision;
+      }
+      if (other.ContainerInventoryRevision.Length != 0) {
+        ContainerInventoryRevision = other.ContainerInventoryRevision;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Direction = (global::StardewValleyMcp.Protocol.V1.InventoryTransferDirection) input.ReadEnum();
+            break;
+          }
+          case 18: {
+            if (itemRef_ == null) {
+              ItemRef = new global::StardewValleyMcp.Protocol.V1.Ref();
+            }
+            input.ReadMessage(ItemRef);
+            break;
+          }
+          case 24: {
+            Quantity = input.ReadUInt32();
+            break;
+          }
+          case 34: {
+            UiRevision = input.ReadString();
+            break;
+          }
+          case 42: {
+            PlayerInventoryRevision = input.ReadString();
+            break;
+          }
+          case 50: {
+            ContainerInventoryRevision = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Direction = (global::StardewValleyMcp.Protocol.V1.InventoryTransferDirection) input.ReadEnum();
+            break;
+          }
+          case 18: {
+            if (itemRef_ == null) {
+              ItemRef = new global::StardewValleyMcp.Protocol.V1.Ref();
+            }
+            input.ReadMessage(ItemRef);
+            break;
+          }
+          case 24: {
+            Quantity = input.ReadUInt32();
+            break;
+          }
+          case 34: {
+            UiRevision = input.ReadString();
+            break;
+          }
+          case 42: {
+            PlayerInventoryRevision = input.ReadString();
+            break;
+          }
+          case 50: {
+            ContainerInventoryRevision = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class TransferInventoryItemResult : pb::IMessage<TransferInventoryItemResult>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<TransferInventoryItemResult> _parser = new pb::MessageParser<TransferInventoryItemResult>(() => new TransferInventoryItemResult());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<TransferInventoryItemResult> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[15]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TransferInventoryItemResult() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TransferInventoryItemResult(TransferInventoryItemResult other) : this() {
+      transferredQuantity_ = other.transferredQuantity_;
+      sourceSlotIndex_ = other.sourceSlotIndex_;
+      sourceRemainingQuantity_ = other.sourceRemainingQuantity_;
+      playerInventoryRevision_ = other.playerInventoryRevision_;
+      containerInventoryRevision_ = other.containerInventoryRevision_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TransferInventoryItemResult Clone() {
+      return new TransferInventoryItemResult(this);
+    }
+
+    /// <summary>Field number for the "transferred_quantity" field.</summary>
+    public const int TransferredQuantityFieldNumber = 1;
+    private uint transferredQuantity_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint TransferredQuantity {
+      get { return transferredQuantity_; }
+      set {
+        transferredQuantity_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "source_slot_index" field.</summary>
+    public const int SourceSlotIndexFieldNumber = 2;
+    private uint sourceSlotIndex_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint SourceSlotIndex {
+      get { return sourceSlotIndex_; }
+      set {
+        sourceSlotIndex_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "source_remaining_quantity" field.</summary>
+    public const int SourceRemainingQuantityFieldNumber = 3;
+    private uint sourceRemainingQuantity_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint SourceRemainingQuantity {
+      get { return sourceRemainingQuantity_; }
+      set {
+        sourceRemainingQuantity_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "player_inventory_revision" field.</summary>
+    public const int PlayerInventoryRevisionFieldNumber = 4;
+    private string playerInventoryRevision_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string PlayerInventoryRevision {
+      get { return playerInventoryRevision_; }
+      set {
+        playerInventoryRevision_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "container_inventory_revision" field.</summary>
+    public const int ContainerInventoryRevisionFieldNumber = 5;
+    private string containerInventoryRevision_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ContainerInventoryRevision {
+      get { return containerInventoryRevision_; }
+      set {
+        containerInventoryRevision_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as TransferInventoryItemResult);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(TransferInventoryItemResult other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (TransferredQuantity != other.TransferredQuantity) return false;
+      if (SourceSlotIndex != other.SourceSlotIndex) return false;
+      if (SourceRemainingQuantity != other.SourceRemainingQuantity) return false;
+      if (PlayerInventoryRevision != other.PlayerInventoryRevision) return false;
+      if (ContainerInventoryRevision != other.ContainerInventoryRevision) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (TransferredQuantity != 0) hash ^= TransferredQuantity.GetHashCode();
+      if (SourceSlotIndex != 0) hash ^= SourceSlotIndex.GetHashCode();
+      if (SourceRemainingQuantity != 0) hash ^= SourceRemainingQuantity.GetHashCode();
+      if (PlayerInventoryRevision.Length != 0) hash ^= PlayerInventoryRevision.GetHashCode();
+      if (ContainerInventoryRevision.Length != 0) hash ^= ContainerInventoryRevision.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (TransferredQuantity != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(TransferredQuantity);
+      }
+      if (SourceSlotIndex != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(SourceSlotIndex);
+      }
+      if (SourceRemainingQuantity != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(SourceRemainingQuantity);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(PlayerInventoryRevision);
+      }
+      if (ContainerInventoryRevision.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(ContainerInventoryRevision);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (TransferredQuantity != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(TransferredQuantity);
+      }
+      if (SourceSlotIndex != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(SourceSlotIndex);
+      }
+      if (SourceRemainingQuantity != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(SourceRemainingQuantity);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(PlayerInventoryRevision);
+      }
+      if (ContainerInventoryRevision.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(ContainerInventoryRevision);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (TransferredQuantity != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(TransferredQuantity);
+      }
+      if (SourceSlotIndex != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(SourceSlotIndex);
+      }
+      if (SourceRemainingQuantity != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(SourceRemainingQuantity);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PlayerInventoryRevision);
+      }
+      if (ContainerInventoryRevision.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ContainerInventoryRevision);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(TransferInventoryItemResult other) {
+      if (other == null) {
+        return;
+      }
+      if (other.TransferredQuantity != 0) {
+        TransferredQuantity = other.TransferredQuantity;
+      }
+      if (other.SourceSlotIndex != 0) {
+        SourceSlotIndex = other.SourceSlotIndex;
+      }
+      if (other.SourceRemainingQuantity != 0) {
+        SourceRemainingQuantity = other.SourceRemainingQuantity;
+      }
+      if (other.PlayerInventoryRevision.Length != 0) {
+        PlayerInventoryRevision = other.PlayerInventoryRevision;
+      }
+      if (other.ContainerInventoryRevision.Length != 0) {
+        ContainerInventoryRevision = other.ContainerInventoryRevision;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            TransferredQuantity = input.ReadUInt32();
+            break;
+          }
+          case 16: {
+            SourceSlotIndex = input.ReadUInt32();
+            break;
+          }
+          case 24: {
+            SourceRemainingQuantity = input.ReadUInt32();
+            break;
+          }
+          case 34: {
+            PlayerInventoryRevision = input.ReadString();
+            break;
+          }
+          case 42: {
+            ContainerInventoryRevision = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            TransferredQuantity = input.ReadUInt32();
+            break;
+          }
+          case 16: {
+            SourceSlotIndex = input.ReadUInt32();
+            break;
+          }
+          case 24: {
+            SourceRemainingQuantity = input.ReadUInt32();
+            break;
+          }
+          case 34: {
+            PlayerInventoryRevision = input.ReadString();
+            break;
+          }
+          case 42: {
+            ContainerInventoryRevision = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class OpenMenuRequest : pb::IMessage<OpenMenuRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -4123,7 +4883,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[14]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[16]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4321,7 +5081,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[15]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[17]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4528,7 +5288,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[16]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[18]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4775,7 +5535,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[17]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[19]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5028,7 +5788,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[18]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[20]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5189,7 +5949,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[19]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[21]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

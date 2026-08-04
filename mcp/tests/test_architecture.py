@@ -136,6 +136,50 @@ def test_item_grab_projection_is_isolated_read_only_and_not_activatable() -> Non
     assert "UiExtractorKind.ItemGrabSlot" not in activate
 
 
+def test_inventory_transfer_is_an_isolated_revision_guarded_transaction() -> None:
+    composition = (MOD / "Bootstrap" / "DefaultCapabilitySet.cs").read_text()
+    handler = (MOD / "Capabilities" / "Actions" / "TransferInventoryItemHandler.cs").read_text()
+    adapter = (MOD / "Capabilities" / "Actions" / "InventoryTransferRuntimeAdapter.cs").read_text()
+    planner = (MOD / "Capabilities" / "Actions" / "InventoryTransferPlanner.cs").read_text()
+    transport = (PACKAGE / "transport.py").read_text()
+    server = (PACKAGE / "server.py").read_text()
+    projection = (PACKAGE / "projection.py").read_text()
+
+    assert "new TransferInventoryItemHandler(refs)" in composition
+    assert "transfer_inventory_item" not in transport
+    assert "transfer_inventory_item" not in server
+    assert "transfer_inventory_item" not in projection
+    for required in (
+        "InventoryTransferPlanner.Plan(",
+        "CanCancel => !_committing",
+        "RollbackAndVerify(",
+        "TargetWritesHold(",
+    ):
+        assert required in handler
+    for required in (
+        "UiRuntimeProjector.Capture(",
+        "GetMutex().IsLockHeld()",
+        "TryLocateSupportedContainer(",
+        "IInventoryTransferCommit Commit(",
+        "void Rollback()",
+    ):
+        assert required in adapter
+    forbidden = (
+        "receiveLeftClick",
+        "receiveRightClick",
+        "leftClick(",
+        "rightClick(",
+        "behaviorOnItemGrab",
+        "behaviorFunction",
+        "heldItem =",
+        ".Invoke(",
+    )
+    runtime = handler + adapter
+    assert not [token for token in forbidden if token in runtime]
+    assert "StardewValley.Menus" not in planner
+    assert "StardewValley.Objects" not in planner
+
+
 def test_dialogue_advance_activation_uses_native_semantic_path() -> None:
     source = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
     semantic_branch = source.index(
@@ -175,6 +219,7 @@ def test_default_capability_set_is_the_unique_concrete_handler_composition_root(
         "InteractHandler",
         "UseToolHandler",
         "EquipHandler",
+        "TransferInventoryItemHandler",
         "OpenMenuHandler",
         "ActivateUiHandler",
         "CloseMenuHandler",

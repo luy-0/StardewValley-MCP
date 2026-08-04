@@ -50,6 +50,11 @@ messages:
       - if: {required: [itemRef]}
         then: {required: [inventoryRevision]}
 
+  TransferInventoryItemRequest:
+    required: [direction, itemRef, quantity, uiRevision, playerInventoryRevision, containerInventoryRevision]
+    fields:
+      quantity: {minimum: 1, maximum: 2147483647}
+
   OpenMenuRequest:
     required: [menu]
 
@@ -128,6 +133,11 @@ output_messages:
   UseToolResult:
     fields:
       chargeLevel: {minimum: 0, maximum: 5}
+
+  TransferInventoryItemResult:
+    fields:
+      transferredQuantity: {minimum: 1, maximum: 2147483647}
+      sourceRemainingQuantity: {minimum: 0, maximum: 2147483647}
 
   InspectedRef:
     allOf:

@@ -31,6 +31,7 @@
 - `ENTITY_KIND_HOE_DIRT=14`、`WorldEntityFact.hoe_dirt=33` 与 `HoeDirtFact` 是 V1 的追加线路定义，旧接收方可以按 Proto 未知字段规则忽略，因此线路层属于 Minor 兼容增补。空 `HoeDirt` 不再作为 `ENTITY_KIND_GENERIC_OBJECT` 返回；曾只按 `generic_object` 过滤已耕地的调用方需要改为请求 `hoe_dirt`，而带作物的土地仍使用既有 `CropFact.watered`。
 - `UI_ELEMENT_KIND_DIALOGUE_ADVANCE=6` 以及普通 `DialogueBox` 新增的语义推进元素，是追加枚举值与结果元素的 V1 Minor 兼容增补。旧调用方必须忽略无法识别的 UI Kind，不能尝试激活未知元素；依赖 MCP Tool Schema 的调用方需要更新 Tool Catalog 后才能识别并使用 `dialogue_advance`。
 - `UiInventorySide`、`UiInventoryLink`、`UiSnapshot.inventories`、`UiElementFact.inventory_side/item_ref` 以及受支持 `ItemGrabMenu` 的只读槽位元素，是可忽略字段与结果元素的 V1 Minor 兼容增补。旧调用方可以忽略库存关联；槽位始终 `enabled=false`，不得因既有 `ITEM_SLOT` 枚举而推断其可由 `activate_ui` 执行。依赖 MCP Tool Schema 的调用方需要更新 Tool Catalog 后才能读取两侧 Revision、Container Ref 与 Item Ref。
+- `transfer_inventory_item`、`InventoryTransferDirection` 及其 Request/Result 是新增的独立能力分支，属于 V1 Minor 兼容增补。旧实现不会公告该能力，旧 MCP 也不会暴露对应 Tool；新调用方必须从当前 `query_ui` 取得 UI Revision、双方 Inventory Revision 和源 Item Ref，不能把已有槽位元素解释为可点击。
 
 ## Agent Skill 指引兼容规则
 
