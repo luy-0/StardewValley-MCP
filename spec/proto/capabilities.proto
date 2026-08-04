@@ -35,6 +35,11 @@ message CommandRequest {
     OpenMenuRequest open_menu = 17;
     ActivateUiRequest activate_ui = 18;
     CloseMenuRequest close_menu = 19;
+    TransferInventoryItemRequest transfer_inventory_item = 20;
+    SetEquipmentSlotRequest set_equipment_slot = 21;
+    MoveInventoryItemRequest move_inventory_item = 22;
+    CraftItemRequest craft_item = 23;
+    PurchaseShopItemRequest purchase_shop_item = 24;
 
     QueryRuntimeRequest query_runtime = 30;
     QueryWorldRequest query_world = 31;
@@ -56,6 +61,11 @@ message CapabilityResult {
     OpenMenuResult open_menu = 17;
     ActivateUiResult activate_ui = 18;
     CloseMenuResult close_menu = 19;
+    TransferInventoryItemResult transfer_inventory_item = 20;
+    SetEquipmentSlotResult set_equipment_slot = 21;
+    MoveInventoryItemResult move_inventory_item = 22;
+    CraftItemResult craft_item = 23;
+    PurchaseShopItemResult purchase_shop_item = 24;
 
     QueryRuntimeResult query_runtime = 30;
     QueryWorldResult query_world = 31;

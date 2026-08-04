@@ -37,6 +37,21 @@ internal static class CapabilityCatalogData
                 Destructive = false,
                 Risks = { },
             },
+            ["craft_item"] = new CapabilityDescriptor
+            {
+                Id = "craft_item",
+                ContractVersion = "1.0.0",
+                SideEffect = SideEffect.Mutating,
+                Execution = ExecutionMode.LongRunning,
+                Cancellable = true,
+                DefaultTimeoutMs = 10000,
+                MaxTimeoutMs = 30000,
+                RequestType = nameof(CraftItemRequest),
+                ResultType = nameof(CraftItemResult),
+                RequiredScope = "game:write",
+                Destructive = true,
+                Risks = { "changes_save", "consumes_item" },
+            },
             ["emote"] = new CapabilityDescriptor
             {
                 Id = "emote",
@@ -112,6 +127,21 @@ internal static class CapabilityCatalogData
                 Destructive = true,
                 Risks = { "changes_relationship", "changes_save" },
             },
+            ["move_inventory_item"] = new CapabilityDescriptor
+            {
+                Id = "move_inventory_item",
+                ContractVersion = "1.0.0",
+                SideEffect = SideEffect.Mutating,
+                Execution = ExecutionMode.LongRunning,
+                Cancellable = true,
+                DefaultTimeoutMs = 10000,
+                MaxTimeoutMs = 30000,
+                RequestType = nameof(MoveInventoryItemRequest),
+                ResultType = nameof(MoveInventoryItemResult),
+                RequiredScope = "game:write",
+                Destructive = true,
+                Risks = { "changes_save" },
+            },
             ["navigate"] = new CapabilityDescriptor
             {
                 Id = "navigate",
@@ -141,6 +171,21 @@ internal static class CapabilityCatalogData
                 RequiredScope = "game:write",
                 Destructive = false,
                 Risks = { },
+            },
+            ["purchase_shop_item"] = new CapabilityDescriptor
+            {
+                Id = "purchase_shop_item",
+                ContractVersion = "1.0.0",
+                SideEffect = SideEffect.Mutating,
+                Execution = ExecutionMode.LongRunning,
+                Cancellable = true,
+                DefaultTimeoutMs = 10000,
+                MaxTimeoutMs = 30000,
+                RequestType = nameof(PurchaseShopItemRequest),
+                ResultType = nameof(PurchaseShopItemResult),
+                RequiredScope = "game:write",
+                Destructive = true,
+                Risks = { "changes_save", "spends_money" },
             },
             ["query_inventory"] = new CapabilityDescriptor
             {
@@ -216,6 +261,36 @@ internal static class CapabilityCatalogData
                 RequiredScope = "game:write",
                 Destructive = false,
                 Risks = { "external_communication" },
+            },
+            ["set_equipment_slot"] = new CapabilityDescriptor
+            {
+                Id = "set_equipment_slot",
+                ContractVersion = "1.0.0",
+                SideEffect = SideEffect.Mutating,
+                Execution = ExecutionMode.LongRunning,
+                Cancellable = true,
+                DefaultTimeoutMs = 10000,
+                MaxTimeoutMs = 30000,
+                RequestType = nameof(SetEquipmentSlotRequest),
+                ResultType = nameof(SetEquipmentSlotResult),
+                RequiredScope = "game:write",
+                Destructive = true,
+                Risks = { "changes_save" },
+            },
+            ["transfer_inventory_item"] = new CapabilityDescriptor
+            {
+                Id = "transfer_inventory_item",
+                ContractVersion = "1.0.0",
+                SideEffect = SideEffect.Mutating,
+                Execution = ExecutionMode.LongRunning,
+                Cancellable = true,
+                DefaultTimeoutMs = 10000,
+                MaxTimeoutMs = 30000,
+                RequestType = nameof(TransferInventoryItemRequest),
+                ResultType = nameof(TransferInventoryItemResult),
+                RequiredScope = "game:write",
+                Destructive = true,
+                Risks = { "changes_save" },
             },
             ["use_tool"] = new CapabilityDescriptor
             {

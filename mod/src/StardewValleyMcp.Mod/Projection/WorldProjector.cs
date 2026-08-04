@@ -51,23 +51,14 @@ internal static class WorldProjector
             if (!area.Contains(x, y))
                 continue;
 
-            var fact = WorldEntityProjectionGuard.ProjectOrFallback(
-                () => pair.Value switch
-                {
-                    STree tree => ProjectTree(location, x, y, tree, refs),
-                    FruitTree fruitTree => ProjectFruitTree(location, x, y, fruitTree, refs),
-                    HoeDirt { crop: not null } dirt => ProjectCrop(location, x, y, dirt, refs),
-                    _ => ProjectGenericTerrainFeature(location, x, y, pair.Value, refs, warnings),
-                },
-                () => ProjectGenericFallback(
-                    pair.Value,
-                    location,
-                    x,
-                    y,
-                    refs,
-                    RefLocatorKind.TerrainFeature,
-                    warnings
-                ),
+            var fact = ProjectEntityAt(
+                location,
+                x,
+                y,
+                pair.Value,
+                RefLocatorKind.TerrainFeature,
+                guard: "",
+                refs,
                 warnings
             );
             AddIfIncluded(facts, fact, kinds);
@@ -79,17 +70,14 @@ internal static class WorldProjector
             var y = (int)pair.Key.Y;
             if (!area.Contains(x, y))
                 continue;
-            var fact = WorldEntityProjectionGuard.ProjectOrFallback(
-                () => ProjectObject(location, x, y, pair.Value, refs, warnings),
-                () => ProjectGenericFallback(
-                    pair.Value,
-                    location,
-                    x,
-                    y,
-                    refs,
-                    RefLocatorKind.Object,
-                    warnings
-                ),
+            var fact = ProjectEntityAt(
+                location,
+                x,
+                y,
+                pair.Value,
+                RefLocatorKind.Object,
+                guard: "",
+                refs,
                 warnings
             );
             AddIfIncluded(facts, fact, kinds);
@@ -114,25 +102,14 @@ internal static class WorldProjector
             && area.Contains(fridgeTile.X, fridgeTile.Y))
             AddIfIncluded(
                 facts,
-                WorldEntityProjectionGuard.ProjectOrFallback(
-                    () => ProjectContainer(
-                        location,
-                        fridgeTile.X,
-                        fridgeTile.Y,
-                        fridge,
-                        refs,
-                        RefLocatorKind.Fridge,
-                        warnings
-                    ),
-                    () => ProjectGenericFallback(
-                        fridge,
-                        location,
-                        fridgeTile.X,
-                        fridgeTile.Y,
-                        refs,
-                        RefLocatorKind.Fridge,
-                        warnings
-                    ),
+                ProjectEntityAt(
+                    location,
+                    fridgeTile.X,
+                    fridgeTile.Y,
+                    fridge,
+                    RefLocatorKind.Fridge,
+                    guard: "",
+                    refs,
                     warnings
                 ),
                 kinds
@@ -144,19 +121,14 @@ internal static class WorldProjector
             var y = (int)furniture.TileLocation.Y;
             if (!area.Contains(x, y))
                 continue;
-            var fact = WorldEntityProjectionGuard.ProjectOrFallback(
-                () => furniture is BedFurniture bed
-                    ? ProjectBed(location, x, y, bed, refs, warnings)
-                    : ProjectFurniture(location, x, y, furniture, refs, warnings),
-                () => ProjectGenericFallback(
-                    furniture,
-                    location,
-                    x,
-                    y,
-                    refs,
-                    RefLocatorKind.Furniture,
-                    warnings
-                ),
+            var fact = ProjectEntityAt(
+                location,
+                x,
+                y,
+                furniture,
+                RefLocatorKind.Furniture,
+                guard: "",
+                refs,
                 warnings
             );
             AddIfIncluded(facts, fact, kinds);
@@ -168,17 +140,14 @@ internal static class WorldProjector
             var y = (int)clump.Tile.Y;
             if (area.Contains(x, y))
             {
-                var fact = WorldEntityProjectionGuard.ProjectOrFallback(
-                    () => ProjectResourceClump(location, x, y, clump, refs),
-                    () => ProjectGenericFallback(
-                        clump,
-                        location,
-                        x,
-                        y,
-                        refs,
-                        RefLocatorKind.ResourceClump,
-                        warnings
-                    ),
+                var fact = ProjectEntityAt(
+                    location,
+                    x,
+                    y,
+                    clump,
+                    RefLocatorKind.ResourceClump,
+                    guard: "",
+                    refs,
                     warnings
                 );
                 AddIfIncluded(facts, fact, kinds);
@@ -189,17 +158,14 @@ internal static class WorldProjector
         {
             if (area.Contains(warp.X, warp.Y))
             {
-                var fact = WorldEntityProjectionGuard.ProjectOrFallback(
-                    () => ProjectWarp(location, warp, refs, warnings),
-                    () => ProjectGenericFallback(
-                        warp,
-                        location,
-                        warp.X,
-                        warp.Y,
-                        refs,
-                        RefLocatorKind.Warp,
-                        warnings
-                    ),
+                var fact = ProjectEntityAt(
+                    location,
+                    warp.X,
+                    warp.Y,
+                    warp,
+                    RefLocatorKind.Warp,
+                    guard: "",
+                    refs,
                     warnings
                 );
                 AddIfIncluded(facts, fact, kinds);
@@ -210,9 +176,14 @@ internal static class WorldProjector
         {
             if (area.Contains(pair.Key.X, pair.Key.Y))
             {
-                var fact = WorldEntityProjectionGuard.ProjectOrFallback(
-                    () => ProjectDoor(location, pair.Key, pair.Value, refs, warnings),
-                    () => ProjectDoorFallback(location, pair.Key, pair.Value, refs, warnings),
+                var fact = ProjectEntityAt(
+                    location,
+                    pair.Key.X,
+                    pair.Key.Y,
+                    pair.Value,
+                    RefLocatorKind.Door,
+                    pair.Value,
+                    refs,
                     warnings
                 );
                 AddIfIncluded(facts, fact, kinds);
@@ -249,11 +220,7 @@ internal static class WorldProjector
             }
             if (!area.Contains(x, y))
                 continue;
-            facts.Add(CharacterProjectionGuard.ProjectOrFallback(
-                () => ProjectCharacter(location, x, y, character, refs),
-                () => ProjectCharacterFallback(location, x, y, character, refs),
-                warnings
-            ));
+            facts.Add(ProjectCharacterAt(location, x, y, character, refs, warnings));
         }
         foreach (var animal in location.Animals.Values)
         {
@@ -274,11 +241,7 @@ internal static class WorldProjector
                 continue;
             }
             if (area.Contains(x, y))
-                facts.Add(CharacterProjectionGuard.ProjectOrFallback(
-                    () => ProjectFarmAnimal(location, x, y, animal, refs),
-                    () => ProjectCharacterFallback(location, x, y, animal, refs),
-                    warnings
-                ));
+                facts.Add(ProjectCharacterAt(location, x, y, animal, refs, warnings));
         }
         return facts;
     }
@@ -303,52 +266,19 @@ internal static class WorldProjector
     {
         var location = resolved.Location;
         var (x, y) = CurrentEntityTile(resolved);
-        var fact = resolved.LocatorKind switch
-        {
-            RefLocatorKind.TerrainFeature => resolved.Target switch
-            {
-                STree tree => ProjectTree(location, x, y, tree, refs),
-                FruitTree fruitTree => ProjectFruitTree(location, x, y, fruitTree, refs),
-                HoeDirt { crop: not null } dirt => ProjectCrop(location, x, y, dirt, refs),
-                TerrainFeature feature => ProjectGenericTerrainFeature(
-                    location,
-                    x,
-                    y,
-                    feature,
-                    refs,
-                    warnings
-                ),
-                _ => throw new InvalidOperationException("Terrain Ref 目标类型无效"),
-            },
-            RefLocatorKind.Object when resolved.Target is SObject obj =>
-                ProjectObject(location, x, y, obj, refs, warnings),
-            RefLocatorKind.Fridge when resolved.Target is Chest fridge =>
-                ProjectContainer(
-                    location,
-                    x,
-                    y,
-                    fridge,
-                    refs,
-                    RefLocatorKind.Fridge,
-                    warnings
-                ),
-            RefLocatorKind.Furniture when resolved.Target is BedFurniture bed =>
-                ProjectBed(location, x, y, bed, refs, warnings),
-            RefLocatorKind.Furniture when resolved.Target is Furniture furniture =>
-                ProjectFurniture(location, x, y, furniture, refs, warnings),
-            RefLocatorKind.ResourceClump when resolved.Target is ResourceClump clump =>
-                ProjectResourceClump(location, x, y, clump, refs),
-            RefLocatorKind.Warp when resolved.Target is Warp warp =>
-                ProjectWarp(location, warp, refs, warnings),
-            RefLocatorKind.Door => ProjectDoor(
-                location,
-                new Point(x, y),
-                resolved.Guard,
-                refs,
-                warnings
-            ),
-            _ => throw new InvalidOperationException("World Entity Ref 目标类型无效"),
-        };
+        // Query 已签发 fallback Ref 时不再重试已知失败的 typed getter；否则 typed
+        // 投影可能在再次抛错前改写 binding guard，使调用方仍持有的 Ref 被误判 stale。
+        var fact = ProjectEntityAt(
+            location,
+            x,
+            y,
+            resolved.Target,
+            resolved.LocatorKind,
+            resolved.Guard,
+            refs,
+            warnings,
+            fallbackOnly: IsFallbackGuard(resolved.Guard)
+        );
         PreserveInputRef(fact.Ref, reference);
         fact.Ref = reference.Clone();
         PreserveWarningRefs(warnings, reference);
@@ -358,20 +288,143 @@ internal static class WorldProjector
     public static CharacterFact ProjectResolvedCharacter(
         ResolvedOpaqueRef resolved,
         Ref reference,
-        OpaqueRefStore refs
+        OpaqueRefStore refs,
+        ICollection<QueryWarning> warnings
     )
     {
         var (x, y) = CurrentCharacterTile(resolved.Target);
-        var fact = resolved.Target switch
-        {
-            FarmAnimal animal => ProjectFarmAnimal(resolved.Location, x, y, animal, refs),
-            NPC character => ProjectCharacter(resolved.Location, x, y, character, refs),
-            _ => throw new InvalidOperationException("Character Ref 目标类型无效"),
-        };
+        // Character fallback 与 World Entity 遵守相同规则：保留调用方 Ref，并重建
+        // 已公开的最小事实，而不是重试 getter 或重新签发 Ref。
+        var fact = ProjectCharacterAt(
+            resolved.Location,
+            x,
+            y,
+            resolved.Target,
+            refs,
+            warnings,
+            fallbackOnly: IsFallbackGuard(resolved.Guard)
+        );
         PreserveInputRef(fact.Ref, reference);
         fact.Ref = reference.Clone();
+        PreserveWarningRefs(warnings, reference);
         return fact;
     }
+
+    private static WorldEntityFact ProjectEntityAt(
+        GameLocation location,
+        int x,
+        int y,
+        object target,
+        RefLocatorKind locatorKind,
+        string guard,
+        OpaqueRefStore refs,
+        ICollection<QueryWarning> warnings,
+        bool fallbackOnly = false
+    )
+    {
+        WorldEntityFact Fallback() => locatorKind == RefLocatorKind.Door
+            ? ProjectDoorFallback(location, new Point(x, y), guard, refs, warnings)
+            : ProjectGenericFallback(target, location, x, y, refs, locatorKind, warnings);
+
+        return ProjectEntityOrFallback(
+            () => locatorKind switch
+            {
+                RefLocatorKind.TerrainFeature => target switch
+                {
+                    STree tree => ProjectTree(location, x, y, tree, refs),
+                    FruitTree fruitTree => ProjectFruitTree(location, x, y, fruitTree, refs),
+                    HoeDirt { crop: not null } dirt => ProjectCrop(location, x, y, dirt, refs),
+                    HoeDirt dirt => ProjectHoeDirt(location, x, y, dirt, refs, warnings),
+                    TerrainFeature feature => ProjectGenericTerrainFeature(
+                        location,
+                        x,
+                        y,
+                        feature,
+                        refs,
+                        warnings
+                    ),
+                    _ => throw new InvalidOperationException("Terrain Ref 目标类型无效"),
+                },
+                RefLocatorKind.Object when target is SObject obj =>
+                    ProjectObject(location, x, y, obj, refs, warnings),
+                RefLocatorKind.Fridge when target is Chest fridge =>
+                    ProjectContainer(
+                        location,
+                        x,
+                        y,
+                        fridge,
+                        refs,
+                        RefLocatorKind.Fridge,
+                        warnings
+                    ),
+                RefLocatorKind.Furniture when target is BedFurniture bed =>
+                    ProjectBed(location, x, y, bed, refs, warnings),
+                RefLocatorKind.Furniture when target is Furniture furniture =>
+                    ProjectFurniture(location, x, y, furniture, refs, warnings),
+                RefLocatorKind.ResourceClump when target is ResourceClump clump =>
+                    ProjectResourceClump(location, x, y, clump, refs),
+                RefLocatorKind.Warp when target is Warp warp =>
+                    ProjectWarp(location, warp, refs, warnings),
+                RefLocatorKind.Door => ProjectDoor(
+                    location,
+                    new Point(x, y),
+                    guard,
+                    refs,
+                    warnings
+                ),
+                _ => throw new InvalidOperationException("World Entity Ref 目标类型无效"),
+            },
+            Fallback,
+            warnings,
+            fallbackOnly
+        );
+    }
+
+    private static CharacterFact ProjectCharacterAt(
+        GameLocation location,
+        int x,
+        int y,
+        object target,
+        OpaqueRefStore refs,
+        ICollection<QueryWarning> warnings,
+        bool fallbackOnly = false
+    )
+    {
+        CharacterFact Fallback() => ProjectCharacterFallback(location, x, y, target, refs);
+        return ProjectCharacterOrFallback(
+            () => target switch
+            {
+                FarmAnimal animal => ProjectFarmAnimal(location, x, y, animal, refs),
+                NPC character => ProjectCharacter(location, x, y, character, refs),
+                _ => throw new InvalidOperationException("Character Ref 目标类型无效"),
+            },
+            Fallback,
+            warnings,
+            fallbackOnly
+        );
+    }
+
+    internal static WorldEntityFact ProjectEntityOrFallback(
+        Func<WorldEntityFact> project,
+        Func<WorldEntityFact> fallback,
+        ICollection<QueryWarning> warnings,
+        bool fallbackOnly
+    ) => fallbackOnly
+        ? WorldEntityProjectionGuard.ProjectFallback(fallback, warnings)
+        : WorldEntityProjectionGuard.ProjectOrFallback(project, fallback, warnings);
+
+    internal static CharacterFact ProjectCharacterOrFallback(
+        Func<CharacterFact> project,
+        Func<CharacterFact> fallback,
+        ICollection<QueryWarning> warnings,
+        bool fallbackOnly
+    ) => fallbackOnly
+        ? CharacterProjectionGuard.ProjectFallback(fallback, warnings)
+        : CharacterProjectionGuard.ProjectOrFallback(project, fallback, warnings);
+
+    private static bool IsFallbackGuard(string guard) =>
+        guard.StartsWith("generic_fallback:", StringComparison.Ordinal)
+        || guard.StartsWith("character_fallback:", StringComparison.Ordinal);
 
     private static (int X, int Y) CurrentEntityTile(ResolvedOpaqueRef resolved)
     {
@@ -543,6 +596,35 @@ internal static class WorldProjector
                 Regrows = crop.RegrowsAfterHarvest(),
             },
         };
+    }
+
+    private static WorldEntityFact ProjectHoeDirt(
+        GameLocation location,
+        int x,
+        int y,
+        HoeDirt dirt,
+        OpaqueRefStore refs,
+        ICollection<QueryWarning> warnings
+    )
+    {
+        var fact = new WorldEntityFact
+        {
+            Ref = refs.GetOrCreate(
+                dirt,
+                location,
+                RefKind.WorldEntity,
+                RefLocatorKind.TerrainFeature,
+                x,
+                y,
+                "hoe_dirt"
+            ),
+            Kind = EntityKind.HoeDirt,
+            Position = Position(location, x, y),
+            DisplayName = "HoeDirt",
+            HoeDirt = HoeDirtProjectionPolicy.Create(dirt.state.Value),
+        };
+        WorldEntityProjectionGuard.ApplyActionable(fact, dirt.isActionable, warnings);
+        return fact;
     }
 
     private static WorldEntityFact ProjectObject(
@@ -1358,6 +1440,11 @@ internal readonly record struct ScanArea(int X, int Y, int Width, int Height)
         x >= X && x < X + Width && y >= Y && y < Y + Height;
 }
 
+internal static class HoeDirtProjectionPolicy
+{
+    public static HoeDirtFact Create(int state) => new() { Watered = state == 1 };
+}
+
 internal static class WorldProjectionPolicy
 {
     public static bool HasResolvedDestination(string locationId) => LocationIdPolicy.IsValid(locationId);
@@ -1399,15 +1486,23 @@ internal static class WorldEntityProjectionGuard
         }
         catch
         {
-            var fact = fallback();
-            warnings.Add(new QueryWarning
-            {
-                Code = "ENTITY_PROJECTION_FALLBACK",
-                Message = "实体类型化投影失败，已降级为 GenericObjectFact",
-                Ref = fact.Ref.Clone(),
-            });
-            return fact;
+            return ProjectFallback(fallback, warnings);
         }
+    }
+
+    public static WorldEntityFact ProjectFallback(
+        Func<WorldEntityFact> fallback,
+        ICollection<QueryWarning> warnings
+    )
+    {
+        var fact = fallback();
+        warnings.Add(new QueryWarning
+        {
+            Code = "ENTITY_PROJECTION_FALLBACK",
+            Message = "实体类型化投影失败，已降级为 GenericObjectFact",
+            Ref = fact.Ref.Clone(),
+        });
+        return fact;
     }
 
     public static void ApplyActionable(
@@ -1459,14 +1554,22 @@ internal static class CharacterProjectionGuard
         }
         catch
         {
-            var fact = fallback();
-            warnings.Add(new QueryWarning
-            {
-                Code = "CHARACTER_PROJECTION_FALLBACK",
-                Message = "角色类型化投影失败，已保留最小 CharacterFact",
-                Ref = fact.Ref.Clone(),
-            });
-            return fact;
+            return ProjectFallback(fallback, warnings);
         }
+    }
+
+    public static CharacterFact ProjectFallback(
+        Func<CharacterFact> fallback,
+        ICollection<QueryWarning> warnings
+    )
+    {
+        var fact = fallback();
+        warnings.Add(new QueryWarning
+        {
+            Code = "CHARACTER_PROJECTION_FALLBACK",
+            Message = "角色类型化投影失败，已保留最小 CharacterFact",
+            Ref = fact.Ref.Clone(),
+        });
+        return fact;
     }
 }

@@ -24,7 +24,7 @@ _sym_db = _symbol_database.Default()
 
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x63ommon.proto\x12\x15stardew_valley.mcp.v1\"T\n\x05\x45rror\x12.\n\x04\x63ode\x18\x01 \x01(\x0e\x32 .stardew_valley.mcp.v1.ErrorCode\x12\x0f\n\x07message\x18\x02 \x01(\tJ\x04\x08\x03\x10\x04J\x04\x08\x04\x10\x05\">\n\x08GameDate\x12\x0e\n\x06season\x18\x01 \x01(\t\x12\x14\n\x0c\x64\x61y_of_month\x18\x02 \x01(\r\x12\x0c\n\x04year\x18\x03 \x01(\r\"!\n\tTilePoint\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\":\n\rWorldPosition\x12\x13\n\x0blocation_id\x18\x01 \x01(\t\x12\t\n\x01x\x18\x02 \x01(\x05\x12\t\n\x01y\x18\x03 \x01(\x05\"T\n\x08TileArea\x12\x13\n\x0blocation_id\x18\x01 \x01(\t\x12\t\n\x01x\x18\x02 \x01(\x05\x12\t\n\x01y\x18\x03 \x01(\x05\x12\r\n\x05width\x18\x04 \x01(\r\x12\x0e\n\x06height\x18\x05 \x01(\r\"R\n\nRadiusArea\x12\x34\n\x06\x63\x65nter\x18\x01 \x01(\x0b\x32$.stardew_valley.mcp.v1.WorldPosition\x12\x0e\n\x06radius\x18\x02 \x01(\r\"\"\n\nPixelPoint\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\">\n\x0eResourceChange\x12\x0e\n\x06\x62\x65\x66ore\x18\x01 \x01(\x01\x12\r\n\x05\x61\x66ter\x18\x02 \x01(\x01\x12\r\n\x05\x64\x65lta\x18\x03 \x01(\x01\"B\n\x0e\x45xecutionStats\x12\x15\n\relapsed_ticks\x18\x01 \x01(\r\x12\x19\n\x11\x63ompletion_reason\x18\x02 \x01(\t\"z\n\x0eMenuTransition\x12\x18\n\x10menu_type_before\x18\x01 \x01(\t\x12\x17\n\x0fmenu_type_after\x18\x02 \x01(\t\x12\x1a\n\x12ui_revision_before\x18\x03 \x01(\t\x12\x19\n\x11ui_revision_after\x18\x04 \x01(\t*u\n\tDirection\x12\x19\n\x15\x44IRECTION_UNSPECIFIED\x10\x00\x12\x10\n\x0c\x44IRECTION_UP\x10\x01\x12\x13\n\x0f\x44IRECTION_RIGHT\x10\x02\x12\x12\n\x0e\x44IRECTION_DOWN\x10\x03\x12\x12\n\x0e\x44IRECTION_LEFT\x10\x04*\xc7\x01\n\x08MenuKind\x12\x19\n\x15MENU_KIND_UNSPECIFIED\x10\x00\x12\x17\n\x13MENU_KIND_INVENTORY\x10\x01\x12\x14\n\x10MENU_KIND_SKILLS\x10\x02\x12\x14\n\x10MENU_KIND_SOCIAL\x10\x03\x12\x11\n\rMENU_KIND_MAP\x10\x04\x12\x16\n\x12MENU_KIND_CRAFTING\x10\x05\x12\x19\n\x15MENU_KIND_COLLECTIONS\x10\x06\x12\x15\n\x11MENU_KIND_OPTIONS\x10\x07*\xf5\x04\n\tErrorCode\x12\x1a\n\x16\x45RROR_CODE_UNSPECIFIED\x10\x00\x12\x1f\n\x1b\x45RROR_CODE_INVALID_ARGUMENT\x10\x01\x12\x1e\n\x1a\x45RROR_CODE_UNAUTHENTICATED\x10\x02\x12 \n\x1c\x45RROR_CODE_PERMISSION_DENIED\x10\x03\x12\"\n\x1e\x45RROR_CODE_UNSUPPORTED_VERSION\x10\x04\x12%\n!ERROR_CODE_UNSUPPORTED_CAPABILITY\x10\x05\x12%\n!ERROR_CODE_CAPABILITY_SET_CHANGED\x10\x06\x12\x1a\n\x16\x45RROR_CODE_STALE_LEASE\x10\x07\x12\x17\n\x13\x45RROR_CODE_CONFLICT\x10\x08\x12\x13\n\x0f\x45RROR_CODE_BUSY\x10\t\x12\x18\n\x14\x45RROR_CODE_NOT_READY\x10\n\x12\x18\n\x14\x45RROR_CODE_NOT_FOUND\x10\x0b\x12 \n\x1c\x45RROR_CODE_DEADLINE_EXCEEDED\x10\x0c\x12\x18\n\x14\x45RROR_CODE_CANCELLED\x10\r\x12\x18\n\x14\x45RROR_CODE_STALE_REF\x10\x0e\x12\x1b\n\x17\x45RROR_CODE_OUT_OF_RANGE\x10\x0f\x12)\n%ERROR_CODE_IDEMPOTENCY_RECORD_EXPIRED\x10\x10\x12\x1f\n\x1b\x45RROR_CODE_EXECUTION_FAILED\x10\x11\x12!\n\x1d\x45RROR_CODE_PROTOCOL_VIOLATION\x10\x12\x12\x17\n\x13\x45RROR_CODE_INTERNAL\x10\x13\x42\x1f\xaa\x02\x1cStardewValleyMcp.Protocol.V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\x0c\x63ommon.proto\x12\x15stardew_valley.mcp.v1\"\xad\x01\n\x05\x45rror\x12.\n\x04\x63ode\x18\x01 \x01(\x0e\x32 .stardew_valley.mcp.v1.ErrorCode\x12\x0f\n\x07message\x18\x02 \x01(\t\x12H\n\nnavigation\x18\x05 \x01(\x0b\x32/.stardew_valley.mcp.v1.NavigationFailureContextH\x00\x88\x01\x01\x42\r\n\x0b_navigationJ\x04\x08\x03\x10\x04J\x04\x08\x04\x10\x05\"\xe6\x02\n\x18NavigationFailureContext\x12J\n\x17last_confirmed_position\x18\x01 \x01(\x0b\x32$.stardew_valley.mcp.v1.WorldPositionH\x00\x88\x01\x01\x12!\n\x14route_segments_total\x18\x02 \x01(\rH\x01\x88\x01\x01\x12%\n\x18route_segments_completed\x18\x03 \x01(\rH\x02\x88\x01\x01\x12 \n\x13interruption_reason\x18\x04 \x01(\tH\x03\x88\x01\x01\x12\x18\n\x0bresume_hint\x18\x05 \x01(\tH\x04\x88\x01\x01\x42\x1a\n\x18_last_confirmed_positionB\x17\n\x15_route_segments_totalB\x1b\n\x19_route_segments_completedB\x16\n\x14_interruption_reasonB\x0e\n\x0c_resume_hint\">\n\x08GameDate\x12\x0e\n\x06season\x18\x01 \x01(\t\x12\x14\n\x0c\x64\x61y_of_month\x18\x02 \x01(\r\x12\x0c\n\x04year\x18\x03 \x01(\r\"!\n\tTilePoint\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\":\n\rWorldPosition\x12\x13\n\x0blocation_id\x18\x01 \x01(\t\x12\t\n\x01x\x18\x02 \x01(\x05\x12\t\n\x01y\x18\x03 \x01(\x05\"T\n\x08TileArea\x12\x13\n\x0blocation_id\x18\x01 \x01(\t\x12\t\n\x01x\x18\x02 \x01(\x05\x12\t\n\x01y\x18\x03 \x01(\x05\x12\r\n\x05width\x18\x04 \x01(\r\x12\x0e\n\x06height\x18\x05 \x01(\r\"R\n\nRadiusArea\x12\x34\n\x06\x63\x65nter\x18\x01 \x01(\x0b\x32$.stardew_valley.mcp.v1.WorldPosition\x12\x0e\n\x06radius\x18\x02 \x01(\r\"\"\n\nPixelPoint\x12\t\n\x01x\x18\x01 \x01(\x05\x12\t\n\x01y\x18\x02 \x01(\x05\">\n\x0eResourceChange\x12\x0e\n\x06\x62\x65\x66ore\x18\x01 \x01(\x01\x12\r\n\x05\x61\x66ter\x18\x02 \x01(\x01\x12\r\n\x05\x64\x65lta\x18\x03 \x01(\x01\"B\n\x0e\x45xecutionStats\x12\x15\n\relapsed_ticks\x18\x01 \x01(\r\x12\x19\n\x11\x63ompletion_reason\x18\x02 \x01(\t\"z\n\x0eMenuTransition\x12\x18\n\x10menu_type_before\x18\x01 \x01(\t\x12\x17\n\x0fmenu_type_after\x18\x02 \x01(\t\x12\x1a\n\x12ui_revision_before\x18\x03 \x01(\t\x12\x19\n\x11ui_revision_after\x18\x04 \x01(\t*u\n\tDirection\x12\x19\n\x15\x44IRECTION_UNSPECIFIED\x10\x00\x12\x10\n\x0c\x44IRECTION_UP\x10\x01\x12\x13\n\x0f\x44IRECTION_RIGHT\x10\x02\x12\x12\n\x0e\x44IRECTION_DOWN\x10\x03\x12\x12\n\x0e\x44IRECTION_LEFT\x10\x04*\xc7\x01\n\x08MenuKind\x12\x19\n\x15MENU_KIND_UNSPECIFIED\x10\x00\x12\x17\n\x13MENU_KIND_INVENTORY\x10\x01\x12\x14\n\x10MENU_KIND_SKILLS\x10\x02\x12\x14\n\x10MENU_KIND_SOCIAL\x10\x03\x12\x11\n\rMENU_KIND_MAP\x10\x04\x12\x16\n\x12MENU_KIND_CRAFTING\x10\x05\x12\x19\n\x15MENU_KIND_COLLECTIONS\x10\x06\x12\x15\n\x11MENU_KIND_OPTIONS\x10\x07*\xf5\x04\n\tErrorCode\x12\x1a\n\x16\x45RROR_CODE_UNSPECIFIED\x10\x00\x12\x1f\n\x1b\x45RROR_CODE_INVALID_ARGUMENT\x10\x01\x12\x1e\n\x1a\x45RROR_CODE_UNAUTHENTICATED\x10\x02\x12 \n\x1c\x45RROR_CODE_PERMISSION_DENIED\x10\x03\x12\"\n\x1e\x45RROR_CODE_UNSUPPORTED_VERSION\x10\x04\x12%\n!ERROR_CODE_UNSUPPORTED_CAPABILITY\x10\x05\x12%\n!ERROR_CODE_CAPABILITY_SET_CHANGED\x10\x06\x12\x1a\n\x16\x45RROR_CODE_STALE_LEASE\x10\x07\x12\x17\n\x13\x45RROR_CODE_CONFLICT\x10\x08\x12\x13\n\x0f\x45RROR_CODE_BUSY\x10\t\x12\x18\n\x14\x45RROR_CODE_NOT_READY\x10\n\x12\x18\n\x14\x45RROR_CODE_NOT_FOUND\x10\x0b\x12 \n\x1c\x45RROR_CODE_DEADLINE_EXCEEDED\x10\x0c\x12\x18\n\x14\x45RROR_CODE_CANCELLED\x10\r\x12\x18\n\x14\x45RROR_CODE_STALE_REF\x10\x0e\x12\x1b\n\x17\x45RROR_CODE_OUT_OF_RANGE\x10\x0f\x12)\n%ERROR_CODE_IDEMPOTENCY_RECORD_EXPIRED\x10\x10\x12\x1f\n\x1b\x45RROR_CODE_EXECUTION_FAILED\x10\x11\x12!\n\x1d\x45RROR_CODE_PROTOCOL_VIOLATION\x10\x12\x12\x17\n\x13\x45RROR_CODE_INTERNAL\x10\x13\x42\x1f\xaa\x02\x1cStardewValleyMcp.Protocol.V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -32,30 +32,32 @@ _builder.BuildTopDescriptorsAndMessages(DESCRIPTOR, 'common_pb2', _globals)
 if not _descriptor._USE_C_DESCRIPTORS:
   _globals['DESCRIPTOR']._loaded_options = None
   _globals['DESCRIPTOR']._serialized_options = b'\252\002\034StardewValleyMcp.Protocol.V1'
-  _globals['_DIRECTION']._serialized_start=746
-  _globals['_DIRECTION']._serialized_end=863
-  _globals['_MENUKIND']._serialized_start=866
-  _globals['_MENUKIND']._serialized_end=1065
-  _globals['_ERRORCODE']._serialized_start=1068
-  _globals['_ERRORCODE']._serialized_end=1697
-  _globals['_ERROR']._serialized_start=39
-  _globals['_ERROR']._serialized_end=123
-  _globals['_GAMEDATE']._serialized_start=125
-  _globals['_GAMEDATE']._serialized_end=187
-  _globals['_TILEPOINT']._serialized_start=189
-  _globals['_TILEPOINT']._serialized_end=222
-  _globals['_WORLDPOSITION']._serialized_start=224
-  _globals['_WORLDPOSITION']._serialized_end=282
-  _globals['_TILEAREA']._serialized_start=284
-  _globals['_TILEAREA']._serialized_end=368
-  _globals['_RADIUSAREA']._serialized_start=370
-  _globals['_RADIUSAREA']._serialized_end=452
-  _globals['_PIXELPOINT']._serialized_start=454
-  _globals['_PIXELPOINT']._serialized_end=488
-  _globals['_RESOURCECHANGE']._serialized_start=490
-  _globals['_RESOURCECHANGE']._serialized_end=552
-  _globals['_EXECUTIONSTATS']._serialized_start=554
-  _globals['_EXECUTIONSTATS']._serialized_end=620
-  _globals['_MENUTRANSITION']._serialized_start=622
-  _globals['_MENUTRANSITION']._serialized_end=744
+  _globals['_DIRECTION']._serialized_start=1197
+  _globals['_DIRECTION']._serialized_end=1314
+  _globals['_MENUKIND']._serialized_start=1317
+  _globals['_MENUKIND']._serialized_end=1516
+  _globals['_ERRORCODE']._serialized_start=1519
+  _globals['_ERRORCODE']._serialized_end=2148
+  _globals['_ERROR']._serialized_start=40
+  _globals['_ERROR']._serialized_end=213
+  _globals['_NAVIGATIONFAILURECONTEXT']._serialized_start=216
+  _globals['_NAVIGATIONFAILURECONTEXT']._serialized_end=574
+  _globals['_GAMEDATE']._serialized_start=576
+  _globals['_GAMEDATE']._serialized_end=638
+  _globals['_TILEPOINT']._serialized_start=640
+  _globals['_TILEPOINT']._serialized_end=673
+  _globals['_WORLDPOSITION']._serialized_start=675
+  _globals['_WORLDPOSITION']._serialized_end=733
+  _globals['_TILEAREA']._serialized_start=735
+  _globals['_TILEAREA']._serialized_end=819
+  _globals['_RADIUSAREA']._serialized_start=821
+  _globals['_RADIUSAREA']._serialized_end=903
+  _globals['_PIXELPOINT']._serialized_start=905
+  _globals['_PIXELPOINT']._serialized_end=939
+  _globals['_RESOURCECHANGE']._serialized_start=941
+  _globals['_RESOURCECHANGE']._serialized_end=1003
+  _globals['_EXECUTIONSTATS']._serialized_start=1005
+  _globals['_EXECUTIONSTATS']._serialized_end=1071
+  _globals['_MENUTRANSITION']._serialized_start=1073
+  _globals['_MENUTRANSITION']._serialized_end=1195
 # @@protoc_insertion_point(module_scope)

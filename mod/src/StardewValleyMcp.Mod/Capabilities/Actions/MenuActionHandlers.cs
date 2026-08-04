@@ -93,6 +93,45 @@ internal sealed record MenuObservation(
 
 internal sealed record MenuActionAttempt(MenuObservation Before, Error? Error = null, bool Submitted = false);
 
+internal static class DialogueClosePolicy
+{
+    public static bool CanClose(DialogueCloseFacts facts) =>
+        !facts.IsQuestion
+        && !facts.EventUp
+        && UiProjectionPolicy.DialogueEnabled(
+            true,
+            facts.Transitioning,
+            facts.SafetyReady,
+            facts.TextReadable,
+            facts.CharacterIndex,
+            facts.TextLength
+        )
+        && !UiProjectionPolicy.DialogueHasNextPage(
+            facts.HasCharacterDialogue,
+            facts.ContinuedOnNextScreen,
+            facts.BrokenUpPageCount,
+            facts.PlainDialogueCount
+        )
+        && (!facts.HasCharacterDialogue || facts.CharacterDialogueIsFinal)
+        && facts.ObjectDialogueCount <= 1;
+}
+
+internal readonly record struct DialogueCloseFacts(
+    bool IsQuestion,
+    bool EventUp,
+    bool Transitioning,
+    bool SafetyReady,
+    bool TextReadable,
+    int CharacterIndex,
+    int TextLength,
+    bool HasCharacterDialogue,
+    bool ContinuedOnNextScreen,
+    int BrokenUpPageCount,
+    int PlainDialogueCount,
+    bool CharacterDialogueIsFinal,
+    int ObjectDialogueCount
+);
+
 internal sealed class OpenMenuContinuation : ICommandContinuation
 {
     private readonly IMenuActionRuntime _runtime;
@@ -267,10 +306,50 @@ internal sealed class RuntimeMenuActionAdapter : IMenuActionRuntime
             return Rejected(before, "世界尚未就绪");
         if (!before.MenuOpen)
             return new MenuActionAttempt(before);
-        if (before.Modal || Game1.activeClickableMenu is not { } menu || !menu.readyToClose())
+        if (Game1.activeClickableMenu is not { } menu)
+            return Rejected(before, "当前菜单不能安全关闭");
+        if (menu is DialogueBox dialogue)
+        {
+            if (dialogue.GetType() != typeof(DialogueBox)
+                || !CanSafelyCloseDialogue(dialogue))
+                return Rejected(before, "当前对话不能安全结束");
+            dialogue.receiveLeftClick(0, 0);
+            return new MenuActionAttempt(before, Submitted: true);
+        }
+        if (before.Modal || !menu.readyToClose())
             return Rejected(before, "当前菜单不能安全关闭");
         menu.exitThisMenu();
         return new MenuActionAttempt(before, Submitted: true);
+    }
+
+    private static bool CanSafelyCloseDialogue(DialogueBox dialogue)
+    {
+        try
+        {
+            var text = dialogue.getCurrentString();
+            var hasCharacterDialogue = dialogue.characterDialogue is not null;
+            var characterDialogueIsFinal = !hasCharacterDialogue
+                || dialogue.characterDialogue!.isOnFinalDialogue();
+            return DialogueClosePolicy.CanClose(new DialogueCloseFacts(
+                dialogue.isQuestion,
+                Game1.eventUp,
+                dialogue.transitioning,
+                dialogue.safetyTimer <= 0,
+                PublicStringPolicy.IsValid(text),
+                dialogue.characterIndexInDialogue,
+                text?.Length ?? 0,
+                hasCharacterDialogue,
+                dialogue.characterDialogue?.isCurrentStringContinuedOnNextScreen ?? false,
+                dialogue.characterDialoguesBrokenUp.Count,
+                dialogue.dialogues.Count,
+                characterDialogueIsFinal,
+                Game1.currentObjectDialogue.Count
+            ));
+        }
+        catch
+        {
+            return false;
+        }
     }
 
     public MenuActionAttempt Activate(Ref elementRef, string uiRevision)
@@ -284,21 +363,43 @@ internal sealed class RuntimeMenuActionAdapter : IMenuActionRuntime
         var fact = CurrentElement(elementRef, before.UiRevision);
         if (fact is null || !fact.Visible || !fact.Enabled)
             return new MenuActionAttempt(before, Failed(ErrorCode.StaleRef, "UI Element 已失效或不可用"));
-        if (resolved.Target.Component is not ClickableComponent component
-            || Game1.activeClickableMenu is not { } menu)
-            return new MenuActionAttempt(before, Failed(ErrorCode.Internal, "当前 UI 组件不可用"));
+        if (Game1.activeClickableMenu is not { } menu)
+            return new MenuActionAttempt(before, Failed(ErrorCode.Internal, "当前 UI 菜单不可用"));
+        if (resolved.Target.Extractor == UiExtractorKind.GameMenu
+            && !UiProjectionPolicy.CanActivateGameMenuElement(
+                resolved.Target.Extractor,
+                resolved.Target.PublicKind,
+                fact.Kind,
+                menu.GetType(),
+                typeof(GameMenu)
+            ))
+            return new MenuActionAttempt(before, Failed(ErrorCode.InvalidArgument, "GameMenu 仅允许激活顶部页签"));
 
-        var center = component.bounds.Center;
+        if (resolved.Target.Extractor == UiExtractorKind.DialogueAdvance
+            && menu.GetType() == typeof(DialogueBox))
+        {
+            ((DialogueBox)menu).receiveLeftClick(0, 0);
+            return new MenuActionAttempt(before, Submitted: true);
+        }
+
+        if (resolved.Target.Component is not ClickableComponent component)
+            return new MenuActionAttempt(before, Failed(ErrorCode.Internal, "当前 UI 组件不可用"));
         var activated = resolved.Target.Extractor switch
         {
-            UiExtractorKind.GameMenuTab when menu.GetType() == typeof(GameMenu) => true,
+            UiExtractorKind.GameMenu when UiProjectionPolicy.CanActivateGameMenuElement(
+                resolved.Target.Extractor,
+                resolved.Target.PublicKind,
+                fact.Kind,
+                menu.GetType(),
+                typeof(GameMenu)
+            ) => true,
             UiExtractorKind.DialogueResponse when menu.GetType() == typeof(DialogueBox) => true,
-            UiExtractorKind.ShopSaleRow when menu.GetType() == typeof(ShopMenu) => true,
             _ => false,
         };
         if (!activated)
             return new MenuActionAttempt(before, Failed(ErrorCode.InvalidArgument, "UI Element 类型不支持激活"));
 
+        var center = component.bounds.Center;
         menu.receiveLeftClick(center.X, center.Y);
         return new MenuActionAttempt(before, Submitted: true);
     }

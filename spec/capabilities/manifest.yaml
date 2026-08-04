@@ -114,6 +114,76 @@ capabilities:
     required_scope: game:write
     risk: []
     destructive: false
+  - id: transfer_inventory_item
+    title: 转移箱子物品
+    description: 在当前受支持的箱子菜单中原子转移一项明确物品的指定数量。
+    contract_version: 1.0.0
+    request: TransferInventoryItemRequest
+    result: TransferInventoryItemResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: [changes_save]
+    destructive: true
+  - id: set_equipment_slot
+    title: 设置装备槽
+    description: 在当前原版背包页面中穿戴、替换或取下一个受支持的装备。
+    contract_version: 1.0.0
+    request: SetEquipmentSlotRequest
+    result: SetEquipmentSlotResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: [changes_save]
+    destructive: true
+  - id: move_inventory_item
+    title: 移动背包物品
+    description: 在当前原版背包页面中将一整件玩家物品移到空槽或与目标槽交换。
+    contract_version: 1.0.0
+    request: MoveInventoryItemRequest
+    result: MoveInventoryItemResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: [changes_save]
+    destructive: true
+  - id: craft_item
+    title: 制作物品
+    description: 使用当前 Crafting 页面签发的配方 Ref 执行一次有界制作批次。
+    contract_version: 1.0.0
+    request: CraftItemRequest
+    result: CraftItemResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: [changes_save, consumes_item]
+    destructive: true
+  - id: purchase_shop_item
+    title: 购买商店物品
+    description: 使用当前商店签发的商品 Ref 完成一次有界金币购买批次。
+    contract_version: 1.0.0
+    request: PurchaseShopItemRequest
+    result: PurchaseShopItemResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: [changes_save, spends_money]
+    destructive: true
   - id: activate_ui
     title: 激活界面元素
     description: 在匹配的 UI Revision 上激活 query_ui 返回的可交互元素。

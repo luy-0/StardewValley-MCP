@@ -12,10 +12,10 @@ public sealed class ObservationContractTests
     {
         var snapshot = CapabilityCatalog.CreateSnapshotFor(new[]
         {
-            "say", "emote", "face", "navigate", "interact", "use_tool", "equip", "open_menu", "activate_ui", "close_menu",
+            "say", "emote", "face", "navigate", "interact", "use_tool", "equip", "transfer_inventory_item", "set_equipment_slot", "move_inventory_item", "craft_item", "purchase_shop_item", "open_menu", "activate_ui", "close_menu",
             "query_runtime", "query_world", "query_inventory", "query_ui", "inspect",
         });
-        Assert.That(snapshot.Capabilities, Has.Count.EqualTo(15));
+        Assert.That(snapshot.Capabilities, Has.Count.EqualTo(20));
         Assert.That(snapshot.Capabilities.Single(item => item.Id == "say").Execution, Is.EqualTo(ExecutionMode.Immediate));
         Assert.That(snapshot.Capabilities.Single(item => item.Id == "face").Execution, Is.EqualTo(ExecutionMode.LongRunning));
         Assert.That(snapshot.Capabilities.Single(item => item.Id == "query_runtime").RequiredScope, Is.EqualTo("game:read"));
@@ -66,6 +66,34 @@ public sealed class ObservationContractTests
                 CommandRequest.OperationOneofCase.QueryRuntime,
                 wrongRequestType
             ));
+        });
+    }
+
+    [Test]
+    public void UiEquipmentSlotsKeepStableEnumAndOptionalFieldNumbers()
+    {
+        var field = UiElementFact.Descriptor.FindFieldByNumber(13);
+        var fact = new UiElementFact
+        {
+            Kind = UiElementKind.EquipmentSlot,
+            EquipmentSlotKind = UiEquipmentSlotKind.Hat,
+        };
+
+        Assert.Multiple(() =>
+        {
+            Assert.That((int)UiElementKind.EquipmentSlot, Is.EqualTo(7));
+            Assert.That((int)UiEquipmentSlotKind.Hat, Is.EqualTo(1));
+            Assert.That((int)UiEquipmentSlotKind.LeftRing, Is.EqualTo(2));
+            Assert.That((int)UiEquipmentSlotKind.RightRing, Is.EqualTo(3));
+            Assert.That((int)UiEquipmentSlotKind.Boots, Is.EqualTo(4));
+            Assert.That((int)UiEquipmentSlotKind.Shirt, Is.EqualTo(5));
+            Assert.That((int)UiEquipmentSlotKind.Pants, Is.EqualTo(6));
+            Assert.That((int)UiEquipmentSlotKind.Trinket, Is.EqualTo(7));
+            Assert.That(field?.Name, Is.EqualTo("equipment_slot_kind"));
+            Assert.That(field?.HasPresence, Is.True);
+            Assert.That(fact.HasEquipmentSlotKind, Is.True);
+            fact.ClearEquipmentSlotKind();
+            Assert.That(fact.HasEquipmentSlotKind, Is.False);
         });
     }
 }

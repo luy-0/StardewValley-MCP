@@ -52,6 +52,23 @@ message Error {
   // 面向调用方的脱敏说明，不得包含秘密、堆栈或主机绝对路径。
   string message = 2;
   reserved 3, 4;
+  // 仅在导航命令已开始执行后出现；用于说明已确认的停止位置。
+  optional NavigationFailureContext navigation = 5;
+}
+
+// 导航失败或停止时可附带的结构化上下文。
+// 后续字段只能增加，调用方不得从缺省字段推断未发生的路线步骤。
+message NavigationFailureContext {
+  // Mod 最后一次在游戏主线程确认的玩家位置。
+  optional WorldPosition last_confirmed_position = 1;
+  // 正常 Warp 路线中的计划段数；一段等于一条 Source 到 Target Location 的 Warp 边。
+  optional uint32 route_segments_total = 2;
+  // 已完成并通过目标 Location 稳定门禁的路线段数。
+  optional uint32 route_segments_completed = 3;
+  // 结构化中断原因，例如 "deadline_exceeded"。
+  optional string interruption_reason = 4;
+  // 面向调用方的安全续跑建议，不替代原始目标或重新规划。
+  optional string resume_hint = 5;
 }
 
 message GameDate {

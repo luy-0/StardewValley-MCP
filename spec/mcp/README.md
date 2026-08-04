@@ -95,6 +95,8 @@ MCP Tool 调用默认等待 Mod 终态。若本地等待期限先到，MCP 返�
 
 `StardewToolError` 至少包含 `code`、`message`、`retryable`，可选 `retryAfterMs`。MCP Tool JSON 统一使用 `lowerCamelCase`，与官方 Proto JSON Mapping 保持一致。错误不得泄露共享秘密、HMAC、完整配置、绝对路径或堆栈。
 
+当 Mod Error 携带公共结构化上下文时，MCP 在可选的 `error.details` 中投影它。当前仅定义 `details.navigation`：`lastConfirmedPosition` 表示失败导航最后一次由 Mod 主线程确认的位置；正常 `command_timeout` 还会包含 `routeSegmentsTotal`、`routeSegmentsCompleted`、`interruptionReason` 与 `resumeHint`。这些字段不表示命令成功，也不替代稳定错误码。
+
 Proto `ErrorCode` 到上述错误的唯一、穷尽映射由 [`error-map.yaml`](error-map.yaml) 定义。实现不得根据错误消息文本推断 `tool_code`、`outcome` 或 `retryable`；`unknown` 结果也不得自动重放变更命令。
 
 `route_unavailable` 不来自 Mod，因此作为 `error-map.yaml.local_errors` 中的 MCP 本地错误显式定义；生成器不得在 Python 代码中追加未声明错误。

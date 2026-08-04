@@ -9,7 +9,8 @@ usage() {
   --with-mod  额外构建并审计 Mod ZIP；需要已安装 Stardew Valley 与 SMAPI
   -h, --help  显示本帮助
 
-依赖：uv、.NET 6 SDK。可通过 UV_BIN 指定 uv 可执行文件。
+依赖：uv、能构建 net6.0 的 .NET SDK，以及 Microsoft.NETCore.App 6.x Runtime。
+可通过 UV_BIN 指定 uv 可执行文件。
 USAGE
 }
 
@@ -31,7 +32,11 @@ if ! command -v "$uv_bin" >/dev/null 2>&1; then
   exit 1
 fi
 if ! command -v dotnet >/dev/null 2>&1; then
-  echo "缺少 .NET 6 SDK：https://dotnet.microsoft.com/download/dotnet/6.0" >&2
+  echo "缺少 .NET SDK；兼容性说明见 docs/runtime-compatibility.md。" >&2
+  exit 1
+fi
+if ! dotnet --list-runtimes | grep -Eq '^Microsoft\.NETCore\.App 6\.'; then
+  echo "缺少 Microsoft.NETCore.App 6.x Runtime；net6.0 测试无法启动。" >&2
   exit 1
 fi
 

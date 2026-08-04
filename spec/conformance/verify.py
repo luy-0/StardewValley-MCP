@@ -133,7 +133,7 @@ def verify_manifest_against_proto(manifest: dict[str, Any], messages: dict[str, 
     capabilities = manifest["capabilities"]
     ids = [item["id"] for item in capabilities]
     require(len(ids) == len(set(ids)), "Manifest capability ID 重复")
-    require(len(ids) == 15, f"V1 候选能力数量应为 15，实际为 {len(ids)}")
+    require(len(ids) == 20, f"V1 候选能力数量应为 20，实际为 {len(ids)}")
     requests = oneof_fields(messages["CommandRequest"], "operation")
     results = oneof_fields(messages["CapabilityResult"], "result")
     require(set(ids) == set(requests) == set(results), "Manifest、Request、Result 能力集合不一致")
@@ -207,6 +207,11 @@ def verify_tool_schema_catalog(manifest: dict[str, Any]) -> None:
         "stardew_interact": {"position": {"locationId": "Farm", "x": 1, "y": 2}},
         "stardew_use_tool": {"position": {"locationId": "Farm", "x": 1, "y": 2}, "chargeLevel": 0},
         "stardew_equip": {"slotIndex": 0},
+        "stardew_transfer_inventory_item": {"direction": "player_to_container", "itemRef": {"value": "item-1"}, "quantity": 1, "uiRevision": revision, "playerInventoryRevision": revision, "containerInventoryRevision": revision},
+        "stardew_set_equipment_slot": {"equipmentSlotRef": {"value": "equipment-1"}, "clear": True, "uiRevision": revision, "playerInventoryRevision": revision},
+        "stardew_move_inventory_item": {"itemRef": {"value": "item-1"}, "destinationSlotRef": {"value": "slot-1"}, "uiRevision": revision, "playerInventoryRevision": revision},
+        "stardew_craft_item": {"recipeRef": {"value": "recipe-1"}, "craftCount": 1, "uiRevision": revision},
+        "stardew_purchase_shop_item": {"saleRef": {"value": "sale-1"}, "purchaseCount": 1, "uiRevision": revision},
         "stardew_open_menu": {"menu": "inventory"},
         "stardew_activate_ui": {"elementRef": {"value": "ui-1"}, "uiRevision": revision},
         "stardew_close_menu": {},
@@ -226,6 +231,31 @@ def verify_tool_schema_catalog(manifest: dict[str, Any]) -> None:
         validator = Draft202012Validator(tool["outputSchema"])
         validator.validate(failed)
         validator.validate(unknown)
+
+    navigation_failure = {
+        "status": "failed",
+        "commandId": command_id,
+        "error": {
+            "code": "execution_failed",
+            "message": "最终路径未抵达目标",
+            "retryable": False,
+            "details": {
+                "navigation": {
+                    "lastConfirmedPosition": {"locationId": "Farm", "x": 8, "y": 6}
+                }
+            },
+        },
+    }
+    require(
+        Draft202012Validator(tools["stardew_navigate"]["outputSchema"]).is_valid(navigation_failure),
+        "navigate 错误 Schema 未接受最后确认位置",
+    )
+    for name, tool in tools.items():
+        if name != "stardew_navigate":
+            require(
+                not Draft202012Validator(tool["outputSchema"]).is_valid(navigation_failure),
+                f"非导航 Tool 不得接受导航错误上下文: {name}",
+            )
 
     def synthesize(schema: dict[str, Any], root: dict[str, Any]) -> Any:
         if "$ref" in schema:
@@ -270,7 +300,7 @@ def verify_action_fixtures() -> None:
     tools = {tool["capabilityId"]: tool for tool in catalog["tools"]}
     expected = {
         "say", "emote", "face", "navigate", "interact",
-        "use_tool", "equip", "open_menu", "activate_ui", "close_menu",
+        "use_tool", "equip", "transfer_inventory_item", "set_equipment_slot", "move_inventory_item", "craft_item", "purchase_shop_item", "open_menu", "activate_ui", "close_menu",
     }
     paths = index.get("actionFixtures", [])
     require(len(paths) == len(set(paths)), "动作 Fixture 路径重复")
@@ -648,8 +678,17 @@ def verify_lifecycle_fixtures(transport_pb2: Any, index: dict[str, Any], top_lev
     require(not timed_out.reply_to, "TIMED_OUT 终态事件必须作为主动事件发送")
     require(timed_out.command_event.command_id == command_id, "TIMED_OUT Command ID 不一致")
     require(timed_out.command_event.state == 6, "TIMED_OUT state 错误")
+    require(timed_out.command_event.phase == "timed_out", "TIMED_OUT phase 错误")
     require(timed_out.command_event.WhichOneof("outcome") == "error", "TIMED_OUT 必须仅携带 Error")
     require(timed_out.command_event.error.code == 12, "TIMED_OUT 必须使用 ERROR_CODE_DEADLINE_EXCEEDED")
+    require(timed_out.command_event.error.message == "命令已超过期限", "TIMED_OUT 消息错误")
+    navigation = timed_out.command_event.error.navigation
+    require(navigation.last_confirmed_position.location_id == "Town", "导航超时 Fixture 最后 Location 错误")
+    require(navigation.last_confirmed_position.x == 36 and navigation.last_confirmed_position.y == 57, "导航超时 Fixture 最后 Tile 错误")
+    require(navigation.route_segments_total == 3, "导航超时 Fixture 路线总段数错误")
+    require(navigation.route_segments_completed == 2, "导航超时 Fixture 已完成段数错误")
+    require(navigation.interruption_reason == "deadline_exceeded", "导航超时 Fixture 中断原因错误")
+    require(navigation.resume_hint == "可按原目标重新调用 navigate 继续执行。", "导航超时 Fixture 续跑提示错误")
     verify_event_shape(timed_out.command_event, "navigate")
 
     expired = frames_by_path["commands/navigate.status-expired.json"]
@@ -854,6 +893,11 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
             inspect_success_frames = frames
     require(success_frames is not None, "observation 缺少 query-world 成功场景")
     require(inspect_success_frames is not None, "observation 缺少 inspect 成功场景")
+    world_result = next(
+        frame.command_event.result.query_world
+        for frame in success_frames
+        if frame.WhichOneof("body") == "command_event" and frame.command_event.state == 3
+    )
     inspect_request = next(
         frame.command_request.inspect
         for frame in inspect_success_frames
@@ -863,6 +907,19 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         frame.command_event.result.inspect
         for frame in inspect_success_frames
         if frame.WhichOneof("body") == "command_event" and frame.command_event.state == 3
+    )
+    world_hoe_dirt = next(
+        (entity for entity in world_result.snapshot.entities if entity.ref.value == "entity-a"),
+        None,
+    )
+    inspected_hoe_dirt = inspect_result.items[0].world_entity
+    require(world_hoe_dirt is not None, "Query World Fixture 缺少空 HoeDirt Fact")
+    require(
+        world_hoe_dirt == inspected_hoe_dirt
+        and world_hoe_dirt.kind == 14
+        and world_hoe_dirt.WhichOneof("details") == "hoe_dirt"
+        and world_hoe_dirt.hoe_dirt.watered,
+        "query_world 与 inspect 未返回一致的空 HoeDirt 含水事实",
     )
     require(
         [reference.value for reference in inspect_request.refs]
@@ -894,13 +951,90 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         "query-world.success-minimal.json", "query-world.success-complete.json",
         "query-inventory.success-minimal.json", "query-inventory.success-complete.json",
         "query-ui.success-no-menu.json", "query-ui.success-menu.json",
-        "query-ui.success-unsupported-menu.json",
+        "query-ui.success-unsupported-menu.json", "query-ui.success-dialogue.json",
+        "query-ui.success-item-grab.json", "query-ui.success-inventory-page.json",
+        "query-ui.success-crafting-page.json",
         "inspect.success-minimal.json", "inspect.success-complete.json",
     ]
     for name in standalone:
         frame = transport_pb2.TransportFrame()
         json_format.ParseDict(load_json(FIXTURE_ROOT / "observation" / name), frame, ignore_unknown_fields=False)
         require(frame.command_event.state == 3, f"observation 最小/完整 Fixture 非成功: {name}")
+        if name == "query-ui.success-dialogue.json":
+            elements = frame.command_event.result.query_ui.snapshot.elements
+            require(
+                len(elements) == 1
+                and elements[0].kind == 6
+                and elements[0].label == "结束"
+                and elements[0].center.x == 0
+                and elements[0].center.y == 0,
+                "普通对话 UI Fixture 未覆盖 DIALOGUE_ADVANCE 语义",
+            )
+        if name == "query-ui.success-item-grab.json":
+            snapshot = frame.command_event.result.query_ui.snapshot
+            require(
+                [link.side for link in snapshot.inventories] == [1, 2]
+                and snapshot.inventories[0].container_ref.value == ""
+                and snapshot.inventories[1].container_ref.value == "inventory-container-view",
+                "物品菜单 UI Fixture 未覆盖两侧库存关联",
+            )
+            require(
+                len(snapshot.elements) == 4
+                and [element.inventory_side for element in snapshot.elements] == [1, 1, 2, 2]
+                and snapshot.elements[0].item_ref.value == "inventory-player-item-0"
+                and snapshot.elements[1].item_ref.value == ""
+                and snapshot.elements[2].item_ref.value == ""
+                and snapshot.elements[3].item_ref.value == "inventory-container-item-1"
+                and all(not element.enabled for element in snapshot.elements)
+                and all(not element.HasField("item") for element in snapshot.elements),
+                "物品菜单 UI Fixture 未覆盖空槽、Item Ref 或只读语义",
+            )
+        if name == "query-ui.success-inventory-page.json":
+            snapshot = frame.command_event.result.query_ui.snapshot
+            require(
+                len(snapshot.inventories) == 1
+                and snapshot.inventories[0].side == 1
+                and snapshot.inventories[0].container_ref.value == "",
+                "Inventory 页 Fixture 未复用玩家库存关联",
+            )
+            backpack = [element for element in snapshot.elements if element.kind == 4]
+            equipment = [element for element in snapshot.elements if element.kind == 7]
+            require(
+                len(backpack) == 2
+                and all(element.inventory_side == 1 for element in backpack)
+                and backpack[0].item_ref.value == "inventory-player-item-0"
+                and backpack[1].item_ref.value == ""
+                and all(not element.enabled for element in backpack),
+                "Inventory 页 Fixture 未覆盖玩家背包空槽或 Item Ref",
+            )
+            require(
+                len(equipment) == 2
+                and [element.equipment_slot_kind for element in equipment] == [1, 2]
+                and equipment[0].HasField("item")
+                and not equipment[0].item.HasField("ref")
+                and not equipment[1].HasField("item")
+                and all(not element.enabled for element in equipment),
+                "Inventory 页 Fixture 未覆盖装备槽、空槽或无 Ref Item Fact",
+            )
+        if name == "query-ui.success-crafting-page.json":
+            snapshot = frame.command_event.result.query_ui.snapshot
+            recipes = [element for element in snapshot.elements if element.kind == 8]
+            require(
+                len(recipes) == 2
+                and [element.index for element in recipes] == [0, 1]
+                and [element.visible for element in recipes] == [True, False]
+                and all(not element.enabled for element in recipes),
+                "Crafting 页 Fixture 未覆盖全局序号、跨页可见性或只读语义",
+            )
+            require(
+                recipes[0].crafting_recipe.recipe_key == "Wood Fence"
+                and recipes[0].crafting_recipe.craftable
+                and recipes[0].crafting_recipe.materials[0].available_quantity == 8
+                and recipes[1].crafting_recipe.recipe_key == "Chest"
+                and not recipes[1].crafting_recipe.craftable
+                and recipes[1].crafting_recipe.possible_outputs[0].qualified_item_id == "(BC)130",
+                "Crafting 页 Fixture 未覆盖配方、材料或可能产出事实",
+            )
         verify_event_shape(frame.command_event)
     invalid = load_json(FIXTURE_ROOT / "observation" / "invalid-inputs.json")
     require(invalid.get("schemaVersion") == 1 and len(invalid.get("cases", [])) >= 5, "observation invalid-inputs 覆盖不足")

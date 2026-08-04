@@ -119,6 +119,112 @@ message EquipResult {
   bool changed = 3;
 }
 
+enum InventoryTransferDirection {
+  INVENTORY_TRANSFER_DIRECTION_UNSPECIFIED = 0;
+  INVENTORY_TRANSFER_DIRECTION_PLAYER_TO_CONTAINER = 1;
+  INVENTORY_TRANSFER_DIRECTION_CONTAINER_TO_PLAYER = 2;
+}
+
+message TransferInventoryItemRequest {
+  InventoryTransferDirection direction = 1;
+  Ref item_ref = 2;
+  uint32 quantity = 3;
+  string ui_revision = 4;
+  string player_inventory_revision = 5;
+  string container_inventory_revision = 6;
+}
+
+message TransferInventoryItemResult {
+  uint32 transferred_quantity = 1;
+  uint32 source_slot_index = 2;
+  uint32 source_remaining_quantity = 3;
+  string player_inventory_revision = 4;
+  string container_inventory_revision = 5;
+}
+
+message SetEquipmentSlotRequest {
+  Ref equipment_slot_ref = 1;
+  oneof value {
+    Ref item_ref = 2;
+    bool clear = 3;
+  }
+  string ui_revision = 4;
+  string player_inventory_revision = 5;
+}
+
+message SetEquipmentSlotResult {
+  UiEquipmentSlotKind equipment_slot_kind = 1;
+  uint32 equipment_slot_index = 2;
+  // 清空后缺省；装备槽中的 ItemFact 不签发物品 Ref。
+  optional ItemFact item = 3;
+  string player_inventory_revision = 4;
+  bool changed = 5;
+}
+
+message MoveInventoryItemRequest {
+  Ref item_ref = 1;
+  Ref destination_slot_ref = 2;
+  string ui_revision = 3;
+  string player_inventory_revision = 4;
+}
+
+message MoveInventoryItemResult {
+  uint32 source_slot_index = 1;
+  uint32 destination_slot_index = 2;
+  bool changed = 3;
+  bool swapped = 4;
+  string player_inventory_revision = 5;
+}
+
+enum CraftItemStopReason {
+  CRAFT_ITEM_STOP_REASON_UNSPECIFIED = 0;
+  CRAFT_ITEM_STOP_REASON_COMPLETED = 1;
+  CRAFT_ITEM_STOP_REASON_MATERIALS_INSUFFICIENT = 2;
+  CRAFT_ITEM_STOP_REASON_INVENTORY_FULL = 3;
+}
+
+message CraftingMaterialConsumption {
+  string ingredient_key = 1;
+  uint32 quantity = 2;
+}
+
+message CraftItemRequest {
+  Ref recipe_ref = 1;
+  // 制作轮数；一轮可能产出多件物品。
+  uint32 craft_count = 2;
+  string ui_revision = 3;
+}
+
+message CraftItemResult {
+  uint32 requested_craft_count = 1;
+  uint32 completed_craft_count = 2;
+  CraftItemStopReason stop_reason = 3;
+  repeated CraftingOutputFact outputs = 4;
+  repeated CraftingMaterialConsumption materials_consumed = 5;
+  string player_inventory_revision = 6;
+  string ui_revision = 7;
+}
+
+message PurchaseShopItemRequest {
+  Ref sale_ref = 1;
+  // 购买轮数；一轮可能包含多件同类物品。
+  uint32 purchase_count = 2;
+  string ui_revision = 3;
+}
+
+message PurchaseShopItemResult {
+  uint32 purchase_count = 1;
+  // 实际收入背包的物品，不签发新的物品 Ref。
+  ItemFact item = 2;
+  uint32 total_price = 3;
+  uint32 money_before = 4;
+  uint32 money_after = 5;
+  // 无限库存商品缺省。
+  optional uint32 stock_remaining = 6;
+  string player_inventory_revision = 7;
+  string ui_revision = 8;
+}
+
 message OpenMenuRequest {
   MenuKind menu = 1;
 }

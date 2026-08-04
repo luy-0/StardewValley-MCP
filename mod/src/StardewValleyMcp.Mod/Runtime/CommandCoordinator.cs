@@ -244,7 +244,7 @@ internal sealed class CommandCoordinator
             case ContinuationStep.Failed failure when stop == ContinuationStopSignal.None:
                 Complete(record, NormalizeTerminal(
                     record,
-                    Failed(record.CommandId, failure.Error.Code, failure.Error.Message, "failed")
+                    Failed(record.CommandId, failure.Error, "failed")
                 ), events);
                 break;
             case ContinuationStep.Stopped when stop != ContinuationStopSignal.None:
@@ -266,22 +266,25 @@ internal sealed class CommandCoordinator
             : ContinuationStopSignal.None;
     }
 
-    private void CompleteStop(CommandRecord record, ContinuationStopSignal stop, List<CommandEvent> events) =>
-        Complete(record, stop == ContinuationStopSignal.CancelRequested
-            ? new CommandEvent
-            {
-                CommandId = record.CommandId,
-                State = CommandState.Cancelled,
-                Phase = "cancelled",
-                Error = NewError(ErrorCode.Cancelled, "命令已取消"),
-            }
-            : new CommandEvent
-            {
-                CommandId = record.CommandId,
-                State = CommandState.TimedOut,
-                Phase = "timed_out",
-                Error = NewError(ErrorCode.DeadlineExceeded, "命令已超过期限"),
-            }, events);
+    private void CompleteStop(CommandRecord record, ContinuationStopSignal stop, List<CommandEvent> events)
+    {
+        var error = stop == ContinuationStopSignal.CancelRequested
+            ? NewError(ErrorCode.Cancelled, "命令已取消")
+            : NewError(ErrorCode.DeadlineExceeded, "命令已超过期限");
+        if (record.Continuation is IStopErrorContextProvider context)
+            context.EnrichStopError(stop, error);
+        Complete(record, new CommandEvent
+        {
+            CommandId = record.CommandId,
+            State = stop == ContinuationStopSignal.CancelRequested
+                ? CommandState.Cancelled
+                : CommandState.TimedOut,
+            Phase = stop == ContinuationStopSignal.CancelRequested
+                ? "cancelled"
+                : "timed_out",
+            Error = error,
+        }, events);
+    }
 
     private void Complete(CommandRecord record, CommandEvent terminal, List<CommandEvent> events)
     {
@@ -388,6 +391,14 @@ internal sealed class CommandCoordinator
         State = CommandState.Failed,
         Phase = phase,
         Error = NewError(code, message),
+    };
+
+    private static CommandEvent Failed(string commandId, Error error, string phase) => new()
+    {
+        CommandId = commandId,
+        State = CommandState.Failed,
+        Phase = phase,
+        Error = error.Clone(),
     };
 
     private static Error NewError(ErrorCode code, string message) => new() { Code = code, Message = message };

@@ -1,6 +1,6 @@
 # 快速开始
 
-当前预览版提供十五项公共 Tool：五项观察能力、七项简单交互能力，以及 `navigate`、`interact`、`use_tool` 三项长时能力。MCP 默认只暴露只读能力；只有显式加入 `--allow-write`，才会暴露当前 Mod 同时公告的操作能力。
+当前预览版提供二十项公共 Tool：五项观察能力和十五项需要明确授权的变更能力，其中 `transfer_inventory_item` 用于当前受支持箱子菜单中的单项原子转移，`set_equipment_slot` 用于当前原版背包页面中的穿戴、替换与取下，`move_inventory_item` 用于玩家背包页内的整件移动或交换，`craft_item` 与 `purchase_shop_item` 分别负责按当前 UI Ref 制作和购买。MCP 默认只暴露只读能力；只有显式加入 `--allow-write`，才会暴露当前 Mod 同时公告的操作能力。
 
 当前采用源码优先发布方式，不提供预编译 Mod 或安装器。Agent 从源码自动安装时，请使用根目录的 [`AGENT-GUIDE.md`](../AGENT-GUIDE.md)。
 
@@ -14,6 +14,7 @@
 - 支持本地 stdio MCP Server 的客户端。
 
 构建 Mod 的游戏目录必须同时包含 `Stardew Valley.dll` 和 `StardewModdingAPI.dll`。
+Mod 产物必须继续以 `net6.0` 匹配游戏宿主；CI 使用受支持的新版 SDK 构建，但仍用 .NET 6 Runtime 运行兼容性测试。原因与升级门槛见 [.NET 构建工具与游戏宿主兼容性](runtime-compatibility.md)。
 
 ## 二、安装 Mod
 

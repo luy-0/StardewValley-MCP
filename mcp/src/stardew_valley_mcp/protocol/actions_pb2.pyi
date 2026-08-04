@@ -27,6 +27,19 @@ class ArrivalMode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     ARRIVAL_MODE_UNSPECIFIED: _ClassVar[ArrivalMode]
     ARRIVAL_MODE_EXACT: _ClassVar[ArrivalMode]
     ARRIVAL_MODE_ADJACENT: _ClassVar[ArrivalMode]
+
+class InventoryTransferDirection(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    INVENTORY_TRANSFER_DIRECTION_UNSPECIFIED: _ClassVar[InventoryTransferDirection]
+    INVENTORY_TRANSFER_DIRECTION_PLAYER_TO_CONTAINER: _ClassVar[InventoryTransferDirection]
+    INVENTORY_TRANSFER_DIRECTION_CONTAINER_TO_PLAYER: _ClassVar[InventoryTransferDirection]
+
+class CraftItemStopReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    CRAFT_ITEM_STOP_REASON_UNSPECIFIED: _ClassVar[CraftItemStopReason]
+    CRAFT_ITEM_STOP_REASON_COMPLETED: _ClassVar[CraftItemStopReason]
+    CRAFT_ITEM_STOP_REASON_MATERIALS_INSUFFICIENT: _ClassVar[CraftItemStopReason]
+    CRAFT_ITEM_STOP_REASON_INVENTORY_FULL: _ClassVar[CraftItemStopReason]
 EMOTE_KIND_UNSPECIFIED: EmoteKind
 EMOTE_KIND_HAPPY: EmoteKind
 EMOTE_KIND_SAD: EmoteKind
@@ -39,6 +52,13 @@ EMOTE_KIND_MUSIC: EmoteKind
 ARRIVAL_MODE_UNSPECIFIED: ArrivalMode
 ARRIVAL_MODE_EXACT: ArrivalMode
 ARRIVAL_MODE_ADJACENT: ArrivalMode
+INVENTORY_TRANSFER_DIRECTION_UNSPECIFIED: InventoryTransferDirection
+INVENTORY_TRANSFER_DIRECTION_PLAYER_TO_CONTAINER: InventoryTransferDirection
+INVENTORY_TRANSFER_DIRECTION_CONTAINER_TO_PLAYER: InventoryTransferDirection
+CRAFT_ITEM_STOP_REASON_UNSPECIFIED: CraftItemStopReason
+CRAFT_ITEM_STOP_REASON_COMPLETED: CraftItemStopReason
+CRAFT_ITEM_STOP_REASON_MATERIALS_INSUFFICIENT: CraftItemStopReason
+CRAFT_ITEM_STOP_REASON_INVENTORY_FULL: CraftItemStopReason
 
 class SayRequest(_message.Message):
     __slots__ = ("content",)
@@ -167,6 +187,156 @@ class EquipResult(_message.Message):
     item: _facts_pb2.ItemFact
     changed: bool
     def __init__(self, slot_index: _Optional[int] = ..., item: _Optional[_Union[_facts_pb2.ItemFact, _Mapping]] = ..., changed: _Optional[bool] = ...) -> None: ...
+
+class TransferInventoryItemRequest(_message.Message):
+    __slots__ = ("direction", "item_ref", "quantity", "ui_revision", "player_inventory_revision", "container_inventory_revision")
+    DIRECTION_FIELD_NUMBER: _ClassVar[int]
+    ITEM_REF_FIELD_NUMBER: _ClassVar[int]
+    QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    CONTAINER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    direction: InventoryTransferDirection
+    item_ref: _refs_pb2.Ref
+    quantity: int
+    ui_revision: str
+    player_inventory_revision: str
+    container_inventory_revision: str
+    def __init__(self, direction: _Optional[_Union[InventoryTransferDirection, str]] = ..., item_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., quantity: _Optional[int] = ..., ui_revision: _Optional[str] = ..., player_inventory_revision: _Optional[str] = ..., container_inventory_revision: _Optional[str] = ...) -> None: ...
+
+class TransferInventoryItemResult(_message.Message):
+    __slots__ = ("transferred_quantity", "source_slot_index", "source_remaining_quantity", "player_inventory_revision", "container_inventory_revision")
+    TRANSFERRED_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    SOURCE_SLOT_INDEX_FIELD_NUMBER: _ClassVar[int]
+    SOURCE_REMAINING_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    CONTAINER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    transferred_quantity: int
+    source_slot_index: int
+    source_remaining_quantity: int
+    player_inventory_revision: str
+    container_inventory_revision: str
+    def __init__(self, transferred_quantity: _Optional[int] = ..., source_slot_index: _Optional[int] = ..., source_remaining_quantity: _Optional[int] = ..., player_inventory_revision: _Optional[str] = ..., container_inventory_revision: _Optional[str] = ...) -> None: ...
+
+class SetEquipmentSlotRequest(_message.Message):
+    __slots__ = ("equipment_slot_ref", "item_ref", "clear", "ui_revision", "player_inventory_revision")
+    EQUIPMENT_SLOT_REF_FIELD_NUMBER: _ClassVar[int]
+    ITEM_REF_FIELD_NUMBER: _ClassVar[int]
+    CLEAR_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    equipment_slot_ref: _refs_pb2.Ref
+    item_ref: _refs_pb2.Ref
+    clear: bool
+    ui_revision: str
+    player_inventory_revision: str
+    def __init__(self, equipment_slot_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., item_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., clear: _Optional[bool] = ..., ui_revision: _Optional[str] = ..., player_inventory_revision: _Optional[str] = ...) -> None: ...
+
+class SetEquipmentSlotResult(_message.Message):
+    __slots__ = ("equipment_slot_kind", "equipment_slot_index", "item", "player_inventory_revision", "changed")
+    EQUIPMENT_SLOT_KIND_FIELD_NUMBER: _ClassVar[int]
+    EQUIPMENT_SLOT_INDEX_FIELD_NUMBER: _ClassVar[int]
+    ITEM_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    CHANGED_FIELD_NUMBER: _ClassVar[int]
+    equipment_slot_kind: _facts_pb2.UiEquipmentSlotKind
+    equipment_slot_index: int
+    item: _facts_pb2.ItemFact
+    player_inventory_revision: str
+    changed: bool
+    def __init__(self, equipment_slot_kind: _Optional[_Union[_facts_pb2.UiEquipmentSlotKind, str]] = ..., equipment_slot_index: _Optional[int] = ..., item: _Optional[_Union[_facts_pb2.ItemFact, _Mapping]] = ..., player_inventory_revision: _Optional[str] = ..., changed: _Optional[bool] = ...) -> None: ...
+
+class MoveInventoryItemRequest(_message.Message):
+    __slots__ = ("item_ref", "destination_slot_ref", "ui_revision", "player_inventory_revision")
+    ITEM_REF_FIELD_NUMBER: _ClassVar[int]
+    DESTINATION_SLOT_REF_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    item_ref: _refs_pb2.Ref
+    destination_slot_ref: _refs_pb2.Ref
+    ui_revision: str
+    player_inventory_revision: str
+    def __init__(self, item_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., destination_slot_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., ui_revision: _Optional[str] = ..., player_inventory_revision: _Optional[str] = ...) -> None: ...
+
+class MoveInventoryItemResult(_message.Message):
+    __slots__ = ("source_slot_index", "destination_slot_index", "changed", "swapped", "player_inventory_revision")
+    SOURCE_SLOT_INDEX_FIELD_NUMBER: _ClassVar[int]
+    DESTINATION_SLOT_INDEX_FIELD_NUMBER: _ClassVar[int]
+    CHANGED_FIELD_NUMBER: _ClassVar[int]
+    SWAPPED_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    source_slot_index: int
+    destination_slot_index: int
+    changed: bool
+    swapped: bool
+    player_inventory_revision: str
+    def __init__(self, source_slot_index: _Optional[int] = ..., destination_slot_index: _Optional[int] = ..., changed: _Optional[bool] = ..., swapped: _Optional[bool] = ..., player_inventory_revision: _Optional[str] = ...) -> None: ...
+
+class CraftingMaterialConsumption(_message.Message):
+    __slots__ = ("ingredient_key", "quantity")
+    INGREDIENT_KEY_FIELD_NUMBER: _ClassVar[int]
+    QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    ingredient_key: str
+    quantity: int
+    def __init__(self, ingredient_key: _Optional[str] = ..., quantity: _Optional[int] = ...) -> None: ...
+
+class CraftItemRequest(_message.Message):
+    __slots__ = ("recipe_ref", "craft_count", "ui_revision")
+    RECIPE_REF_FIELD_NUMBER: _ClassVar[int]
+    CRAFT_COUNT_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    recipe_ref: _refs_pb2.Ref
+    craft_count: int
+    ui_revision: str
+    def __init__(self, recipe_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., craft_count: _Optional[int] = ..., ui_revision: _Optional[str] = ...) -> None: ...
+
+class CraftItemResult(_message.Message):
+    __slots__ = ("requested_craft_count", "completed_craft_count", "stop_reason", "outputs", "materials_consumed", "player_inventory_revision", "ui_revision")
+    REQUESTED_CRAFT_COUNT_FIELD_NUMBER: _ClassVar[int]
+    COMPLETED_CRAFT_COUNT_FIELD_NUMBER: _ClassVar[int]
+    STOP_REASON_FIELD_NUMBER: _ClassVar[int]
+    OUTPUTS_FIELD_NUMBER: _ClassVar[int]
+    MATERIALS_CONSUMED_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    requested_craft_count: int
+    completed_craft_count: int
+    stop_reason: CraftItemStopReason
+    outputs: _containers.RepeatedCompositeFieldContainer[_facts_pb2.CraftingOutputFact]
+    materials_consumed: _containers.RepeatedCompositeFieldContainer[CraftingMaterialConsumption]
+    player_inventory_revision: str
+    ui_revision: str
+    def __init__(self, requested_craft_count: _Optional[int] = ..., completed_craft_count: _Optional[int] = ..., stop_reason: _Optional[_Union[CraftItemStopReason, str]] = ..., outputs: _Optional[_Iterable[_Union[_facts_pb2.CraftingOutputFact, _Mapping]]] = ..., materials_consumed: _Optional[_Iterable[_Union[CraftingMaterialConsumption, _Mapping]]] = ..., player_inventory_revision: _Optional[str] = ..., ui_revision: _Optional[str] = ...) -> None: ...
+
+class PurchaseShopItemRequest(_message.Message):
+    __slots__ = ("sale_ref", "purchase_count", "ui_revision")
+    SALE_REF_FIELD_NUMBER: _ClassVar[int]
+    PURCHASE_COUNT_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    sale_ref: _refs_pb2.Ref
+    purchase_count: int
+    ui_revision: str
+    def __init__(self, sale_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., purchase_count: _Optional[int] = ..., ui_revision: _Optional[str] = ...) -> None: ...
+
+class PurchaseShopItemResult(_message.Message):
+    __slots__ = ("purchase_count", "item", "total_price", "money_before", "money_after", "stock_remaining", "player_inventory_revision", "ui_revision")
+    PURCHASE_COUNT_FIELD_NUMBER: _ClassVar[int]
+    ITEM_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_PRICE_FIELD_NUMBER: _ClassVar[int]
+    MONEY_BEFORE_FIELD_NUMBER: _ClassVar[int]
+    MONEY_AFTER_FIELD_NUMBER: _ClassVar[int]
+    STOCK_REMAINING_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    purchase_count: int
+    item: _facts_pb2.ItemFact
+    total_price: int
+    money_before: int
+    money_after: int
+    stock_remaining: int
+    player_inventory_revision: str
+    ui_revision: str
+    def __init__(self, purchase_count: _Optional[int] = ..., item: _Optional[_Union[_facts_pb2.ItemFact, _Mapping]] = ..., total_price: _Optional[int] = ..., money_before: _Optional[int] = ..., money_after: _Optional[int] = ..., stock_remaining: _Optional[int] = ..., player_inventory_revision: _Optional[str] = ..., ui_revision: _Optional[str] = ...) -> None: ...
 
 class OpenMenuRequest(_message.Message):
     __slots__ = ("menu",)

@@ -27,6 +27,13 @@ internal interface ICommandContinuation
     ContinuationStep Tick(ContinuationStopSignal signal);
 }
 
+// Coordinator 保持取消和 Deadline 终态的唯一所有者；长时能力只能在终态写入前
+// 补充已确认的停止上下文，不能自行构造取消或超时错误码。
+internal interface IStopErrorContextProvider
+{
+    void EnrichStopError(ContinuationStopSignal signal, Error error);
+}
+
 internal enum ContinuationStopSignal
 {
     None,

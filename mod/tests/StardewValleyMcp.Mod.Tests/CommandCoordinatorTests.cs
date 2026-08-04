@@ -190,6 +190,42 @@ public sealed class CommandCoordinatorTests
         });
     }
 
+    [Test]
+    public void DeadlineUsesContinuationContextWithoutLettingHandlerConstructTimeout()
+    {
+        var clock = new FakeClock();
+        var coordinator = NewCoordinator(clock, new NavigationTimeoutHandler());
+        var events = new List<CommandEvent>();
+        coordinator.EventPublished += events.Add;
+        var request = new CommandRequest
+        {
+            CommandId = "aeaeaeae-aeae-4eae-8eae-aeaeaeaeaeae",
+            TimeoutMs = 1,
+            Navigate = new NavigateRequest
+            {
+                Position = new WorldPosition { LocationId = "Hospital", X = 10, Y = 15 },
+                Arrival = ArrivalMode.Exact,
+            },
+        };
+
+        coordinator.Submit(request);
+        coordinator.ReleaseAccepted(request.CommandId);
+        coordinator.Tick();
+        clock.Milliseconds = 1;
+        coordinator.Tick();
+
+        var terminal = events.Last();
+        Assert.Multiple(() =>
+        {
+            Assert.That(terminal.State, Is.EqualTo(CommandState.TimedOut));
+            Assert.That(terminal.Error.Code, Is.EqualTo(ErrorCode.DeadlineExceeded));
+            Assert.That(terminal.Error.Navigation.LastConfirmedPosition, Is.EqualTo(new WorldPosition { LocationId = "Town", X = 36, Y = 57 }));
+            Assert.That(terminal.Error.Navigation.RouteSegmentsTotal, Is.EqualTo(3));
+            Assert.That(terminal.Error.Navigation.RouteSegmentsCompleted, Is.EqualTo(2));
+            Assert.That(terminal.Error.Navigation.InterruptionReason, Is.EqualTo("deadline_exceeded"));
+        });
+    }
+
     [TestCase(InvalidTerminalKind.WrongResultBranch)]
     [TestCase(InvalidTerminalKind.Cancelled)]
     [TestCase(InvalidTerminalKind.TimedOut)]
@@ -230,6 +266,11 @@ public sealed class CommandCoordinatorTests
         {
             Assert.That(events.Single().State, Is.EqualTo(CommandState.Failed));
             Assert.That(events.Single().Error.Code, Is.EqualTo(ErrorCode.InvalidArgument));
+            Assert.That(events.Single().Error.Navigation, Is.Not.Null);
+            Assert.That(
+                events.Single().Error.Navigation.LastConfirmedPosition,
+                Is.EqualTo(new WorldPosition { LocationId = "Farm", X = 3, Y = 4 })
+            );
         });
     }
 
@@ -365,7 +406,15 @@ public sealed class CommandCoordinatorTests
         {
             CommandId = commandId,
             State = CommandState.Failed,
-            Error = new Error { Code = ErrorCode.InvalidArgument, Message = "引用类型与能力不匹配" },
+            Error = new Error
+            {
+                Code = ErrorCode.InvalidArgument,
+                Message = "引用类型与能力不匹配",
+                Navigation = new NavigationFailureContext
+                {
+                    LastConfirmedPosition = new WorldPosition { LocationId = "Farm", X = 3, Y = 4 },
+                },
+            },
         };
     }
 
@@ -387,6 +436,39 @@ public sealed class CommandCoordinatorTests
             if (signal == ContinuationStopSignal.DeadlineExceeded)
                 return new ContinuationStep.Stopped();
             return new ContinuationStep.Pending();
+        }
+    }
+
+    private sealed class NavigationTimeoutHandler : ILongRunningCapabilityHandler
+    {
+        public string Id => "navigate";
+        public CommandRequest.OperationOneofCase Operation => CommandRequest.OperationOneofCase.Navigate;
+        public Error? Validate(CommandRequest request) => null;
+        public ICommandContinuation Start(string commandId, CommandRequest request) => new NavigationTimeoutContinuation();
+    }
+
+    private sealed class NavigationTimeoutContinuation : ICommandContinuation, IStopErrorContextProvider
+    {
+        public string Phase => "walking";
+        public uint? ProgressPercent => null;
+        public bool CanCancel => true;
+        public ContinuationStep Tick(ContinuationStopSignal signal) =>
+            signal == ContinuationStopSignal.DeadlineExceeded
+                ? new ContinuationStep.Stopped()
+                : new ContinuationStep.Pending();
+
+        public void EnrichStopError(ContinuationStopSignal signal, Error error)
+        {
+            if (signal != ContinuationStopSignal.DeadlineExceeded)
+                return;
+            error.Navigation = new NavigationFailureContext
+            {
+                LastConfirmedPosition = new WorldPosition { LocationId = "Town", X = 36, Y = 57 },
+                RouteSegmentsTotal = 3,
+                RouteSegmentsCompleted = 2,
+                InterruptionReason = "deadline_exceeded",
+                ResumeHint = "可按原目标重新调用 navigate 继续执行。",
+            };
         }
     }
 

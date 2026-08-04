@@ -130,6 +130,101 @@ public sealed class InspectModContractTests
         });
     }
 
+    [Test]
+    public void WorldEntityQueryFallbackRemainsInspectableWithSameRefAndWarnings()
+    {
+        var source = new ThrowingProjectionSource("world-ref");
+        var queryWarnings = new List<QueryWarning>();
+        var inspectWarnings = new List<QueryWarning>();
+
+        var discovered = WorldProjector.ProjectEntityOrFallback(
+            source.ProjectWorldEntity,
+            source.FallbackWorldEntity,
+            queryWarnings,
+            fallbackOnly: false
+        );
+        var inspected = WorldProjector.ProjectEntityOrFallback(
+            source.ProjectWorldEntity,
+            source.FallbackWorldEntity,
+            inspectWarnings,
+            fallbackOnly: true
+        );
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(source.WorldGetterReads, Is.EqualTo(1));
+            Assert.That(discovered.Kind, Is.EqualTo(EntityKind.GenericObject));
+            Assert.That(inspected.Kind, Is.EqualTo(EntityKind.GenericObject));
+            Assert.That(inspected.Ref.Value, Is.EqualTo(discovered.Ref.Value));
+            Assert.That(
+                inspected.GenericObject.RuntimeType,
+                Is.EqualTo(discovered.GenericObject.RuntimeType)
+            );
+            Assert.That(
+                inspectWarnings.Select(warning => warning.Code),
+                Is.EqualTo(queryWarnings.Select(warning => warning.Code))
+            );
+            Assert.That(queryWarnings.All(warning => warning.Ref.Value == "world-ref"), Is.True);
+            Assert.That(inspectWarnings.All(warning => warning.Ref.Value == "world-ref"), Is.True);
+        });
+    }
+
+    [Test]
+    public void CharacterQueryFallbackRemainsInspectableWithSameRefAndWarnings()
+    {
+        var source = new ThrowingProjectionSource("character-ref");
+        var queryWarnings = new List<QueryWarning>();
+        var inspectWarnings = new List<QueryWarning>();
+
+        var discovered = WorldProjector.ProjectCharacterOrFallback(
+            source.ProjectCharacter,
+            source.FallbackCharacter,
+            queryWarnings,
+            fallbackOnly: false
+        );
+        var inspected = WorldProjector.ProjectCharacterOrFallback(
+            source.ProjectCharacter,
+            source.FallbackCharacter,
+            inspectWarnings,
+            fallbackOnly: true
+        );
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(source.CharacterGetterReads, Is.EqualTo(1));
+            Assert.That(discovered.Kind, Is.EqualTo(CharacterKind.Npc));
+            Assert.That(inspected.Kind, Is.EqualTo(CharacterKind.Npc));
+            Assert.That(inspected.Ref.Value, Is.EqualTo(discovered.Ref.Value));
+            Assert.That(
+                inspectWarnings.Select(warning => warning.Code),
+                Is.EqualTo(queryWarnings.Select(warning => warning.Code))
+            );
+            Assert.That(queryWarnings.Single().Ref.Value, Is.EqualTo("character-ref"));
+            Assert.That(inspectWarnings.Single().Ref.Value, Is.EqualTo("character-ref"));
+        });
+    }
+
+    [Test]
+    public void StaleProjectionIsNotConvertedToFactUnavailable()
+    {
+        var reference = new Ref { Value = "stale" };
+        var result = InspectHandler.Assemble(
+            Request(reference.Value).Inspect,
+            _ => Resolved(reference, RefKind.WorldEntity, new TestInspectTarget(RefKind.WorldEntity)),
+            (_, _) => throw new InspectRefStaleException()
+        );
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Items.Single().Resolution.Status, Is.EqualTo(RefStatus.Stale));
+            Assert.That(
+                result.Items.Single().Resolution.Error?.Code,
+                Is.EqualTo(ErrorCode.StaleRef)
+            );
+            Assert.That(result.Items.Single().Resolution.Ref.Value, Is.EqualTo(reference.Value));
+        });
+    }
+
     private static CommandRequest Request(params string[] refs)
     {
         var request = new CommandRequest { Inspect = new InspectRequest() };
@@ -238,4 +333,60 @@ public sealed class InspectModContractTests
     }
 
     private sealed record TestInspectTarget(RefKind Value) : InspectableRefTarget(Value);
+
+    private sealed class ThrowingProjectionSource
+    {
+        private readonly Ref _reference;
+
+        public ThrowingProjectionSource(string reference)
+        {
+            _reference = new Ref { Value = reference };
+        }
+
+        public int WorldGetterReads { get; private set; }
+        public int CharacterGetterReads { get; private set; }
+
+        public WorldEntityFact ProjectWorldEntity() => new()
+        {
+            Ref = _reference.Clone(),
+            DisplayName = BrokenWorldDisplayName,
+        };
+
+        public WorldEntityFact FallbackWorldEntity() => new()
+        {
+            Ref = _reference.Clone(),
+            Kind = EntityKind.GenericObject,
+            GenericObject = new GenericObjectFact { RuntimeType = "ThirdParty.BrokenEntity" },
+        };
+
+        public CharacterFact ProjectCharacter() => new()
+        {
+            Ref = _reference.Clone(),
+            DisplayName = BrokenCharacterDisplayName,
+        };
+
+        public CharacterFact FallbackCharacter() => new()
+        {
+            Ref = _reference.Clone(),
+            Kind = CharacterKind.Npc,
+        };
+
+        private string BrokenWorldDisplayName
+        {
+            get
+            {
+                WorldGetterReads++;
+                throw new InvalidOperationException("third-party world getter failed");
+            }
+        }
+
+        private string BrokenCharacterDisplayName
+        {
+            get
+            {
+                CharacterGetterReads++;
+                throw new InvalidOperationException("third-party character getter failed");
+            }
+        }
+    }
 }

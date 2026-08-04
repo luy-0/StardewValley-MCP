@@ -1,0 +1,9 @@
+{
+  "capability": "purchase_shop_item",
+  "minimalInput": {"saleRef":{"value":"sale-ref"},"purchaseCount":1,"uiRevision":"0000000000000000000000000000000000000000000000000000000000000000"},
+  "fullInput": {"saleRef":{"value":"sale-ref-2"},"purchaseCount":25,"uiRevision":"1111111111111111111111111111111111111111111111111111111111111111"},
+  "invalidInput": {"saleRef":{"value":"sale-ref"},"purchaseCount":0,"uiRevision":"0000000000000000000000000000000000000000000000000000000000000000"},
+  "accepted": {"state":"accepted","phase":"queued"},
+  "succeeded": {"status":"succeeded","commandId":"41000000-0000-4000-8000-000000000015","output":{"purchaseCount":3,"item":{"qualifiedItemId":"(O)472","displayName":"防风草种子","category":"种子","stack":3,"quality":0,"tool":false,"toolLevel":0},"totalPrice":60,"moneyBefore":500,"moneyAfter":440,"stockRemaining":7,"playerInventoryRevision":"2222222222222222222222222222222222222222222222222222222222222222","uiRevision":"3333333333333333333333333333333333333333333333333333333333333333"}},
+  "failed": {"status":"failed","commandId":"41000000-0000-4000-8000-000000000015","error":{"code":"not_ready","message":"金币、库存或背包容量不足，未开始购买","retryable":true}}
+}

@@ -31,7 +31,8 @@ internal static class InventoryProjector
             view.RevisionSelectedSlot,
             includeEmptySlots,
             refs,
-            (target, reference) => ItemFactProjector.Project((StardewValley.Item)target, reference)
+            (target, reference) => ItemFactProjector.Project((StardewValley.Item)target, reference),
+            view.RefObservationCapacity
         );
     }
 
@@ -43,7 +44,8 @@ internal static class InventoryProjector
         int selectedSlot,
         bool includeEmptySlots,
         OpaqueRefStore refs,
-        Func<object, Ref, ItemFact> projectItem
+        Func<object, Ref, ItemFact> projectItem,
+        int? refObservationCapacity = null
     )
     {
         var completeSlots = new List<InventorySlot>(captured.Count);
@@ -68,7 +70,7 @@ internal static class InventoryProjector
             }
             completeSlots.Add(slot);
         }
-        refs.CompleteInventoryObservation(owner, captured.Count);
+        refs.CompleteInventoryObservation(owner, refObservationCapacity ?? captured.Count);
         return AssembleCompleteSnapshot(
             containerKind,
             containerRef,

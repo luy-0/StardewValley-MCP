@@ -82,12 +82,28 @@ ERROR_CODE_PROTOCOL_VIOLATION: ErrorCode
 ERROR_CODE_INTERNAL: ErrorCode
 
 class Error(_message.Message):
-    __slots__ = ("code", "message")
+    __slots__ = ("code", "message", "navigation")
     CODE_FIELD_NUMBER: _ClassVar[int]
     MESSAGE_FIELD_NUMBER: _ClassVar[int]
+    NAVIGATION_FIELD_NUMBER: _ClassVar[int]
     code: ErrorCode
     message: str
-    def __init__(self, code: _Optional[_Union[ErrorCode, str]] = ..., message: _Optional[str] = ...) -> None: ...
+    navigation: NavigationFailureContext
+    def __init__(self, code: _Optional[_Union[ErrorCode, str]] = ..., message: _Optional[str] = ..., navigation: _Optional[_Union[NavigationFailureContext, _Mapping]] = ...) -> None: ...
+
+class NavigationFailureContext(_message.Message):
+    __slots__ = ("last_confirmed_position", "route_segments_total", "route_segments_completed", "interruption_reason", "resume_hint")
+    LAST_CONFIRMED_POSITION_FIELD_NUMBER: _ClassVar[int]
+    ROUTE_SEGMENTS_TOTAL_FIELD_NUMBER: _ClassVar[int]
+    ROUTE_SEGMENTS_COMPLETED_FIELD_NUMBER: _ClassVar[int]
+    INTERRUPTION_REASON_FIELD_NUMBER: _ClassVar[int]
+    RESUME_HINT_FIELD_NUMBER: _ClassVar[int]
+    last_confirmed_position: WorldPosition
+    route_segments_total: int
+    route_segments_completed: int
+    interruption_reason: str
+    resume_hint: str
+    def __init__(self, last_confirmed_position: _Optional[_Union[WorldPosition, _Mapping]] = ..., route_segments_total: _Optional[int] = ..., route_segments_completed: _Optional[int] = ..., interruption_reason: _Optional[str] = ..., resume_hint: _Optional[str] = ...) -> None: ...
 
 class GameDate(_message.Message):
     __slots__ = ("season", "day_of_month", "year")

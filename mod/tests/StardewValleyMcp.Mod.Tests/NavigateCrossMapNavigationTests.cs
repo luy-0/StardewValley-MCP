@@ -418,6 +418,20 @@ public sealed class NavigateCrossMapNavigationTests
             continuation.Tick(ContinuationStopSignal.DeadlineExceeded),
             Is.TypeOf<ContinuationStep.Stopped>()
         );
+        var error = new Error { Code = ErrorCode.DeadlineExceeded, Message = "命令已超过期限" };
+        ((IStopErrorContextProvider)continuation).EnrichStopError(
+            ContinuationStopSignal.DeadlineExceeded,
+            error
+        );
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(error.Navigation.LastConfirmedPosition, Is.EqualTo(Position("Town", 2, 2)));
+            Assert.That(error.Navigation.RouteSegmentsTotal, Is.EqualTo(1));
+            Assert.That(error.Navigation.RouteSegmentsCompleted, Is.EqualTo(1));
+            Assert.That(error.Navigation.InterruptionReason, Is.EqualTo("deadline_exceeded"));
+            Assert.That(error.Navigation.ResumeHint, Is.EqualTo("可按原目标重新调用 navigate 继续执行。"));
+        });
     }
 
     private static FixtureState StartedTransitionFixture()

@@ -7,10 +7,16 @@ namespace StardewValleyMcp.Mod;
 
 internal static class UiRuntimeProjector
 {
-    private const int GameMenuLimit = 32;
+    private const int GameMenuLimit = 64;
     private const int DialogueLimit = 64;
 
     public static QueryUiResult Project(
+        IClickableMenu menu,
+        Farmer player,
+        OpaqueRefStore refs
+    ) => Capture(menu, player, refs).Result;
+
+    internal static UiRuntimeProjectionCapture Capture(
         IClickableMenu menu,
         Farmer player,
         OpaqueRefStore refs
@@ -21,7 +27,8 @@ internal static class UiRuntimeProjector
             runtimeType,
             typeof(GameMenu),
             typeof(DialogueBox),
-            typeof(ShopMenu)
+            typeof(ShopMenu),
+            typeof(ItemGrabMenu)
         );
         var warnings = new List<QueryWarning>();
         var dialogueCapture = classification == UiMenuClassification.DialogueBox
@@ -30,24 +37,58 @@ internal static class UiRuntimeProjector
         var shell = CreateShell(menu, runtimeType, classification, dialogueCapture, warnings);
         var viewport = new UiBounds(0, 0, Game1.uiViewport.Width, Game1.uiViewport.Height);
         var descriptors = new List<UiElementDescriptor>();
+        var inventories = new List<UiInventoryLink>();
         var extractor = UiExtractorKind.Unsupported;
         var actionState = "";
+        var completeness = UiElementSetCompleteness.Complete;
 
         switch (classification)
         {
             case UiMenuClassification.GameMenu:
             {
                 var gameMenu = (GameMenu)menu;
-                extractor = UiExtractorKind.GameMenuTab;
+                extractor = UiExtractorKind.GameMenu;
                 actionState = $"tab:{gameMenu.currentTab}";
-                ExtractGameMenu(gameMenu, viewport, descriptors, warnings);
+                var pageState = InventoryPageProjector.CapturePageState(gameMenu, warnings);
+                completeness = ExtractGameMenu(
+                    gameMenu,
+                    pageState,
+                    viewport,
+                    descriptors,
+                    warnings
+                );
+                if (completeness == UiElementSetCompleteness.Complete)
+                {
+                    completeness = InventoryPageProjector.Extract(
+                        gameMenu,
+                        player,
+                        refs,
+                        viewport,
+                        descriptors,
+                        inventories,
+                        warnings
+                    ).Completeness;
+                }
+                if (completeness == UiElementSetCompleteness.Complete)
+                {
+                    var crafting = CraftingPageProjector.Extract(
+                        gameMenu,
+                        player,
+                        viewport,
+                        descriptors,
+                        warnings
+                    );
+                    completeness = crafting.Completeness;
+                    if (!string.IsNullOrEmpty(crafting.ActionState))
+                        actionState = $"{actionState}:{crafting.ActionState}";
+                }
                 break;
             }
             case UiMenuClassification.DialogueBox:
             {
                 var dialogue = (DialogueBox)menu;
-                extractor = UiExtractorKind.DialogueResponse;
-                ExtractDialogue(
+                extractor = UiProjectionPolicy.DialogueExtractor(dialogue.isQuestion);
+                completeness = ExtractDialogue(
                     dialogue,
                     dialogueCapture!,
                     viewport,
@@ -61,7 +102,36 @@ internal static class UiRuntimeProjector
             {
                 var shop = (ShopMenu)menu;
                 extractor = UiExtractorKind.ShopSaleRow;
-                ExtractShop(shop, player, viewport, descriptors, warnings, out actionState);
+                completeness = ExtractShop(
+                    shop,
+                    viewport,
+                    descriptors,
+                    warnings,
+                    out actionState
+                );
+                break;
+            }
+            case UiMenuClassification.ItemGrabMenu:
+            {
+                extractor = UiExtractorKind.ItemGrabSlot;
+                var itemGrab = ItemGrabMenuProjector.Extract(
+                    (ItemGrabMenu)menu,
+                    player,
+                    refs,
+                    viewport,
+                    descriptors,
+                    inventories,
+                    warnings
+                );
+                actionState = "item-grab";
+                completeness = itemGrab.Completeness;
+                if (!itemGrab.Supported)
+                {
+                    extractor = UiExtractorKind.Unsupported;
+                    actionState = "";
+                    descriptors.Clear();
+                    inventories.Clear();
+                }
                 break;
             }
             default:
@@ -72,8 +142,13 @@ internal static class UiRuntimeProjector
                 break;
         }
 
-        var owner = new RuntimeUiElementRefOwner(menu, extractor);
-        return UiProjector.ProjectDescriptors(
+        if (descriptors.Any(descriptor => !descriptor.IsValid()))
+            completeness = UiElementSetCompleteness.Incomplete;
+        if (extractor == UiExtractorKind.GameMenu
+            && completeness == UiElementSetCompleteness.Incomplete)
+            DisableGameMenuTabs(descriptors);
+        var owner = new RuntimeUiElementRefOwner(menu, extractor, refs);
+        var result = UiProjector.ProjectDescriptors(
             menu,
             shell,
             extractor,
@@ -81,8 +156,11 @@ internal static class UiRuntimeProjector
             descriptors,
             warnings,
             owner,
-            refs
+            refs,
+            completeness,
+            inventories
         );
+        return new UiRuntimeProjectionCapture(result, completeness);
     }
 
     private static UiMenuFact CreateShell(
@@ -196,8 +274,9 @@ internal static class UiRuntimeProjector
         return new CapturedDialogueMenu(title, text, textReadable && textValid);
     }
 
-    private static void ExtractGameMenu(
+    private static UiElementSetCompleteness ExtractGameMenu(
         GameMenu menu,
+        GameMenuPageState pageState,
         UiBounds viewport,
         List<UiElementDescriptor> output,
         List<QueryWarning> warnings
@@ -206,7 +285,7 @@ internal static class UiRuntimeProjector
         if (menu.tabs.Count > GameMenuLimit)
         {
             warnings.Add(LimitWarning());
-            return;
+            return UiElementSetCompleteness.Incomplete;
         }
         var skipped = 0;
         foreach (var component in menu.tabs)
@@ -227,7 +306,7 @@ internal static class UiRuntimeProjector
             var visible = UiProjectionPolicy.IsVisible(bounds, component.visible, viewport);
             var center = UiProjectionPolicy.Center(bounds);
             output.Add(new UiElementDescriptor(
-                UiExtractorKind.GameMenuTab,
+                UiExtractorKind.GameMenu,
                 UiElementKind.Tab,
                 index,
                 component,
@@ -235,15 +314,18 @@ internal static class UiRuntimeProjector
                 $"game-menu-tab:{index}",
                 label,
                 visible,
-                visible && index != menu.currentTab,
+                visible && pageState.ReadyToClose && index != menu.currentTab,
                 center.X,
                 center.Y
             ));
         }
         AddSkippedWarning(skipped, warnings);
+        return skipped == 0 && pageState.Completeness == UiElementSetCompleteness.Complete
+            ? UiElementSetCompleteness.Complete
+            : UiElementSetCompleteness.Incomplete;
     }
 
-    private static void ExtractDialogue(
+    private static UiElementSetCompleteness ExtractDialogue(
         DialogueBox menu,
         CapturedDialogueMenu capture,
         UiBounds viewport,
@@ -256,14 +338,56 @@ internal static class UiRuntimeProjector
             && menu.characterIndexInDialogue >= capture.Text.Length - 1;
         actionState = $"dialogue:{menu.isQuestion}:{menu.transitioning}:{menu.safetyTimer <= 0}:{fullyPresented}";
         if (!menu.isQuestion)
-            return;
+        {
+            if (!capture.TextReadable)
+                return UiElementSetCompleteness.Incomplete;
+            try
+            {
+                var brokenUpPageCount = menu.characterDialoguesBrokenUp?.Count ?? 0;
+                var plainDialogueCount = menu.dialogues?.Count ?? 0;
+                var hasNextPage = UiProjectionPolicy.DialogueHasNextPage(
+                    menu.characterDialogue is not null,
+                    menu.characterDialogue?.isCurrentStringContinuedOnNextScreen ?? false,
+                    brokenUpPageCount,
+                    plainDialogueCount
+                );
+                var characterDialogueIndex = menu.characterDialogue?.currentDialogueIndex ?? -1;
+                var guard = $"dialogue-advance:{characterDialogueIndex}:{brokenUpPageCount}:{plainDialogueCount}:{hasNextPage}:{capture.Text}";
+                output.Add(new UiElementDescriptor(
+                    UiExtractorKind.DialogueAdvance,
+                    UiElementKind.DialogueAdvance,
+                    0,
+                    null,
+                    menu,
+                    guard,
+                    UiProjectionPolicy.DialogueAdvanceLabel(hasNextPage),
+                    true,
+                    UiProjectionPolicy.DialogueEnabled(
+                        true,
+                        menu.transitioning,
+                        menu.safetyTimer <= 0,
+                        capture.TextReadable,
+                        menu.characterIndexInDialogue,
+                        capture.Text.Length
+                    ),
+                    0,
+                    0
+                ));
+                return UiElementSetCompleteness.Complete;
+            }
+            catch
+            {
+                warnings.Add(ProjectionWarning());
+                return UiElementSetCompleteness.Incomplete;
+            }
+        }
         if (menu.responses is null || menu.responses.Length > DialogueLimit)
         {
             if (menu.responses?.Length > DialogueLimit)
                 warnings.Add(LimitWarning());
             else
                 warnings.Add(ProjectionWarning());
-            return;
+            return UiElementSetCompleteness.Incomplete;
         }
         if (menu.responses.Length > 0 && (menu.responseCC is null || menu.responseCC.Count == 0))
         {
@@ -271,12 +395,12 @@ internal static class UiRuntimeProjector
                 "UI_ELEMENTS_NOT_PRESENTED",
                 "对话选项尚未由游戏呈现"
             ));
-            return;
+            return UiElementSetCompleteness.Incomplete;
         }
         if (menu.responseCC is null || menu.responseCC.Count != menu.responses.Length)
         {
             warnings.Add(ProjectionWarning());
-            return;
+            return UiElementSetCompleteness.Incomplete;
         }
 
         var skipped = 0;
@@ -315,18 +439,20 @@ internal static class UiRuntimeProjector
             ));
         }
         AddSkippedWarning(skipped, warnings);
+        return skipped == 0
+            ? UiElementSetCompleteness.Complete
+            : UiElementSetCompleteness.Incomplete;
     }
 
-    private static void ExtractShop(
+    private static UiElementSetCompleteness ExtractShop(
         ShopMenu menu,
-        Farmer player,
         UiBounds viewport,
         List<UiElementDescriptor> output,
         List<QueryWarning> warnings,
         out string actionState
     )
     {
-        actionState = $"shop:{menu.currentItemIndex}:{menu.currency}:{menu.safetyTimer <= 0}:{menu.heldItem is null}:{menu.readOnly}:{menu.canPurchaseCheck is null}";
+        actionState = $"shop:{menu.currentItemIndex}:{menu.currency}";
         var selected = UiProjectionPolicy.SelectShopViewport(
             menu.currentItemIndex,
             menu.forSaleButtons.Count,
@@ -335,7 +461,7 @@ internal static class UiRuntimeProjector
         if (selected is null)
         {
             warnings.Add(LimitWarning());
-            return;
+            return UiElementSetCompleteness.Incomplete;
         }
 
         var skipped = 0;
@@ -395,53 +521,15 @@ internal static class UiRuntimeProjector
                         "当前价格使用非金币货币"
                     ));
                 }
-                var tradeRequired = true;
                 if (!string.IsNullOrEmpty(stockInfo.TradeItem))
                 {
                     descriptorWarnings.Add(DescriptorWarning(
                         "UI_PRICE_PARTIAL",
                         "当前商品还需要协议未表示的交换物"
                     ));
-                    var requiredCount = stockInfo.TradeItemCount
-                        ?? ShopMenu.numberRequiredForExtraItemTrade;
-#pragma warning disable CS0618
-                    tradeRequired = requiredCount >= 0
-                        && player.getItemCount(stockInfo.TradeItem) >= requiredCount;
-#pragma warning restore CS0618
-                }
-                if (menu.canPurchaseCheck is not null)
-                {
-                    descriptorWarnings.Add(DescriptorWarning(
-                        "UI_ELEMENT_ACTIVATION_UNCERTAIN",
-                        "当前商品存在不可无副作用验证的购买条件"
-                    ));
-                }
-                var vanillaSafeSalable = UiProjectionPolicy.IsExactActivationKnownType(
-                    salable.GetType(),
-                    typeof(StardewValley.Object)
-                );
-                if (!vanillaSafeSalable)
-                {
-                    descriptorWarnings.Add(DescriptorWarning(
-                        "UI_ELEMENT_ACTIVATION_UNCERTAIN",
-                        "第三方商品的购买条件不能无副作用验证"
-                    ));
                 }
 
                 var unlimited = stockInfo.Stock == ShopMenu.infiniteStock;
-                var enabled = UiProjectionPolicy.ShopEnabled(new ShopActivationFacts(
-                    visible,
-                    menu.safetyTimer <= 0,
-                    menu.heldItem is not null,
-                    menu.readOnly,
-                    unlimited,
-                    stockInfo.Stock,
-                    stockInfo.Price,
-                    ShopMenu.getPlayerCurrencyAmount(player, menu.currency),
-                    tradeRequired,
-                    menu.canPurchaseCheck is not null,
-                    vanillaSafeSalable
-                ));
                 output.Add(new UiElementDescriptor(
                     UiExtractorKind.ShopSaleRow,
                     UiElementKind.ItemSlot,
@@ -451,7 +539,7 @@ internal static class UiRuntimeProjector
                     $"shop-sale-row:{absoluteIndex}",
                     label,
                     visible,
-                    enabled,
+                    false,
                     center.X,
                     center.Y,
                     itemFact,
@@ -466,6 +554,9 @@ internal static class UiRuntimeProjector
             }
         }
         AddSkippedWarning(skipped, warnings);
+        return skipped == 0
+            ? UiElementSetCompleteness.Complete
+            : UiElementSetCompleteness.Incomplete;
     }
 
     internal static int TabIndex(string? name) => name switch
@@ -519,6 +610,148 @@ internal static class UiRuntimeProjector
 
     private static UiDescriptorWarning DescriptorWarning(string code, string message) =>
         new(code, message);
+
+    internal static UiElementLookup ResolveCurrentElement(
+        IClickableMenu menu,
+        UiExtractorKind extractor,
+        UiElementBindingIdentity identity,
+        OpaqueRefStore refs
+    )
+    {
+        var warnings = new List<QueryWarning>();
+        var descriptors = new List<UiElementDescriptor>();
+        var viewport = new UiBounds(0, 0, Game1.uiViewport.Width, Game1.uiViewport.Height);
+        UiElementSetCompleteness completeness;
+        switch (extractor)
+        {
+            case UiExtractorKind.GameMenu when menu.GetType() == typeof(GameMenu):
+                if (Game1.player is not { } gameMenuPlayer)
+                    return new UiElementLookup(UiElementLookupStatus.Unavailable);
+                var gameMenu = (GameMenu)menu;
+                var gameMenuInventories = new List<UiInventoryLink>();
+                var pageState = InventoryPageProjector.CapturePageState(gameMenu, warnings);
+                completeness = ExtractGameMenu(
+                    gameMenu,
+                    pageState,
+                    viewport,
+                    descriptors,
+                    warnings
+                );
+                if (completeness == UiElementSetCompleteness.Complete)
+                {
+                    completeness = InventoryPageProjector.Extract(
+                        gameMenu,
+                        gameMenuPlayer,
+                        refs,
+                        viewport,
+                        descriptors,
+                        gameMenuInventories,
+                        warnings
+                    ).Completeness;
+                }
+                if (completeness == UiElementSetCompleteness.Complete)
+                {
+                    completeness = CraftingPageProjector.Extract(
+                        gameMenu,
+                        gameMenuPlayer,
+                        viewport,
+                        descriptors,
+                        warnings
+                    ).Completeness;
+                }
+                break;
+            case UiExtractorKind.DialogueResponse when menu.GetType() == typeof(DialogueBox):
+                var dialogue = (DialogueBox)menu;
+                completeness = ExtractDialogue(
+                    dialogue,
+                    CaptureDialogue(dialogue, warnings),
+                    viewport,
+                    descriptors,
+                    warnings,
+                    out _
+                );
+                break;
+            case UiExtractorKind.DialogueAdvance when menu.GetType() == typeof(DialogueBox):
+                var advance = (DialogueBox)menu;
+                completeness = ExtractDialogue(
+                    advance,
+                    CaptureDialogue(advance, warnings),
+                    viewport,
+                    descriptors,
+                    warnings,
+                    out _
+                );
+                break;
+            case UiExtractorKind.ShopSaleRow when menu.GetType() == typeof(ShopMenu):
+                completeness = ExtractShop(
+                    (ShopMenu)menu,
+                    viewport,
+                    descriptors,
+                    warnings,
+                    out _
+                );
+                break;
+            case UiExtractorKind.ItemGrabSlot when menu.GetType() == typeof(ItemGrabMenu):
+                if (Game1.player is not { } itemGrabPlayer)
+                    return new UiElementLookup(UiElementLookupStatus.Unavailable);
+                var inventories = new List<UiInventoryLink>();
+                var capture = ItemGrabMenuProjector.Extract(
+                    (ItemGrabMenu)menu,
+                    itemGrabPlayer,
+                    refs,
+                    viewport,
+                    descriptors,
+                    inventories,
+                    warnings
+                );
+                if (!capture.Supported)
+                    return new UiElementLookup(UiElementLookupStatus.Stale);
+                completeness = capture.Completeness;
+                break;
+            default:
+                return new UiElementLookup(UiElementLookupStatus.Stale);
+        }
+
+        if (completeness == UiElementSetCompleteness.Incomplete
+            || descriptors.Any(descriptor => !descriptor.IsValid()))
+            return new UiElementLookup(UiElementLookupStatus.Unavailable);
+        var current = descriptors.FirstOrDefault(descriptor =>
+            DescriptorMatchesIdentity(descriptor, identity));
+        if (current is null)
+            return new UiElementLookup(UiElementLookupStatus.Stale);
+        return ReferenceEquals(current.Component, identity.Component)
+            && ReferenceEquals(current.SemanticTarget, identity.SemanticTarget)
+            && string.Equals(current.Guard, identity.Guard, StringComparison.Ordinal)
+            ? new UiElementLookup(
+                UiElementLookupStatus.Resolved,
+                current.Component,
+                current.SemanticTarget,
+                current.Guard
+            )
+            : new UiElementLookup(UiElementLookupStatus.Stale);
+    }
+
+    internal static bool DescriptorMatchesIdentity(
+        UiElementDescriptor descriptor,
+        UiElementBindingIdentity identity
+    ) => descriptor.Extractor == identity.Extractor
+        && descriptor.Kind == identity.PublicKind
+        && (descriptor.InventorySide ?? UiInventorySide.Unspecified)
+            == identity.InventorySide
+        && (descriptor.EquipmentSlotKind ?? UiEquipmentSlotKind.Unspecified)
+            == identity.EquipmentSlotKind
+        && descriptor.Index == identity.Index;
+
+    internal static void DisableGameMenuTabs(List<UiElementDescriptor> descriptors)
+    {
+        for (var index = 0; index < descriptors.Count; index++)
+        {
+            if (descriptors[index].Extractor == UiExtractorKind.GameMenu
+                && descriptors[index].Kind == UiElementKind.Tab
+                && descriptors[index].Enabled)
+                descriptors[index] = descriptors[index] with { Enabled = false };
+        }
+    }
 }
 
 internal sealed record CapturedDialogueMenu(
@@ -531,11 +764,17 @@ internal sealed class RuntimeUiElementRefOwner : IUiElementRefOwner
 {
     private readonly WeakReference<IClickableMenu> _menu;
     private readonly UiExtractorKind _extractor;
+    private readonly OpaqueRefStore _refs;
 
-    public RuntimeUiElementRefOwner(IClickableMenu menu, UiExtractorKind extractor)
+    public RuntimeUiElementRefOwner(
+        IClickableMenu menu,
+        UiExtractorKind extractor,
+        OpaqueRefStore refs
+    )
     {
         _menu = new WeakReference<IClickableMenu>(menu);
         _extractor = extractor;
+        _refs = refs;
     }
 
     public bool TryGetMenuIdentity(out object menu)
@@ -558,13 +797,7 @@ internal sealed class RuntimeUiElementRefOwner : IUiElementRefOwner
                 || identity.Extractor != _extractor)
                 return new UiElementLookup(UiElementLookupStatus.Stale);
 
-            return identity.Extractor switch
-            {
-                UiExtractorKind.GameMenuTab => ResolveTab(menu, identity),
-                UiExtractorKind.DialogueResponse => ResolveDialogue(menu, identity),
-                UiExtractorKind.ShopSaleRow => ResolveShop(menu, identity),
-                _ => new UiElementLookup(UiElementLookupStatus.Stale),
-            };
+            return UiRuntimeProjector.ResolveCurrentElement(menu, _extractor, identity, _refs);
         }
         catch
         {
@@ -572,81 +805,4 @@ internal sealed class RuntimeUiElementRefOwner : IUiElementRefOwner
         }
     }
 
-    private static UiElementLookup ResolveTab(
-        IClickableMenu menu,
-        UiElementBindingIdentity identity
-    )
-    {
-        if (menu.GetType() != typeof(GameMenu))
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        var tabs = ((GameMenu)menu).tabs;
-        if (tabs.Count > 32)
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        var tab = tabs.FirstOrDefault(candidate =>
-            candidate is not null && UiRuntimeProjector.TabIndex(candidate.name) == identity.Index);
-        return tab is not null
-            && ReferenceEquals(tab, identity.Component)
-            && ReferenceEquals(tab, identity.SemanticTarget)
-            ? Resolved(identity)
-            : new UiElementLookup(UiElementLookupStatus.Stale);
-    }
-
-    private static UiElementLookup ResolveDialogue(
-        IClickableMenu menu,
-        UiElementBindingIdentity identity
-    )
-    {
-        if (menu.GetType() != typeof(DialogueBox))
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        var dialogue = (DialogueBox)menu;
-        if (!dialogue.isQuestion
-            || dialogue.responses is null
-            || dialogue.responseCC is null
-            || dialogue.responses.Length > 64
-            || dialogue.responses.Length != dialogue.responseCC.Count
-            || identity.Index < 0
-            || identity.Index >= dialogue.responses.Length)
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        var response = dialogue.responses[identity.Index];
-        var component = dialogue.responseCC[identity.Index];
-        return ReferenceEquals(response, identity.SemanticTarget)
-            && ReferenceEquals(component, identity.Component)
-            && string.Equals(
-                identity.Guard,
-                $"dialogue-response:{identity.Index}:{response.responseKey ?? ""}",
-                StringComparison.Ordinal
-            )
-            ? Resolved(identity)
-            : new UiElementLookup(UiElementLookupStatus.Stale);
-    }
-
-    private static UiElementLookup ResolveShop(
-        IClickableMenu menu,
-        UiElementBindingIdentity identity
-    )
-    {
-        if (menu.GetType() != typeof(ShopMenu))
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        var shop = (ShopMenu)menu;
-        if (shop.forSaleButtons.Count > 16)
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        var row = identity.Index - shop.currentItemIndex;
-        if (identity.Index < 0
-            || identity.Index >= shop.forSale.Count
-            || row < 0
-            || row >= shop.forSaleButtons.Count)
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        return ReferenceEquals(shop.forSale[identity.Index], identity.SemanticTarget)
-            && ReferenceEquals(shop.forSaleButtons[row], identity.Component)
-            ? Resolved(identity)
-            : new UiElementLookup(UiElementLookupStatus.Stale);
-    }
-
-    private static UiElementLookup Resolved(UiElementBindingIdentity identity) =>
-        new(
-            UiElementLookupStatus.Resolved,
-            identity.Component,
-            identity.SemanticTarget,
-            identity.Guard
-        );
 }

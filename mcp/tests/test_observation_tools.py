@@ -188,6 +188,131 @@ def test_query_ui_game_menu_and_unsupported_shell_use_generic_projection() -> No
     assert unsupported["warnings"][0]["code"] == "UI_MENU_UNSUPPORTED"
 
 
+def test_query_ui_dialogue_advance_preserves_non_screen_sentinel() -> None:
+    frame = transport_pb2.TransportFrame()
+    json_format.Parse(
+        (FIXTURES / "query-ui.success-dialogue.json").read_text(),
+        frame,
+    )
+    output = project_message(frame.command_event.result.query_ui)
+    projected = {
+        "status": "succeeded",
+        "commandId": frame.command_event.command_id,
+        "output": output,
+    }
+    Draft202012Validator(Catalog.load().tool("query_ui").outputSchema).validate(projected)
+    element = output["snapshot"]["elements"][0]
+    assert element["kind"] == "dialogue_advance"
+    assert element["label"] == "结束"
+    assert element["center"] == {"x": 0, "y": 0}
+
+
+def test_query_ui_item_grab_projects_lightweight_two_sided_inventory_links() -> None:
+    frame = transport_pb2.TransportFrame()
+    json_format.Parse(
+        (FIXTURES / "query-ui.success-item-grab.json").read_text(),
+        frame,
+    )
+    output = project_message(frame.command_event.result.query_ui)
+    projected = {
+        "status": "succeeded",
+        "commandId": frame.command_event.command_id,
+        "output": output,
+    }
+    Draft202012Validator(Catalog.load().tool("query_ui").outputSchema).validate(projected)
+    snapshot = output["snapshot"]
+    assert [link["side"] for link in snapshot["inventories"]] == ["player", "container"]
+    assert "containerRef" not in snapshot["inventories"][0]
+    assert snapshot["inventories"][1]["containerRef"] == {"value": "inventory-container-view"}
+    assert [element["inventorySide"] for element in snapshot["elements"]] == [
+        "player",
+        "player",
+        "container",
+        "container",
+    ]
+    assert snapshot["elements"][0]["itemRef"] == {"value": "inventory-player-item-0"}
+    assert "itemRef" not in snapshot["elements"][1]
+    assert "itemRef" not in snapshot["elements"][2]
+    assert snapshot["elements"][3]["itemRef"] == {"value": "inventory-container-item-1"}
+    assert all("item" not in element and element["enabled"] is False for element in snapshot["elements"])
+
+
+def test_query_ui_inventory_page_reuses_player_inventory_and_projects_equipment() -> None:
+    frame = transport_pb2.TransportFrame()
+    json_format.Parse(
+        (FIXTURES / "query-ui.success-inventory-page.json").read_text(),
+        frame,
+    )
+    output = project_message(frame.command_event.result.query_ui)
+    projected = {
+        "status": "succeeded",
+        "commandId": frame.command_event.command_id,
+        "output": output,
+    }
+    Draft202012Validator(Catalog.load().tool("query_ui").outputSchema).validate(projected)
+    snapshot = output["snapshot"]
+    assert snapshot["inventories"] == [
+        {
+            "side": "player",
+            "inventoryRevision": "1" * 64,
+            "slotCount": 2,
+        }
+    ]
+    backpack = [element for element in snapshot["elements"] if element["kind"] == "item_slot"]
+    equipment = [element for element in snapshot["elements"] if element["kind"] == "equipment_slot"]
+    assert [element.get("itemRef") for element in backpack] == [
+        {"value": "inventory-player-item-0"},
+        None,
+    ]
+    assert all(element["inventorySide"] == "player" and not element["enabled"] for element in backpack)
+    assert [element["equipmentSlotKind"] for element in equipment] == ["hat", "left_ring"]
+    assert equipment[0]["item"]["displayName"] == "草帽"
+    assert "ref" not in equipment[0]["item"]
+    assert "item" not in equipment[1]
+    assert all(not element["enabled"] for element in equipment)
+
+
+def test_query_ui_crafting_page_projects_all_pages_as_read_only_recipe_facts() -> None:
+    frame = transport_pb2.TransportFrame()
+    json_format.Parse(
+        (FIXTURES / "query-ui.success-crafting-page.json").read_text(),
+        frame,
+    )
+    output = project_message(frame.command_event.result.query_ui)
+    projected = {
+        "status": "succeeded",
+        "commandId": frame.command_event.command_id,
+        "output": output,
+    }
+    Draft202012Validator(Catalog.load().tool("query_ui").outputSchema).validate(projected)
+    recipes = [
+        element for element in output["snapshot"]["elements"]
+        if element["kind"] == "crafting_recipe"
+    ]
+    assert [element["index"] for element in recipes] == [0, 1]
+    assert [element["visible"] for element in recipes] == [True, False]
+    assert all(element["enabled"] is False for element in recipes)
+    assert recipes[0]["craftingRecipe"] == {
+        "recipeKey": "Wood Fence",
+        "displayName": "木围栏",
+        "known": True,
+        "craftable": True,
+        "materials": [{
+            "ingredientKey": "388",
+            "displayName": "木材",
+            "requiredQuantity": 2,
+            "availableQuantity": 8,
+        }],
+        "possibleOutputs": [{
+            "qualifiedItemId": "(O)322",
+            "displayName": "木围栏",
+            "quantity": 1,
+        }],
+    }
+    assert recipes[1]["craftingRecipe"]["craftable"] is False
+
+
+
 def test_direct_call_cannot_bypass_mod_announcement_intersection() -> None:
     bootstrap = transport_pb2.TransportFrame()
     json_format.Parse((ROOT / "spec" / "fixtures" / "v1" / "bootstrap" / "server-ready.json").read_text(), bootstrap)

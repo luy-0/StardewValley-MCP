@@ -10,7 +10,9 @@ internal sealed record ReadableInventoryView(
     string ContainerKind,
     ChestInventoryBacking BackingKind,
     int Capacity,
+    int RefObservationCapacity,
     IReadOnlyList<Item?> Slots,
+    object BackingIdentity,
     Ref? ContainerRef,
     int RevisionSelectedSlot
 );
@@ -26,10 +28,39 @@ internal static class InventoryViewResolver
             "player",
             ChestInventoryBacking.Player,
             capacity,
+            capacity,
             slots,
+            player.Items,
             null,
             player.CurrentToolIndex
         );
+    }
+
+    public static ReadableInventoryView CreatePlayerForMenu(
+        Farmer player,
+        int visualCapacity
+    )
+    {
+        var capacity = ResolvePlayerMenuCapacity(player.MaxItems, visualCapacity);
+        var slots = CaptureVisible(player.Items, capacity);
+        return new ReadableInventoryView(
+            new PlayerInventoryRefOwner(player),
+            "player",
+            ChestInventoryBacking.Player,
+            capacity,
+            player.MaxItems,
+            slots,
+            player.Items,
+            null,
+            player.CurrentToolIndex
+        );
+    }
+
+    internal static int ResolvePlayerMenuCapacity(int playerCapacity, int visualCapacity)
+    {
+        if (playerCapacity < 0 || visualCapacity < 0)
+            throw new InventoryViewException(ErrorCode.Internal, "库存容量无效", "internal");
+        return Math.Min(playerCapacity, visualCapacity);
     }
 
     public static ReadableInventoryView CreateContainer(
@@ -50,13 +81,35 @@ internal static class InventoryViewResolver
             && !string.Equals(resolved.Role, "inventory-view", StringComparison.Ordinal))
             throw Invalid("Container Ref 类型无效");
 
-        var currentGuard = resolved.Guard;
-        if (!TryReadCurrentContainer(
+        return CreateAttachedContainer(
             chest,
             resolved.Location,
             player,
+            refs,
             resolved.LocatorKind,
-            currentGuard,
+            resolved.X,
+            resolved.Y,
+            resolved.Guard
+        );
+    }
+
+    internal static ReadableInventoryView CreateAttachedContainer(
+        Chest chest,
+        GameLocation location,
+        Farmer player,
+        OpaqueRefStore refs,
+        RefLocatorKind locatorKind,
+        int x,
+        int y,
+        string expectedGuard
+    )
+    {
+        if (!TryReadCurrentContainer(
+            chest,
+            location,
+            player,
+            locatorKind,
+            expectedGuard,
             out var backing,
             out var backingKind,
             out var capacity
@@ -65,27 +118,29 @@ internal static class InventoryViewResolver
 
         var viewRef = refs.GetOrCreate(
             chest,
-            resolved.Location,
+            location,
             RefKind.Container,
-            resolved.LocatorKind,
-            resolved.X,
-            resolved.Y,
-            currentGuard,
+            locatorKind,
+            x,
+            y,
+            expectedGuard,
             "inventory-view"
         );
         var slots = Capture(backing, capacity);
         return new ReadableInventoryView(
             new ChestInventoryRefOwner(
                 chest,
-                resolved.Location,
+                location,
                 player,
-                resolved.LocatorKind,
-                currentGuard
+                locatorKind,
+                expectedGuard
             ),
-            ContainerKindClassifier.Classify(chest, resolved.LocatorKind),
+            ContainerKindClassifier.Classify(chest, locatorKind),
             backingKind,
             capacity,
+            capacity,
             slots,
+            backing,
             viewRef,
             int.MinValue
         );
@@ -151,6 +206,16 @@ internal static class InventoryViewResolver
         ValidateBounds(capacity, source.Count);
         var slots = new Item?[capacity];
         for (var index = 0; index < source.Count; index++)
+            slots[index] = source[index];
+        return slots;
+    }
+
+    private static Item?[] CaptureVisible(IList<Item> source, int capacity)
+    {
+        if (capacity < 0)
+            throw new InventoryViewException(ErrorCode.Internal, "库存容量无效", "internal");
+        var slots = new Item?[capacity];
+        for (var index = 0; index < Math.Min(source.Count, capacity); index++)
             slots[index] = source[index];
         return slots;
     }

@@ -1,5 +1,7 @@
+using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
+using System.Text;
 using Microsoft.Xna.Framework;
 using StardewValley;
 using StardewValleyMcp.Protocol.V1;
@@ -7,41 +9,61 @@ using StardewValleyMcp.Protocol.V1;
 namespace StardewValleyMcp.Mod;
 
 /// <summary>
-/// Owns process-local opaque references. Tokens are never decoded; resolution only uses
-/// the in-memory binding and verifies that the original runtime object is still attached
-/// to the same location collection.
+/// Owns process-local opaque references. Active resolution uses the in-memory binding and
+/// verifies that the original runtime object is still attached to the same location collection.
 /// </summary>
 /// <remarks>
 /// 当前 V1 观察切片的已知限制：
 /// <list type="bullet">
 /// <item>Ref 只在单个 Mod 进程内有效。游戏重启或 Mod 重载后，客户端必须把旧 Ref 视为 stale 并重新查询 Snapshot。</item>
-/// <item>Token 索引目前没有 TTL 或容量策略。长时间会话观察大量不同对象时，stale binding 会保留到进程退出。</item>
+/// <item>中央 Token Registry 默认最多保留 4096 个 Binding；容量压力下先回收 stale，再回收最久未使用的 live Binding。</item>
+/// <item>已回收 Ref 只保留“经进程密钥认证的签发序号不超过高水位”这一有界判据，不保留逐 Token tombstone；进程密钥泄露不在本地进程隔离的威胁边界内。</item>
 /// <item>部分世界实体依赖运行时对象身份、Location、Tile 与 Guard 校验。这比解析公开字符串更严格，但无法在游戏重建等价对象后恢复身份。</item>
 /// <item>Door 等逻辑身份 Ref 绑定在 Location 与 Tile 级身份上，适合同一已加载世界内的 inspect 和后续动作，不是持久存档级 ID。</item>
 /// </list>
 /// </remarks>
 internal sealed class OpaqueRefStore
 {
+    internal const int DefaultCapacity = 4096;
     private const int TokenGenerationAttempts = 8;
     private readonly string _modInstanceId;
     private readonly Func<string> _tokenFactory;
+    private readonly byte[] _tokenSigningKey;
+    private readonly int _capacity;
     private readonly ConditionalWeakTable<object, Dictionary<BindingKey, Binding>> _byIdentity = new();
-    private readonly Dictionary<string, IOpaqueBinding> _byToken = new(StringComparer.Ordinal);
+    private readonly Dictionary<string, RegistryEntry> _byToken = new(StringComparer.Ordinal);
+    private readonly LinkedList<string> _leastRecentlyUsed = new();
     private readonly InventoryItemBindingStore _inventoryItems = new();
     private readonly UiElementBindingStore _uiElements;
     private readonly ConditionalWeakTable<object, Dictionary<LogicalKey, object>> _logicalIdentities = new();
+    private ulong _lastIssuedSequence;
 
     public OpaqueRefStore(
         string modInstanceId,
         Func<string>? tokenFactory = null,
-        Func<string>? menuEpochFactory = null
+        Func<string>? menuEpochFactory = null,
+        int capacity = DefaultCapacity,
+        byte[]? tokenSigningKey = null
     )
     {
         OpaqueRefTokenCodec.ValidateInstanceId(modInstanceId);
+        if (capacity <= 0)
+            throw new ArgumentOutOfRangeException(nameof(capacity), "Ref Registry 容量必须大于 0");
+        if (tokenSigningKey is { Length: 0 })
+            throw new ArgumentException("Ref token 签名密钥不能为空", nameof(tokenSigningKey));
         _modInstanceId = modInstanceId;
-        _tokenFactory = tokenFactory ?? (() => OpaqueRefTokenCodec.NewToken(_modInstanceId));
+        _capacity = capacity;
+        _tokenSigningKey = tokenSigningKey?.ToArray()
+            ?? RandomNumberGenerator.GetBytes(32);
+        _tokenFactory = tokenFactory ?? (() => OpaqueRefTokenCodec.NewIssuedToken(
+            _modInstanceId,
+            checked(_lastIssuedSequence + 1),
+            _tokenSigningKey
+        ));
         _uiElements = new UiElementBindingStore(menuEpochFactory);
     }
+
+    internal int RegisteredBindingCount => _byToken.Count;
 
     public Ref GetOrCreate(
         object target,
@@ -62,6 +84,7 @@ internal sealed class OpaqueRefStore
             {
                 current.X = x;
                 current.Y = y;
+                Touch(current.Token);
                 return new Ref { Value = current.Token };
             }
 
@@ -71,7 +94,7 @@ internal sealed class OpaqueRefStore
         var token = CreateUniqueToken();
         var binding = new Binding(token, target, location, kind, locatorKind, x, y, guard, role);
         bindings[bindingKey] = binding;
-        _byToken.Add(token, binding);
+        Register(binding);
         return new Ref { Value = token };
     }
 
@@ -105,15 +128,7 @@ internal sealed class OpaqueRefStore
             guard,
             CreateUniqueToken
         );
-        if (_byToken.TryGetValue(binding.Token, out var registered))
-        {
-            if (!ReferenceEquals(registered, binding))
-                throw new InvalidOperationException("Ref token 冲突");
-        }
-        else
-        {
-            _byToken.Add(binding.Token, binding);
-        }
+        Register(binding);
         return new Ref { Value = binding.Token };
     }
 
@@ -136,15 +151,7 @@ internal sealed class OpaqueRefStore
     )
     {
         var binding = _uiElements.Observe(session, owner, identity, CreateUniqueToken);
-        if (_byToken.TryGetValue(binding.Token, out var registered))
-        {
-            if (!ReferenceEquals(registered, binding))
-                throw new InvalidOperationException("Ref token 冲突");
-        }
-        else
-        {
-            _byToken.Add(binding.Token, binding);
-        }
+        Register(binding);
         return new Ref { Value = binding.Token };
     }
 
@@ -173,9 +180,7 @@ internal sealed class OpaqueRefStore
             };
             if (status != UiElementResolveStatus.Resolved)
                 return new UiElementResolveResult(status, resolution.Kind, resolution.Error, null);
-            if (binding is not UiElementBinding uiBinding
-                || target is null
-                || uiBinding.ResolvedComponent is null)
+            if (binding is not UiElementBinding uiBinding || target is null)
             {
                 return new UiElementResolveResult(
                     UiElementResolveStatus.Unavailable,
@@ -194,6 +199,8 @@ internal sealed class OpaqueRefStore
                     uiBinding.MenuEpoch,
                     uiBinding.Extractor,
                     uiBinding.PublicKind,
+                    uiBinding.InventorySide,
+                    uiBinding.EquipmentSlotKind,
                     uiBinding.Index
                 )
             );
@@ -244,18 +251,18 @@ internal sealed class OpaqueRefStore
                         new InventoryItemRefTarget(target, item.Slot, item.Provenance)
                     ),
                 UiElementBinding ui when ui.Kind == RefKind.UiElement =>
-                    ui.ResolvedComponent is null
-                        ? null
-                        : new UiElementInspectTarget(
-                            new ResolvedUiElementRef(
-                                target,
-                                ui.ResolvedComponent,
-                                ui.MenuEpoch,
-                                ui.Extractor,
-                                ui.PublicKind,
-                                ui.Index
-                            )
-                        ),
+                    new UiElementInspectTarget(
+                        new ResolvedUiElementRef(
+                            target,
+                            ui.ResolvedComponent,
+                            ui.MenuEpoch,
+                            ui.Extractor,
+                            ui.PublicKind,
+                            ui.InventorySide,
+                            ui.EquipmentSlotKind,
+                            ui.Index
+                        )
+                    ),
                 _ => null,
             };
             if (inspected is not null)
@@ -428,13 +435,21 @@ internal sealed class OpaqueRefStore
         target = null;
         if (reference is null || string.IsNullOrEmpty(reference.Value))
             return Resolution(reference, RefStatus.NotFound, RefKind.Unspecified, ErrorCode.NotFound, "Ref 不存在");
-        var tokenKnown = _byToken.TryGetValue(reference.Value, out binding);
-        var tokenDecision = OpaqueRefTokenCodec.Decide(reference.Value, _modInstanceId, tokenKnown);
+        var tokenKnown = _byToken.TryGetValue(reference.Value, out var entry);
+        binding = entry?.Binding;
+        var retiredIssued = !tokenKnown && IsRetiredIssuedToken(reference.Value);
+        var tokenDecision = OpaqueRefTokenCodec.Decide(
+            reference.Value,
+            _modInstanceId,
+            tokenKnown,
+            retiredIssued
+        );
         if (tokenDecision == OpaqueRefLookupDecision.Stale)
-            return Resolution(reference, RefStatus.Stale, RefKind.Unspecified, ErrorCode.StaleRef, "Ref 来自已失效的 Mod 实例");
+            return Resolution(reference, RefStatus.Stale, RefKind.Unspecified, ErrorCode.StaleRef, "Ref 已失效");
         if (tokenDecision != OpaqueRefLookupDecision.Lookup || binding is null)
             return Resolution(reference, RefStatus.NotFound, RefKind.Unspecified, ErrorCode.NotFound, "Ref 不存在");
 
+        Touch(binding.Token);
         if (!kindAllowed(binding.Kind))
             return Resolution(reference, RefStatus.Unsupported, binding.Kind, ErrorCode.InvalidArgument, "Ref 类型不匹配");
         if (binding.Stale)
@@ -475,17 +490,95 @@ internal sealed class OpaqueRefStore
 
     private string CreateUniqueToken()
     {
+        var nextSequence = checked(_lastIssuedSequence + 1);
         for (var attempt = 0; attempt < TokenGenerationAttempts; attempt++)
         {
             var token = _tokenFactory();
             if (OpaqueRefTokenCodec.Classify(token, _modInstanceId)
                     != OpaqueRefTokenScope.CurrentInstance)
                 throw new InvalidOperationException("Ref token 生成器返回了无效 token");
-            if (!_byToken.ContainsKey(token))
+            if (!OpaqueRefTokenCodec.TryReadIssuedSequence(
+                    token,
+                    _modInstanceId,
+                    _tokenSigningKey,
+                    out var sequence
+                ))
+                throw new InvalidOperationException("Ref token 生成器返回了未经认证的 token");
+            if (sequence == nextSequence && !_byToken.ContainsKey(token))
+            {
+                _lastIssuedSequence = nextSequence;
+                EnsureCapacityForNewBinding();
                 return token;
+            }
+            if (sequence > _lastIssuedSequence)
+                throw new InvalidOperationException("Ref token 生成器返回了错误的签发序号");
         }
         throw new InvalidOperationException("无法生成唯一 Ref token");
     }
+
+    private bool IsRetiredIssuedToken(string token) =>
+        OpaqueRefTokenCodec.TryReadIssuedSequence(
+            token,
+            _modInstanceId,
+            _tokenSigningKey,
+            out var sequence
+        )
+        && sequence <= _lastIssuedSequence;
+
+    private void Register(IOpaqueBinding binding)
+    {
+        if (_byToken.TryGetValue(binding.Token, out var registered))
+        {
+            if (!ReferenceEquals(registered.Binding, binding))
+                throw new InvalidOperationException("Ref token 冲突");
+            Touch(registered);
+            return;
+        }
+
+        EnsureCapacityForNewBinding();
+        var node = _leastRecentlyUsed.AddLast(binding.Token);
+        _byToken.Add(binding.Token, new RegistryEntry(binding, node));
+    }
+
+    private void Touch(string token)
+    {
+        if (_byToken.TryGetValue(token, out var entry))
+            Touch(entry);
+    }
+
+    private void Touch(RegistryEntry entry)
+    {
+        _leastRecentlyUsed.Remove(entry.Node);
+        _leastRecentlyUsed.AddLast(entry.Node);
+    }
+
+    private void EnsureCapacityForNewBinding()
+    {
+        if (_byToken.Count < _capacity)
+            return;
+
+        var victim = _leastRecentlyUsed.First;
+        for (var current = victim; current is not null; current = current.Next)
+        {
+            if (_byToken[current.Value].Binding.Stale)
+            {
+                victim = current;
+                break;
+            }
+        }
+        if (victim is null)
+            throw new InvalidOperationException("Ref Registry LRU 状态损坏");
+
+        var entry = _byToken[victim.Value];
+        entry.Binding.Stale = true;
+        _byToken.Remove(victim.Value);
+        _leastRecentlyUsed.Remove(victim);
+    }
+
+    private sealed record RegistryEntry(
+        IOpaqueBinding Binding,
+        LinkedListNode<string> Node
+    );
 
     private sealed class Binding : IOpaqueBinding
     {
@@ -727,8 +820,10 @@ internal static class OpaqueRefTokenCodec
 {
     private const string Prefix = "r1_";
     private const int InstanceIdLength = 36;
-    private const int RandomLength = 48;
-    private const int TokenLength = 3 + InstanceIdLength + 1 + RandomLength;
+    private const int SequenceLength = 16;
+    private const int AuthenticatorLength = 32;
+    private const int PayloadLength = SequenceLength + AuthenticatorLength;
+    private const int TokenLength = 3 + InstanceIdLength + 1 + PayloadLength;
 
     public static void ValidateInstanceId(string modInstanceId)
     {
@@ -739,7 +834,56 @@ internal static class OpaqueRefTokenCodec
     public static string NewToken(string modInstanceId)
     {
         ValidateInstanceId(modInstanceId);
-        return $"{Prefix}{modInstanceId}_{LowerHex(24)}";
+        return $"{Prefix}{modInstanceId}_{new string('0', SequenceLength)}{LowerHex(16)}";
+    }
+
+    public static string NewIssuedToken(
+        string modInstanceId,
+        ulong sequence,
+        byte[] signingKey
+    )
+    {
+        ValidateInstanceId(modInstanceId);
+        ArgumentNullException.ThrowIfNull(signingKey);
+        if (sequence == 0)
+            throw new ArgumentOutOfRangeException(nameof(sequence));
+        if (signingKey.Length == 0)
+            throw new ArgumentException("Ref token 签名密钥不能为空", nameof(signingKey));
+
+        var sequenceText = sequence.ToString("x16", CultureInfo.InvariantCulture);
+        var authenticator = ComputeAuthenticator(modInstanceId, sequenceText, signingKey);
+        return $"{Prefix}{modInstanceId}_{sequenceText}{authenticator}";
+    }
+
+    public static bool TryReadIssuedSequence(
+        string token,
+        string currentModInstanceId,
+        byte[] signingKey,
+        out ulong sequence
+    )
+    {
+        sequence = 0;
+        if (Classify(token, currentModInstanceId) != OpaqueRefTokenScope.CurrentInstance
+            || signingKey.Length == 0)
+            return false;
+
+        var payloadOffset = Prefix.Length + InstanceIdLength + 1;
+        var sequenceText = token.Substring(payloadOffset, SequenceLength);
+        if (!ulong.TryParse(
+                sequenceText,
+                NumberStyles.AllowHexSpecifier,
+                CultureInfo.InvariantCulture,
+                out sequence
+            )
+            || sequence == 0)
+            return false;
+
+        var expected = ComputeAuthenticator(currentModInstanceId, sequenceText, signingKey);
+        var actual = token.AsSpan(payloadOffset + SequenceLength, AuthenticatorLength);
+        return CryptographicOperations.FixedTimeEquals(
+            Encoding.ASCII.GetBytes(expected),
+            Encoding.ASCII.GetBytes(actual.ToString())
+        );
     }
 
     public static OpaqueRefTokenScope Classify(string token, string currentModInstanceId)
@@ -749,7 +893,7 @@ internal static class OpaqueRefTokenCodec
             || !token.StartsWith(Prefix, StringComparison.Ordinal)
             || token[Prefix.Length + InstanceIdLength] != '_'
             || !IsInstanceId(token.Substring(Prefix.Length, InstanceIdLength))
-            || !IsLowerHex(token.AsSpan(Prefix.Length + InstanceIdLength + 1, RandomLength)))
+            || !IsLowerHex(token.AsSpan(Prefix.Length + InstanceIdLength + 1, PayloadLength)))
             return OpaqueRefTokenScope.Invalid;
 
         return token.AsSpan(Prefix.Length, InstanceIdLength).SequenceEqual(currentModInstanceId)
@@ -767,6 +911,30 @@ internal static class OpaqueRefTokenCodec
         OpaqueRefTokenScope.CurrentInstance when issuedByCurrentInstance => OpaqueRefLookupDecision.Lookup,
         _ => OpaqueRefLookupDecision.NotFound,
     };
+
+    public static OpaqueRefLookupDecision Decide(
+        string token,
+        string currentModInstanceId,
+        bool activeBindingKnown,
+        bool retiredIssuedByCurrentInstance
+    ) => Classify(token, currentModInstanceId) switch
+    {
+        OpaqueRefTokenScope.ForeignInstance => OpaqueRefLookupDecision.Stale,
+        OpaqueRefTokenScope.CurrentInstance when activeBindingKnown => OpaqueRefLookupDecision.Lookup,
+        OpaqueRefTokenScope.CurrentInstance when retiredIssuedByCurrentInstance => OpaqueRefLookupDecision.Stale,
+        _ => OpaqueRefLookupDecision.NotFound,
+    };
+
+    private static string ComputeAuthenticator(
+        string modInstanceId,
+        string sequenceText,
+        byte[] signingKey
+    )
+    {
+        using var hmac = new HMACSHA256(signingKey);
+        var material = Encoding.ASCII.GetBytes($"{Prefix}{modInstanceId}_{sequenceText}");
+        return Convert.ToHexString(hmac.ComputeHash(material).AsSpan(0, 16)).ToLowerInvariant();
+    }
 
     private static string LowerHex(int byteCount) =>
         Convert.ToHexString(RandomNumberGenerator.GetBytes(byteCount)).ToLowerInvariant();

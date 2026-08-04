@@ -22,7 +22,9 @@ internal static class UiProjector
         IReadOnlyList<UiElementDescriptor> descriptors,
         IEnumerable<QueryWarning> warnings,
         IUiElementRefOwner owner,
-        OpaqueRefStore refs
+        OpaqueRefStore refs,
+        UiElementSetCompleteness completeness = UiElementSetCompleteness.Complete,
+        IReadOnlyList<UiInventoryLink>? inventories = null
     )
     {
         ArgumentNullException.ThrowIfNull(menu);
@@ -33,11 +35,53 @@ internal static class UiProjector
             throw new UiProjectionException("UI 基本事实不符合公开约束");
         if (extractor == UiExtractorKind.Unsupported && descriptors.Count != 0)
             throw new InvalidOperationException("Unsupported menu 不得投影元素");
-        var identities = new HashSet<(UiExtractorKind Extractor, UiElementKind Kind, int Index)>();
+        if (inventories is not null)
+        {
+            var sides = new HashSet<UiInventorySide>();
+            foreach (var link in inventories)
+            {
+                if (link.Side is not UiInventorySide.Player and not UiInventorySide.Container
+                    || !sides.Add(link.Side)
+                    || !PublicStringPolicy.IsNonEmptyValid(link.InventoryRevision)
+                    || link.Side == UiInventorySide.Player && link.ContainerRef is not null
+                    || link.Side == UiInventorySide.Container && link.ContainerRef is null)
+                    throw new UiProjectionException("UI 库存关联不符合公开约束");
+            }
+            var hasPlayerSlots = descriptors.Any(descriptor =>
+                descriptor.InventorySide == UiInventorySide.Player);
+            var hasOnlyPlayerLink = sides.SetEquals(new[] { UiInventorySide.Player });
+            if (extractor == UiExtractorKind.ItemGrabSlot
+                    && completeness == UiElementSetCompleteness.Complete
+                    && descriptors.Count != 0
+                    && !sides.SetEquals(new[]
+                    {
+                        UiInventorySide.Player,
+                        UiInventorySide.Container,
+                    })
+                || extractor == UiExtractorKind.GameMenu
+                    && (sides.Contains(UiInventorySide.Container)
+                        || hasPlayerSlots != hasOnlyPlayerLink)
+                || extractor is not UiExtractorKind.ItemGrabSlot and not UiExtractorKind.GameMenu
+                    && sides.Count != 0)
+                throw new UiProjectionException("UI 库存关联与 extractor 不一致");
+        }
+        var identities = new HashSet<(
+            UiExtractorKind Extractor,
+            UiElementKind Kind,
+            UiInventorySide Side,
+            UiEquipmentSlotKind EquipmentSlotKind,
+            int Index
+        )>();
         foreach (var descriptor in descriptors.Where(item => item.IsValid()))
         {
             if (descriptor.Extractor != extractor
-                || !identities.Add((descriptor.Extractor, descriptor.Kind, descriptor.Index)))
+                || !identities.Add((
+                    descriptor.Extractor,
+                    descriptor.Kind,
+                    descriptor.InventorySide ?? UiInventorySide.Unspecified,
+                    descriptor.EquipmentSlotKind ?? UiEquipmentSlotKind.Unspecified,
+                    descriptor.Index
+                )))
                 throw new InvalidOperationException("UI descriptor identity 不唯一");
         }
 
@@ -47,6 +91,8 @@ internal static class UiProjector
             MenuOpen = true,
             Menu = shell.Clone(),
         };
+        if (inventories is not null)
+            snapshot.Inventories.AddRange(inventories.Select(item => item.Clone()));
         var resultWarnings = warnings.Select(item => item.Clone()).ToList();
         var skipped = 0;
         foreach (var descriptor in descriptors)
@@ -62,6 +108,8 @@ internal static class UiProjector
                 new UiElementBindingIdentity(
                     descriptor.Extractor,
                     descriptor.Kind,
+                    descriptor.InventorySide ?? UiInventorySide.Unspecified,
+                    descriptor.EquipmentSlotKind ?? UiEquipmentSlotKind.Unspecified,
                     descriptor.Index,
                     descriptor.Component,
                     descriptor.SemanticTarget,
@@ -82,13 +130,15 @@ internal static class UiProjector
         }
         if (skipped > 0)
         {
+            completeness = UiElementSetCompleteness.Incomplete;
             resultWarnings.Add(new QueryWarning
             {
                 Code = "UI_ELEMENT_PROJECTION_FAILED",
                 Message = $"{skipped} 个 UI 元素无法安全投影",
             });
         }
-        refs.CompleteUiProjection(session);
+        if (completeness == UiElementSetCompleteness.Complete)
+            refs.CompleteUiProjection(session);
         UiRevision.Finalize(snapshot, session.MenuEpoch, extractor, actionState);
 
         var result = new QueryUiResult { Snapshot = snapshot };
@@ -102,13 +152,40 @@ internal static class UiProjector
             .ThenBy(item => item.Ref?.Value ?? "", StringComparer.Ordinal)
             .ThenBy(item => item.Message, StringComparer.Ordinal)
             .Select(item => item.Clone());
+
+    internal static UiInventoryLink ToInventoryLink(
+        UiInventorySide side,
+        InventorySnapshot snapshot
+    )
+    {
+        var link = new UiInventoryLink
+        {
+            Side = side,
+            InventoryRevision = snapshot.InventoryRevision,
+            SlotCount = snapshot.SlotCount,
+        };
+        if (snapshot.ContainerRef is not null)
+            link.ContainerRef = snapshot.ContainerRef.Clone();
+        return link;
+    }
 }
+
+internal enum UiElementSetCompleteness
+{
+    Complete,
+    Incomplete,
+}
+
+internal sealed record UiRuntimeProjectionCapture(
+    QueryUiResult Result,
+    UiElementSetCompleteness ElementSetCompleteness
+);
 
 internal sealed record UiElementDescriptor(
     UiExtractorKind Extractor,
     UiElementKind Kind,
     int Index,
-    object Component,
+    object? Component,
     object SemanticTarget,
     string Guard,
     string Label,
@@ -119,7 +196,11 @@ internal sealed record UiElementDescriptor(
     ItemFact? Item = null,
     long? Price = null,
     uint? Stock = null,
-    IReadOnlyList<UiDescriptorWarning>? DescriptorWarnings = null
+    IReadOnlyList<UiDescriptorWarning>? DescriptorWarnings = null,
+    UiInventorySide? InventorySide = null,
+    Ref? ItemRef = null,
+    UiEquipmentSlotKind? EquipmentSlotKind = null,
+    CraftingRecipeFact? CraftingRecipe = null
 )
 {
     public IReadOnlyList<UiDescriptorWarning> Warnings =>
@@ -127,7 +208,45 @@ internal sealed record UiElementDescriptor(
 
     public bool IsValid() =>
         Extractor != UiExtractorKind.Unsupported
-        && Kind is UiElementKind.Tab or UiElementKind.DialogueResponse or UiElementKind.ItemSlot
+        && Kind is UiElementKind.Tab
+            or UiElementKind.DialogueResponse
+            or UiElementKind.DialogueAdvance
+            or UiElementKind.ItemSlot
+            or UiElementKind.EquipmentSlot
+            or UiElementKind.CraftingRecipe
+        && (Kind == UiElementKind.DialogueAdvance ? Component is null : Component is not null)
+        && (InventorySide is null
+            || Kind == UiElementKind.ItemSlot
+                && InventorySide is (UiInventorySide.Player or UiInventorySide.Container)
+                && Item is null
+                && Price is null
+                && Stock is null
+                && EquipmentSlotKind is null
+                && CraftingRecipe is null
+                && !Enabled)
+        && (ItemRef is null || InventorySide is not null)
+        && (EquipmentSlotKind is null
+            || Kind == UiElementKind.EquipmentSlot
+                && EquipmentSlotKind != UiEquipmentSlotKind.Unspecified
+                && InventorySide is null
+                && ItemRef is null
+                && Price is null
+                && Stock is null
+                && CraftingRecipe is null
+                && (Item is null || Item.Ref is null)
+                && !Enabled)
+        && (Kind != UiElementKind.EquipmentSlot || EquipmentSlotKind is not null)
+        && (CraftingRecipe is null
+            || Kind == UiElementKind.CraftingRecipe
+                && Component is not null
+                && InventorySide is null
+                && ItemRef is null
+                && EquipmentSlotKind is null
+                && Item is null
+                && Price is null
+                && Stock is null
+                && !Enabled)
+        && (Kind != UiElementKind.CraftingRecipe || CraftingRecipe is not null)
         && Index >= 0
         && PublicStringPolicy.IsValid(Label)
         && !string.IsNullOrEmpty(Guard);
@@ -150,6 +269,14 @@ internal sealed record UiElementDescriptor(
             fact.Price = Price.Value;
         if (Stock.HasValue)
             fact.Stock = Stock.Value;
+        if (InventorySide.HasValue)
+            fact.InventorySide = InventorySide.Value;
+        if (ItemRef is not null)
+            fact.ItemRef = ItemRef.Clone();
+        if (EquipmentSlotKind.HasValue)
+            fact.EquipmentSlotKind = EquipmentSlotKind.Value;
+        if (CraftingRecipe is not null)
+            fact.CraftingRecipe = CraftingRecipe.Clone();
         return fact;
     }
 }
@@ -170,6 +297,7 @@ internal enum UiMenuClassification
     GameMenu,
     DialogueBox,
     ShopMenu,
+    ItemGrabMenu,
 }
 
 internal static class UiProjectionPolicy
@@ -178,7 +306,8 @@ internal static class UiProjectionPolicy
         Type runtimeType,
         Type gameMenuType,
         Type dialogueBoxType,
-        Type shopMenuType
+        Type shopMenuType,
+        Type itemGrabMenuType
     )
     {
         if (runtimeType == gameMenuType)
@@ -187,6 +316,8 @@ internal static class UiProjectionPolicy
             return UiMenuClassification.DialogueBox;
         if (runtimeType == shopMenuType)
             return UiMenuClassification.ShopMenu;
+        if (runtimeType == itemGrabMenuType)
+            return UiMenuClassification.ItemGrabMenu;
         return UiMenuClassification.Unsupported;
     }
 
@@ -231,19 +362,16 @@ internal static class UiProjectionPolicy
         return selected;
     }
 
-    public static bool ShopEnabled(ShopActivationFacts facts) =>
-        facts.Visible
-        && facts.SafetyReady
-        && !facts.HasHeldItem
-        && !facts.ReadOnly
-        && (facts.UnlimitedStock || facts.Stock > 0)
-        && facts.CurrencyAmount >= facts.Price
-        && facts.HasRequiredTradeItem
-        && !facts.HasCanPurchaseCheck
-        && facts.VanillaSafeSalable;
-
-    public static bool IsExactActivationKnownType(Type runtimeType, Type knownType) =>
-        runtimeType == knownType;
+    public static bool CanActivateGameMenuElement(
+        UiExtractorKind extractor,
+        UiElementKind resolvedKind,
+        UiElementKind factKind,
+        Type runtimeType,
+        Type gameMenuType
+    ) => extractor == UiExtractorKind.GameMenu
+        && resolvedKind == UiElementKind.Tab
+        && factKind == UiElementKind.Tab
+        && runtimeType == gameMenuType;
 
     public static bool DialogueEnabled(
         bool visible,
@@ -257,20 +385,21 @@ internal static class UiProjectionPolicy
         && safetyReady
         && textReadable
         && characterIndex >= textLength - 1;
+
+    public static bool DialogueHasNextPage(
+        bool hasCharacterDialogue,
+        bool continuedOnNextScreen,
+        int brokenUpPageCount,
+        int plainDialogueCount
+    ) => hasCharacterDialogue
+        ? continuedOnNextScreen || brokenUpPageCount > 1
+        : plainDialogueCount > 1;
+
+    public static string DialogueAdvanceLabel(bool hasNextPage) =>
+        hasNextPage ? "继续" : "结束";
+
+    public static UiExtractorKind DialogueExtractor(bool isQuestion) =>
+        isQuestion ? UiExtractorKind.DialogueResponse : UiExtractorKind.DialogueAdvance;
 }
 
 internal readonly record struct UiBounds(int X, int Y, int Width, int Height);
-
-internal readonly record struct ShopActivationFacts(
-    bool Visible,
-    bool SafetyReady,
-    bool HasHeldItem,
-    bool ReadOnly,
-    bool UnlimitedStock,
-    int Stock,
-    long Price,
-    long CurrencyAmount,
-    bool HasRequiredTradeItem,
-    bool HasCanPurchaseCheck,
-    bool VanillaSafeSalable
-);

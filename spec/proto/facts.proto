@@ -54,6 +54,7 @@ enum EntityKind {
   ENTITY_KIND_DOOR = 11;
   ENTITY_KIND_WARP = 12;
   ENTITY_KIND_GENERIC_OBJECT = 13;
+  ENTITY_KIND_HOE_DIRT = 14;
 }
 
 message WorldSnapshot {
@@ -98,6 +99,7 @@ message WorldEntityFact {
     DoorFact door = 30;
     WarpFact warp = 31;
     GenericObjectFact generic_object = 32;
+    HoeDirtFact hoe_dirt = 33;
   }
 }
 
@@ -125,6 +127,11 @@ message CropFact {
   bool watered = 5;
   bool dead = 6;
   bool regrows = 7;
+}
+
+// 不含作物的已耕地事实。带作物的 HoeDirt 继续使用 CropFact。
+message HoeDirtFact {
+  bool watered = 1;
 }
 
 message ResourceNodeFact {
@@ -278,6 +285,62 @@ enum UiElementKind {
   UI_ELEMENT_KIND_OPTION = 3;
   UI_ELEMENT_KIND_ITEM_SLOT = 4;
   UI_ELEMENT_KIND_DIALOGUE_RESPONSE = 5;
+  UI_ELEMENT_KIND_DIALOGUE_ADVANCE = 6;
+  UI_ELEMENT_KIND_EQUIPMENT_SLOT = 7;
+  UI_ELEMENT_KIND_CRAFTING_RECIPE = 8;
+}
+
+enum UiInventorySide {
+  UI_INVENTORY_SIDE_UNSPECIFIED = 0;
+  UI_INVENTORY_SIDE_PLAYER = 1;
+  UI_INVENTORY_SIDE_CONTAINER = 2;
+}
+
+enum UiEquipmentSlotKind {
+  UI_EQUIPMENT_SLOT_KIND_UNSPECIFIED = 0;
+  UI_EQUIPMENT_SLOT_KIND_HAT = 1;
+  UI_EQUIPMENT_SLOT_KIND_LEFT_RING = 2;
+  UI_EQUIPMENT_SLOT_KIND_RIGHT_RING = 3;
+  UI_EQUIPMENT_SLOT_KIND_BOOTS = 4;
+  UI_EQUIPMENT_SLOT_KIND_SHIRT = 5;
+  UI_EQUIPMENT_SLOT_KIND_PANTS = 6;
+  UI_EQUIPMENT_SLOT_KIND_TRINKET = 7;
+}
+
+message CraftingMaterialRequirement {
+  // 原版配方中的物品 ID、类别编号或特殊匹配键。
+  string ingredient_key = 1;
+  string display_name = 2;
+  uint32 required_quantity = 3;
+  // 包括玩家背包和当前 Crafting 页指定的材料容器。
+  uint32 available_quantity = 4;
+}
+
+message CraftingOutputFact {
+  string qualified_item_id = 1;
+  string display_name = 2;
+  uint32 quantity = 3;
+}
+
+message CraftingRecipeFact {
+  string recipe_key = 1;
+  string display_name = 2;
+  bool known = 3;
+  // 只表示当前材料足够，不表示已验证制作提交或背包容量。
+  bool craftable = 4;
+  repeated CraftingMaterialRequirement materials = 5;
+  // 多个元素表示原版制作时可能随机选择其一。
+  repeated CraftingOutputFact possible_outputs = 6;
+}
+
+message UiInventoryLink {
+  // ItemGrabMenu 中的库存一侧；不得用 Slot Index 偏移代替。
+  UiInventorySide side = 1;
+  // 与同一时刻 query_inventory 返回值完全一致。
+  string inventory_revision = 2;
+  uint32 slot_count = 3;
+  // 仅容器侧存在；玩家侧必须缺省。
+  optional Ref container_ref = 4;
 }
 
 message UiSnapshot {
@@ -285,6 +348,7 @@ message UiSnapshot {
   bool menu_open = 2;
   optional UiMenuFact menu = 3;
   repeated UiElementFact elements = 4;
+  repeated UiInventoryLink inventories = 5;
 }
 
 message UiMenuFact {
@@ -306,4 +370,12 @@ message UiElementFact {
   optional ItemFact item = 8;
   optional int64 price = 9;
   optional uint32 stock = 10;
+  // 仅库存槽位存在；Shop Item Slot 必须缺省。
+  optional UiInventorySide inventory_side = 11;
+  // 库存槽位非空时存在；完整 ItemFact 由 query_inventory 或 inspect 返回。
+  optional Ref item_ref = 12;
+  // 仅 Inventory 页装备槽存在；index 是同种类内从 0 开始的序号。
+  optional UiEquipmentSlotKind equipment_slot_kind = 13;
+  // 仅精确原版 Crafting 页的 CRAFTING_RECIPE 元素存在。
+  optional CraftingRecipeFact crafting_recipe = 14;
 }

@@ -27,16 +27,20 @@ internal readonly record struct UiElementLookup(
 internal enum UiExtractorKind
 {
     Unsupported,
-    GameMenuTab,
+    GameMenu,
     DialogueResponse,
+    DialogueAdvance,
     ShopSaleRow,
+    ItemGrabSlot,
 }
 
 internal readonly record struct UiElementBindingIdentity(
     UiExtractorKind Extractor,
     UiElementKind PublicKind,
+    UiInventorySide InventorySide,
+    UiEquipmentSlotKind EquipmentSlotKind,
     int Index,
-    object Component,
+    object? Component,
     object SemanticTarget,
     string Guard
 );
@@ -83,7 +87,13 @@ internal sealed class UiElementBindingStore
             || !string.Equals(state.Epoch, session.MenuEpoch, StringComparison.Ordinal))
             throw new InvalidOperationException("UI 投影 Session 已失效");
 
-        var key = new UiBindingKey(identity.Extractor, identity.PublicKind, identity.Index);
+        var key = new UiBindingKey(
+            identity.Extractor,
+            identity.PublicKind,
+            identity.InventorySide,
+            identity.EquipmentSlotKind,
+            identity.Index
+        );
         if (state.Bindings.TryGetValue(key, out var current))
         {
             if (current.Matches(owner, identity, session.MenuEpoch))
@@ -137,6 +147,8 @@ internal sealed class UiElementBindingStore
     private readonly record struct UiBindingKey(
         UiExtractorKind Extractor,
         UiElementKind PublicKind,
+        UiInventorySide InventorySide,
+        UiEquipmentSlotKind EquipmentSlotKind,
         int Index
     );
 
@@ -166,7 +178,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
 {
     private readonly IUiElementRefOwner _owner;
     private readonly WeakReference<object> _menu;
-    private readonly WeakReference<object> _component;
+    private readonly WeakReference<object>? _component;
     private readonly WeakReference<object> _semanticTarget;
     private readonly string _guard;
 
@@ -182,11 +194,15 @@ internal sealed class UiElementBinding : IOpaqueBinding
         Token = token;
         _owner = owner;
         _menu = new WeakReference<object>(menu);
-        _component = new WeakReference<object>(identity.Component);
+        _component = identity.Component is null
+            ? null
+            : new WeakReference<object>(identity.Component);
         _semanticTarget = new WeakReference<object>(identity.SemanticTarget);
         MenuEpoch = menuEpoch;
         Extractor = identity.Extractor;
         PublicKind = identity.PublicKind;
+        InventorySide = identity.InventorySide;
+        EquipmentSlotKind = identity.EquipmentSlotKind;
         Index = identity.Index;
         _guard = identity.Guard;
         ObservedGeneration = observedGeneration;
@@ -197,6 +213,8 @@ internal sealed class UiElementBinding : IOpaqueBinding
     public string MenuEpoch { get; }
     public UiExtractorKind Extractor { get; }
     public UiElementKind PublicKind { get; }
+    public UiInventorySide InventorySide { get; }
+    public UiEquipmentSlotKind EquipmentSlotKind { get; }
     public int Index { get; }
     public long ObservedGeneration { get; set; }
     public bool Stale { get; set; }
@@ -210,15 +228,23 @@ internal sealed class UiElementBinding : IOpaqueBinding
         && string.Equals(MenuEpoch, menuEpoch, StringComparison.Ordinal)
         && Extractor == identity.Extractor
         && PublicKind == identity.PublicKind
+        && InventorySide == identity.InventorySide
+        && EquipmentSlotKind == identity.EquipmentSlotKind
         && Index == identity.Index
         && string.Equals(_guard, identity.Guard, StringComparison.Ordinal)
         && _owner.TryGetMenuIdentity(out var previousMenu)
         && owner.TryGetMenuIdentity(out var currentMenu)
         && ReferenceEquals(previousMenu, currentMenu)
-        && _component.TryGetTarget(out var previousComponent)
-        && ReferenceEquals(previousComponent, identity.Component)
+        && ComponentMatches(identity.Component)
         && _semanticTarget.TryGetTarget(out var previousTarget)
         && ReferenceEquals(previousTarget, identity.SemanticTarget);
+
+    private bool ComponentMatches(object? component) =>
+        component is null
+            ? _component is null
+            : _component is not null
+                && _component.TryGetTarget(out var previous)
+                && ReferenceEquals(previous, component);
 
     public OpaqueBindingCurrentStatus ResolveCurrent(out object? target)
     {
@@ -226,7 +252,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
         ResolvedComponent = null;
         if (Stale
             || !_menu.TryGetTarget(out var menu)
-            || !_component.TryGetTarget(out var component)
+            || !TryGetComponent(out var component)
             || !_semanticTarget.TryGetTarget(out var semanticTarget)
             || !_owner.TryGetMenuIdentity(out var ownerMenu)
             || !ReferenceEquals(menu, ownerMenu))
@@ -235,6 +261,8 @@ internal sealed class UiElementBinding : IOpaqueBinding
         var current = _owner.ResolveCurrentElement(new UiElementBindingIdentity(
             Extractor,
             PublicKind,
+            InventorySide,
+            EquipmentSlotKind,
             Index,
             component,
             semanticTarget,
@@ -243,9 +271,8 @@ internal sealed class UiElementBinding : IOpaqueBinding
         if (current.Status == UiElementLookupStatus.Unavailable)
             return OpaqueBindingCurrentStatus.Unavailable;
         if (current.Status == UiElementLookupStatus.Stale
-            || current.Component is null
             || current.SemanticTarget is null
-            || !ReferenceEquals(component, current.Component)
+            || !ComponentsMatch(component, current.Component)
             || !ReferenceEquals(semanticTarget, current.SemanticTarget)
             || !string.Equals(_guard, current.Guard, StringComparison.Ordinal))
             return OpaqueBindingCurrentStatus.Stale;
@@ -253,6 +280,15 @@ internal sealed class UiElementBinding : IOpaqueBinding
         ResolvedComponent = current.Component;
         return OpaqueBindingCurrentStatus.Resolved;
     }
+
+    private bool TryGetComponent(out object? component)
+    {
+        component = null;
+        return _component is null || _component.TryGetTarget(out component);
+    }
+
+    private static bool ComponentsMatch(object? left, object? right) =>
+        left is null ? right is null : ReferenceEquals(left, right);
 }
 
 internal readonly record struct UiProjectionSession(
@@ -272,10 +308,12 @@ internal enum UiElementResolveStatus
 
 internal sealed record ResolvedUiElementRef(
     object Target,
-    object Component,
+    object? Component,
     string MenuEpoch,
     UiExtractorKind Extractor,
     UiElementKind PublicKind,
+    UiInventorySide InventorySide,
+    UiEquipmentSlotKind EquipmentSlotKind,
     int Index
 );
 

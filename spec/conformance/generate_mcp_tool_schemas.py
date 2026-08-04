@@ -309,8 +309,42 @@ def load_tool_errors() -> dict[str, dict[str, Any]]:
     return tool_errors
 
 
+def error_context_schema(
+    index: DescriptorIndex,
+    overrides: dict[str, Any],
+    generated_defs: dict[str, Any],
+    capability_id: str,
+) -> dict[str, Any] | None:
+    contexts_by_capability = overrides.get("error_contexts", {})
+    require(isinstance(contexts_by_capability, dict), "error_contexts 必须是对象")
+    contexts = contexts_by_capability.get(capability_id, {})
+    require(isinstance(contexts, dict), f"{capability_id} 错误上下文必须是对象")
+    if not contexts:
+        return None
+    properties: dict[str, Any] = {}
+    for name, context in sorted(contexts.items()):
+        require(isinstance(name, str) and re.fullmatch(r"[a-z][a-z0-9_]*", name) is not None, "错误上下文名称无效")
+        require(isinstance(context, dict) and isinstance(context.get("message"), str), f"{name} 错误上下文消息无效")
+        builder = SchemaBuilder(index, overrides, "output")
+        document = builder.build(context["message"])
+        for definition, schema in document["$defs"].items():
+            if definition in generated_defs:
+                require(generated_defs[definition] == schema, f"错误上下文定义冲突：{definition}")
+            else:
+                generated_defs[definition] = schema
+        properties[lower_camel(name)] = {"$ref": f"#/$defs/{context['message']}"}
+    return {
+        "type": "object",
+        "additionalProperties": False,
+        "properties": properties,
+        "oneOf": [{"required": [name]} for name in sorted(properties)],
+    }
+
+
 def tool_error_schema(
-    tool_errors: dict[str, dict[str, Any]], outcome: str | None = None
+    tool_errors: dict[str, dict[str, Any]],
+    details: dict[str, Any] | None,
+    outcome: str | None = None,
 ) -> dict[str, Any]:
     branches: list[dict[str, Any]] = []
     for code in sorted(tool_errors):
@@ -328,6 +362,8 @@ def tool_error_schema(
                 "minimum": 1,
                 "maximum": 180000,
             }
+        if details is not None:
+            properties["details"] = details
         branches.append(
             {
                 "type": "object",
@@ -345,11 +381,13 @@ def output_schema(
     overrides: dict[str, Any],
     result: str,
     tool_errors: dict[str, dict[str, Any]],
+    capability_id: str,
 ) -> dict[str, Any]:
     generated = SchemaBuilder(index, overrides, "output").build(result)
-    generated["$defs"]["StardewToolError"] = tool_error_schema(tool_errors)
-    generated["$defs"]["FailedToolError"] = tool_error_schema(tool_errors, "failed")
-    generated["$defs"]["UnknownToolError"] = tool_error_schema(tool_errors, "unknown")
+    details = error_context_schema(index, overrides, generated["$defs"], capability_id)
+    generated["$defs"]["StardewToolError"] = tool_error_schema(tool_errors, details)
+    generated["$defs"]["FailedToolError"] = tool_error_schema(tool_errors, details, "failed")
+    generated["$defs"]["UnknownToolError"] = tool_error_schema(tool_errors, details, "unknown")
     output_ref = f"#/$defs/{result}"
     branch_common = {
         "commandId": {"type": "string", "pattern": UUID_PATTERN},
@@ -478,7 +516,7 @@ def generate() -> dict[str, Any]:
                 "resultType": capability["result"],
                 "inputSchema": input_schema,
                 "outputSchema": output_schema(
-                    index, overrides, capability["result"], tool_errors
+                    index, overrides, capability["result"], tool_errors, capability["id"]
                 ),
                 "annotations": {
                     "readOnlyHint": capability["side_effect"] == "read_only",

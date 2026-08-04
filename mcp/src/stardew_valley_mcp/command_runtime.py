@@ -57,9 +57,22 @@ _FAILED_ERROR_CODES = {
 }
 
 
-def _error(command_id: str, error: common_pb2.Error) -> dict[str, object]:
+def _error(
+    command_id: str,
+    error: common_pb2.Error,
+    capability_id: str | None = None,
+) -> dict[str, object]:
+    if error.HasField("navigation") and capability_id != "navigate":
+        return CommandRuntime._protocol_failure(command_id)
     status, code, retryable = _ERRORS.get(error.code, ("failed", "upstream_protocol_error", False))
-    return {"status": status, "commandId": command_id, "error": {"code": code, "message": error.message[:512] or "Mod 返回错误", "retryable": retryable}}
+    projected: dict[str, object] = {
+        "code": code,
+        "message": error.message[:512] or "Mod 返回错误",
+        "retryable": retryable,
+    }
+    if error.HasField("navigation"):
+        projected["details"] = {"navigation": project_message(error.navigation)}
+    return {"status": status, "commandId": command_id, "error": projected}
 
 
 def _unknown(command_id: str) -> dict[str, object]:
@@ -191,7 +204,7 @@ class CommandRuntime:
                     pass
             raise
         except _ProtocolResponse as response:
-            return _error(command_id, response.error)
+            return _error(command_id, response.error, capability_id)
         except (_ConnectionLost, asyncio.TimeoutError):
             return await self._recover_or_unknown(waiter, deadline)
         except (ProtocolError, ValueError):
@@ -504,7 +517,7 @@ class CommandRuntime:
 
     def _project_terminal(self, waiter: _CommandWaiter, event: capabilities_pb2.CommandEvent) -> dict[str, object]:
         if event.state != capabilities_pb2.COMMAND_STATE_SUCCEEDED:
-            return _error(waiter.command_id, event.error)
+            return _error(waiter.command_id, event.error, waiter.capability_id)
         result = {
             "status": "succeeded",
             "commandId": waiter.command_id,

@@ -1,0 +1,9 @@
+{
+  "capability": "craft_item",
+  "minimalInput": {"recipeRef":{"value":"recipe-ref"},"craftCount":1,"uiRevision":"0000000000000000000000000000000000000000000000000000000000000000"},
+  "fullInput": {"recipeRef":{"value":"recipe-ref-2"},"craftCount":25,"uiRevision":"1111111111111111111111111111111111111111111111111111111111111111"},
+  "invalidInput": {"recipeRef":{"value":"recipe-ref"},"craftCount":0,"uiRevision":"0000000000000000000000000000000000000000000000000000000000000000"},
+  "accepted": {"state":"accepted","phase":"queued"},
+  "succeeded": {"status":"succeeded","commandId":"41000000-0000-4000-8000-000000000014","output":{"requestedCraftCount":2,"completedCraftCount":1,"stopReason":"materials_insufficient","outputs":[{"qualifiedItemId":"(O)322","displayName":"木围栏","quantity":1}],"materialsConsumed":[{"ingredientKey":"388","quantity":2}],"playerInventoryRevision":"2222222222222222222222222222222222222222222222222222222222222222","uiRevision":"3333333333333333333333333333333333333333333333333333333333333333"}},
+  "failed": {"status":"failed","commandId":"41000000-0000-4000-8000-000000000014","error":{"code":"not_ready","message":"当前材料不足，未开始制作","retryable":true}}
+}

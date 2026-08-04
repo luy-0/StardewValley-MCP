@@ -25,7 +25,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChJjYXBhYmlsaXRpZXMucHJvdG8SFXN0YXJkZXdfdmFsbGV5Lm1jcC52MRoN",
-            "YWN0aW9ucy5wcm90bxoMY29tbW9uLnByb3RvGg1xdWVyaWVzLnByb3RvIssH",
+            "YWN0aW9ucy5wcm90bxoMY29tbW9uLnByb3RvGg1xdWVyaWVzLnByb3RvIs4K",
             "Cg5Db21tYW5kUmVxdWVzdBISCgpjb21tYW5kX2lkGAEgASgJEhIKCnRpbWVv",
             "dXRfbXMYAiABKA0SMAoDc2F5GAogASgLMiEuc3RhcmRld192YWxsZXkubWNw",
             "LnYxLlNheVJlcXVlc3RIABI0CgVlbW90ZRgLIAEoCzIjLnN0YXJkZXdfdmFs",
@@ -40,61 +40,78 @@ namespace StardewValleyMcp.Protocol.V1 {
             "bnVSZXF1ZXN0SAASPwoLYWN0aXZhdGVfdWkYEiABKAsyKC5zdGFyZGV3X3Zh",
             "bGxleS5tY3AudjEuQWN0aXZhdGVVaVJlcXVlc3RIABI9CgpjbG9zZV9tZW51",
             "GBMgASgLMicuc3RhcmRld192YWxsZXkubWNwLnYxLkNsb3NlTWVudVJlcXVl",
-            "c3RIABJDCg1xdWVyeV9ydW50aW1lGB4gASgLMiouc3RhcmRld192YWxsZXku",
-            "bWNwLnYxLlF1ZXJ5UnVudGltZVJlcXVlc3RIABI/CgtxdWVyeV93b3JsZBgf",
-            "IAEoCzIoLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5RdWVyeVdvcmxkUmVxdWVz",
-            "dEgAEkcKD3F1ZXJ5X2ludmVudG9yeRggIAEoCzIsLnN0YXJkZXdfdmFsbGV5",
-            "Lm1jcC52MS5RdWVyeUludmVudG9yeVJlcXVlc3RIABI5CghxdWVyeV91aRgh",
-            "IAEoCzIlLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5RdWVyeVVpUmVxdWVzdEgA",
-            "EjgKB2luc3BlY3QYIiABKAsyJS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuSW5z",
-            "cGVjdFJlcXVlc3RIAEILCglvcGVyYXRpb24ikwcKEENhcGFiaWxpdHlSZXN1",
-            "bHQSLwoDc2F5GAogASgLMiAuc3RhcmRld192YWxsZXkubWNwLnYxLlNheVJl",
-            "c3VsdEgAEjMKBWVtb3RlGAsgASgLMiIuc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LkVtb3RlUmVzdWx0SAASMQoEZmFjZRgMIAEoCzIhLnN0YXJkZXdfdmFsbGV5",
-            "Lm1jcC52MS5GYWNlUmVzdWx0SAASOQoIbmF2aWdhdGUYDSABKAsyJS5zdGFy",
-            "ZGV3X3ZhbGxleS5tY3AudjEuTmF2aWdhdGVSZXN1bHRIABI5CghpbnRlcmFj",
-            "dBgOIAEoCzIlLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5JbnRlcmFjdFJlc3Vs",
-            "dEgAEjgKCHVzZV90b29sGA8gASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LlVzZVRvb2xSZXN1bHRIABIzCgVlcXVpcBgQIAEoCzIiLnN0YXJkZXdfdmFs",
-            "bGV5Lm1jcC52MS5FcXVpcFJlc3VsdEgAEjoKCW9wZW5fbWVudRgRIAEoCzIl",
-            "LnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5PcGVuTWVudVJlc3VsdEgAEj4KC2Fj",
-            "dGl2YXRlX3VpGBIgASgLMicuc3RhcmRld192YWxsZXkubWNwLnYxLkFjdGl2",
-            "YXRlVWlSZXN1bHRIABI8CgpjbG9zZV9tZW51GBMgASgLMiYuc3RhcmRld192",
-            "YWxsZXkubWNwLnYxLkNsb3NlTWVudVJlc3VsdEgAEkIKDXF1ZXJ5X3J1bnRp",
-            "bWUYHiABKAsyKS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUXVlcnlSdW50aW1l",
-            "UmVzdWx0SAASPgoLcXVlcnlfd29ybGQYHyABKAsyJy5zdGFyZGV3X3ZhbGxl",
-            "eS5tY3AudjEuUXVlcnlXb3JsZFJlc3VsdEgAEkYKD3F1ZXJ5X2ludmVudG9y",
-            "eRggIAEoCzIrLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5RdWVyeUludmVudG9y",
-            "eVJlc3VsdEgAEjgKCHF1ZXJ5X3VpGCEgASgLMiQuc3RhcmRld192YWxsZXku",
-            "bWNwLnYxLlF1ZXJ5VWlSZXN1bHRIABI3CgdpbnNwZWN0GCIgASgLMiQuc3Rh",
-            "cmRld192YWxsZXkubWNwLnYxLkluc3BlY3RSZXN1bHRIAEIICgZyZXN1bHQi",
-            "jgIKDENvbW1hbmRFdmVudBISCgpjb21tYW5kX2lkGAEgASgJEjIKBXN0YXRl",
-            "GAIgASgOMiMuc3RhcmRld192YWxsZXkubWNwLnYxLkNvbW1hbmRTdGF0ZRIN",
-            "CgVwaGFzZRgDIAEoCRIdChBwcm9ncmVzc19wZXJjZW50GAQgASgNSAGIAQES",
-            "OQoGcmVzdWx0GAogASgLMicuc3RhcmRld192YWxsZXkubWNwLnYxLkNhcGFi",
-            "aWxpdHlSZXN1bHRIABItCgVlcnJvchgLIAEoCzIcLnN0YXJkZXdfdmFsbGV5",
-            "Lm1jcC52MS5FcnJvckgAQgkKB291dGNvbWVCEwoRX3Byb2dyZXNzX3BlcmNl",
-            "bnQiOgoUQ2FuY2VsQ29tbWFuZFJlcXVlc3QSEgoKY29tbWFuZF9pZBgBIAEo",
-            "CRIOCgZyZWFzb24YAiABKAkirwEKFUNhbmNlbENvbW1hbmRSZXNwb25zZRIS",
-            "Cgpjb21tYW5kX2lkGAEgASgJEhAKCGFjY2VwdGVkGAIgASgIEjQKB2N1cnJl",
-            "bnQYAyABKAsyIy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQ29tbWFuZEV2ZW50",
-            "EjAKBWVycm9yGAQgASgLMhwuc3RhcmRld192YWxsZXkubWNwLnYxLkVycm9y",
-            "SACIAQFCCAoGX2Vycm9yIi0KF0dldENvbW1hbmRTdGF0dXNSZXF1ZXN0EhIK",
-            "CmNvbW1hbmRfaWQYASABKAkihAEKGEdldENvbW1hbmRTdGF0dXNSZXNwb25z",
-            "ZRISCgpjb21tYW5kX2lkGAEgASgJEg0KBWZvdW5kGAIgASgIEjkKB2N1cnJl",
-            "bnQYAyABKAsyIy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQ29tbWFuZEV2ZW50",
-            "SACIAQFCCgoIX2N1cnJlbnQq1QEKDENvbW1hbmRTdGF0ZRIdChlDT01NQU5E",
-            "X1NUQVRFX1VOU1BFQ0lGSUVEEAASGgoWQ09NTUFORF9TVEFURV9BQ0NFUFRF",
-            "RBABEhkKFUNPTU1BTkRfU1RBVEVfUlVOTklORxACEhsKF0NPTU1BTkRfU1RB",
-            "VEVfU1VDQ0VFREVEEAMSGAoUQ09NTUFORF9TVEFURV9GQUlMRUQQBBIbChdD",
-            "T01NQU5EX1NUQVRFX0NBTkNFTExFRBAFEhsKF0NPTU1BTkRfU1RBVEVfVElN",
-            "RURfT1VUEAZCH6oCHFN0YXJkZXdWYWxsZXlNY3AuUHJvdG9jb2wuVjFiBnBy",
-            "b3RvMw=="));
+            "c3RIABJWChd0cmFuc2Zlcl9pbnZlbnRvcnlfaXRlbRgUIAEoCzIzLnN0YXJk",
+            "ZXdfdmFsbGV5Lm1jcC52MS5UcmFuc2ZlckludmVudG9yeUl0ZW1SZXF1ZXN0",
+            "SAASTAoSc2V0X2VxdWlwbWVudF9zbG90GBUgASgLMi4uc3RhcmRld192YWxs",
+            "ZXkubWNwLnYxLlNldEVxdWlwbWVudFNsb3RSZXF1ZXN0SAASTgoTbW92ZV9p",
+            "bnZlbnRvcnlfaXRlbRgWIAEoCzIvLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5N",
+            "b3ZlSW52ZW50b3J5SXRlbVJlcXVlc3RIABI9CgpjcmFmdF9pdGVtGBcgASgL",
+            "Micuc3RhcmRld192YWxsZXkubWNwLnYxLkNyYWZ0SXRlbVJlcXVlc3RIABJM",
+            "ChJwdXJjaGFzZV9zaG9wX2l0ZW0YGCABKAsyLi5zdGFyZGV3X3ZhbGxleS5t",
+            "Y3AudjEuUHVyY2hhc2VTaG9wSXRlbVJlcXVlc3RIABJDCg1xdWVyeV9ydW50",
+            "aW1lGB4gASgLMiouc3RhcmRld192YWxsZXkubWNwLnYxLlF1ZXJ5UnVudGlt",
+            "ZVJlcXVlc3RIABI/CgtxdWVyeV93b3JsZBgfIAEoCzIoLnN0YXJkZXdfdmFs",
+            "bGV5Lm1jcC52MS5RdWVyeVdvcmxkUmVxdWVzdEgAEkcKD3F1ZXJ5X2ludmVu",
+            "dG9yeRggIAEoCzIsLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5RdWVyeUludmVu",
+            "dG9yeVJlcXVlc3RIABI5CghxdWVyeV91aRghIAEoCzIlLnN0YXJkZXdfdmFs",
+            "bGV5Lm1jcC52MS5RdWVyeVVpUmVxdWVzdEgAEjgKB2luc3BlY3QYIiABKAsy",
+            "JS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuSW5zcGVjdFJlcXVlc3RIAEILCglv",
+            "cGVyYXRpb24ikQoKEENhcGFiaWxpdHlSZXN1bHQSLwoDc2F5GAogASgLMiAu",
+            "c3RhcmRld192YWxsZXkubWNwLnYxLlNheVJlc3VsdEgAEjMKBWVtb3RlGAsg",
+            "ASgLMiIuc3RhcmRld192YWxsZXkubWNwLnYxLkVtb3RlUmVzdWx0SAASMQoE",
+            "ZmFjZRgMIAEoCzIhLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5GYWNlUmVzdWx0",
+            "SAASOQoIbmF2aWdhdGUYDSABKAsyJS5zdGFyZGV3X3ZhbGxleS5tY3AudjEu",
+            "TmF2aWdhdGVSZXN1bHRIABI5CghpbnRlcmFjdBgOIAEoCzIlLnN0YXJkZXdf",
+            "dmFsbGV5Lm1jcC52MS5JbnRlcmFjdFJlc3VsdEgAEjgKCHVzZV90b29sGA8g",
+            "ASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYxLlVzZVRvb2xSZXN1bHRIABIz",
+            "CgVlcXVpcBgQIAEoCzIiLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5FcXVpcFJl",
+            "c3VsdEgAEjoKCW9wZW5fbWVudRgRIAEoCzIlLnN0YXJkZXdfdmFsbGV5Lm1j",
+            "cC52MS5PcGVuTWVudVJlc3VsdEgAEj4KC2FjdGl2YXRlX3VpGBIgASgLMicu",
+            "c3RhcmRld192YWxsZXkubWNwLnYxLkFjdGl2YXRlVWlSZXN1bHRIABI8Cgpj",
+            "bG9zZV9tZW51GBMgASgLMiYuc3RhcmRld192YWxsZXkubWNwLnYxLkNsb3Nl",
+            "TWVudVJlc3VsdEgAElUKF3RyYW5zZmVyX2ludmVudG9yeV9pdGVtGBQgASgL",
+            "MjIuc3RhcmRld192YWxsZXkubWNwLnYxLlRyYW5zZmVySW52ZW50b3J5SXRl",
+            "bVJlc3VsdEgAEksKEnNldF9lcXVpcG1lbnRfc2xvdBgVIAEoCzItLnN0YXJk",
+            "ZXdfdmFsbGV5Lm1jcC52MS5TZXRFcXVpcG1lbnRTbG90UmVzdWx0SAASTQoT",
+            "bW92ZV9pbnZlbnRvcnlfaXRlbRgWIAEoCzIuLnN0YXJkZXdfdmFsbGV5Lm1j",
+            "cC52MS5Nb3ZlSW52ZW50b3J5SXRlbVJlc3VsdEgAEjwKCmNyYWZ0X2l0ZW0Y",
+            "FyABKAsyJi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQ3JhZnRJdGVtUmVzdWx0",
+            "SAASSwoScHVyY2hhc2Vfc2hvcF9pdGVtGBggASgLMi0uc3RhcmRld192YWxs",
+            "ZXkubWNwLnYxLlB1cmNoYXNlU2hvcEl0ZW1SZXN1bHRIABJCCg1xdWVyeV9y",
+            "dW50aW1lGB4gASgLMikuc3RhcmRld192YWxsZXkubWNwLnYxLlF1ZXJ5UnVu",
+            "dGltZVJlc3VsdEgAEj4KC3F1ZXJ5X3dvcmxkGB8gASgLMicuc3RhcmRld192",
+            "YWxsZXkubWNwLnYxLlF1ZXJ5V29ybGRSZXN1bHRIABJGCg9xdWVyeV9pbnZl",
+            "bnRvcnkYICABKAsyKy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUXVlcnlJbnZl",
+            "bnRvcnlSZXN1bHRIABI4CghxdWVyeV91aRghIAEoCzIkLnN0YXJkZXdfdmFs",
+            "bGV5Lm1jcC52MS5RdWVyeVVpUmVzdWx0SAASNwoHaW5zcGVjdBgiIAEoCzIk",
+            "LnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5JbnNwZWN0UmVzdWx0SABCCAoGcmVz",
+            "dWx0Io4CCgxDb21tYW5kRXZlbnQSEgoKY29tbWFuZF9pZBgBIAEoCRIyCgVz",
+            "dGF0ZRgCIAEoDjIjLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5Db21tYW5kU3Rh",
+            "dGUSDQoFcGhhc2UYAyABKAkSHQoQcHJvZ3Jlc3NfcGVyY2VudBgEIAEoDUgB",
+            "iAEBEjkKBnJlc3VsdBgKIAEoCzInLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5D",
+            "YXBhYmlsaXR5UmVzdWx0SAASLQoFZXJyb3IYCyABKAsyHC5zdGFyZGV3X3Zh",
+            "bGxleS5tY3AudjEuRXJyb3JIAEIJCgdvdXRjb21lQhMKEV9wcm9ncmVzc19w",
+            "ZXJjZW50IjoKFENhbmNlbENvbW1hbmRSZXF1ZXN0EhIKCmNvbW1hbmRfaWQY",
+            "ASABKAkSDgoGcmVhc29uGAIgASgJIq8BChVDYW5jZWxDb21tYW5kUmVzcG9u",
+            "c2USEgoKY29tbWFuZF9pZBgBIAEoCRIQCghhY2NlcHRlZBgCIAEoCBI0Cgdj",
+            "dXJyZW50GAMgASgLMiMuc3RhcmRld192YWxsZXkubWNwLnYxLkNvbW1hbmRF",
+            "dmVudBIwCgVlcnJvchgEIAEoCzIcLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5F",
+            "cnJvckgAiAEBQggKBl9lcnJvciItChdHZXRDb21tYW5kU3RhdHVzUmVxdWVz",
+            "dBISCgpjb21tYW5kX2lkGAEgASgJIoQBChhHZXRDb21tYW5kU3RhdHVzUmVz",
+            "cG9uc2USEgoKY29tbWFuZF9pZBgBIAEoCRINCgVmb3VuZBgCIAEoCBI5Cgdj",
+            "dXJyZW50GAMgASgLMiMuc3RhcmRld192YWxsZXkubWNwLnYxLkNvbW1hbmRF",
+            "dmVudEgAiAEBQgoKCF9jdXJyZW50KtUBCgxDb21tYW5kU3RhdGUSHQoZQ09N",
+            "TUFORF9TVEFURV9VTlNQRUNJRklFRBAAEhoKFkNPTU1BTkRfU1RBVEVfQUND",
+            "RVBURUQQARIZChVDT01NQU5EX1NUQVRFX1JVTk5JTkcQAhIbChdDT01NQU5E",
+            "X1NUQVRFX1NVQ0NFRURFRBADEhgKFENPTU1BTkRfU1RBVEVfRkFJTEVEEAQS",
+            "GwoXQ09NTUFORF9TVEFURV9DQU5DRUxMRUQQBRIbChdDT01NQU5EX1NUQVRF",
+            "X1RJTUVEX09VVBAGQh+qAhxTdGFyZGV3VmFsbGV5TWNwLlByb3RvY29sLlYx",
+            "YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.CommonReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.CommandState), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CommandRequest), global::StardewValleyMcp.Protocol.V1.CommandRequest.Parser, new[]{ "CommandId", "TimeoutMs", "Say", "Emote", "Face", "Navigate", "Interact", "UseTool", "Equip", "OpenMenu", "ActivateUi", "CloseMenu", "QueryRuntime", "QueryWorld", "QueryInventory", "QueryUi", "Inspect" }, new[]{ "Operation" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CapabilityResult), global::StardewValleyMcp.Protocol.V1.CapabilityResult.Parser, new[]{ "Say", "Emote", "Face", "Navigate", "Interact", "UseTool", "Equip", "OpenMenu", "ActivateUi", "CloseMenu", "QueryRuntime", "QueryWorld", "QueryInventory", "QueryUi", "Inspect" }, new[]{ "Result" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CommandRequest), global::StardewValleyMcp.Protocol.V1.CommandRequest.Parser, new[]{ "CommandId", "TimeoutMs", "Say", "Emote", "Face", "Navigate", "Interact", "UseTool", "Equip", "OpenMenu", "ActivateUi", "CloseMenu", "TransferInventoryItem", "SetEquipmentSlot", "MoveInventoryItem", "CraftItem", "PurchaseShopItem", "QueryRuntime", "QueryWorld", "QueryInventory", "QueryUi", "Inspect" }, new[]{ "Operation" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CapabilityResult), global::StardewValleyMcp.Protocol.V1.CapabilityResult.Parser, new[]{ "Say", "Emote", "Face", "Navigate", "Interact", "UseTool", "Equip", "OpenMenu", "ActivateUi", "CloseMenu", "TransferInventoryItem", "SetEquipmentSlot", "MoveInventoryItem", "CraftItem", "PurchaseShopItem", "QueryRuntime", "QueryWorld", "QueryInventory", "QueryUi", "Inspect" }, new[]{ "Result" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CommandEvent), global::StardewValleyMcp.Protocol.V1.CommandEvent.Parser, new[]{ "CommandId", "State", "Phase", "ProgressPercent", "Result", "Error" }, new[]{ "Outcome", "ProgressPercent" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CancelCommandRequest), global::StardewValleyMcp.Protocol.V1.CancelCommandRequest.Parser, new[]{ "CommandId", "Reason" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CancelCommandResponse), global::StardewValleyMcp.Protocol.V1.CancelCommandResponse.Parser, new[]{ "CommandId", "Accepted", "Current", "Error" }, new[]{ "Error" }, null, null, null),
@@ -186,6 +203,21 @@ namespace StardewValleyMcp.Protocol.V1 {
           break;
         case OperationOneofCase.CloseMenu:
           CloseMenu = other.CloseMenu.Clone();
+          break;
+        case OperationOneofCase.TransferInventoryItem:
+          TransferInventoryItem = other.TransferInventoryItem.Clone();
+          break;
+        case OperationOneofCase.SetEquipmentSlot:
+          SetEquipmentSlot = other.SetEquipmentSlot.Clone();
+          break;
+        case OperationOneofCase.MoveInventoryItem:
+          MoveInventoryItem = other.MoveInventoryItem.Clone();
+          break;
+        case OperationOneofCase.CraftItem:
+          CraftItem = other.CraftItem.Clone();
+          break;
+        case OperationOneofCase.PurchaseShopItem:
+          PurchaseShopItem = other.PurchaseShopItem.Clone();
           break;
         case OperationOneofCase.QueryRuntime:
           QueryRuntime = other.QueryRuntime.Clone();
@@ -363,6 +395,66 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "transfer_inventory_item" field.</summary>
+    public const int TransferInventoryItemFieldNumber = 20;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest TransferInventoryItem {
+      get { return operationCase_ == OperationOneofCase.TransferInventoryItem ? (global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest) operation_ : null; }
+      set {
+        operation_ = value;
+        operationCase_ = value == null ? OperationOneofCase.None : OperationOneofCase.TransferInventoryItem;
+      }
+    }
+
+    /// <summary>Field number for the "set_equipment_slot" field.</summary>
+    public const int SetEquipmentSlotFieldNumber = 21;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotRequest SetEquipmentSlot {
+      get { return operationCase_ == OperationOneofCase.SetEquipmentSlot ? (global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotRequest) operation_ : null; }
+      set {
+        operation_ = value;
+        operationCase_ = value == null ? OperationOneofCase.None : OperationOneofCase.SetEquipmentSlot;
+      }
+    }
+
+    /// <summary>Field number for the "move_inventory_item" field.</summary>
+    public const int MoveInventoryItemFieldNumber = 22;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.MoveInventoryItemRequest MoveInventoryItem {
+      get { return operationCase_ == OperationOneofCase.MoveInventoryItem ? (global::StardewValleyMcp.Protocol.V1.MoveInventoryItemRequest) operation_ : null; }
+      set {
+        operation_ = value;
+        operationCase_ = value == null ? OperationOneofCase.None : OperationOneofCase.MoveInventoryItem;
+      }
+    }
+
+    /// <summary>Field number for the "craft_item" field.</summary>
+    public const int CraftItemFieldNumber = 23;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.CraftItemRequest CraftItem {
+      get { return operationCase_ == OperationOneofCase.CraftItem ? (global::StardewValleyMcp.Protocol.V1.CraftItemRequest) operation_ : null; }
+      set {
+        operation_ = value;
+        operationCase_ = value == null ? OperationOneofCase.None : OperationOneofCase.CraftItem;
+      }
+    }
+
+    /// <summary>Field number for the "purchase_shop_item" field.</summary>
+    public const int PurchaseShopItemFieldNumber = 24;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.PurchaseShopItemRequest PurchaseShopItem {
+      get { return operationCase_ == OperationOneofCase.PurchaseShopItem ? (global::StardewValleyMcp.Protocol.V1.PurchaseShopItemRequest) operation_ : null; }
+      set {
+        operation_ = value;
+        operationCase_ = value == null ? OperationOneofCase.None : OperationOneofCase.PurchaseShopItem;
+      }
+    }
+
     /// <summary>Field number for the "query_runtime" field.</summary>
     public const int QueryRuntimeFieldNumber = 30;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -437,6 +529,11 @@ namespace StardewValleyMcp.Protocol.V1 {
       OpenMenu = 17,
       ActivateUi = 18,
       CloseMenu = 19,
+      TransferInventoryItem = 20,
+      SetEquipmentSlot = 21,
+      MoveInventoryItem = 22,
+      CraftItem = 23,
+      PurchaseShopItem = 24,
       QueryRuntime = 30,
       QueryWorld = 31,
       QueryInventory = 32,
@@ -484,6 +581,11 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (!object.Equals(OpenMenu, other.OpenMenu)) return false;
       if (!object.Equals(ActivateUi, other.ActivateUi)) return false;
       if (!object.Equals(CloseMenu, other.CloseMenu)) return false;
+      if (!object.Equals(TransferInventoryItem, other.TransferInventoryItem)) return false;
+      if (!object.Equals(SetEquipmentSlot, other.SetEquipmentSlot)) return false;
+      if (!object.Equals(MoveInventoryItem, other.MoveInventoryItem)) return false;
+      if (!object.Equals(CraftItem, other.CraftItem)) return false;
+      if (!object.Equals(PurchaseShopItem, other.PurchaseShopItem)) return false;
       if (!object.Equals(QueryRuntime, other.QueryRuntime)) return false;
       if (!object.Equals(QueryWorld, other.QueryWorld)) return false;
       if (!object.Equals(QueryInventory, other.QueryInventory)) return false;
@@ -509,6 +611,11 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (operationCase_ == OperationOneofCase.OpenMenu) hash ^= OpenMenu.GetHashCode();
       if (operationCase_ == OperationOneofCase.ActivateUi) hash ^= ActivateUi.GetHashCode();
       if (operationCase_ == OperationOneofCase.CloseMenu) hash ^= CloseMenu.GetHashCode();
+      if (operationCase_ == OperationOneofCase.TransferInventoryItem) hash ^= TransferInventoryItem.GetHashCode();
+      if (operationCase_ == OperationOneofCase.SetEquipmentSlot) hash ^= SetEquipmentSlot.GetHashCode();
+      if (operationCase_ == OperationOneofCase.MoveInventoryItem) hash ^= MoveInventoryItem.GetHashCode();
+      if (operationCase_ == OperationOneofCase.CraftItem) hash ^= CraftItem.GetHashCode();
+      if (operationCase_ == OperationOneofCase.PurchaseShopItem) hash ^= PurchaseShopItem.GetHashCode();
       if (operationCase_ == OperationOneofCase.QueryRuntime) hash ^= QueryRuntime.GetHashCode();
       if (operationCase_ == OperationOneofCase.QueryWorld) hash ^= QueryWorld.GetHashCode();
       if (operationCase_ == OperationOneofCase.QueryInventory) hash ^= QueryInventory.GetHashCode();
@@ -580,6 +687,26 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (operationCase_ == OperationOneofCase.CloseMenu) {
         output.WriteRawTag(154, 1);
         output.WriteMessage(CloseMenu);
+      }
+      if (operationCase_ == OperationOneofCase.TransferInventoryItem) {
+        output.WriteRawTag(162, 1);
+        output.WriteMessage(TransferInventoryItem);
+      }
+      if (operationCase_ == OperationOneofCase.SetEquipmentSlot) {
+        output.WriteRawTag(170, 1);
+        output.WriteMessage(SetEquipmentSlot);
+      }
+      if (operationCase_ == OperationOneofCase.MoveInventoryItem) {
+        output.WriteRawTag(178, 1);
+        output.WriteMessage(MoveInventoryItem);
+      }
+      if (operationCase_ == OperationOneofCase.CraftItem) {
+        output.WriteRawTag(186, 1);
+        output.WriteMessage(CraftItem);
+      }
+      if (operationCase_ == OperationOneofCase.PurchaseShopItem) {
+        output.WriteRawTag(194, 1);
+        output.WriteMessage(PurchaseShopItem);
       }
       if (operationCase_ == OperationOneofCase.QueryRuntime) {
         output.WriteRawTag(242, 1);
@@ -659,6 +786,26 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(154, 1);
         output.WriteMessage(CloseMenu);
       }
+      if (operationCase_ == OperationOneofCase.TransferInventoryItem) {
+        output.WriteRawTag(162, 1);
+        output.WriteMessage(TransferInventoryItem);
+      }
+      if (operationCase_ == OperationOneofCase.SetEquipmentSlot) {
+        output.WriteRawTag(170, 1);
+        output.WriteMessage(SetEquipmentSlot);
+      }
+      if (operationCase_ == OperationOneofCase.MoveInventoryItem) {
+        output.WriteRawTag(178, 1);
+        output.WriteMessage(MoveInventoryItem);
+      }
+      if (operationCase_ == OperationOneofCase.CraftItem) {
+        output.WriteRawTag(186, 1);
+        output.WriteMessage(CraftItem);
+      }
+      if (operationCase_ == OperationOneofCase.PurchaseShopItem) {
+        output.WriteRawTag(194, 1);
+        output.WriteMessage(PurchaseShopItem);
+      }
       if (operationCase_ == OperationOneofCase.QueryRuntime) {
         output.WriteRawTag(242, 1);
         output.WriteMessage(QueryRuntime);
@@ -724,6 +871,21 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (operationCase_ == OperationOneofCase.CloseMenu) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(CloseMenu);
+      }
+      if (operationCase_ == OperationOneofCase.TransferInventoryItem) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(TransferInventoryItem);
+      }
+      if (operationCase_ == OperationOneofCase.SetEquipmentSlot) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(SetEquipmentSlot);
+      }
+      if (operationCase_ == OperationOneofCase.MoveInventoryItem) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(MoveInventoryItem);
+      }
+      if (operationCase_ == OperationOneofCase.CraftItem) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(CraftItem);
+      }
+      if (operationCase_ == OperationOneofCase.PurchaseShopItem) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(PurchaseShopItem);
       }
       if (operationCase_ == OperationOneofCase.QueryRuntime) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(QueryRuntime);
@@ -818,6 +980,36 @@ namespace StardewValleyMcp.Protocol.V1 {
             CloseMenu = new global::StardewValleyMcp.Protocol.V1.CloseMenuRequest();
           }
           CloseMenu.MergeFrom(other.CloseMenu);
+          break;
+        case OperationOneofCase.TransferInventoryItem:
+          if (TransferInventoryItem == null) {
+            TransferInventoryItem = new global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest();
+          }
+          TransferInventoryItem.MergeFrom(other.TransferInventoryItem);
+          break;
+        case OperationOneofCase.SetEquipmentSlot:
+          if (SetEquipmentSlot == null) {
+            SetEquipmentSlot = new global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotRequest();
+          }
+          SetEquipmentSlot.MergeFrom(other.SetEquipmentSlot);
+          break;
+        case OperationOneofCase.MoveInventoryItem:
+          if (MoveInventoryItem == null) {
+            MoveInventoryItem = new global::StardewValleyMcp.Protocol.V1.MoveInventoryItemRequest();
+          }
+          MoveInventoryItem.MergeFrom(other.MoveInventoryItem);
+          break;
+        case OperationOneofCase.CraftItem:
+          if (CraftItem == null) {
+            CraftItem = new global::StardewValleyMcp.Protocol.V1.CraftItemRequest();
+          }
+          CraftItem.MergeFrom(other.CraftItem);
+          break;
+        case OperationOneofCase.PurchaseShopItem:
+          if (PurchaseShopItem == null) {
+            PurchaseShopItem = new global::StardewValleyMcp.Protocol.V1.PurchaseShopItemRequest();
+          }
+          PurchaseShopItem.MergeFrom(other.PurchaseShopItem);
           break;
         case OperationOneofCase.QueryRuntime:
           if (QueryRuntime == null) {
@@ -966,6 +1158,51 @@ namespace StardewValleyMcp.Protocol.V1 {
             }
             input.ReadMessage(subBuilder);
             CloseMenu = subBuilder;
+            break;
+          }
+          case 162: {
+            global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest();
+            if (operationCase_ == OperationOneofCase.TransferInventoryItem) {
+              subBuilder.MergeFrom(TransferInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            TransferInventoryItem = subBuilder;
+            break;
+          }
+          case 170: {
+            global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotRequest();
+            if (operationCase_ == OperationOneofCase.SetEquipmentSlot) {
+              subBuilder.MergeFrom(SetEquipmentSlot);
+            }
+            input.ReadMessage(subBuilder);
+            SetEquipmentSlot = subBuilder;
+            break;
+          }
+          case 178: {
+            global::StardewValleyMcp.Protocol.V1.MoveInventoryItemRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.MoveInventoryItemRequest();
+            if (operationCase_ == OperationOneofCase.MoveInventoryItem) {
+              subBuilder.MergeFrom(MoveInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            MoveInventoryItem = subBuilder;
+            break;
+          }
+          case 186: {
+            global::StardewValleyMcp.Protocol.V1.CraftItemRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.CraftItemRequest();
+            if (operationCase_ == OperationOneofCase.CraftItem) {
+              subBuilder.MergeFrom(CraftItem);
+            }
+            input.ReadMessage(subBuilder);
+            CraftItem = subBuilder;
+            break;
+          }
+          case 194: {
+            global::StardewValleyMcp.Protocol.V1.PurchaseShopItemRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.PurchaseShopItemRequest();
+            if (operationCase_ == OperationOneofCase.PurchaseShopItem) {
+              subBuilder.MergeFrom(PurchaseShopItem);
+            }
+            input.ReadMessage(subBuilder);
+            PurchaseShopItem = subBuilder;
             break;
           }
           case 242: {
@@ -1130,6 +1367,51 @@ namespace StardewValleyMcp.Protocol.V1 {
             CloseMenu = subBuilder;
             break;
           }
+          case 162: {
+            global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest();
+            if (operationCase_ == OperationOneofCase.TransferInventoryItem) {
+              subBuilder.MergeFrom(TransferInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            TransferInventoryItem = subBuilder;
+            break;
+          }
+          case 170: {
+            global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotRequest();
+            if (operationCase_ == OperationOneofCase.SetEquipmentSlot) {
+              subBuilder.MergeFrom(SetEquipmentSlot);
+            }
+            input.ReadMessage(subBuilder);
+            SetEquipmentSlot = subBuilder;
+            break;
+          }
+          case 178: {
+            global::StardewValleyMcp.Protocol.V1.MoveInventoryItemRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.MoveInventoryItemRequest();
+            if (operationCase_ == OperationOneofCase.MoveInventoryItem) {
+              subBuilder.MergeFrom(MoveInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            MoveInventoryItem = subBuilder;
+            break;
+          }
+          case 186: {
+            global::StardewValleyMcp.Protocol.V1.CraftItemRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.CraftItemRequest();
+            if (operationCase_ == OperationOneofCase.CraftItem) {
+              subBuilder.MergeFrom(CraftItem);
+            }
+            input.ReadMessage(subBuilder);
+            CraftItem = subBuilder;
+            break;
+          }
+          case 194: {
+            global::StardewValleyMcp.Protocol.V1.PurchaseShopItemRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.PurchaseShopItemRequest();
+            if (operationCase_ == OperationOneofCase.PurchaseShopItem) {
+              subBuilder.MergeFrom(PurchaseShopItem);
+            }
+            input.ReadMessage(subBuilder);
+            PurchaseShopItem = subBuilder;
+            break;
+          }
           case 242: {
             global::StardewValleyMcp.Protocol.V1.QueryRuntimeRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.QueryRuntimeRequest();
             if (operationCase_ == OperationOneofCase.QueryRuntime) {
@@ -1247,6 +1529,21 @@ namespace StardewValleyMcp.Protocol.V1 {
           break;
         case ResultOneofCase.CloseMenu:
           CloseMenu = other.CloseMenu.Clone();
+          break;
+        case ResultOneofCase.TransferInventoryItem:
+          TransferInventoryItem = other.TransferInventoryItem.Clone();
+          break;
+        case ResultOneofCase.SetEquipmentSlot:
+          SetEquipmentSlot = other.SetEquipmentSlot.Clone();
+          break;
+        case ResultOneofCase.MoveInventoryItem:
+          MoveInventoryItem = other.MoveInventoryItem.Clone();
+          break;
+        case ResultOneofCase.CraftItem:
+          CraftItem = other.CraftItem.Clone();
+          break;
+        case ResultOneofCase.PurchaseShopItem:
+          PurchaseShopItem = other.PurchaseShopItem.Clone();
           break;
         case ResultOneofCase.QueryRuntime:
           QueryRuntime = other.QueryRuntime.Clone();
@@ -1394,6 +1691,66 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "transfer_inventory_item" field.</summary>
+    public const int TransferInventoryItemFieldNumber = 20;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult TransferInventoryItem {
+      get { return resultCase_ == ResultOneofCase.TransferInventoryItem ? (global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult) result_ : null; }
+      set {
+        result_ = value;
+        resultCase_ = value == null ? ResultOneofCase.None : ResultOneofCase.TransferInventoryItem;
+      }
+    }
+
+    /// <summary>Field number for the "set_equipment_slot" field.</summary>
+    public const int SetEquipmentSlotFieldNumber = 21;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotResult SetEquipmentSlot {
+      get { return resultCase_ == ResultOneofCase.SetEquipmentSlot ? (global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotResult) result_ : null; }
+      set {
+        result_ = value;
+        resultCase_ = value == null ? ResultOneofCase.None : ResultOneofCase.SetEquipmentSlot;
+      }
+    }
+
+    /// <summary>Field number for the "move_inventory_item" field.</summary>
+    public const int MoveInventoryItemFieldNumber = 22;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.MoveInventoryItemResult MoveInventoryItem {
+      get { return resultCase_ == ResultOneofCase.MoveInventoryItem ? (global::StardewValleyMcp.Protocol.V1.MoveInventoryItemResult) result_ : null; }
+      set {
+        result_ = value;
+        resultCase_ = value == null ? ResultOneofCase.None : ResultOneofCase.MoveInventoryItem;
+      }
+    }
+
+    /// <summary>Field number for the "craft_item" field.</summary>
+    public const int CraftItemFieldNumber = 23;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.CraftItemResult CraftItem {
+      get { return resultCase_ == ResultOneofCase.CraftItem ? (global::StardewValleyMcp.Protocol.V1.CraftItemResult) result_ : null; }
+      set {
+        result_ = value;
+        resultCase_ = value == null ? ResultOneofCase.None : ResultOneofCase.CraftItem;
+      }
+    }
+
+    /// <summary>Field number for the "purchase_shop_item" field.</summary>
+    public const int PurchaseShopItemFieldNumber = 24;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.PurchaseShopItemResult PurchaseShopItem {
+      get { return resultCase_ == ResultOneofCase.PurchaseShopItem ? (global::StardewValleyMcp.Protocol.V1.PurchaseShopItemResult) result_ : null; }
+      set {
+        result_ = value;
+        resultCase_ = value == null ? ResultOneofCase.None : ResultOneofCase.PurchaseShopItem;
+      }
+    }
+
     /// <summary>Field number for the "query_runtime" field.</summary>
     public const int QueryRuntimeFieldNumber = 30;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1468,6 +1825,11 @@ namespace StardewValleyMcp.Protocol.V1 {
       OpenMenu = 17,
       ActivateUi = 18,
       CloseMenu = 19,
+      TransferInventoryItem = 20,
+      SetEquipmentSlot = 21,
+      MoveInventoryItem = 22,
+      CraftItem = 23,
+      PurchaseShopItem = 24,
       QueryRuntime = 30,
       QueryWorld = 31,
       QueryInventory = 32,
@@ -1513,6 +1875,11 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (!object.Equals(OpenMenu, other.OpenMenu)) return false;
       if (!object.Equals(ActivateUi, other.ActivateUi)) return false;
       if (!object.Equals(CloseMenu, other.CloseMenu)) return false;
+      if (!object.Equals(TransferInventoryItem, other.TransferInventoryItem)) return false;
+      if (!object.Equals(SetEquipmentSlot, other.SetEquipmentSlot)) return false;
+      if (!object.Equals(MoveInventoryItem, other.MoveInventoryItem)) return false;
+      if (!object.Equals(CraftItem, other.CraftItem)) return false;
+      if (!object.Equals(PurchaseShopItem, other.PurchaseShopItem)) return false;
       if (!object.Equals(QueryRuntime, other.QueryRuntime)) return false;
       if (!object.Equals(QueryWorld, other.QueryWorld)) return false;
       if (!object.Equals(QueryInventory, other.QueryInventory)) return false;
@@ -1536,6 +1903,11 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (resultCase_ == ResultOneofCase.OpenMenu) hash ^= OpenMenu.GetHashCode();
       if (resultCase_ == ResultOneofCase.ActivateUi) hash ^= ActivateUi.GetHashCode();
       if (resultCase_ == ResultOneofCase.CloseMenu) hash ^= CloseMenu.GetHashCode();
+      if (resultCase_ == ResultOneofCase.TransferInventoryItem) hash ^= TransferInventoryItem.GetHashCode();
+      if (resultCase_ == ResultOneofCase.SetEquipmentSlot) hash ^= SetEquipmentSlot.GetHashCode();
+      if (resultCase_ == ResultOneofCase.MoveInventoryItem) hash ^= MoveInventoryItem.GetHashCode();
+      if (resultCase_ == ResultOneofCase.CraftItem) hash ^= CraftItem.GetHashCode();
+      if (resultCase_ == ResultOneofCase.PurchaseShopItem) hash ^= PurchaseShopItem.GetHashCode();
       if (resultCase_ == ResultOneofCase.QueryRuntime) hash ^= QueryRuntime.GetHashCode();
       if (resultCase_ == ResultOneofCase.QueryWorld) hash ^= QueryWorld.GetHashCode();
       if (resultCase_ == ResultOneofCase.QueryInventory) hash ^= QueryInventory.GetHashCode();
@@ -1599,6 +1971,26 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (resultCase_ == ResultOneofCase.CloseMenu) {
         output.WriteRawTag(154, 1);
         output.WriteMessage(CloseMenu);
+      }
+      if (resultCase_ == ResultOneofCase.TransferInventoryItem) {
+        output.WriteRawTag(162, 1);
+        output.WriteMessage(TransferInventoryItem);
+      }
+      if (resultCase_ == ResultOneofCase.SetEquipmentSlot) {
+        output.WriteRawTag(170, 1);
+        output.WriteMessage(SetEquipmentSlot);
+      }
+      if (resultCase_ == ResultOneofCase.MoveInventoryItem) {
+        output.WriteRawTag(178, 1);
+        output.WriteMessage(MoveInventoryItem);
+      }
+      if (resultCase_ == ResultOneofCase.CraftItem) {
+        output.WriteRawTag(186, 1);
+        output.WriteMessage(CraftItem);
+      }
+      if (resultCase_ == ResultOneofCase.PurchaseShopItem) {
+        output.WriteRawTag(194, 1);
+        output.WriteMessage(PurchaseShopItem);
       }
       if (resultCase_ == ResultOneofCase.QueryRuntime) {
         output.WriteRawTag(242, 1);
@@ -1670,6 +2062,26 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(154, 1);
         output.WriteMessage(CloseMenu);
       }
+      if (resultCase_ == ResultOneofCase.TransferInventoryItem) {
+        output.WriteRawTag(162, 1);
+        output.WriteMessage(TransferInventoryItem);
+      }
+      if (resultCase_ == ResultOneofCase.SetEquipmentSlot) {
+        output.WriteRawTag(170, 1);
+        output.WriteMessage(SetEquipmentSlot);
+      }
+      if (resultCase_ == ResultOneofCase.MoveInventoryItem) {
+        output.WriteRawTag(178, 1);
+        output.WriteMessage(MoveInventoryItem);
+      }
+      if (resultCase_ == ResultOneofCase.CraftItem) {
+        output.WriteRawTag(186, 1);
+        output.WriteMessage(CraftItem);
+      }
+      if (resultCase_ == ResultOneofCase.PurchaseShopItem) {
+        output.WriteRawTag(194, 1);
+        output.WriteMessage(PurchaseShopItem);
+      }
       if (resultCase_ == ResultOneofCase.QueryRuntime) {
         output.WriteRawTag(242, 1);
         output.WriteMessage(QueryRuntime);
@@ -1729,6 +2141,21 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (resultCase_ == ResultOneofCase.CloseMenu) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(CloseMenu);
+      }
+      if (resultCase_ == ResultOneofCase.TransferInventoryItem) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(TransferInventoryItem);
+      }
+      if (resultCase_ == ResultOneofCase.SetEquipmentSlot) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(SetEquipmentSlot);
+      }
+      if (resultCase_ == ResultOneofCase.MoveInventoryItem) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(MoveInventoryItem);
+      }
+      if (resultCase_ == ResultOneofCase.CraftItem) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(CraftItem);
+      }
+      if (resultCase_ == ResultOneofCase.PurchaseShopItem) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(PurchaseShopItem);
       }
       if (resultCase_ == ResultOneofCase.QueryRuntime) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(QueryRuntime);
@@ -1817,6 +2244,36 @@ namespace StardewValleyMcp.Protocol.V1 {
             CloseMenu = new global::StardewValleyMcp.Protocol.V1.CloseMenuResult();
           }
           CloseMenu.MergeFrom(other.CloseMenu);
+          break;
+        case ResultOneofCase.TransferInventoryItem:
+          if (TransferInventoryItem == null) {
+            TransferInventoryItem = new global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult();
+          }
+          TransferInventoryItem.MergeFrom(other.TransferInventoryItem);
+          break;
+        case ResultOneofCase.SetEquipmentSlot:
+          if (SetEquipmentSlot == null) {
+            SetEquipmentSlot = new global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotResult();
+          }
+          SetEquipmentSlot.MergeFrom(other.SetEquipmentSlot);
+          break;
+        case ResultOneofCase.MoveInventoryItem:
+          if (MoveInventoryItem == null) {
+            MoveInventoryItem = new global::StardewValleyMcp.Protocol.V1.MoveInventoryItemResult();
+          }
+          MoveInventoryItem.MergeFrom(other.MoveInventoryItem);
+          break;
+        case ResultOneofCase.CraftItem:
+          if (CraftItem == null) {
+            CraftItem = new global::StardewValleyMcp.Protocol.V1.CraftItemResult();
+          }
+          CraftItem.MergeFrom(other.CraftItem);
+          break;
+        case ResultOneofCase.PurchaseShopItem:
+          if (PurchaseShopItem == null) {
+            PurchaseShopItem = new global::StardewValleyMcp.Protocol.V1.PurchaseShopItemResult();
+          }
+          PurchaseShopItem.MergeFrom(other.PurchaseShopItem);
           break;
         case ResultOneofCase.QueryRuntime:
           if (QueryRuntime == null) {
@@ -1957,6 +2414,51 @@ namespace StardewValleyMcp.Protocol.V1 {
             }
             input.ReadMessage(subBuilder);
             CloseMenu = subBuilder;
+            break;
+          }
+          case 162: {
+            global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult subBuilder = new global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult();
+            if (resultCase_ == ResultOneofCase.TransferInventoryItem) {
+              subBuilder.MergeFrom(TransferInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            TransferInventoryItem = subBuilder;
+            break;
+          }
+          case 170: {
+            global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotResult subBuilder = new global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotResult();
+            if (resultCase_ == ResultOneofCase.SetEquipmentSlot) {
+              subBuilder.MergeFrom(SetEquipmentSlot);
+            }
+            input.ReadMessage(subBuilder);
+            SetEquipmentSlot = subBuilder;
+            break;
+          }
+          case 178: {
+            global::StardewValleyMcp.Protocol.V1.MoveInventoryItemResult subBuilder = new global::StardewValleyMcp.Protocol.V1.MoveInventoryItemResult();
+            if (resultCase_ == ResultOneofCase.MoveInventoryItem) {
+              subBuilder.MergeFrom(MoveInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            MoveInventoryItem = subBuilder;
+            break;
+          }
+          case 186: {
+            global::StardewValleyMcp.Protocol.V1.CraftItemResult subBuilder = new global::StardewValleyMcp.Protocol.V1.CraftItemResult();
+            if (resultCase_ == ResultOneofCase.CraftItem) {
+              subBuilder.MergeFrom(CraftItem);
+            }
+            input.ReadMessage(subBuilder);
+            CraftItem = subBuilder;
+            break;
+          }
+          case 194: {
+            global::StardewValleyMcp.Protocol.V1.PurchaseShopItemResult subBuilder = new global::StardewValleyMcp.Protocol.V1.PurchaseShopItemResult();
+            if (resultCase_ == ResultOneofCase.PurchaseShopItem) {
+              subBuilder.MergeFrom(PurchaseShopItem);
+            }
+            input.ReadMessage(subBuilder);
+            PurchaseShopItem = subBuilder;
             break;
           }
           case 242: {
@@ -2111,6 +2613,51 @@ namespace StardewValleyMcp.Protocol.V1 {
             }
             input.ReadMessage(subBuilder);
             CloseMenu = subBuilder;
+            break;
+          }
+          case 162: {
+            global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult subBuilder = new global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult();
+            if (resultCase_ == ResultOneofCase.TransferInventoryItem) {
+              subBuilder.MergeFrom(TransferInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            TransferInventoryItem = subBuilder;
+            break;
+          }
+          case 170: {
+            global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotResult subBuilder = new global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotResult();
+            if (resultCase_ == ResultOneofCase.SetEquipmentSlot) {
+              subBuilder.MergeFrom(SetEquipmentSlot);
+            }
+            input.ReadMessage(subBuilder);
+            SetEquipmentSlot = subBuilder;
+            break;
+          }
+          case 178: {
+            global::StardewValleyMcp.Protocol.V1.MoveInventoryItemResult subBuilder = new global::StardewValleyMcp.Protocol.V1.MoveInventoryItemResult();
+            if (resultCase_ == ResultOneofCase.MoveInventoryItem) {
+              subBuilder.MergeFrom(MoveInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            MoveInventoryItem = subBuilder;
+            break;
+          }
+          case 186: {
+            global::StardewValleyMcp.Protocol.V1.CraftItemResult subBuilder = new global::StardewValleyMcp.Protocol.V1.CraftItemResult();
+            if (resultCase_ == ResultOneofCase.CraftItem) {
+              subBuilder.MergeFrom(CraftItem);
+            }
+            input.ReadMessage(subBuilder);
+            CraftItem = subBuilder;
+            break;
+          }
+          case 194: {
+            global::StardewValleyMcp.Protocol.V1.PurchaseShopItemResult subBuilder = new global::StardewValleyMcp.Protocol.V1.PurchaseShopItemResult();
+            if (resultCase_ == ResultOneofCase.PurchaseShopItem) {
+              subBuilder.MergeFrom(PurchaseShopItem);
+            }
+            input.ReadMessage(subBuilder);
+            PurchaseShopItem = subBuilder;
             break;
           }
           case 242: {

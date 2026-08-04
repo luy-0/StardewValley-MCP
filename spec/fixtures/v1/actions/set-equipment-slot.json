@@ -1,0 +1,9 @@
+{
+  "capability": "set_equipment_slot",
+  "minimalInput": {"equipmentSlotRef":{"value":"equipment-slot-ref"},"clear":true,"uiRevision":"0000000000000000000000000000000000000000000000000000000000000000","playerInventoryRevision":"1111111111111111111111111111111111111111111111111111111111111111"},
+  "fullInput": {"equipmentSlotRef":{"value":"equipment-slot-ref"},"itemRef":{"value":"player-item-ref"},"uiRevision":"2222222222222222222222222222222222222222222222222222222222222222","playerInventoryRevision":"3333333333333333333333333333333333333333333333333333333333333333"},
+  "invalidInput": {"equipmentSlotRef":{"value":"equipment-slot-ref"},"clear":false,"uiRevision":"0000000000000000000000000000000000000000000000000000000000000000","playerInventoryRevision":"1111111111111111111111111111111111111111111111111111111111111111"},
+  "accepted": {"state":"accepted","phase":"queued"},
+  "succeeded": {"status":"succeeded","commandId":"41000000-0000-4000-8000-000000000012","output":{"equipmentSlotKind":"hat","equipmentSlotIndex":0,"playerInventoryRevision":"4444444444444444444444444444444444444444444444444444444444444444","changed":true}},
+  "failed": {"status":"failed","commandId":"41000000-0000-4000-8000-000000000012","error":{"code":"not_ready","message":"玩家背包已满；请先腾出一个背包格并重新查询","retryable":true}}
+}
