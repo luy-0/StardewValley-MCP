@@ -55,7 +55,7 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 | `UNSUPPORTED` | 已知时提供 | 不得存在 | `INVALID_ARGUMENT` |
 | `FACT_UNAVAILABLE` | 非 `UNSPECIFIED` | 不得存在 | `INTERNAL`，消息固定为“当前 Ref 事实不可用” |
 
-`STALE` 只在对象或 owner 生命周期已由肯定证据终止时产生，并保持单调不复活。getter、关键字段、typed projector 或完整 UI capture 本次不可读，但 Binding 身份仍可验证时，必须逐项返回 `FACT_UNAVAILABLE`；该项不改变 Binding、不产生 warning，也不得拖垮同批其他 Ref。既有安全 fallback 若已形成完整公开 Fact，仍返回 `RESOLVED` 及对应 warning。
+`STALE` 只在对象或 owner 生命周期已由肯定证据终止时产生，并保持单调不复活。getter、关键字段、typed projector 或完整 UI capture 本次不可读，但 Binding 身份仍可验证时，必须逐项返回 `FACT_UNAVAILABLE`；该项不改变 Binding、不产生 warning，也不得拖垮同批其他 Ref。对于 UI Ref，只有菜单关闭或被替换、完整且可信的当前公开元素集合明确不含该元素，或同一身份槽位已由不同组件或语义对象替换，才构成 stale 证据；不完整捕获不得淘汰本轮未观察到的 Binding。既有安全 fallback 若已形成完整公开 Fact，仍返回 `RESOLVED` 及对应 warning。
 
 ## 3. 成功终态的统一含义
 
@@ -184,6 +184,8 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 `modal` 是 V1 的窄 allowlist 分类值：仅精确原版 `DialogueBox` 或 `LetterViewerMenu` 为 `true`，其他类型（包括其派生类）均为 `false`；它不表示菜单一定可关闭或不阻塞游戏。UI 查询不得调用点击、按键、hover、组件填充、菜单更新、切换、购买或第三方 callback。GameMenu、DialogueBox、ShopMenu 的完整 extractor 分别以 32、64、16 个元素为上限；超过上限时整体降级为 shell-only 并返回 `UI_ELEMENTS_LIMIT_UNSUPPORTED`，不得静默截断。
 
 UI warning 使用以下稳定 code：`UI_MENU_UNSUPPORTED` 表示只有 shell；`UI_MENU_FACT_UNAVAILABLE` 表示非关键 Menu 字段不可读；`UI_ELEMENTS_NOT_PRESENTED` 表示对话响应尚未生成 clickable component；`UI_ELEMENTS_LIMIT_UNSUPPORTED` 表示超出完整投影上限；`UI_ELEMENT_PROJECTION_FAILED` 表示元素无法安全投影；`UI_ELEMENT_ACTIVATION_UNCERTAIN` 表示无法无副作用证明可激活；`UI_ITEM_FACT_UNAVAILABLE`、`UI_PRICE_CURRENCY_UNREPRESENTED`、`UI_PRICE_PARTIAL` 分别表示 Shop Item、货币或交换物事实不完整。Warnings 按 `(code,ref.value-or-empty,message)` Ordinal 排序且不进入 `ui_revision`。
+
+元素集合只有在对应 extractor 已完整枚举其公开范围时才可作为负向生命周期证据。`UI_ELEMENTS_NOT_PRESENTED`、`UI_ELEMENTS_LIMIT_UNSUPPORTED` 或 `UI_ELEMENT_PROJECTION_FAILED` 表示本轮元素集合不完整；实现不得据此把未观察到的旧 UI Ref 标记 stale。`UI_MENU_UNSUPPORTED` 的公开元素集合按定义为空且完整；`UI_MENU_FACT_UNAVAILABLE` 只涉及非关键 Menu shell 字段，`UI_ITEM_FACT_UNAVAILABLE`、`UI_PRICE_CURRENCY_UNREPRESENTED`、`UI_PRICE_PARTIAL` 和 `UI_ELEMENT_ACTIVATION_UNCERTAIN` 只影响已观察元素的附属事实，这些 warning 本身不得阻止元素集合完成。`inspect` 在不完整捕获中找不到目标 UI Ref 时返回可重试的 `FACT_UNAVAILABLE`，后续完整捕获恢复同一元素时必须继续使用原 Ref；完整捕获明确缺少目标时返回 `STALE`，且该 Ref 不得复活。
 
 ### `inspect`
 

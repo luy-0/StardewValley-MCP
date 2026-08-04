@@ -124,6 +124,217 @@ public sealed class QueryUiModContractTests
     }
 
     [Test]
+    public void IncompleteCaptureMissingElementPreservesRefForLaterRecovery()
+    {
+        var store = new OpaqueRefStore(InstanceId, menuEpochFactory: () => "menu-a");
+        var menu = new object();
+        var owner = new FakeUiOwner(menu);
+        var component = new object();
+        var target = new object();
+        owner.Set(2, component, target, "tab:2");
+        var first = Project(store, menu, owner, Descriptor(2, component, target));
+        var reference = first.Snapshot.Elements.Single().Ref;
+
+        owner.Remove(2);
+        owner.Unavailable = true;
+        var incomplete = Project(
+            store,
+            menu,
+            owner,
+            Array.Empty<UiElementDescriptor>(),
+            new[]
+            {
+                new QueryWarning
+                {
+                    Code = "UI_ELEMENT_PROJECTION_FAILED",
+                    Message = "1 个 UI 元素无法安全投影",
+                },
+            },
+            completeness: UiElementSetCompleteness.Incomplete
+        );
+        var unavailable = store.ResolveForInspect(reference);
+
+        owner.Unavailable = false;
+        owner.Set(2, component, target, "tab:2");
+        var recovered = Project(store, menu, owner, Descriptor(2, component, target));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(incomplete.Snapshot.Elements, Is.Empty);
+            Assert.That(unavailable.Resolution.Status, Is.EqualTo(RefStatus.FactUnavailable));
+            Assert.That(unavailable.Resolution.Ref.Value, Is.EqualTo(reference.Value));
+            Assert.That(recovered.Snapshot.Elements.Single().Ref.Value, Is.EqualTo(reference.Value));
+            Assert.That(store.ResolveUiElement(reference).Status, Is.EqualTo(UiElementResolveStatus.Resolved));
+        });
+    }
+
+    [Test]
+    public void ProjectorSkippedDescriptorOverridesIncorrectCompleteClaim()
+    {
+        var store = new OpaqueRefStore(InstanceId, menuEpochFactory: () => "menu-a");
+        var menu = new object();
+        var owner = new FakeUiOwner(menu);
+        var component = new object();
+        var target = new object();
+        owner.Set(2, component, target, "tab:2");
+        var first = Project(store, menu, owner, Descriptor(2, component, target));
+        var reference = first.Snapshot.Elements.Single().Ref;
+
+        owner.Remove(2);
+        owner.Unavailable = true;
+        var invalid = Descriptor(7, new object(), new object()) with { Guard = "" };
+        var partial = Project(
+            store,
+            menu,
+            owner,
+            new[] { invalid },
+            Array.Empty<QueryWarning>(),
+            completeness: UiElementSetCompleteness.Complete
+        );
+        var unavailable = store.ResolveForInspect(reference);
+
+        owner.Unavailable = false;
+        owner.Set(2, component, target, "tab:2");
+        var recovered = Project(store, menu, owner, Descriptor(2, component, target));
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(partial.Snapshot.Elements, Is.Empty);
+            Assert.That(
+                partial.Warnings.Select(warning => warning.Code),
+                Is.EqualTo(new[] { "UI_ELEMENT_PROJECTION_FAILED" })
+            );
+            Assert.That(unavailable.Resolution.Status, Is.EqualTo(RefStatus.FactUnavailable));
+            Assert.That(recovered.Snapshot.Elements.Single().Ref.Value, Is.EqualTo(reference.Value));
+        });
+    }
+
+    [Test]
+    public void DescriptorFactWarningDoesNotMakeElementSetIncomplete()
+    {
+        var store = new OpaqueRefStore(InstanceId, menuEpochFactory: () => "menu-a");
+        var menu = new object();
+        var owner = new FakeUiOwner(menu);
+        var keptComponent = new object();
+        var keptTarget = new object();
+        var removedComponent = new object();
+        var removedTarget = new object();
+        owner.Set(0, keptComponent, keptTarget, "tab:0");
+        owner.Set(1, removedComponent, removedTarget, "tab:1");
+        var first = Project(
+            store,
+            menu,
+            owner,
+            Descriptor(0, keptComponent, keptTarget),
+            Descriptor(1, removedComponent, removedTarget)
+        );
+        var removedRef = first.Snapshot.Elements.Single(element => element.Index == 1).Ref;
+
+        owner.Remove(1);
+        var kept = Descriptor(0, keptComponent, keptTarget) with
+        {
+            DescriptorWarnings = new[]
+            {
+                new UiDescriptorWarning(
+                    "UI_ITEM_FACT_UNAVAILABLE",
+                    "当前商品的 Item 事实不可读"
+                ),
+            },
+        };
+        var complete = Project(store, menu, owner, kept);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(complete.Warnings.Single().Code, Is.EqualTo("UI_ITEM_FACT_UNAVAILABLE"));
+            Assert.That(
+                store.ResolveUiElement(removedRef).Status,
+                Is.EqualTo(UiElementResolveStatus.Stale)
+            );
+        });
+    }
+
+    [Test]
+    public void InspectMissingUiElementUsesCaptureCompletenessAndIsolatesBatchItems()
+    {
+        var request = new InspectRequest();
+        request.Refs.AddRange(new[]
+        {
+            new Ref { Value = "incomplete" },
+            new Ref { Value = "complete" },
+            new Ref { Value = "ok" },
+        });
+        var incomplete = Capture(UiElementSetCompleteness.Incomplete);
+        var complete = Capture(UiElementSetCompleteness.Complete);
+        var successful = Capture(
+            UiElementSetCompleteness.Complete,
+            new UiElementFact
+            {
+                Ref = new Ref { Value = "ok" },
+                Kind = UiElementKind.Tab,
+                Label = "背包",
+            }
+        );
+
+        var result = InspectHandler.Assemble(
+            request,
+            reference => new InspectRefLookup(
+                new RefResolution
+                {
+                    Ref = reference.Clone(),
+                    Status = RefStatus.Resolved,
+                    Kind = RefKind.UiElement,
+                },
+                new TestUiInspectTarget(RefKind.UiElement)
+            ),
+            (reference, _) =>
+            {
+                var capture = reference.Value switch
+                {
+                    "incomplete" => incomplete,
+                    "complete" => complete,
+                    _ => successful,
+                };
+                var warnings = new List<QueryWarning>();
+                return new InspectProjectionResult(
+                    new InspectedRef
+                    {
+                        UiElement = InspectFactProjector.ProjectUiElement(
+                            reference,
+                            capture,
+                            warnings
+                        ),
+                    },
+                    warnings
+                );
+            }
+        );
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(
+                result.Items.Select(item => item.Resolution.Status),
+                Is.EqualTo(new[]
+                {
+                    RefStatus.FactUnavailable,
+                    RefStatus.Stale,
+                    RefStatus.Resolved,
+                })
+            );
+            Assert.That(
+                result.Items.Select(item => item.Resolution.Error?.Code),
+                Is.EqualTo(new ErrorCode?[]
+                {
+                    ErrorCode.Internal,
+                    ErrorCode.StaleRef,
+                    null,
+                })
+            );
+            Assert.That(result.Items[2].UiElement.Ref.Value, Is.EqualTo("ok"));
+            Assert.That(result.Warnings, Is.Empty);
+        });
+    }
+
+    [Test]
     public void UiProjector_DescriptorOrderIsCanonicalAndWarningsAreStable()
     {
         var store = new OpaqueRefStore(InstanceId, menuEpochFactory: () => "menu-a");
@@ -362,7 +573,8 @@ public sealed class QueryUiModContractTests
         FakeUiOwner owner,
         IReadOnlyList<UiElementDescriptor> descriptors,
         IEnumerable<QueryWarning> warnings,
-        UiExtractorKind extractor = UiExtractorKind.GameMenuTab
+        UiExtractorKind extractor = UiExtractorKind.GameMenuTab,
+        UiElementSetCompleteness completeness = UiElementSetCompleteness.Complete
     ) => UiProjector.ProjectDescriptors(
         menu,
         new UiMenuFact { MenuType = "GameMenu", Title = "背包" },
@@ -371,8 +583,26 @@ public sealed class QueryUiModContractTests
         descriptors,
         warnings,
         owner,
-        store
+        store,
+        completeness
     );
+
+    private static UiRuntimeProjectionCapture Capture(
+        UiElementSetCompleteness completeness,
+        params UiElementFact[] elements
+    )
+    {
+        var result = new QueryUiResult
+        {
+            Snapshot = new UiSnapshot
+            {
+                MenuOpen = true,
+                Menu = new UiMenuFact { MenuType = "GameMenu" },
+            },
+        };
+        result.Snapshot.Elements.AddRange(elements);
+        return new UiRuntimeProjectionCapture(result, completeness);
+    }
 
     private static UiElementDescriptor Descriptor(int index, object component, object target) =>
         new(
@@ -451,6 +681,9 @@ public sealed class QueryUiModContractTests
             );
         }
     }
+
+    private sealed record TestUiInspectTarget(RefKind Value)
+        : InspectableRefTarget(Value);
 
     private class BaseGameMenu { }
     private sealed class DerivedGameMenu : BaseGameMenu { }

@@ -22,7 +22,8 @@ internal static class UiProjector
         IReadOnlyList<UiElementDescriptor> descriptors,
         IEnumerable<QueryWarning> warnings,
         IUiElementRefOwner owner,
-        OpaqueRefStore refs
+        OpaqueRefStore refs,
+        UiElementSetCompleteness completeness = UiElementSetCompleteness.Complete
     )
     {
         ArgumentNullException.ThrowIfNull(menu);
@@ -82,13 +83,15 @@ internal static class UiProjector
         }
         if (skipped > 0)
         {
+            completeness = UiElementSetCompleteness.Incomplete;
             resultWarnings.Add(new QueryWarning
             {
                 Code = "UI_ELEMENT_PROJECTION_FAILED",
                 Message = $"{skipped} 个 UI 元素无法安全投影",
             });
         }
-        refs.CompleteUiProjection(session);
+        if (completeness == UiElementSetCompleteness.Complete)
+            refs.CompleteUiProjection(session);
         UiRevision.Finalize(snapshot, session.MenuEpoch, extractor, actionState);
 
         var result = new QueryUiResult { Snapshot = snapshot };
@@ -103,6 +106,17 @@ internal static class UiProjector
             .ThenBy(item => item.Message, StringComparer.Ordinal)
             .Select(item => item.Clone());
 }
+
+internal enum UiElementSetCompleteness
+{
+    Complete,
+    Incomplete,
+}
+
+internal sealed record UiRuntimeProjectionCapture(
+    QueryUiResult Result,
+    UiElementSetCompleteness ElementSetCompleteness
+);
 
 internal sealed record UiElementDescriptor(
     UiExtractorKind Extractor,

@@ -6,7 +6,7 @@ namespace StardewValleyMcp.Mod;
 internal sealed class InspectProjectionContext
 {
     private readonly OpaqueRefStore _refs;
-    private QueryUiResult? _ui;
+    private UiRuntimeProjectionCapture? _ui;
 
     public InspectProjectionContext(OpaqueRefStore refs)
     {
@@ -15,13 +15,13 @@ internal sealed class InspectProjectionContext
 
     internal OpaqueRefStore Refs => _refs;
 
-    public QueryUiResult CaptureUi()
+    public UiRuntimeProjectionCapture CaptureUi()
     {
         if (_ui is not null)
             return _ui;
         if (Game1.player is not { } player || Game1.activeClickableMenu is not { } menu)
             throw new InspectRefStaleException();
-        _ui = UiRuntimeProjector.Project(menu, player, _refs);
+        _ui = UiRuntimeProjector.Capture(menu, player, _refs);
         return _ui;
     }
 }
@@ -76,20 +76,34 @@ internal static class InspectFactProjector
                 item.Inventory.ContainerRef = reference.Clone();
                 break;
             case UiElementInspectTarget:
-                var ui = context.CaptureUi();
-                var fact = ui.Snapshot.Elements.FirstOrDefault(element =>
-                    string.Equals(element.Ref?.Value, reference.Value, StringComparison.Ordinal));
-                if (fact is null)
-                    throw new InspectRefStaleException();
-                item.UiElement = fact.Clone();
-                item.UiElement.Ref = reference.Clone();
-                warnings.AddRange(ui.Warnings.Where(warning =>
-                    string.Equals(warning.Ref?.Value, reference.Value, StringComparison.Ordinal)));
+                item.UiElement = ProjectUiElement(reference, context.CaptureUi(), warnings);
                 break;
             default:
                 throw new InvalidOperationException("当前 Ref 类型不支持检查");
         }
         return new InspectProjectionResult(item, warnings);
+    }
+
+    internal static UiElementFact ProjectUiElement(
+        Ref reference,
+        UiRuntimeProjectionCapture capture,
+        ICollection<QueryWarning> warnings
+    )
+    {
+        var fact = capture.Result.Snapshot.Elements.FirstOrDefault(element =>
+            string.Equals(element.Ref?.Value, reference.Value, StringComparison.Ordinal));
+        if (fact is null)
+        {
+            if (capture.ElementSetCompleteness == UiElementSetCompleteness.Incomplete)
+                throw new InspectFactUnavailableException();
+            throw new InspectRefStaleException();
+        }
+        foreach (var warning in capture.Result.Warnings.Where(warning =>
+            string.Equals(warning.Ref?.Value, reference.Value, StringComparison.Ordinal)))
+            warnings.Add(warning.Clone());
+        var projected = fact.Clone();
+        projected.Ref = reference.Clone();
+        return projected;
     }
 }
 
@@ -99,5 +113,9 @@ internal sealed record InspectProjectionResult(
 );
 
 internal sealed class InspectRefStaleException : Exception
+{
+}
+
+internal sealed class InspectFactUnavailableException : Exception
 {
 }

@@ -14,6 +14,12 @@ internal static class UiRuntimeProjector
         IClickableMenu menu,
         Farmer player,
         OpaqueRefStore refs
+    ) => Capture(menu, player, refs).Result;
+
+    internal static UiRuntimeProjectionCapture Capture(
+        IClickableMenu menu,
+        Farmer player,
+        OpaqueRefStore refs
     )
     {
         var runtimeType = menu.GetType();
@@ -32,6 +38,7 @@ internal static class UiRuntimeProjector
         var descriptors = new List<UiElementDescriptor>();
         var extractor = UiExtractorKind.Unsupported;
         var actionState = "";
+        var completeness = UiElementSetCompleteness.Complete;
 
         switch (classification)
         {
@@ -40,14 +47,14 @@ internal static class UiRuntimeProjector
                 var gameMenu = (GameMenu)menu;
                 extractor = UiExtractorKind.GameMenuTab;
                 actionState = $"tab:{gameMenu.currentTab}";
-                ExtractGameMenu(gameMenu, viewport, descriptors, warnings);
+                completeness = ExtractGameMenu(gameMenu, viewport, descriptors, warnings);
                 break;
             }
             case UiMenuClassification.DialogueBox:
             {
                 var dialogue = (DialogueBox)menu;
                 extractor = UiExtractorKind.DialogueResponse;
-                ExtractDialogue(
+                completeness = ExtractDialogue(
                     dialogue,
                     dialogueCapture!,
                     viewport,
@@ -61,7 +68,14 @@ internal static class UiRuntimeProjector
             {
                 var shop = (ShopMenu)menu;
                 extractor = UiExtractorKind.ShopSaleRow;
-                ExtractShop(shop, player, viewport, descriptors, warnings, out actionState);
+                completeness = ExtractShop(
+                    shop,
+                    player,
+                    viewport,
+                    descriptors,
+                    warnings,
+                    out actionState
+                );
                 break;
             }
             default:
@@ -72,8 +86,10 @@ internal static class UiRuntimeProjector
                 break;
         }
 
+        if (descriptors.Any(descriptor => !descriptor.IsValid()))
+            completeness = UiElementSetCompleteness.Incomplete;
         var owner = new RuntimeUiElementRefOwner(menu, extractor);
-        return UiProjector.ProjectDescriptors(
+        var result = UiProjector.ProjectDescriptors(
             menu,
             shell,
             extractor,
@@ -81,8 +97,10 @@ internal static class UiRuntimeProjector
             descriptors,
             warnings,
             owner,
-            refs
+            refs,
+            completeness
         );
+        return new UiRuntimeProjectionCapture(result, completeness);
     }
 
     private static UiMenuFact CreateShell(
@@ -196,7 +214,7 @@ internal static class UiRuntimeProjector
         return new CapturedDialogueMenu(title, text, textReadable && textValid);
     }
 
-    private static void ExtractGameMenu(
+    private static UiElementSetCompleteness ExtractGameMenu(
         GameMenu menu,
         UiBounds viewport,
         List<UiElementDescriptor> output,
@@ -206,7 +224,7 @@ internal static class UiRuntimeProjector
         if (menu.tabs.Count > GameMenuLimit)
         {
             warnings.Add(LimitWarning());
-            return;
+            return UiElementSetCompleteness.Incomplete;
         }
         var skipped = 0;
         foreach (var component in menu.tabs)
@@ -241,9 +259,12 @@ internal static class UiRuntimeProjector
             ));
         }
         AddSkippedWarning(skipped, warnings);
+        return skipped == 0
+            ? UiElementSetCompleteness.Complete
+            : UiElementSetCompleteness.Incomplete;
     }
 
-    private static void ExtractDialogue(
+    private static UiElementSetCompleteness ExtractDialogue(
         DialogueBox menu,
         CapturedDialogueMenu capture,
         UiBounds viewport,
@@ -256,14 +277,14 @@ internal static class UiRuntimeProjector
             && menu.characterIndexInDialogue >= capture.Text.Length - 1;
         actionState = $"dialogue:{menu.isQuestion}:{menu.transitioning}:{menu.safetyTimer <= 0}:{fullyPresented}";
         if (!menu.isQuestion)
-            return;
+            return UiElementSetCompleteness.Complete;
         if (menu.responses is null || menu.responses.Length > DialogueLimit)
         {
             if (menu.responses?.Length > DialogueLimit)
                 warnings.Add(LimitWarning());
             else
                 warnings.Add(ProjectionWarning());
-            return;
+            return UiElementSetCompleteness.Incomplete;
         }
         if (menu.responses.Length > 0 && (menu.responseCC is null || menu.responseCC.Count == 0))
         {
@@ -271,12 +292,12 @@ internal static class UiRuntimeProjector
                 "UI_ELEMENTS_NOT_PRESENTED",
                 "对话选项尚未由游戏呈现"
             ));
-            return;
+            return UiElementSetCompleteness.Incomplete;
         }
         if (menu.responseCC is null || menu.responseCC.Count != menu.responses.Length)
         {
             warnings.Add(ProjectionWarning());
-            return;
+            return UiElementSetCompleteness.Incomplete;
         }
 
         var skipped = 0;
@@ -315,9 +336,12 @@ internal static class UiRuntimeProjector
             ));
         }
         AddSkippedWarning(skipped, warnings);
+        return skipped == 0
+            ? UiElementSetCompleteness.Complete
+            : UiElementSetCompleteness.Incomplete;
     }
 
-    private static void ExtractShop(
+    private static UiElementSetCompleteness ExtractShop(
         ShopMenu menu,
         Farmer player,
         UiBounds viewport,
@@ -335,7 +359,7 @@ internal static class UiRuntimeProjector
         if (selected is null)
         {
             warnings.Add(LimitWarning());
-            return;
+            return UiElementSetCompleteness.Incomplete;
         }
 
         var skipped = 0;
@@ -466,6 +490,9 @@ internal static class UiRuntimeProjector
             }
         }
         AddSkippedWarning(skipped, warnings);
+        return skipped == 0
+            ? UiElementSetCompleteness.Complete
+            : UiElementSetCompleteness.Incomplete;
     }
 
     internal static int TabIndex(string? name) => name switch
@@ -519,6 +546,69 @@ internal static class UiRuntimeProjector
 
     private static UiDescriptorWarning DescriptorWarning(string code, string message) =>
         new(code, message);
+
+    internal static UiElementLookup ResolveCurrentElement(
+        IClickableMenu menu,
+        UiExtractorKind extractor,
+        UiElementBindingIdentity identity
+    )
+    {
+        var warnings = new List<QueryWarning>();
+        var descriptors = new List<UiElementDescriptor>();
+        var viewport = new UiBounds(0, 0, Game1.uiViewport.Width, Game1.uiViewport.Height);
+        UiElementSetCompleteness completeness;
+        switch (extractor)
+        {
+            case UiExtractorKind.GameMenuTab when menu.GetType() == typeof(GameMenu):
+                completeness = ExtractGameMenu((GameMenu)menu, viewport, descriptors, warnings);
+                break;
+            case UiExtractorKind.DialogueResponse when menu.GetType() == typeof(DialogueBox):
+                var dialogue = (DialogueBox)menu;
+                completeness = ExtractDialogue(
+                    dialogue,
+                    CaptureDialogue(dialogue, warnings),
+                    viewport,
+                    descriptors,
+                    warnings,
+                    out _
+                );
+                break;
+            case UiExtractorKind.ShopSaleRow when menu.GetType() == typeof(ShopMenu):
+                if (Game1.player is not { } player)
+                    return new UiElementLookup(UiElementLookupStatus.Unavailable);
+                completeness = ExtractShop(
+                    (ShopMenu)menu,
+                    player,
+                    viewport,
+                    descriptors,
+                    warnings,
+                    out _
+                );
+                break;
+            default:
+                return new UiElementLookup(UiElementLookupStatus.Stale);
+        }
+
+        if (completeness == UiElementSetCompleteness.Incomplete
+            || descriptors.Any(descriptor => !descriptor.IsValid()))
+            return new UiElementLookup(UiElementLookupStatus.Unavailable);
+        var current = descriptors.FirstOrDefault(descriptor =>
+            descriptor.Extractor == identity.Extractor
+            && descriptor.Kind == identity.PublicKind
+            && descriptor.Index == identity.Index);
+        if (current is null)
+            return new UiElementLookup(UiElementLookupStatus.Stale);
+        return ReferenceEquals(current.Component, identity.Component)
+            && ReferenceEquals(current.SemanticTarget, identity.SemanticTarget)
+            && string.Equals(current.Guard, identity.Guard, StringComparison.Ordinal)
+            ? new UiElementLookup(
+                UiElementLookupStatus.Resolved,
+                current.Component,
+                current.SemanticTarget,
+                current.Guard
+            )
+            : new UiElementLookup(UiElementLookupStatus.Stale);
+    }
 }
 
 internal sealed record CapturedDialogueMenu(
@@ -558,13 +648,7 @@ internal sealed class RuntimeUiElementRefOwner : IUiElementRefOwner
                 || identity.Extractor != _extractor)
                 return new UiElementLookup(UiElementLookupStatus.Stale);
 
-            return identity.Extractor switch
-            {
-                UiExtractorKind.GameMenuTab => ResolveTab(menu, identity),
-                UiExtractorKind.DialogueResponse => ResolveDialogue(menu, identity),
-                UiExtractorKind.ShopSaleRow => ResolveShop(menu, identity),
-                _ => new UiElementLookup(UiElementLookupStatus.Stale),
-            };
+            return UiRuntimeProjector.ResolveCurrentElement(menu, _extractor, identity);
         }
         catch
         {
@@ -572,81 +656,4 @@ internal sealed class RuntimeUiElementRefOwner : IUiElementRefOwner
         }
     }
 
-    private static UiElementLookup ResolveTab(
-        IClickableMenu menu,
-        UiElementBindingIdentity identity
-    )
-    {
-        if (menu.GetType() != typeof(GameMenu))
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        var tabs = ((GameMenu)menu).tabs;
-        if (tabs.Count > 32)
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        var tab = tabs.FirstOrDefault(candidate =>
-            candidate is not null && UiRuntimeProjector.TabIndex(candidate.name) == identity.Index);
-        return tab is not null
-            && ReferenceEquals(tab, identity.Component)
-            && ReferenceEquals(tab, identity.SemanticTarget)
-            ? Resolved(identity)
-            : new UiElementLookup(UiElementLookupStatus.Stale);
-    }
-
-    private static UiElementLookup ResolveDialogue(
-        IClickableMenu menu,
-        UiElementBindingIdentity identity
-    )
-    {
-        if (menu.GetType() != typeof(DialogueBox))
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        var dialogue = (DialogueBox)menu;
-        if (!dialogue.isQuestion
-            || dialogue.responses is null
-            || dialogue.responseCC is null
-            || dialogue.responses.Length > 64
-            || dialogue.responses.Length != dialogue.responseCC.Count
-            || identity.Index < 0
-            || identity.Index >= dialogue.responses.Length)
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        var response = dialogue.responses[identity.Index];
-        var component = dialogue.responseCC[identity.Index];
-        return ReferenceEquals(response, identity.SemanticTarget)
-            && ReferenceEquals(component, identity.Component)
-            && string.Equals(
-                identity.Guard,
-                $"dialogue-response:{identity.Index}:{response.responseKey ?? ""}",
-                StringComparison.Ordinal
-            )
-            ? Resolved(identity)
-            : new UiElementLookup(UiElementLookupStatus.Stale);
-    }
-
-    private static UiElementLookup ResolveShop(
-        IClickableMenu menu,
-        UiElementBindingIdentity identity
-    )
-    {
-        if (menu.GetType() != typeof(ShopMenu))
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        var shop = (ShopMenu)menu;
-        if (shop.forSaleButtons.Count > 16)
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        var row = identity.Index - shop.currentItemIndex;
-        if (identity.Index < 0
-            || identity.Index >= shop.forSale.Count
-            || row < 0
-            || row >= shop.forSaleButtons.Count)
-            return new UiElementLookup(UiElementLookupStatus.Stale);
-        return ReferenceEquals(shop.forSale[identity.Index], identity.SemanticTarget)
-            && ReferenceEquals(shop.forSaleButtons[row], identity.Component)
-            ? Resolved(identity)
-            : new UiElementLookup(UiElementLookupStatus.Stale);
-    }
-
-    private static UiElementLookup Resolved(UiElementBindingIdentity identity) =>
-        new(
-            UiElementLookupStatus.Resolved,
-            identity.Component,
-            identity.SemanticTarget,
-            identity.Guard
-        );
 }
