@@ -49,12 +49,9 @@ UV_BIN="$uv_bin" "$repo_root/mcp/scripts/test.sh"
 
 if [[ "$with_mod" == true ]]; then
   "$repo_root/mod/scripts/build.sh" --package
+  "$uv_bin" run --project "$repo_root/mcp" python "$repo_root/scripts/audit_packages.py" --with-mod
+else
+  "$uv_bin" run --project "$repo_root/mcp" python "$repo_root/scripts/audit_packages.py"
 fi
-
-audit_arguments=()
-if [[ "$with_mod" == true ]]; then
-  audit_arguments+=(--with-mod)
-fi
-"$uv_bin" run --project "$repo_root/mcp" python "$repo_root/scripts/audit_packages.py" "${audit_arguments[@]}"
 
 echo "repository_verify_ok with_mod=$with_mod"
