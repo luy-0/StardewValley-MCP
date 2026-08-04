@@ -1,6 +1,6 @@
 # 公开能力契约
 
-`manifest.yaml` 是 Mod 可以宣告、MCP 可以暴露、第三方 Skill 可以依赖的能力面权威来源，并且必须通过 `manifest.schema.json` 校验。公开 V1 包含 18 项能力。
+`manifest.yaml` 是 Mod 可以宣告、MCP 可以暴露、第三方 Skill 可以依赖的能力面权威来源，并且必须通过 `manifest.schema.json` 校验。公开 V1 包含 19 项能力。
 
 参数约束、默认值、Ref/Revision 生命周期和成功后置条件见 [`behavior.md`](behavior.md)。
 

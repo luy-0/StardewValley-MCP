@@ -37,6 +37,21 @@ internal static class CapabilityCatalogData
                 Destructive = false,
                 Risks = { },
             },
+            ["craft_item"] = new CapabilityDescriptor
+            {
+                Id = "craft_item",
+                ContractVersion = "1.0.0",
+                SideEffect = SideEffect.Mutating,
+                Execution = ExecutionMode.LongRunning,
+                Cancellable = true,
+                DefaultTimeoutMs = 10000,
+                MaxTimeoutMs = 30000,
+                RequestType = nameof(CraftItemRequest),
+                ResultType = nameof(CraftItemResult),
+                RequiredScope = "game:write",
+                Destructive = true,
+                Risks = { "changes_save", "consumes_item" },
+            },
             ["emote"] = new CapabilityDescriptor
             {
                 Id = "emote",

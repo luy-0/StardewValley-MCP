@@ -156,6 +156,16 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 - 成功必须确认两槽结果、其他槽不变、所有 Stack 不变、游标仍为空、对象守恒、两项 Revision 在真实写入后变化，并返回源槽、目标槽、`changed`、`swapped` 与新玩家 Inventory Revision。真实写入成功后源与目标旧 Item Ref 失效，Slot Ref 仍绑定同一组件；调用方必须重新查询取得新 Revision 和 Item Ref。同槽 no-op 不改变 Ref 或 Revision。
 - 写入或后置校验失败时，必须以两槽局部 journal 尽力停止提交后的当前 Item、清空计划对象、恢复原对象与原持有状态。回滚不得覆盖第三方在失败窗口写入的未知对象；无法安全恢复或确认时返回 `EXECUTION_FAILED` 并要求重新查询。能力不承诺撤销第三方 Item callback 已产生的历史副作用。
 
+### `craft_item`
+
+- 请求必须提供当前精确原版非烹饪 Crafting 页签发的 Recipe Ref、当前 UI Revision 与 `1..25` 的制作轮数。能力不接受配方名称，也不重新构造配方；Recipe Ref 必须仍绑定同一菜单、页面、组件和原版 `CraftingRecipe` 对象。
+- 实现必须分两个 Tick 完成预检与提交，并在提交前重验世界、玩家、菜单、页面、空 `heldItem`、Recipe Ref 与 UI Revision。同步制作开始后不可取消。O15 已签发但不在当前可见分页的配方仍可制作；能力不得为此切换分页或模拟点击。
+- 每轮必须先按原版规则同时检查玩家背包和当前页面材料容器，再对全部可能产出做保守的完整入包检查。任一可能产出无法由当前背包完整容纳时，本轮不得开始；首版可以拒绝只有先消耗材料腾出 Slot 后才能容纳的边界场景。
+- 每轮只允许调用一次 `CraftingRecipe.createItem()`，随后使用同一实际 Item 完成扣料与入包，并按原版非烹饪路径更新任务、配方制作计数和制作成就。不得调用私有 Crafting 点击路径、坐标点击、键盘修饰键，也不得把放不下的产物丢到地面。
+- 第一轮即材料不足或背包无容量时返回 `NOT_READY`，不得改变材料、背包或统计。完成至少一轮后遇到材料或容量边界，命令成功并以 `completed_craft_count < requested_craft_count` 及稳定 `stop_reason` 表达部分完成；调用方应基于新的查询决定是否续跑。
+- 成功结果必须按实际 Qualified Item ID 与显示名聚合产出，按 ingredient key 聚合实际材料消耗，并返回请求／完成轮数、新玩家 Inventory Revision 和新 UI Revision。Recipe Fact、材料事实或组件变化会使 UI Revision 失效；无关背包布局变化不使请求失效，提交阶段改用当前材料与容量安全决定是否继续。成功后受影响的 Item Ref 失效，结果中的 Revision 只描述新状态，不是后续写入授权。
+- 首版不支持烹饪、调味料或派生 CraftingPage／CraftingRecipe。提交阶段的罕见原版或第三方异常返回 `EXECUTION_FAILED`，即使此前已有轮次完成也不伪报全部成功；调用方必须先重新查询，不能直接重试。实现应在不覆盖未知物品的前提下把已经创建但未能完整入包的实际产物保留在 Crafting 游标，避免产物只残留于异常栈中的局部变量。
+
 ### `open_menu`
 
 - `menu` 必须是受支持的非 `UNSPECIFIED` 顶层菜单。

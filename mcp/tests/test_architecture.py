@@ -330,6 +330,45 @@ def test_crafting_projection_is_read_only_modular_and_descriptor_projected() -> 
     assert "GameMenu 仅允许激活顶部页签" in menu_actions
 
 
+def test_craft_item_is_an_isolated_ref_driven_action_without_mcp_special_cases() -> None:
+    composition = (MOD / "Bootstrap" / "DefaultCapabilitySet.cs").read_text()
+    handler = (MOD / "Capabilities" / "Actions" / "CraftItemHandler.cs").read_text()
+    adapter = (MOD / "Capabilities" / "Actions" / "CraftItemRuntimeAdapter.cs").read_text()
+    transport = (PACKAGE / "transport.py").read_text()
+    server = (PACKAGE / "server.py").read_text()
+    projection = (PACKAGE / "projection.py").read_text()
+    menu_actions = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
+
+    assert "new CraftItemHandler(refs)" in composition
+    for source in (transport, server, projection, menu_actions):
+        assert "craft_item" not in source
+    for required in (
+        "CanCancel => !_committing",
+        "UiElementKind.CraftingRecipe",
+        "UiRuntimeProjector.Capture(",
+        "recipe.doesFarmerHaveIngredientsInInventory(",
+        "recipe.consumeIngredients(",
+        "recipe.createItem()",
+        "state.Player.addItemToInventory(pendingOutput)",
+        "PreserveCreatedOutput(state.Page, crafted)",
+        "recipe.numberProducedPerCraft",
+        "Game1.stats.checkForCraftingAchievements()",
+    ):
+        assert required in handler + adapter
+    consume = adapter.index("recipe.consumeIngredients(")
+    recovery_point = adapter.index("state.Page.heldItem = crafted", consume)
+    quest = adapter.index("UpdateCraftingQuest(", recovery_point)
+    inventory = adapter.index("state.Player.addItemToInventory(pendingOutput)", quest)
+    assert consume < recovery_point < quest < inventory
+    for forbidden in (
+        "receiveLeftClick",
+        "receiveRightClick",
+        "createItemDebris",
+        "new CraftingRecipe(",
+    ):
+        assert forbidden not in handler + adapter
+
+
 def test_close_menu_blocks_dialogue_family_before_generic_exit_path() -> None:
     source = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
     close = source.split("public MenuActionAttempt Close()", 1)[1].split(
@@ -360,6 +399,7 @@ def test_default_capability_set_is_the_unique_concrete_handler_composition_root(
         "TransferInventoryItemHandler",
         "SetEquipmentSlotHandler",
         "MoveInventoryItemHandler",
+        "CraftItemHandler",
         "OpenMenuHandler",
         "ActivateUiHandler",
         "CloseMenuHandler",

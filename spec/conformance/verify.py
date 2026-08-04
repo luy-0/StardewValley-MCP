@@ -133,7 +133,7 @@ def verify_manifest_against_proto(manifest: dict[str, Any], messages: dict[str, 
     capabilities = manifest["capabilities"]
     ids = [item["id"] for item in capabilities]
     require(len(ids) == len(set(ids)), "Manifest capability ID 重复")
-    require(len(ids) == 18, f"V1 候选能力数量应为 18，实际为 {len(ids)}")
+    require(len(ids) == 19, f"V1 候选能力数量应为 19，实际为 {len(ids)}")
     requests = oneof_fields(messages["CommandRequest"], "operation")
     results = oneof_fields(messages["CapabilityResult"], "result")
     require(set(ids) == set(requests) == set(results), "Manifest、Request、Result 能力集合不一致")
@@ -210,6 +210,7 @@ def verify_tool_schema_catalog(manifest: dict[str, Any]) -> None:
         "stardew_transfer_inventory_item": {"direction": "player_to_container", "itemRef": {"value": "item-1"}, "quantity": 1, "uiRevision": revision, "playerInventoryRevision": revision, "containerInventoryRevision": revision},
         "stardew_set_equipment_slot": {"equipmentSlotRef": {"value": "equipment-1"}, "clear": True, "uiRevision": revision, "playerInventoryRevision": revision},
         "stardew_move_inventory_item": {"itemRef": {"value": "item-1"}, "destinationSlotRef": {"value": "slot-1"}, "uiRevision": revision, "playerInventoryRevision": revision},
+        "stardew_craft_item": {"recipeRef": {"value": "recipe-1"}, "craftCount": 1, "uiRevision": revision},
         "stardew_open_menu": {"menu": "inventory"},
         "stardew_activate_ui": {"elementRef": {"value": "ui-1"}, "uiRevision": revision},
         "stardew_close_menu": {},
@@ -298,7 +299,7 @@ def verify_action_fixtures() -> None:
     tools = {tool["capabilityId"]: tool for tool in catalog["tools"]}
     expected = {
         "say", "emote", "face", "navigate", "interact",
-        "use_tool", "equip", "transfer_inventory_item", "set_equipment_slot", "move_inventory_item", "open_menu", "activate_ui", "close_menu",
+        "use_tool", "equip", "transfer_inventory_item", "set_equipment_slot", "move_inventory_item", "craft_item", "open_menu", "activate_ui", "close_menu",
     }
     paths = index.get("actionFixtures", [])
     require(len(paths) == len(set(paths)), "动作 Fixture 路径重复")

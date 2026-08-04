@@ -33,6 +33,13 @@ class InventoryTransferDirection(int, metaclass=_enum_type_wrapper.EnumTypeWrapp
     INVENTORY_TRANSFER_DIRECTION_UNSPECIFIED: _ClassVar[InventoryTransferDirection]
     INVENTORY_TRANSFER_DIRECTION_PLAYER_TO_CONTAINER: _ClassVar[InventoryTransferDirection]
     INVENTORY_TRANSFER_DIRECTION_CONTAINER_TO_PLAYER: _ClassVar[InventoryTransferDirection]
+
+class CraftItemStopReason(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    CRAFT_ITEM_STOP_REASON_UNSPECIFIED: _ClassVar[CraftItemStopReason]
+    CRAFT_ITEM_STOP_REASON_COMPLETED: _ClassVar[CraftItemStopReason]
+    CRAFT_ITEM_STOP_REASON_MATERIALS_INSUFFICIENT: _ClassVar[CraftItemStopReason]
+    CRAFT_ITEM_STOP_REASON_INVENTORY_FULL: _ClassVar[CraftItemStopReason]
 EMOTE_KIND_UNSPECIFIED: EmoteKind
 EMOTE_KIND_HAPPY: EmoteKind
 EMOTE_KIND_SAD: EmoteKind
@@ -48,6 +55,10 @@ ARRIVAL_MODE_ADJACENT: ArrivalMode
 INVENTORY_TRANSFER_DIRECTION_UNSPECIFIED: InventoryTransferDirection
 INVENTORY_TRANSFER_DIRECTION_PLAYER_TO_CONTAINER: InventoryTransferDirection
 INVENTORY_TRANSFER_DIRECTION_CONTAINER_TO_PLAYER: InventoryTransferDirection
+CRAFT_ITEM_STOP_REASON_UNSPECIFIED: CraftItemStopReason
+CRAFT_ITEM_STOP_REASON_COMPLETED: CraftItemStopReason
+CRAFT_ITEM_STOP_REASON_MATERIALS_INSUFFICIENT: CraftItemStopReason
+CRAFT_ITEM_STOP_REASON_INVENTORY_FULL: CraftItemStopReason
 
 class SayRequest(_message.Message):
     __slots__ = ("content",)
@@ -260,6 +271,42 @@ class MoveInventoryItemResult(_message.Message):
     swapped: bool
     player_inventory_revision: str
     def __init__(self, source_slot_index: _Optional[int] = ..., destination_slot_index: _Optional[int] = ..., changed: _Optional[bool] = ..., swapped: _Optional[bool] = ..., player_inventory_revision: _Optional[str] = ...) -> None: ...
+
+class CraftingMaterialConsumption(_message.Message):
+    __slots__ = ("ingredient_key", "quantity")
+    INGREDIENT_KEY_FIELD_NUMBER: _ClassVar[int]
+    QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    ingredient_key: str
+    quantity: int
+    def __init__(self, ingredient_key: _Optional[str] = ..., quantity: _Optional[int] = ...) -> None: ...
+
+class CraftItemRequest(_message.Message):
+    __slots__ = ("recipe_ref", "craft_count", "ui_revision")
+    RECIPE_REF_FIELD_NUMBER: _ClassVar[int]
+    CRAFT_COUNT_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    recipe_ref: _refs_pb2.Ref
+    craft_count: int
+    ui_revision: str
+    def __init__(self, recipe_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., craft_count: _Optional[int] = ..., ui_revision: _Optional[str] = ...) -> None: ...
+
+class CraftItemResult(_message.Message):
+    __slots__ = ("requested_craft_count", "completed_craft_count", "stop_reason", "outputs", "materials_consumed", "player_inventory_revision", "ui_revision")
+    REQUESTED_CRAFT_COUNT_FIELD_NUMBER: _ClassVar[int]
+    COMPLETED_CRAFT_COUNT_FIELD_NUMBER: _ClassVar[int]
+    STOP_REASON_FIELD_NUMBER: _ClassVar[int]
+    OUTPUTS_FIELD_NUMBER: _ClassVar[int]
+    MATERIALS_CONSUMED_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    requested_craft_count: int
+    completed_craft_count: int
+    stop_reason: CraftItemStopReason
+    outputs: _containers.RepeatedCompositeFieldContainer[_facts_pb2.CraftingOutputFact]
+    materials_consumed: _containers.RepeatedCompositeFieldContainer[CraftingMaterialConsumption]
+    player_inventory_revision: str
+    ui_revision: str
+    def __init__(self, requested_craft_count: _Optional[int] = ..., completed_craft_count: _Optional[int] = ..., stop_reason: _Optional[_Union[CraftItemStopReason, str]] = ..., outputs: _Optional[_Iterable[_Union[_facts_pb2.CraftingOutputFact, _Mapping]]] = ..., materials_consumed: _Optional[_Iterable[_Union[CraftingMaterialConsumption, _Mapping]]] = ..., player_inventory_revision: _Optional[str] = ..., ui_revision: _Optional[str] = ...) -> None: ...
 
 class OpenMenuRequest(_message.Message):
     __slots__ = ("menu",)

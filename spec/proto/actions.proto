@@ -176,6 +176,35 @@ message MoveInventoryItemResult {
   string player_inventory_revision = 5;
 }
 
+enum CraftItemStopReason {
+  CRAFT_ITEM_STOP_REASON_UNSPECIFIED = 0;
+  CRAFT_ITEM_STOP_REASON_COMPLETED = 1;
+  CRAFT_ITEM_STOP_REASON_MATERIALS_INSUFFICIENT = 2;
+  CRAFT_ITEM_STOP_REASON_INVENTORY_FULL = 3;
+}
+
+message CraftingMaterialConsumption {
+  string ingredient_key = 1;
+  uint32 quantity = 2;
+}
+
+message CraftItemRequest {
+  Ref recipe_ref = 1;
+  // 制作轮数；一轮可能产出多件物品。
+  uint32 craft_count = 2;
+  string ui_revision = 3;
+}
+
+message CraftItemResult {
+  uint32 requested_craft_count = 1;
+  uint32 completed_craft_count = 2;
+  CraftItemStopReason stop_reason = 3;
+  repeated CraftingOutputFact outputs = 4;
+  repeated CraftingMaterialConsumption materials_consumed = 5;
+  string player_inventory_revision = 6;
+  string ui_revision = 7;
+}
+
 message OpenMenuRequest {
   MenuKind menu = 1;
 }

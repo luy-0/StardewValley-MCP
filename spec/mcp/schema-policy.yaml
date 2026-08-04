@@ -64,6 +64,11 @@ messages:
   MoveInventoryItemRequest:
     required: [itemRef, destinationSlotRef, uiRevision, playerInventoryRevision]
 
+  CraftItemRequest:
+    required: [recipeRef, craftCount, uiRevision]
+    fields:
+      craftCount: {minimum: 1, maximum: 25}
+
   OpenMenuRequest:
     required: [menu]
 
@@ -147,6 +152,19 @@ output_messages:
     fields:
       transferredQuantity: {minimum: 1, maximum: 2147483647}
       sourceRemainingQuantity: {minimum: 0, maximum: 2147483647}
+
+  CraftItemResult:
+    fields:
+      requestedCraftCount: {minimum: 1, maximum: 25}
+      completedCraftCount: {minimum: 1, maximum: 25}
+      outputs: {minItems: 1}
+      materialsConsumed: {minItems: 1}
+      stopReason:
+        enum: [completed, materials_insufficient, inventory_full]
+
+  CraftingMaterialConsumption:
+    fields:
+      quantity: {minimum: 1}
 
   InspectedRef:
     allOf:

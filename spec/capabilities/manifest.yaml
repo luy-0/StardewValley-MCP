@@ -156,6 +156,20 @@ capabilities:
     required_scope: game:write
     risk: [changes_save]
     destructive: true
+  - id: craft_item
+    title: 制作物品
+    description: 使用当前 Crafting 页面签发的配方 Ref 执行一次有界制作批次。
+    contract_version: 1.0.0
+    request: CraftItemRequest
+    result: CraftItemResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: [changes_save, consumes_item]
+    destructive: true
   - id: activate_ui
     title: 激活界面元素
     description: 在匹配的 UI Revision 上激活 query_ui 返回的可交互元素。
