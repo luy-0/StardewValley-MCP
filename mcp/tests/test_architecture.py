@@ -147,7 +147,8 @@ def test_item_grab_projection_is_isolated_read_only_and_not_activatable() -> Non
         "current.GetFridge(",
         "current.Objects.Pairs",
         "menu.heldItem is not null",
-        "InventoryViewResolver.CreatePlayer(player)",
+        "InventoryViewResolver.CreatePlayerForMenu(",
+        "menu.inventory.capacity",
         "InventoryViewResolver.CreateAttachedContainer(",
         "InventoryProjector.Project(",
         "UI_INVENTORY_CAPTURE_INCOMPLETE",
@@ -392,6 +393,12 @@ def test_craft_item_is_an_isolated_ref_driven_action_without_mcp_special_cases()
     composition = (MOD / "Bootstrap" / "DefaultCapabilitySet.cs").read_text()
     handler = (MOD / "Capabilities" / "Actions" / "CraftItemHandler.cs").read_text()
     adapter = (MOD / "Capabilities" / "Actions" / "CraftItemRuntimeAdapter.cs").read_text()
+    transfer = (
+        MOD
+        / "Capabilities"
+        / "Actions"
+        / "InventoryTransferRuntimePrimitives.cs"
+    ).read_text()
     transport = (PACKAGE / "transport.py").read_text()
     server = (PACKAGE / "server.py").read_text()
     projection = (PACKAGE / "projection.py").read_text()
@@ -407,8 +414,12 @@ def test_craft_item_is_an_isolated_ref_driven_action_without_mcp_special_cases()
         "recipe.doesFarmerHaveIngredientsInInventory(",
         "recipe.consumeIngredients(",
         "recipe.createItem()",
-        "state.Player.addItemToInventory(pendingOutput)",
+        "InventoryViewResolver.CreatePlayerForMenu(",
+        "InventoryTransferRuntimeItemFactory.Wrap(",
+        "InventoryTransferRuntimeCommitter.Commit(",
         "PreserveCreatedOutput(state.Page, crafted)",
+        "player.NotifyQuests(",
+        "quest.OnRecipeCrafted(",
         "recipe.numberProducedPerCraft",
         "Game1.stats.checkForCraftingAchievements()",
     ):
@@ -416,8 +427,20 @@ def test_craft_item_is_an_isolated_ref_driven_action_without_mcp_special_cases()
     consume = adapter.index("recipe.consumeIngredients(")
     recovery_point = adapter.index("state.Page.heldItem = crafted", consume)
     quest = adapter.index("UpdateCraftingQuest(", recovery_point)
-    inventory = adapter.index("state.Player.addItemToInventory(pendingOutput)", quest)
-    assert consume < recovery_point < quest < inventory
+    inventory_plan = adapter.index("var insertion = PreparePlayerInsertion", quest)
+    inventory_commit = adapter.index(
+        "InventoryTransferRuntimeCommitter.Commit(", inventory_plan
+    )
+    assert consume < recovery_point < quest < inventory_plan < inventory_commit
+    assert "state.Player.addItemToInventory(" not in adapter
+    assert "checkForQuestComplete" not in adapter
+    for required in (
+        "InventoryTransferRuntimeItemFactory",
+        "InventoryTransferRuntimeCommitter",
+        "public static IInventoryTransferCommit Commit(",
+        "journal.Rollback()",
+    ):
+        assert required in transfer
     for forbidden in (
         "receiveLeftClick",
         "receiveRightClick",
