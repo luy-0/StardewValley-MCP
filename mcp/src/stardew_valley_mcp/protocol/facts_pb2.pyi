@@ -45,12 +45,24 @@ class UiElementKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     UI_ELEMENT_KIND_ITEM_SLOT: _ClassVar[UiElementKind]
     UI_ELEMENT_KIND_DIALOGUE_RESPONSE: _ClassVar[UiElementKind]
     UI_ELEMENT_KIND_DIALOGUE_ADVANCE: _ClassVar[UiElementKind]
+    UI_ELEMENT_KIND_EQUIPMENT_SLOT: _ClassVar[UiElementKind]
 
 class UiInventorySide(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     UI_INVENTORY_SIDE_UNSPECIFIED: _ClassVar[UiInventorySide]
     UI_INVENTORY_SIDE_PLAYER: _ClassVar[UiInventorySide]
     UI_INVENTORY_SIDE_CONTAINER: _ClassVar[UiInventorySide]
+
+class UiEquipmentSlotKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    UI_EQUIPMENT_SLOT_KIND_UNSPECIFIED: _ClassVar[UiEquipmentSlotKind]
+    UI_EQUIPMENT_SLOT_KIND_HAT: _ClassVar[UiEquipmentSlotKind]
+    UI_EQUIPMENT_SLOT_KIND_LEFT_RING: _ClassVar[UiEquipmentSlotKind]
+    UI_EQUIPMENT_SLOT_KIND_RIGHT_RING: _ClassVar[UiEquipmentSlotKind]
+    UI_EQUIPMENT_SLOT_KIND_BOOTS: _ClassVar[UiEquipmentSlotKind]
+    UI_EQUIPMENT_SLOT_KIND_SHIRT: _ClassVar[UiEquipmentSlotKind]
+    UI_EQUIPMENT_SLOT_KIND_PANTS: _ClassVar[UiEquipmentSlotKind]
+    UI_EQUIPMENT_SLOT_KIND_TRINKET: _ClassVar[UiEquipmentSlotKind]
 ENTITY_KIND_UNSPECIFIED: EntityKind
 ENTITY_KIND_TREE: EntityKind
 ENTITY_KIND_FRUIT_TREE: EntityKind
@@ -79,9 +91,18 @@ UI_ELEMENT_KIND_OPTION: UiElementKind
 UI_ELEMENT_KIND_ITEM_SLOT: UiElementKind
 UI_ELEMENT_KIND_DIALOGUE_RESPONSE: UiElementKind
 UI_ELEMENT_KIND_DIALOGUE_ADVANCE: UiElementKind
+UI_ELEMENT_KIND_EQUIPMENT_SLOT: UiElementKind
 UI_INVENTORY_SIDE_UNSPECIFIED: UiInventorySide
 UI_INVENTORY_SIDE_PLAYER: UiInventorySide
 UI_INVENTORY_SIDE_CONTAINER: UiInventorySide
+UI_EQUIPMENT_SLOT_KIND_UNSPECIFIED: UiEquipmentSlotKind
+UI_EQUIPMENT_SLOT_KIND_HAT: UiEquipmentSlotKind
+UI_EQUIPMENT_SLOT_KIND_LEFT_RING: UiEquipmentSlotKind
+UI_EQUIPMENT_SLOT_KIND_RIGHT_RING: UiEquipmentSlotKind
+UI_EQUIPMENT_SLOT_KIND_BOOTS: UiEquipmentSlotKind
+UI_EQUIPMENT_SLOT_KIND_SHIRT: UiEquipmentSlotKind
+UI_EQUIPMENT_SLOT_KIND_PANTS: UiEquipmentSlotKind
+UI_EQUIPMENT_SLOT_KIND_TRINKET: UiEquipmentSlotKind
 
 class RuntimeSnapshot(_message.Message):
     __slots__ = ("date", "time_of_day", "player", "weather", "ui")
@@ -528,7 +549,7 @@ class UiMenuFact(_message.Message):
     def __init__(self, menu_type: _Optional[str] = ..., menu_kind: _Optional[_Union[_common_pb2.MenuKind, str]] = ..., title: _Optional[str] = ..., modal: _Optional[bool] = ..., dialogue_text: _Optional[str] = ...) -> None: ...
 
 class UiElementFact(_message.Message):
-    __slots__ = ("ref", "kind", "label", "visible", "enabled", "center", "index", "item", "price", "stock", "inventory_side", "item_ref")
+    __slots__ = ("ref", "kind", "label", "visible", "enabled", "center", "index", "item", "price", "stock", "inventory_side", "item_ref", "equipment_slot_kind")
     REF_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
     LABEL_FIELD_NUMBER: _ClassVar[int]
@@ -541,6 +562,7 @@ class UiElementFact(_message.Message):
     STOCK_FIELD_NUMBER: _ClassVar[int]
     INVENTORY_SIDE_FIELD_NUMBER: _ClassVar[int]
     ITEM_REF_FIELD_NUMBER: _ClassVar[int]
+    EQUIPMENT_SLOT_KIND_FIELD_NUMBER: _ClassVar[int]
     ref: _refs_pb2.Ref
     kind: UiElementKind
     label: str
@@ -553,4 +575,5 @@ class UiElementFact(_message.Message):
     stock: int
     inventory_side: UiInventorySide
     item_ref: _refs_pb2.Ref
-    def __init__(self, ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., kind: _Optional[_Union[UiElementKind, str]] = ..., label: _Optional[str] = ..., visible: _Optional[bool] = ..., enabled: _Optional[bool] = ..., center: _Optional[_Union[_common_pb2.PixelPoint, _Mapping]] = ..., index: _Optional[int] = ..., item: _Optional[_Union[ItemFact, _Mapping]] = ..., price: _Optional[int] = ..., stock: _Optional[int] = ..., inventory_side: _Optional[_Union[UiInventorySide, str]] = ..., item_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ...) -> None: ...
+    equipment_slot_kind: UiEquipmentSlotKind
+    def __init__(self, ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., kind: _Optional[_Union[UiElementKind, str]] = ..., label: _Optional[str] = ..., visible: _Optional[bool] = ..., enabled: _Optional[bool] = ..., center: _Optional[_Union[_common_pb2.PixelPoint, _Mapping]] = ..., index: _Optional[int] = ..., item: _Optional[_Union[ItemFact, _Mapping]] = ..., price: _Optional[int] = ..., stock: _Optional[int] = ..., inventory_side: _Optional[_Union[UiInventorySide, str]] = ..., item_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., equipment_slot_kind: _Optional[_Union[UiEquipmentSlotKind, str]] = ...) -> None: ...

@@ -27,7 +27,7 @@ internal readonly record struct UiElementLookup(
 internal enum UiExtractorKind
 {
     Unsupported,
-    GameMenuTab,
+    GameMenu,
     DialogueResponse,
     DialogueAdvance,
     ShopSaleRow,
@@ -38,6 +38,7 @@ internal readonly record struct UiElementBindingIdentity(
     UiExtractorKind Extractor,
     UiElementKind PublicKind,
     UiInventorySide InventorySide,
+    UiEquipmentSlotKind EquipmentSlotKind,
     int Index,
     object? Component,
     object SemanticTarget,
@@ -90,6 +91,7 @@ internal sealed class UiElementBindingStore
             identity.Extractor,
             identity.PublicKind,
             identity.InventorySide,
+            identity.EquipmentSlotKind,
             identity.Index
         );
         if (state.Bindings.TryGetValue(key, out var current))
@@ -146,6 +148,7 @@ internal sealed class UiElementBindingStore
         UiExtractorKind Extractor,
         UiElementKind PublicKind,
         UiInventorySide InventorySide,
+        UiEquipmentSlotKind EquipmentSlotKind,
         int Index
     );
 
@@ -199,6 +202,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
         Extractor = identity.Extractor;
         PublicKind = identity.PublicKind;
         InventorySide = identity.InventorySide;
+        EquipmentSlotKind = identity.EquipmentSlotKind;
         Index = identity.Index;
         _guard = identity.Guard;
         ObservedGeneration = observedGeneration;
@@ -210,6 +214,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
     public UiExtractorKind Extractor { get; }
     public UiElementKind PublicKind { get; }
     public UiInventorySide InventorySide { get; }
+    public UiEquipmentSlotKind EquipmentSlotKind { get; }
     public int Index { get; }
     public long ObservedGeneration { get; set; }
     public bool Stale { get; set; }
@@ -224,6 +229,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
         && Extractor == identity.Extractor
         && PublicKind == identity.PublicKind
         && InventorySide == identity.InventorySide
+        && EquipmentSlotKind == identity.EquipmentSlotKind
         && Index == identity.Index
         && string.Equals(_guard, identity.Guard, StringComparison.Ordinal)
         && _owner.TryGetMenuIdentity(out var previousMenu)
@@ -256,6 +262,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
             Extractor,
             PublicKind,
             InventorySide,
+            EquipmentSlotKind,
             Index,
             component,
             semanticTarget,
@@ -306,6 +313,7 @@ internal sealed record ResolvedUiElementRef(
     UiExtractorKind Extractor,
     UiElementKind PublicKind,
     UiInventorySide InventorySide,
+    UiEquipmentSlotKind EquipmentSlotKind,
     int Index
 );
 

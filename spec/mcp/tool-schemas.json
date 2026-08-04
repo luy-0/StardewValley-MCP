@@ -271,6 +271,7 @@
         "button": "UI_ELEMENT_KIND_BUTTON",
         "dialogue_advance": "UI_ELEMENT_KIND_DIALOGUE_ADVANCE",
         "dialogue_response": "UI_ELEMENT_KIND_DIALOGUE_RESPONSE",
+        "equipment_slot": "UI_ELEMENT_KIND_EQUIPMENT_SLOT",
         "item_slot": "UI_ELEMENT_KIND_ITEM_SLOT",
         "option": "UI_ELEMENT_KIND_OPTION",
         "tab": "UI_ELEMENT_KIND_TAB",
@@ -280,10 +281,33 @@
         "UI_ELEMENT_KIND_BUTTON": "button",
         "UI_ELEMENT_KIND_DIALOGUE_ADVANCE": "dialogue_advance",
         "UI_ELEMENT_KIND_DIALOGUE_RESPONSE": "dialogue_response",
+        "UI_ELEMENT_KIND_EQUIPMENT_SLOT": "equipment_slot",
         "UI_ELEMENT_KIND_ITEM_SLOT": "item_slot",
         "UI_ELEMENT_KIND_OPTION": "option",
         "UI_ELEMENT_KIND_TAB": "tab",
         "UI_ELEMENT_KIND_UNSPECIFIED": "unspecified"
+      }
+    },
+    "stardew_valley.mcp.v1.UiEquipmentSlotKind": {
+      "jsonToProto": {
+        "boots": "UI_EQUIPMENT_SLOT_KIND_BOOTS",
+        "hat": "UI_EQUIPMENT_SLOT_KIND_HAT",
+        "left_ring": "UI_EQUIPMENT_SLOT_KIND_LEFT_RING",
+        "pants": "UI_EQUIPMENT_SLOT_KIND_PANTS",
+        "right_ring": "UI_EQUIPMENT_SLOT_KIND_RIGHT_RING",
+        "shirt": "UI_EQUIPMENT_SLOT_KIND_SHIRT",
+        "trinket": "UI_EQUIPMENT_SLOT_KIND_TRINKET",
+        "unspecified": "UI_EQUIPMENT_SLOT_KIND_UNSPECIFIED"
+      },
+      "protoToJson": {
+        "UI_EQUIPMENT_SLOT_KIND_BOOTS": "boots",
+        "UI_EQUIPMENT_SLOT_KIND_HAT": "hat",
+        "UI_EQUIPMENT_SLOT_KIND_LEFT_RING": "left_ring",
+        "UI_EQUIPMENT_SLOT_KIND_PANTS": "pants",
+        "UI_EQUIPMENT_SLOT_KIND_RIGHT_RING": "right_ring",
+        "UI_EQUIPMENT_SLOT_KIND_SHIRT": "shirt",
+        "UI_EQUIPMENT_SLOT_KIND_TRINKET": "trinket",
+        "UI_EQUIPMENT_SLOT_KIND_UNSPECIFIED": "unspecified"
       }
     },
     "stardew_valley.mcp.v1.UiInventorySide": {
@@ -18470,6 +18494,19 @@
               "enabled": {
                 "type": "boolean"
               },
+              "equipmentSlotKind": {
+                "enum": [
+                  "unspecified",
+                  "hat",
+                  "left_ring",
+                  "right_ring",
+                  "boots",
+                  "shirt",
+                  "pants",
+                  "trinket"
+                ],
+                "type": "string"
+              },
               "index": {
                 "maximum": 4294967295,
                 "minimum": 0,
@@ -18497,7 +18534,8 @@
                   "option",
                   "item_slot",
                   "dialogue_response",
-                  "dialogue_advance"
+                  "dialogue_advance",
+                  "equipment_slot"
                 ],
                 "type": "string"
               },
@@ -21024,6 +21062,19 @@
               "enabled": {
                 "type": "boolean"
               },
+              "equipmentSlotKind": {
+                "enum": [
+                  "unspecified",
+                  "hat",
+                  "left_ring",
+                  "right_ring",
+                  "boots",
+                  "shirt",
+                  "pants",
+                  "trinket"
+                ],
+                "type": "string"
+              },
               "index": {
                 "maximum": 4294967295,
                 "minimum": 0,
@@ -21051,7 +21102,8 @@
                   "option",
                   "item_slot",
                   "dialogue_response",
-                  "dialogue_advance"
+                  "dialogue_advance",
+                  "equipment_slot"
                 ],
                 "type": "string"
               },

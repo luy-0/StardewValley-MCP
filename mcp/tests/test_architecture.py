@@ -102,6 +102,36 @@ def test_query_ui_runtime_has_no_generic_clickable_mutation_or_callback_invocati
     assert "IsExactActivationKnownType" in source
 
 
+def test_inventory_page_projection_is_isolated_fail_closed_and_read_only() -> None:
+    runtime = (MOD / "Projection" / "UiRuntimeProjector.cs").read_text()
+    inventory_page = (MOD / "Projection" / "InventoryPageProjector.cs").read_text()
+    actions = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
+
+    assert runtime.count("InventoryPageProjector.Extract(") == 2
+    assert runtime.count("InventoryPageProjector.CapturePageState(") == 2
+    assert "GetCurrentPage(" not in runtime
+    assert "menu.GetCurrentPage()" in inventory_page
+    assert "if (completeness == UiElementSetCompleteness.Complete)" in runtime
+    assert "inventories.Add(playerLink);" in inventory_page
+    assert inventory_page.index("inventories.Add(playerLink);") > inventory_page.index("CreateEquipmentDescriptors(")
+    for forbidden in (
+        "receiveLeftClick",
+        "receiveRightClick",
+        ".AddItem(",
+        ".removeItem",
+        ".Invoke(",
+    ):
+        assert forbidden not in inventory_page
+    activate = actions.split("public MenuActionAttempt Activate", 1)[1]
+    for required in (
+        "resolved.Target.PublicKind",
+        "fact.Kind",
+        "typeof(GameMenu)",
+        "GameMenu 仅允许激活顶部页签",
+    ):
+        assert required in activate
+
+
 def test_item_grab_projection_is_isolated_read_only_and_not_activatable() -> None:
     runtime = (MOD / "Projection" / "UiRuntimeProjector.cs").read_text()
     item_grab = (MOD / "Projection" / "ItemGrabMenuProjector.cs").read_text()

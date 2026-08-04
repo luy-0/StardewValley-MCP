@@ -47,21 +47,29 @@ internal static class UiProjector
                     || link.Side == UiInventorySide.Container && link.ContainerRef is null)
                     throw new UiProjectionException("UI 库存关联不符合公开约束");
             }
-            if (extractor != UiExtractorKind.ItemGrabSlot && sides.Count != 0
-                || extractor == UiExtractorKind.ItemGrabSlot
+            var hasPlayerSlots = descriptors.Any(descriptor =>
+                descriptor.InventorySide == UiInventorySide.Player);
+            var hasOnlyPlayerLink = sides.SetEquals(new[] { UiInventorySide.Player });
+            if (extractor == UiExtractorKind.ItemGrabSlot
                     && completeness == UiElementSetCompleteness.Complete
                     && descriptors.Count != 0
                     && !sides.SetEquals(new[]
                     {
                         UiInventorySide.Player,
                         UiInventorySide.Container,
-                    }))
+                    })
+                || extractor == UiExtractorKind.GameMenu
+                    && (sides.Contains(UiInventorySide.Container)
+                        || hasPlayerSlots != hasOnlyPlayerLink)
+                || extractor is not UiExtractorKind.ItemGrabSlot and not UiExtractorKind.GameMenu
+                    && sides.Count != 0)
                 throw new UiProjectionException("UI 库存关联与 extractor 不一致");
         }
         var identities = new HashSet<(
             UiExtractorKind Extractor,
             UiElementKind Kind,
             UiInventorySide Side,
+            UiEquipmentSlotKind EquipmentSlotKind,
             int Index
         )>();
         foreach (var descriptor in descriptors.Where(item => item.IsValid()))
@@ -71,6 +79,7 @@ internal static class UiProjector
                     descriptor.Extractor,
                     descriptor.Kind,
                     descriptor.InventorySide ?? UiInventorySide.Unspecified,
+                    descriptor.EquipmentSlotKind ?? UiEquipmentSlotKind.Unspecified,
                     descriptor.Index
                 )))
                 throw new InvalidOperationException("UI descriptor identity 不唯一");
@@ -100,6 +109,7 @@ internal static class UiProjector
                     descriptor.Extractor,
                     descriptor.Kind,
                     descriptor.InventorySide ?? UiInventorySide.Unspecified,
+                    descriptor.EquipmentSlotKind ?? UiEquipmentSlotKind.Unspecified,
                     descriptor.Index,
                     descriptor.Component,
                     descriptor.SemanticTarget,
@@ -142,6 +152,22 @@ internal static class UiProjector
             .ThenBy(item => item.Ref?.Value ?? "", StringComparer.Ordinal)
             .ThenBy(item => item.Message, StringComparer.Ordinal)
             .Select(item => item.Clone());
+
+    internal static UiInventoryLink ToInventoryLink(
+        UiInventorySide side,
+        InventorySnapshot snapshot
+    )
+    {
+        var link = new UiInventoryLink
+        {
+            Side = side,
+            InventoryRevision = snapshot.InventoryRevision,
+            SlotCount = snapshot.SlotCount,
+        };
+        if (snapshot.ContainerRef is not null)
+            link.ContainerRef = snapshot.ContainerRef.Clone();
+        return link;
+    }
 }
 
 internal enum UiElementSetCompleteness
@@ -172,7 +198,8 @@ internal sealed record UiElementDescriptor(
     uint? Stock = null,
     IReadOnlyList<UiDescriptorWarning>? DescriptorWarnings = null,
     UiInventorySide? InventorySide = null,
-    Ref? ItemRef = null
+    Ref? ItemRef = null,
+    UiEquipmentSlotKind? EquipmentSlotKind = null
 )
 {
     public IReadOnlyList<UiDescriptorWarning> Warnings =>
@@ -184,6 +211,7 @@ internal sealed record UiElementDescriptor(
             or UiElementKind.DialogueResponse
             or UiElementKind.DialogueAdvance
             or UiElementKind.ItemSlot
+            or UiElementKind.EquipmentSlot
         && (Kind == UiElementKind.DialogueAdvance ? Component is null : Component is not null)
         && (InventorySide is null
             || Kind == UiElementKind.ItemSlot
@@ -191,8 +219,19 @@ internal sealed record UiElementDescriptor(
                 && Item is null
                 && Price is null
                 && Stock is null
+                && EquipmentSlotKind is null
                 && !Enabled)
         && (ItemRef is null || InventorySide is not null)
+        && (EquipmentSlotKind is null
+            || Kind == UiElementKind.EquipmentSlot
+                && EquipmentSlotKind != UiEquipmentSlotKind.Unspecified
+                && InventorySide is null
+                && ItemRef is null
+                && Price is null
+                && Stock is null
+                && (Item is null || Item.Ref is null)
+                && !Enabled)
+        && (Kind != UiElementKind.EquipmentSlot || EquipmentSlotKind is not null)
         && Index >= 0
         && PublicStringPolicy.IsValid(Label)
         && !string.IsNullOrEmpty(Guard);
@@ -219,6 +258,8 @@ internal sealed record UiElementDescriptor(
             fact.InventorySide = InventorySide.Value;
         if (ItemRef is not null)
             fact.ItemRef = ItemRef.Clone();
+        if (EquipmentSlotKind.HasValue)
+            fact.EquipmentSlotKind = EquipmentSlotKind.Value;
         return fact;
     }
 }
@@ -317,6 +358,17 @@ internal static class UiProjectionPolicy
 
     public static bool IsExactActivationKnownType(Type runtimeType, Type knownType) =>
         runtimeType == knownType;
+
+    public static bool CanActivateGameMenuElement(
+        UiExtractorKind extractor,
+        UiElementKind resolvedKind,
+        UiElementKind factKind,
+        Type runtimeType,
+        Type gameMenuType
+    ) => extractor == UiExtractorKind.GameMenu
+        && resolvedKind == UiElementKind.Tab
+        && factKind == UiElementKind.Tab
+        && runtimeType == gameMenuType;
 
     public static bool DialogueEnabled(
         bool visible,

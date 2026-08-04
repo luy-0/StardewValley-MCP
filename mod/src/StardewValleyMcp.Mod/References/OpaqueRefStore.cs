@@ -200,6 +200,7 @@ internal sealed class OpaqueRefStore
                     uiBinding.Extractor,
                     uiBinding.PublicKind,
                     uiBinding.InventorySide,
+                    uiBinding.EquipmentSlotKind,
                     uiBinding.Index
                 )
             );
@@ -258,6 +259,7 @@ internal sealed class OpaqueRefStore
                             ui.Extractor,
                             ui.PublicKind,
                             ui.InventorySide,
+                            ui.EquipmentSlotKind,
                             ui.Index
                         )
                     ),

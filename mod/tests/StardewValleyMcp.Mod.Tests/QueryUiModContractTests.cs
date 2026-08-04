@@ -405,7 +405,7 @@ public sealed class QueryUiModContractTests
             mutate(changed);
             Assert.That(Hash(changed, "epoch-a"), Is.Not.EqualTo(baseline));
         }
-        Assert.That(UiRevision.CanonicalMaterial(baseSnapshot, "epoch-a", UiExtractorKind.GameMenuTab, "tab:0"), Is.EqualTo(UiRevision.CanonicalMaterial(baseSnapshot.Clone(), "epoch-a", UiExtractorKind.GameMenuTab, "tab:0")));
+        Assert.That(UiRevision.CanonicalMaterial(baseSnapshot, "epoch-a", UiExtractorKind.GameMenu, "tab:0"), Is.EqualTo(UiRevision.CanonicalMaterial(baseSnapshot.Clone(), "epoch-a", UiExtractorKind.GameMenu, "tab:0")));
     }
 
     [Test]
@@ -738,8 +738,8 @@ public sealed class QueryUiModContractTests
         }
         var inventories = new[]
         {
-            ItemGrabMenuProjector.ToInventoryLink(UiInventorySide.Container, containerSnapshot),
-            ItemGrabMenuProjector.ToInventoryLink(UiInventorySide.Player, playerSnapshot),
+            UiProjector.ToInventoryLink(UiInventorySide.Container, containerSnapshot),
+            UiProjector.ToInventoryLink(UiInventorySide.Player, playerSnapshot),
         };
         var result = UiProjector.ProjectDescriptors(
             menu,
@@ -863,6 +863,545 @@ public sealed class QueryUiModContractTests
         });
     }
 
+    [Test]
+    public void InventoryPageProjection_ReusesPlayerInventoryAndKeepsEquipmentSlotRefsStable()
+    {
+        var store = new OpaqueRefStore(InstanceId, menuEpochFactory: () => "inventory-page-a");
+        var inventoryOwner = new FakeInventoryOwner(InventoryItemProvenance.Player, 2);
+        var inventoryItem = new object();
+        inventoryOwner.Set(0, inventoryItem, "player-item");
+        var inventory = InventoryProjector.ProjectCapturedSlots(
+            inventoryOwner,
+            "player",
+            null,
+            new[]
+            {
+                new CapturedInventorySlot(inventoryItem, "player-item"),
+                new CapturedInventorySlot(null, ""),
+            },
+            0,
+            true,
+            store,
+            (_, reference) => new ItemFact
+            {
+                Ref = reference.Clone(),
+                QualifiedItemId = "(T)Axe",
+                DisplayName = "斧头",
+                Stack = 1,
+                Tool = true,
+            }
+        );
+        var backpackComponents = new object[]
+        {
+            new FakeSlotComponent(new UiBounds(0, 0, 64, 64)),
+            new FakeSlotComponent(new UiBounds(64, 0, 64, 64)),
+        };
+        var backpack = InventoryPageProjector.CreateBackpackDescriptors(
+            backpackComponents,
+            inventory,
+            component => ((FakeSlotComponent)component).Bounds,
+            _ => true,
+            new UiBounds(0, 0, 800, 600)
+        );
+        var equipmentKinds = new[]
+        {
+            UiEquipmentSlotKind.Pants,
+            UiEquipmentSlotKind.Hat,
+            UiEquipmentSlotKind.RightRing,
+            UiEquipmentSlotKind.Boots,
+            UiEquipmentSlotKind.LeftRing,
+            UiEquipmentSlotKind.Shirt,
+            UiEquipmentSlotKind.Trinket,
+        };
+        var equipmentComponents = equipmentKinds.ToDictionary(kind => kind, _ => new object());
+        CapturedUiEquipmentSlot Equipment(UiEquipmentSlotKind kind, string suffix) => new(
+            kind,
+            0,
+            equipmentComponents[kind],
+            new UiBounds(100 + (int)kind * 64, 160, 64, 64),
+            true,
+            new ItemFact
+            {
+                QualifiedItemId = $"(O){suffix}",
+                DisplayName = $"装备 {suffix}",
+                Stack = 1,
+            }
+        );
+        var equipment = equipmentKinds
+            .Select(kind => kind == UiEquipmentSlotKind.Pants
+                ? new CapturedUiEquipmentSlot(
+                    kind,
+                    0,
+                    equipmentComponents[kind],
+                    new UiBounds(100 + (int)kind * 64, 160, 64, 64),
+                    true,
+                    null
+                )
+                : Equipment(kind, ((int)kind).ToString()))
+            .ToArray();
+        var equipmentDescriptors = InventoryPageProjector.CreateEquipmentDescriptors(
+            equipment,
+            new UiBounds(0, 0, 800, 600)
+        );
+        var menu = new object();
+        var owner = new FakeUiOwner(menu);
+        foreach (var descriptor in backpack)
+        {
+            owner.Set(
+                UiInventorySide.Player,
+                descriptor.Index,
+                descriptor.Component,
+                descriptor.SemanticTarget,
+                descriptor.Guard
+            );
+        }
+        foreach (var descriptor in equipmentDescriptors)
+        {
+            owner.SetEquipment(
+                descriptor.EquipmentSlotKind!.Value,
+                descriptor.Index,
+                descriptor.Component,
+                descriptor.SemanticTarget,
+                descriptor.Guard
+            );
+        }
+        var links = new[]
+        {
+            UiProjector.ToInventoryLink(UiInventorySide.Player, inventory),
+        };
+        var first = ProjectGameMenu(
+            store,
+            menu,
+            owner,
+            backpack.Concat(equipmentDescriptors).ToArray(),
+            links
+        );
+        var reversed = ProjectGameMenu(
+            store,
+            menu,
+            owner,
+            backpack.Concat(equipmentDescriptors.Reverse()).ToArray(),
+            links
+        );
+        var equipmentFacts = first.Snapshot.Elements
+            .Where(item => item.Kind == UiElementKind.EquipmentSlot)
+            .ToArray();
+        var firstRefs = equipmentFacts.ToDictionary(
+            item => item.EquipmentSlotKind,
+            item => item.Ref.Value
+        );
+
+        var changedEquipment = equipment
+            .Select(item => item.Kind == UiEquipmentSlotKind.Hat
+                ? item with
+                {
+                    Item = new ItemFact
+                    {
+                        QualifiedItemId = "(H)Changed",
+                        DisplayName = "新帽子",
+                        Stack = 1,
+                    },
+                }
+                : item)
+            .ToArray();
+        var changedDescriptors = InventoryPageProjector.CreateEquipmentDescriptors(
+            changedEquipment,
+            new UiBounds(0, 0, 800, 600)
+        );
+        var changed = ProjectGameMenu(
+            store,
+            menu,
+            owner,
+            backpack.Concat(changedDescriptors).ToArray(),
+            links
+        );
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(first.Snapshot.Inventories.Single().InventoryRevision, Is.EqualTo(inventory.InventoryRevision));
+            Assert.That(first.Snapshot.Elements.Single(item =>
+                item.Kind == UiElementKind.ItemSlot && item.Index == 0).ItemRef,
+                Is.EqualTo(inventory.Slots[0].Item.Ref));
+            Assert.That(first.Snapshot.Elements.Single(item =>
+                item.Kind == UiElementKind.ItemSlot && item.Index == 1).ItemRef,
+                Is.Null);
+            Assert.That(equipmentFacts, Has.Length.EqualTo(7));
+            Assert.That(equipmentFacts.Select(item => item.EquipmentSlotKind), Is.Ordered);
+            Assert.That(equipmentFacts.All(item => item.Index == 0), Is.True);
+            Assert.That(equipmentFacts.All(item => (item.Item is null || item.Item.Ref is null) && !item.Enabled), Is.True);
+            var emptyPants = equipmentFacts.Single(item =>
+                item.EquipmentSlotKind == UiEquipmentSlotKind.Pants);
+            Assert.That(emptyPants.Item, Is.Null);
+            Assert.That(emptyPants.Label, Is.Empty);
+            Assert.That(equipmentFacts.Select(item => item.Ref.Value), Is.Unique);
+            Assert.That(equipmentFacts.All(item =>
+                store.ResolveUiElement(item.Ref).Status == UiElementResolveStatus.Resolved), Is.True);
+            Assert.That(equipmentFacts.All(item =>
+                store.ResolveForInspect(item.Ref).Resolution.Status == RefStatus.Resolved), Is.True);
+            Assert.That(reversed.Snapshot.UiRevision, Is.EqualTo(first.Snapshot.UiRevision));
+            Assert.That(changed.Snapshot.UiRevision, Is.Not.EqualTo(first.Snapshot.UiRevision));
+            Assert.That(
+                changed.Snapshot.Elements
+                    .Where(item => item.Kind == UiElementKind.EquipmentSlot)
+                    .ToDictionary(item => item.EquipmentSlotKind, item => item.Ref.Value),
+                Is.EqualTo(firstRefs)
+            );
+        });
+    }
+
+    [Test]
+    public void InventoryPageProjection_RejectsOrphanOrContainerInventoryLinks()
+    {
+        var store = new OpaqueRefStore(InstanceId, menuEpochFactory: () => "inventory-page-a");
+        var menu = new object();
+        var owner = new FakeUiOwner(menu);
+        var component = new object();
+        var descriptor = new UiElementDescriptor(
+            UiExtractorKind.GameMenu,
+            UiElementKind.ItemSlot,
+            0,
+            component,
+            component,
+            "inventory-page-backpack:0",
+            "",
+            true,
+            false,
+            32,
+            32,
+            InventorySide: UiInventorySide.Player
+        );
+        owner.Set(UiInventorySide.Player, 0, component, component, descriptor.Guard);
+        var playerLink = new UiInventoryLink
+        {
+            Side = UiInventorySide.Player,
+            InventoryRevision = new string('1', 64),
+            SlotCount = 1,
+        };
+        var containerLink = new UiInventoryLink
+        {
+            Side = UiInventorySide.Container,
+            InventoryRevision = new string('2', 64),
+            SlotCount = 1,
+            ContainerRef = new Ref { Value = "container" },
+        };
+
+        Assert.Multiple(() =>
+        {
+            Assert.Throws<UiProjectionException>(() => ProjectGameMenu(
+                store,
+                menu,
+                owner,
+                Array.Empty<UiElementDescriptor>(),
+                new[] { playerLink }
+            ));
+            Assert.Throws<UiProjectionException>(() => ProjectGameMenu(
+                store,
+                menu,
+                owner,
+                new[] { descriptor },
+                Array.Empty<UiInventoryLink>()
+            ));
+            Assert.Throws<UiProjectionException>(() => ProjectGameMenu(
+                store,
+                menu,
+                owner,
+                new[] { descriptor },
+                new[] { containerLink }
+            ));
+        });
+    }
+
+    [Test]
+    public void GameMenuActivationPolicy_AllowsOnlyFreshExactTabs()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(UiProjectionPolicy.CanActivateGameMenuElement(
+                UiExtractorKind.GameMenu,
+                UiElementKind.Tab,
+                UiElementKind.Tab,
+                typeof(BaseGameMenu),
+                typeof(BaseGameMenu)
+            ), Is.True);
+            Assert.That(UiProjectionPolicy.CanActivateGameMenuElement(
+                UiExtractorKind.GameMenu,
+                UiElementKind.EquipmentSlot,
+                UiElementKind.EquipmentSlot,
+                typeof(BaseGameMenu),
+                typeof(BaseGameMenu)
+            ), Is.False);
+            Assert.That(UiProjectionPolicy.CanActivateGameMenuElement(
+                UiExtractorKind.GameMenu,
+                UiElementKind.ItemSlot,
+                UiElementKind.ItemSlot,
+                typeof(BaseGameMenu),
+                typeof(BaseGameMenu)
+            ), Is.False);
+            Assert.That(UiProjectionPolicy.CanActivateGameMenuElement(
+                UiExtractorKind.GameMenu,
+                UiElementKind.Tab,
+                UiElementKind.EquipmentSlot,
+                typeof(BaseGameMenu),
+                typeof(BaseGameMenu)
+            ), Is.False);
+            Assert.That(UiProjectionPolicy.CanActivateGameMenuElement(
+                UiExtractorKind.GameMenu,
+                UiElementKind.Tab,
+                UiElementKind.Tab,
+                typeof(DerivedGameMenu),
+                typeof(BaseGameMenu)
+            ), Is.False);
+        });
+    }
+
+    [Test]
+    public void GameMenuIncompleteCapture_DisablesEveryTab()
+    {
+        var tab = Descriptor(1, new object(), new object()) with { Enabled = true };
+        var equipment = new UiElementDescriptor(
+            UiExtractorKind.GameMenu,
+            UiElementKind.EquipmentSlot,
+            0,
+            new object(),
+            new object(),
+            "inventory-page-equipment:Hat:0",
+            "帽子",
+            true,
+            false,
+            10,
+            10,
+            EquipmentSlotKind: UiEquipmentSlotKind.Hat
+        );
+        var descriptors = new List<UiElementDescriptor> { tab, equipment };
+
+        UiRuntimeProjector.DisableGameMenuTabs(descriptors);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(descriptors[0].Enabled, Is.False);
+            Assert.That(descriptors[1], Is.EqualTo(equipment));
+        });
+    }
+
+    [TestCase(12)]
+    [TestCase(24)]
+    [TestCase(36)]
+    public void InventoryPageProjection_UsesOnlyUnlockedBackpackSlots(int unlockedSlots)
+    {
+        var names = Enumerable.Range(0, 36).Select(index => index.ToString()).ToArray();
+        var ids = Enumerable.Range(0, 36).ToArray();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(InventoryPageProjector.HasCompleteBackpackCoverage(
+                unlockedSlots,
+                36,
+                names,
+                ids
+            ), Is.True);
+            Assert.That(InventoryPageProjector.HasCompleteBackpackCoverage(
+                unlockedSlots,
+                36,
+                names,
+                ids.Select((id, index) => index == unlockedSlots - 1 ? id + 1 : id).ToArray()
+            ), Is.False);
+        });
+    }
+
+    [Test]
+    public void InventoryPageProjection_MapsExactEquipmentComponentsOnly()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(InventoryPageProjector.TryClassifyEquipmentComponent(
+                "Hat", 101, out var hat, out var hatIndex), Is.True);
+            Assert.That(hat, Is.EqualTo(UiEquipmentSlotKind.Hat));
+            Assert.That(hatIndex, Is.Zero);
+            Assert.That(InventoryPageProjector.TryClassifyEquipmentComponent(
+                "Left Ring", 102, out var left, out _), Is.True);
+            Assert.That(left, Is.EqualTo(UiEquipmentSlotKind.LeftRing));
+            Assert.That(InventoryPageProjector.TryClassifyEquipmentComponent(
+                "Right Ring", 103, out var right, out _), Is.True);
+            Assert.That(right, Is.EqualTo(UiEquipmentSlotKind.RightRing));
+            Assert.That(InventoryPageProjector.TryClassifyEquipmentComponent(
+                "Trinket", 121, out var trinket, out var trinketIndex), Is.True);
+            Assert.That(trinket, Is.EqualTo(UiEquipmentSlotKind.Trinket));
+            Assert.That(trinketIndex, Is.EqualTo(1));
+            Assert.That(InventoryPageProjector.TryClassifyEquipmentComponent(
+                "Hat", 102, out _, out _), Is.False);
+            Assert.That(InventoryPageProjector.TryClassifyEquipmentComponent(
+                "Unknown", 101, out _, out _), Is.False);
+        });
+    }
+
+    [Test]
+    public void InventoryPageProjection_CurrentDescriptorMatchingIncludesEquipmentKindAndOrdinal()
+    {
+        var kinds = new[]
+        {
+            UiEquipmentSlotKind.Hat,
+            UiEquipmentSlotKind.LeftRing,
+            UiEquipmentSlotKind.RightRing,
+            UiEquipmentSlotKind.Boots,
+            UiEquipmentSlotKind.Shirt,
+            UiEquipmentSlotKind.Pants,
+        };
+        foreach (var kind in kinds)
+        {
+            var component = new object();
+            var descriptor = new UiElementDescriptor(
+                UiExtractorKind.GameMenu,
+                UiElementKind.EquipmentSlot,
+                0,
+                component,
+                component,
+                $"equipment:{kind}:0",
+                "",
+                true,
+                false,
+                0,
+                0,
+                EquipmentSlotKind: kind
+            );
+            var identity = new UiElementBindingIdentity(
+                UiExtractorKind.GameMenu,
+                UiElementKind.EquipmentSlot,
+                UiInventorySide.Unspecified,
+                kind,
+                0,
+                component,
+                component,
+                descriptor.Guard
+            );
+            Assert.That(
+                UiRuntimeProjector.DescriptorMatchesIdentity(descriptor, identity),
+                Is.True,
+                kind.ToString()
+            );
+            var wrongKind = identity with
+            {
+                EquipmentSlotKind = kind == UiEquipmentSlotKind.Hat
+                    ? UiEquipmentSlotKind.LeftRing
+                    : UiEquipmentSlotKind.Hat,
+            };
+            Assert.That(
+                UiRuntimeProjector.DescriptorMatchesIdentity(descriptor, wrongKind),
+                Is.False,
+                $"错误装备类型不应匹配 {kind}"
+            );
+        }
+
+        var trinketComponent = new object();
+        var trinket = new UiElementDescriptor(
+            UiExtractorKind.GameMenu,
+            UiElementKind.EquipmentSlot,
+            1,
+            trinketComponent,
+            trinketComponent,
+            "equipment:trinket:1",
+            "",
+            true,
+            false,
+            0,
+            0,
+            EquipmentSlotKind: UiEquipmentSlotKind.Trinket
+        );
+        var trinketIdentity = new UiElementBindingIdentity(
+            UiExtractorKind.GameMenu,
+            UiElementKind.EquipmentSlot,
+            UiInventorySide.Unspecified,
+            UiEquipmentSlotKind.Trinket,
+            1,
+            trinketComponent,
+            trinketComponent,
+            trinket.Guard
+        );
+        Assert.That(UiRuntimeProjector.DescriptorMatchesIdentity(trinket, trinketIdentity), Is.True);
+        Assert.That(UiRuntimeProjector.DescriptorMatchesIdentity(
+            trinket,
+            trinketIdentity with { Index = 0 }
+        ), Is.False);
+    }
+
+    [Test]
+    public void InventoryPageProjection_IncompletePreservesRefAndCompletePageSwitchStalesIt()
+    {
+        var store = new OpaqueRefStore(InstanceId, menuEpochFactory: () => "inventory-page-a");
+        var menu = new object();
+        var owner = new FakeUiOwner(menu);
+        var component = new object();
+        var equipment = new UiElementDescriptor(
+            UiExtractorKind.GameMenu,
+            UiElementKind.EquipmentSlot,
+            0,
+            component,
+            component,
+            "inventory-page-equipment:Hat:0",
+            "帽子",
+            true,
+            false,
+            32,
+            32,
+            Item: new ItemFact
+            {
+                QualifiedItemId = "(H)1",
+                DisplayName = "帽子",
+                Stack = 1,
+            },
+            EquipmentSlotKind: UiEquipmentSlotKind.Hat
+        );
+        owner.SetEquipment(
+            UiEquipmentSlotKind.Hat,
+            0,
+            component,
+            component,
+            equipment.Guard
+        );
+        var first = ProjectGameMenu(
+            store,
+            menu,
+            owner,
+            new[] { equipment },
+            Array.Empty<UiInventoryLink>()
+        );
+        var reference = first.Snapshot.Elements.Single().Ref.Clone();
+
+        owner.Unavailable = true;
+        _ = ProjectGameMenu(
+            store,
+            menu,
+            owner,
+            Array.Empty<UiElementDescriptor>(),
+            Array.Empty<UiInventoryLink>(),
+            UiElementSetCompleteness.Incomplete
+        );
+        var unavailable = store.ResolveForInspect(reference);
+        owner.Unavailable = false;
+        var recovered = ProjectGameMenu(
+            store,
+            menu,
+            owner,
+            new[] { equipment },
+            Array.Empty<UiInventoryLink>()
+        );
+
+        _ = ProjectGameMenu(
+            store,
+            menu,
+            owner,
+            Array.Empty<UiElementDescriptor>(),
+            Array.Empty<UiInventoryLink>()
+        );
+        var stale = store.ResolveForInspect(reference);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(unavailable.Resolution.Status, Is.EqualTo(RefStatus.FactUnavailable));
+            Assert.That(recovered.Snapshot.Elements.Single().Ref.Value, Is.EqualTo(reference.Value));
+            Assert.That(stale.Resolution.Status, Is.EqualTo(RefStatus.Stale));
+        });
+    }
+
     private static QueryUiResult Project(
         OpaqueRefStore store,
         object menu,
@@ -876,7 +1415,7 @@ public sealed class QueryUiModContractTests
         FakeUiOwner owner,
         IReadOnlyList<UiElementDescriptor> descriptors,
         IEnumerable<QueryWarning> warnings,
-        UiExtractorKind extractor = UiExtractorKind.GameMenuTab,
+        UiExtractorKind extractor = UiExtractorKind.GameMenu,
         UiElementSetCompleteness completeness = UiElementSetCompleteness.Complete
     ) => UiProjector.ProjectDescriptors(
         menu,
@@ -902,6 +1441,31 @@ public sealed class QueryUiModContractTests
         new UiMenuFact { MenuType = "ItemGrabMenu" },
         UiExtractorKind.ItemGrabSlot,
         "item-grab",
+        descriptors,
+        Array.Empty<QueryWarning>(),
+        owner,
+        store,
+        completeness,
+        inventories
+    );
+
+    private static QueryUiResult ProjectGameMenu(
+        OpaqueRefStore store,
+        object menu,
+        FakeUiOwner owner,
+        IReadOnlyList<UiElementDescriptor> descriptors,
+        IReadOnlyList<UiInventoryLink> inventories,
+        UiElementSetCompleteness completeness = UiElementSetCompleteness.Complete
+    ) => UiProjector.ProjectDescriptors(
+        menu,
+        new UiMenuFact
+        {
+            MenuType = "GameMenu",
+            MenuKind = MenuKind.Inventory,
+            Title = "背包",
+        },
+        UiExtractorKind.GameMenu,
+        "tab:0",
         descriptors,
         Array.Empty<QueryWarning>(),
         owner,
@@ -947,7 +1511,7 @@ public sealed class QueryUiModContractTests
 
     private static UiElementDescriptor Descriptor(int index, object component, object target) =>
         new(
-            UiExtractorKind.GameMenuTab,
+            UiExtractorKind.GameMenu,
             UiElementKind.Tab,
             index,
             component,
@@ -1017,13 +1581,16 @@ public sealed class QueryUiModContractTests
     private static string Hash(UiSnapshot snapshot, string epoch)
     {
         var clone = snapshot.Clone();
-        return UiRevision.Finalize(clone, epoch, UiExtractorKind.GameMenuTab, "tab:0");
+        return UiRevision.Finalize(clone, epoch, UiExtractorKind.GameMenu, "tab:0");
     }
 
     private sealed class FakeUiOwner : IUiElementRefOwner
     {
         private readonly object _menu;
-        private readonly Dictionary<(UiInventorySide Side, int Index), (object? Component, object Target, string Guard)> _current = new();
+        private readonly Dictionary<
+            (UiInventorySide Side, UiEquipmentSlotKind EquipmentKind, int Index),
+            (object? Component, object Target, string Guard)
+        > _current = new();
 
         public FakeUiOwner(object menu) => _menu = menu;
         public bool Unavailable { get; set; }
@@ -1037,9 +1604,37 @@ public sealed class QueryUiModContractTests
             object? component,
             object target,
             string guard
-        ) => _current[(side, index)] = (component, target, guard);
+        ) => Set(side, UiEquipmentSlotKind.Unspecified, index, component, target, guard);
 
-        public void Remove(int index) => _current.Remove((UiInventorySide.Unspecified, index));
+        public void SetEquipment(
+            UiEquipmentSlotKind equipmentKind,
+            int index,
+            object? component,
+            object target,
+            string guard
+        ) => Set(
+            UiInventorySide.Unspecified,
+            equipmentKind,
+            index,
+            component,
+            target,
+            guard
+        );
+
+        private void Set(
+            UiInventorySide side,
+            UiEquipmentSlotKind equipmentKind,
+            int index,
+            object? component,
+            object target,
+            string guard
+        ) => _current[(side, equipmentKind, index)] = (component, target, guard);
+
+        public void Remove(int index) => _current.Remove((
+            UiInventorySide.Unspecified,
+            UiEquipmentSlotKind.Unspecified,
+            index
+        ));
 
         public bool TryGetMenuIdentity(out object menu)
         {
@@ -1051,7 +1646,11 @@ public sealed class QueryUiModContractTests
         {
             if (Unavailable)
                 return new UiElementLookup(UiElementLookupStatus.Unavailable);
-            if (!_current.TryGetValue((identity.InventorySide, identity.Index), out var current))
+            if (!_current.TryGetValue((
+                identity.InventorySide,
+                identity.EquipmentSlotKind,
+                identity.Index
+            ), out var current))
                 return new UiElementLookup(UiElementLookupStatus.Stale);
             return new UiElementLookup(
                 UiElementLookupStatus.Resolved,

@@ -7688,6 +7688,19 @@
               "enabled": {
                 "type": "boolean"
               },
+              "equipmentSlotKind": {
+                "enum": [
+                  "unspecified",
+                  "hat",
+                  "left_ring",
+                  "right_ring",
+                  "boots",
+                  "shirt",
+                  "pants",
+                  "trinket"
+                ],
+                "type": "string"
+              },
               "index": {
                 "maximum": 4294967295,
                 "minimum": 0,
@@ -7715,7 +7728,8 @@
                   "option",
                   "item_slot",
                   "dialogue_response",
-                  "dialogue_advance"
+                  "dialogue_advance",
+                  "equipment_slot"
                 ],
                 "type": "string"
               },
@@ -15759,6 +15773,19 @@
               "enabled": {
                 "type": "boolean"
               },
+              "equipmentSlotKind": {
+                "enum": [
+                  "unspecified",
+                  "hat",
+                  "left_ring",
+                  "right_ring",
+                  "boots",
+                  "shirt",
+                  "pants",
+                  "trinket"
+                ],
+                "type": "string"
+              },
               "index": {
                 "maximum": 4294967295,
                 "minimum": 0,
@@ -15786,7 +15813,8 @@
                   "option",
                   "item_slot",
                   "dialogue_response",
-                  "dialogue_advance"
+                  "dialogue_advance",
+                  "equipment_slot"
                 ],
                 "type": "string"
               },

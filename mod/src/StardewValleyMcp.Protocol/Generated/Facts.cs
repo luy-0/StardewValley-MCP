@@ -150,7 +150,7 @@ namespace StardewValleyMcp.Protocol.V1 {
             "dG9yeUxpbmtCBwoFX21lbnUimwEKClVpTWVudUZhY3QSEQoJbWVudV90eXBl",
             "GAEgASgJEjcKCW1lbnVfa2luZBgCIAEoDjIfLnN0YXJkZXdfdmFsbGV5Lm1j",
             "cC52MS5NZW51S2luZEgAiAEBEg0KBXRpdGxlGAMgASgJEg0KBW1vZGFsGAQg",
-            "ASgIEhUKDWRpYWxvZ3VlX3RleHQYBSABKAlCDAoKX21lbnVfa2luZCLwAwoN",
+            "ASgIEhUKDWRpYWxvZ3VlX3RleHQYBSABKAlCDAoKX21lbnVfa2luZCLWBAoN",
             "VWlFbGVtZW50RmFjdBInCgNyZWYYASABKAsyGi5zdGFyZGV3X3ZhbGxleS5t",
             "Y3AudjEuUmVmEjIKBGtpbmQYAiABKA4yJC5zdGFyZGV3X3ZhbGxleS5tY3Au",
             "djEuVWlFbGVtZW50S2luZBINCgVsYWJlbBgDIAEoCRIPCgd2aXNpYmxlGAQg",
@@ -160,33 +160,43 @@ namespace StardewValleyMcp.Protocol.V1 {
             "iAEBEhIKBXByaWNlGAkgASgDSAGIAQESEgoFc3RvY2sYCiABKA1IAogBARJD",
             "Cg5pbnZlbnRvcnlfc2lkZRgLIAEoDjImLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
             "MS5VaUludmVudG9yeVNpZGVIA4gBARIxCghpdGVtX3JlZhgMIAEoCzIaLnN0",
-            "YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWZIBIgBAUIHCgVfaXRlbUIICgZfcHJp",
-            "Y2VCCAoGX3N0b2NrQhEKD19pbnZlbnRvcnlfc2lkZUILCglfaXRlbV9yZWYq",
-            "lgMKCkVudGl0eUtpbmQSGwoXRU5USVRZX0tJTkRfVU5TUEVDSUZJRUQQABIU",
-            "ChBFTlRJVFlfS0lORF9UUkVFEAESGgoWRU5USVRZX0tJTkRfRlJVSVRfVFJF",
-            "RRACEhQKEEVOVElUWV9LSU5EX0NST1AQAxIdChlFTlRJVFlfS0lORF9SRVNP",
-            "VVJDRV9OT0RFEAQSHgoaRU5USVRZX0tJTkRfUkVTT1VSQ0VfQ0xVTVAQBRIX",
-            "ChNFTlRJVFlfS0lORF9NQUNISU5FEAYSGQoVRU5USVRZX0tJTkRfQ09OVEFJ",
-            "TkVSEAcSEwoPRU5USVRZX0tJTkRfQkVEEAgSGQoVRU5USVRZX0tJTkRfRlVS",
-            "TklUVVJFEAkSGgoWRU5USVRZX0tJTkRfTE9PU0VfSVRFTRAKEhQKEEVOVElU",
-            "WV9LSU5EX0RPT1IQCxIUChBFTlRJVFlfS0lORF9XQVJQEAwSHgoaRU5USVRZ",
-            "X0tJTkRfR0VORVJJQ19PQkpFQ1QQDRIYChRFTlRJVFlfS0lORF9IT0VfRElS",
-            "VBAOKrUBCg1DaGFyYWN0ZXJLaW5kEh4KGkNIQVJBQ1RFUl9LSU5EX1VOU1BF",
-            "Q0lGSUVEEAASFgoSQ0hBUkFDVEVSX0tJTkRfTlBDEAESGgoWQ0hBUkFDVEVS",
-            "X0tJTkRfTU9OU1RFUhACEh4KGkNIQVJBQ1RFUl9LSU5EX0ZBUk1fQU5JTUFM",
-            "EAMSFgoSQ0hBUkFDVEVSX0tJTkRfUEVUEAQSGAoUQ0hBUkFDVEVSX0tJTkRf",
-            "SE9SU0UQBSrtAQoNVWlFbGVtZW50S2luZBIfChtVSV9FTEVNRU5UX0tJTkRf",
-            "VU5TUEVDSUZJRUQQABIaChZVSV9FTEVNRU5UX0tJTkRfQlVUVE9OEAESFwoT",
-            "VUlfRUxFTUVOVF9LSU5EX1RBQhACEhoKFlVJX0VMRU1FTlRfS0lORF9PUFRJ",
-            "T04QAxIdChlVSV9FTEVNRU5UX0tJTkRfSVRFTV9TTE9UEAQSJQohVUlfRUxF",
-            "TUVOVF9LSU5EX0RJQUxPR1VFX1JFU1BPTlNFEAUSJAogVUlfRUxFTUVOVF9L",
-            "SU5EX0RJQUxPR1VFX0FEVkFOQ0UQBipzCg9VaUludmVudG9yeVNpZGUSIQod",
-            "VUlfSU5WRU5UT1JZX1NJREVfVU5TUEVDSUZJRUQQABIcChhVSV9JTlZFTlRP",
-            "UllfU0lERV9QTEFZRVIQARIfChtVSV9JTlZFTlRPUllfU0lERV9DT05UQUlO",
-            "RVIQAkIfqgIcU3RhcmRld1ZhbGxleU1jcC5Qcm90b2NvbC5WMWIGcHJvdG8z"));
+            "YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWZIBIgBARJMChNlcXVpcG1lbnRfc2xv",
+            "dF9raW5kGA0gASgOMiouc3RhcmRld192YWxsZXkubWNwLnYxLlVpRXF1aXBt",
+            "ZW50U2xvdEtpbmRIBYgBAUIHCgVfaXRlbUIICgZfcHJpY2VCCAoGX3N0b2Nr",
+            "QhEKD19pbnZlbnRvcnlfc2lkZUILCglfaXRlbV9yZWZCFgoUX2VxdWlwbWVu",
+            "dF9zbG90X2tpbmQqlgMKCkVudGl0eUtpbmQSGwoXRU5USVRZX0tJTkRfVU5T",
+            "UEVDSUZJRUQQABIUChBFTlRJVFlfS0lORF9UUkVFEAESGgoWRU5USVRZX0tJ",
+            "TkRfRlJVSVRfVFJFRRACEhQKEEVOVElUWV9LSU5EX0NST1AQAxIdChlFTlRJ",
+            "VFlfS0lORF9SRVNPVVJDRV9OT0RFEAQSHgoaRU5USVRZX0tJTkRfUkVTT1VS",
+            "Q0VfQ0xVTVAQBRIXChNFTlRJVFlfS0lORF9NQUNISU5FEAYSGQoVRU5USVRZ",
+            "X0tJTkRfQ09OVEFJTkVSEAcSEwoPRU5USVRZX0tJTkRfQkVEEAgSGQoVRU5U",
+            "SVRZX0tJTkRfRlVSTklUVVJFEAkSGgoWRU5USVRZX0tJTkRfTE9PU0VfSVRF",
+            "TRAKEhQKEEVOVElUWV9LSU5EX0RPT1IQCxIUChBFTlRJVFlfS0lORF9XQVJQ",
+            "EAwSHgoaRU5USVRZX0tJTkRfR0VORVJJQ19PQkpFQ1QQDRIYChRFTlRJVFlf",
+            "S0lORF9IT0VfRElSVBAOKrUBCg1DaGFyYWN0ZXJLaW5kEh4KGkNIQVJBQ1RF",
+            "Ul9LSU5EX1VOU1BFQ0lGSUVEEAASFgoSQ0hBUkFDVEVSX0tJTkRfTlBDEAES",
+            "GgoWQ0hBUkFDVEVSX0tJTkRfTU9OU1RFUhACEh4KGkNIQVJBQ1RFUl9LSU5E",
+            "X0ZBUk1fQU5JTUFMEAMSFgoSQ0hBUkFDVEVSX0tJTkRfUEVUEAQSGAoUQ0hB",
+            "UkFDVEVSX0tJTkRfSE9SU0UQBSqRAgoNVWlFbGVtZW50S2luZBIfChtVSV9F",
+            "TEVNRU5UX0tJTkRfVU5TUEVDSUZJRUQQABIaChZVSV9FTEVNRU5UX0tJTkRf",
+            "QlVUVE9OEAESFwoTVUlfRUxFTUVOVF9LSU5EX1RBQhACEhoKFlVJX0VMRU1F",
+            "TlRfS0lORF9PUFRJT04QAxIdChlVSV9FTEVNRU5UX0tJTkRfSVRFTV9TTE9U",
+            "EAQSJQohVUlfRUxFTUVOVF9LSU5EX0RJQUxPR1VFX1JFU1BPTlNFEAUSJAog",
+            "VUlfRUxFTUVOVF9LSU5EX0RJQUxPR1VFX0FEVkFOQ0UQBhIiCh5VSV9FTEVN",
+            "RU5UX0tJTkRfRVFVSVBNRU5UX1NMT1QQBypzCg9VaUludmVudG9yeVNpZGUS",
+            "IQodVUlfSU5WRU5UT1JZX1NJREVfVU5TUEVDSUZJRUQQABIcChhVSV9JTlZF",
+            "TlRPUllfU0lERV9QTEFZRVIQARIfChtVSV9JTlZFTlRPUllfU0lERV9DT05U",
+            "QUlORVIQAiq0AgoTVWlFcXVpcG1lbnRTbG90S2luZBImCiJVSV9FUVVJUE1F",
+            "TlRfU0xPVF9LSU5EX1VOU1BFQ0lGSUVEEAASHgoaVUlfRVFVSVBNRU5UX1NM",
+            "T1RfS0lORF9IQVQQARIkCiBVSV9FUVVJUE1FTlRfU0xPVF9LSU5EX0xFRlRf",
+            "UklORxACEiUKIVVJX0VRVUlQTUVOVF9TTE9UX0tJTkRfUklHSFRfUklORxAD",
+            "EiAKHFVJX0VRVUlQTUVOVF9TTE9UX0tJTkRfQk9PVFMQBBIgChxVSV9FUVVJ",
+            "UE1FTlRfU0xPVF9LSU5EX1NISVJUEAUSIAocVUlfRVFVSVBNRU5UX1NMT1Rf",
+            "S0lORF9QQU5UUxAGEiIKHlVJX0VRVUlQTUVOVF9TTE9UX0tJTkRfVFJJTktF",
+            "VBAHQh+qAhxTdGFyZGV3VmFsbGV5TWNwLlByb3RvY29sLlYxYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::StardewValleyMcp.Protocol.V1.CommonReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.RefsReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.EntityKind), typeof(global::StardewValleyMcp.Protocol.V1.CharacterKind), typeof(global::StardewValleyMcp.Protocol.V1.UiElementKind), typeof(global::StardewValleyMcp.Protocol.V1.UiInventorySide), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.EntityKind), typeof(global::StardewValleyMcp.Protocol.V1.CharacterKind), typeof(global::StardewValleyMcp.Protocol.V1.UiElementKind), typeof(global::StardewValleyMcp.Protocol.V1.UiInventorySide), typeof(global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.RuntimeSnapshot), global::StardewValleyMcp.Protocol.V1.RuntimeSnapshot.Parser, new[]{ "Date", "TimeOfDay", "Player", "Weather", "Ui" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.PlayerFact), global::StardewValleyMcp.Protocol.V1.PlayerFact.Parser, new[]{ "Position", "Facing", "Money", "Energy", "MaxEnergy", "Health", "MaxHealth", "CanMove" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.WeatherFact), global::StardewValleyMcp.Protocol.V1.WeatherFact.Parser, new[]{ "Raining", "Lightning", "Snowing", "GreenRain", "FestivalDay" }, null, null, null, null),
@@ -220,7 +230,7 @@ namespace StardewValleyMcp.Protocol.V1 {
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.UiInventoryLink), global::StardewValleyMcp.Protocol.V1.UiInventoryLink.Parser, new[]{ "Side", "InventoryRevision", "SlotCount", "ContainerRef" }, new[]{ "ContainerRef" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.UiSnapshot), global::StardewValleyMcp.Protocol.V1.UiSnapshot.Parser, new[]{ "UiRevision", "MenuOpen", "Menu", "Elements", "Inventories" }, new[]{ "Menu" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.UiMenuFact), global::StardewValleyMcp.Protocol.V1.UiMenuFact.Parser, new[]{ "MenuType", "MenuKind", "Title", "Modal", "DialogueText" }, new[]{ "MenuKind" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.UiElementFact), global::StardewValleyMcp.Protocol.V1.UiElementFact.Parser, new[]{ "Ref", "Kind", "Label", "Visible", "Enabled", "Center", "Index", "Item", "Price", "Stock", "InventorySide", "ItemRef" }, new[]{ "Item", "Price", "Stock", "InventorySide", "ItemRef" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.UiElementFact), global::StardewValleyMcp.Protocol.V1.UiElementFact.Parser, new[]{ "Ref", "Kind", "Label", "Visible", "Enabled", "Center", "Index", "Item", "Price", "Stock", "InventorySide", "ItemRef", "EquipmentSlotKind" }, new[]{ "Item", "Price", "Stock", "InventorySide", "ItemRef", "EquipmentSlotKind" }, null, null, null)
           }));
     }
     #endregion
@@ -262,12 +272,24 @@ namespace StardewValleyMcp.Protocol.V1 {
     [pbr::OriginalName("UI_ELEMENT_KIND_ITEM_SLOT")] ItemSlot = 4,
     [pbr::OriginalName("UI_ELEMENT_KIND_DIALOGUE_RESPONSE")] DialogueResponse = 5,
     [pbr::OriginalName("UI_ELEMENT_KIND_DIALOGUE_ADVANCE")] DialogueAdvance = 6,
+    [pbr::OriginalName("UI_ELEMENT_KIND_EQUIPMENT_SLOT")] EquipmentSlot = 7,
   }
 
   public enum UiInventorySide {
     [pbr::OriginalName("UI_INVENTORY_SIDE_UNSPECIFIED")] Unspecified = 0,
     [pbr::OriginalName("UI_INVENTORY_SIDE_PLAYER")] Player = 1,
     [pbr::OriginalName("UI_INVENTORY_SIDE_CONTAINER")] Container = 2,
+  }
+
+  public enum UiEquipmentSlotKind {
+    [pbr::OriginalName("UI_EQUIPMENT_SLOT_KIND_UNSPECIFIED")] Unspecified = 0,
+    [pbr::OriginalName("UI_EQUIPMENT_SLOT_KIND_HAT")] Hat = 1,
+    [pbr::OriginalName("UI_EQUIPMENT_SLOT_KIND_LEFT_RING")] LeftRing = 2,
+    [pbr::OriginalName("UI_EQUIPMENT_SLOT_KIND_RIGHT_RING")] RightRing = 3,
+    [pbr::OriginalName("UI_EQUIPMENT_SLOT_KIND_BOOTS")] Boots = 4,
+    [pbr::OriginalName("UI_EQUIPMENT_SLOT_KIND_SHIRT")] Shirt = 5,
+    [pbr::OriginalName("UI_EQUIPMENT_SLOT_KIND_PANTS")] Pants = 6,
+    [pbr::OriginalName("UI_EQUIPMENT_SLOT_KIND_TRINKET")] Trinket = 7,
   }
 
   #endregion
@@ -11933,6 +11955,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       stock_ = other.stock_;
       inventorySide_ = other.inventorySide_;
       itemRef_ = other.itemRef_ != null ? other.itemRef_.Clone() : null;
+      equipmentSlotKind_ = other.equipmentSlotKind_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -12137,6 +12160,36 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "equipment_slot_kind" field.</summary>
+    public const int EquipmentSlotKindFieldNumber = 13;
+    private readonly static global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind EquipmentSlotKindDefaultValue = global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind.Unspecified;
+
+    private global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind equipmentSlotKind_;
+    /// <summary>
+    /// 仅 Inventory 页装备槽存在；index 是同种类内从 0 开始的序号。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind EquipmentSlotKind {
+      get { if ((_hasBits0 & 8) != 0) { return equipmentSlotKind_; } else { return EquipmentSlotKindDefaultValue; } }
+      set {
+        _hasBits0 |= 8;
+        equipmentSlotKind_ = value;
+      }
+    }
+    /// <summary>Gets whether the "equipment_slot_kind" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasEquipmentSlotKind {
+      get { return (_hasBits0 & 8) != 0; }
+    }
+    /// <summary>Clears the value of the "equipment_slot_kind" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearEquipmentSlotKind() {
+      _hasBits0 &= ~8;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -12164,6 +12217,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (Stock != other.Stock) return false;
       if (InventorySide != other.InventorySide) return false;
       if (!object.Equals(ItemRef, other.ItemRef)) return false;
+      if (EquipmentSlotKind != other.EquipmentSlotKind) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -12183,6 +12237,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (HasStock) hash ^= Stock.GetHashCode();
       if (HasInventorySide) hash ^= InventorySide.GetHashCode();
       if (itemRef_ != null) hash ^= ItemRef.GetHashCode();
+      if (HasEquipmentSlotKind) hash ^= EquipmentSlotKind.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -12249,6 +12304,10 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(98);
         output.WriteMessage(ItemRef);
       }
+      if (HasEquipmentSlotKind) {
+        output.WriteRawTag(104);
+        output.WriteEnum((int) EquipmentSlotKind);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -12307,6 +12366,10 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(98);
         output.WriteMessage(ItemRef);
       }
+      if (HasEquipmentSlotKind) {
+        output.WriteRawTag(104);
+        output.WriteEnum((int) EquipmentSlotKind);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -12352,6 +12415,9 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (itemRef_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(ItemRef);
+      }
+      if (HasEquipmentSlotKind) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) EquipmentSlotKind);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -12412,6 +12478,9 @@ namespace StardewValleyMcp.Protocol.V1 {
           ItemRef = new global::StardewValleyMcp.Protocol.V1.Ref();
         }
         ItemRef.MergeFrom(other.ItemRef);
+      }
+      if (other.HasEquipmentSlotKind) {
+        EquipmentSlotKind = other.EquipmentSlotKind;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -12492,6 +12561,10 @@ namespace StardewValleyMcp.Protocol.V1 {
             input.ReadMessage(ItemRef);
             break;
           }
+          case 104: {
+            EquipmentSlotKind = (global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind) input.ReadEnum();
+            break;
+          }
         }
       }
     #endif
@@ -12569,6 +12642,10 @@ namespace StardewValleyMcp.Protocol.V1 {
               ItemRef = new global::StardewValleyMcp.Protocol.V1.Ref();
             }
             input.ReadMessage(ItemRef);
+            break;
+          }
+          case 104: {
+            EquipmentSlotKind = (global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind) input.ReadEnum();
             break;
           }
         }

@@ -948,7 +948,7 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         "query-inventory.success-minimal.json", "query-inventory.success-complete.json",
         "query-ui.success-no-menu.json", "query-ui.success-menu.json",
         "query-ui.success-unsupported-menu.json", "query-ui.success-dialogue.json",
-        "query-ui.success-item-grab.json",
+        "query-ui.success-item-grab.json", "query-ui.success-inventory-page.json",
         "inspect.success-minimal.json", "inspect.success-complete.json",
     ]
     for name in standalone:
@@ -983,6 +983,33 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
                 and all(not element.enabled for element in snapshot.elements)
                 and all(not element.HasField("item") for element in snapshot.elements),
                 "物品菜单 UI Fixture 未覆盖空槽、Item Ref 或只读语义",
+            )
+        if name == "query-ui.success-inventory-page.json":
+            snapshot = frame.command_event.result.query_ui.snapshot
+            require(
+                len(snapshot.inventories) == 1
+                and snapshot.inventories[0].side == 1
+                and snapshot.inventories[0].container_ref.value == "",
+                "Inventory 页 Fixture 未复用玩家库存关联",
+            )
+            backpack = [element for element in snapshot.elements if element.kind == 4]
+            equipment = [element for element in snapshot.elements if element.kind == 7]
+            require(
+                len(backpack) == 2
+                and all(element.inventory_side == 1 for element in backpack)
+                and backpack[0].item_ref.value == "inventory-player-item-0"
+                and backpack[1].item_ref.value == ""
+                and all(not element.enabled for element in backpack),
+                "Inventory 页 Fixture 未覆盖玩家背包空槽或 Item Ref",
+            )
+            require(
+                len(equipment) == 2
+                and [element.equipment_slot_kind for element in equipment] == [1, 2]
+                and equipment[0].HasField("item")
+                and not equipment[0].item.HasField("ref")
+                and not equipment[1].HasField("item")
+                and all(not element.enabled for element in equipment),
+                "Inventory 页 Fixture 未覆盖装备槽、空槽或无 Ref Item Fact",
             )
         verify_event_shape(frame.command_event)
     invalid = load_json(FIXTURE_ROOT / "observation" / "invalid-inputs.json")

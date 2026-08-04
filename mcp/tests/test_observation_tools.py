@@ -237,6 +237,41 @@ def test_query_ui_item_grab_projects_lightweight_two_sided_inventory_links() -> 
     assert all("item" not in element and element["enabled"] is False for element in snapshot["elements"])
 
 
+def test_query_ui_inventory_page_reuses_player_inventory_and_projects_equipment() -> None:
+    frame = transport_pb2.TransportFrame()
+    json_format.Parse(
+        (FIXTURES / "query-ui.success-inventory-page.json").read_text(),
+        frame,
+    )
+    output = project_message(frame.command_event.result.query_ui)
+    projected = {
+        "status": "succeeded",
+        "commandId": frame.command_event.command_id,
+        "output": output,
+    }
+    Draft202012Validator(Catalog.load().tool("query_ui").outputSchema).validate(projected)
+    snapshot = output["snapshot"]
+    assert snapshot["inventories"] == [
+        {
+            "side": "player",
+            "inventoryRevision": "1" * 64,
+            "slotCount": 2,
+        }
+    ]
+    backpack = [element for element in snapshot["elements"] if element["kind"] == "item_slot"]
+    equipment = [element for element in snapshot["elements"] if element["kind"] == "equipment_slot"]
+    assert [element.get("itemRef") for element in backpack] == [
+        {"value": "inventory-player-item-0"},
+        None,
+    ]
+    assert all(element["inventorySide"] == "player" and not element["enabled"] for element in backpack)
+    assert [element["equipmentSlotKind"] for element in equipment] == ["hat", "left_ring"]
+    assert equipment[0]["item"]["displayName"] == "草帽"
+    assert "ref" not in equipment[0]["item"]
+    assert "item" not in equipment[1]
+    assert all(not element["enabled"] for element in equipment)
+
+
 def test_direct_call_cannot_bypass_mod_announcement_intersection() -> None:
     bootstrap = transport_pb2.TransportFrame()
     json_format.Parse((ROOT / "spec" / "fixtures" / "v1" / "bootstrap" / "server-ready.json").read_text(), bootstrap)

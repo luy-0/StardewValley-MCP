@@ -55,6 +55,9 @@ internal static class UiRevision
             .ThenBy(element => element.HasInventorySide
                 ? element.InventorySide
                 : UiInventorySide.Unspecified)
+            .ThenBy(element => element.HasEquipmentSlotKind
+                ? element.EquipmentSlotKind
+                : UiEquipmentSlotKind.Unspecified)
             .ThenBy(element => element.Index)
             .ThenBy(element => element.Ref?.Value ?? "", StringComparer.Ordinal)
             .Select(element => element.Clone())

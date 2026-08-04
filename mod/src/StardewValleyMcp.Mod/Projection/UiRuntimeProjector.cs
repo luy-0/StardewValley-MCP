@@ -7,7 +7,7 @@ namespace StardewValleyMcp.Mod;
 
 internal static class UiRuntimeProjector
 {
-    private const int GameMenuLimit = 32;
+    private const int GameMenuLimit = 64;
     private const int DialogueLimit = 64;
 
     public static QueryUiResult Project(
@@ -47,9 +47,28 @@ internal static class UiRuntimeProjector
             case UiMenuClassification.GameMenu:
             {
                 var gameMenu = (GameMenu)menu;
-                extractor = UiExtractorKind.GameMenuTab;
+                extractor = UiExtractorKind.GameMenu;
                 actionState = $"tab:{gameMenu.currentTab}";
-                completeness = ExtractGameMenu(gameMenu, viewport, descriptors, warnings);
+                var pageState = InventoryPageProjector.CapturePageState(gameMenu, warnings);
+                completeness = ExtractGameMenu(
+                    gameMenu,
+                    pageState,
+                    viewport,
+                    descriptors,
+                    warnings
+                );
+                if (completeness == UiElementSetCompleteness.Complete)
+                {
+                    completeness = InventoryPageProjector.Extract(
+                        gameMenu,
+                        player,
+                        refs,
+                        viewport,
+                        descriptors,
+                        inventories,
+                        warnings
+                    ).Completeness;
+                }
                 break;
             }
             case UiMenuClassification.DialogueBox:
@@ -113,6 +132,9 @@ internal static class UiRuntimeProjector
 
         if (descriptors.Any(descriptor => !descriptor.IsValid()))
             completeness = UiElementSetCompleteness.Incomplete;
+        if (extractor == UiExtractorKind.GameMenu
+            && completeness == UiElementSetCompleteness.Incomplete)
+            DisableGameMenuTabs(descriptors);
         var owner = new RuntimeUiElementRefOwner(menu, extractor, refs);
         var result = UiProjector.ProjectDescriptors(
             menu,
@@ -242,6 +264,7 @@ internal static class UiRuntimeProjector
 
     private static UiElementSetCompleteness ExtractGameMenu(
         GameMenu menu,
+        GameMenuPageState pageState,
         UiBounds viewport,
         List<UiElementDescriptor> output,
         List<QueryWarning> warnings
@@ -271,7 +294,7 @@ internal static class UiRuntimeProjector
             var visible = UiProjectionPolicy.IsVisible(bounds, component.visible, viewport);
             var center = UiProjectionPolicy.Center(bounds);
             output.Add(new UiElementDescriptor(
-                UiExtractorKind.GameMenuTab,
+                UiExtractorKind.GameMenu,
                 UiElementKind.Tab,
                 index,
                 component,
@@ -279,13 +302,13 @@ internal static class UiRuntimeProjector
                 $"game-menu-tab:{index}",
                 label,
                 visible,
-                visible && index != menu.currentTab,
+                visible && pageState.ReadyToClose && index != menu.currentTab,
                 center.X,
                 center.Y
             ));
         }
         AddSkippedWarning(skipped, warnings);
-        return skipped == 0
+        return skipped == 0 && pageState.Completeness == UiElementSetCompleteness.Complete
             ? UiElementSetCompleteness.Complete
             : UiElementSetCompleteness.Incomplete;
     }
@@ -628,8 +651,31 @@ internal static class UiRuntimeProjector
         UiElementSetCompleteness completeness;
         switch (extractor)
         {
-            case UiExtractorKind.GameMenuTab when menu.GetType() == typeof(GameMenu):
-                completeness = ExtractGameMenu((GameMenu)menu, viewport, descriptors, warnings);
+            case UiExtractorKind.GameMenu when menu.GetType() == typeof(GameMenu):
+                if (Game1.player is not { } gameMenuPlayer)
+                    return new UiElementLookup(UiElementLookupStatus.Unavailable);
+                var gameMenu = (GameMenu)menu;
+                var gameMenuInventories = new List<UiInventoryLink>();
+                var pageState = InventoryPageProjector.CapturePageState(gameMenu, warnings);
+                completeness = ExtractGameMenu(
+                    gameMenu,
+                    pageState,
+                    viewport,
+                    descriptors,
+                    warnings
+                );
+                if (completeness == UiElementSetCompleteness.Complete)
+                {
+                    completeness = InventoryPageProjector.Extract(
+                        gameMenu,
+                        gameMenuPlayer,
+                        refs,
+                        viewport,
+                        descriptors,
+                        gameMenuInventories,
+                        warnings
+                    ).Completeness;
+                }
                 break;
             case UiExtractorKind.DialogueResponse when menu.GetType() == typeof(DialogueBox):
                 var dialogue = (DialogueBox)menu;
@@ -690,11 +736,7 @@ internal static class UiRuntimeProjector
             || descriptors.Any(descriptor => !descriptor.IsValid()))
             return new UiElementLookup(UiElementLookupStatus.Unavailable);
         var current = descriptors.FirstOrDefault(descriptor =>
-            descriptor.Extractor == identity.Extractor
-            && descriptor.Kind == identity.PublicKind
-            && (descriptor.InventorySide ?? UiInventorySide.Unspecified)
-                == identity.InventorySide
-            && descriptor.Index == identity.Index);
+            DescriptorMatchesIdentity(descriptor, identity));
         if (current is null)
             return new UiElementLookup(UiElementLookupStatus.Stale);
         return ReferenceEquals(current.Component, identity.Component)
@@ -707,6 +749,28 @@ internal static class UiRuntimeProjector
                 current.Guard
             )
             : new UiElementLookup(UiElementLookupStatus.Stale);
+    }
+
+    internal static bool DescriptorMatchesIdentity(
+        UiElementDescriptor descriptor,
+        UiElementBindingIdentity identity
+    ) => descriptor.Extractor == identity.Extractor
+        && descriptor.Kind == identity.PublicKind
+        && (descriptor.InventorySide ?? UiInventorySide.Unspecified)
+            == identity.InventorySide
+        && (descriptor.EquipmentSlotKind ?? UiEquipmentSlotKind.Unspecified)
+            == identity.EquipmentSlotKind
+        && descriptor.Index == identity.Index;
+
+    internal static void DisableGameMenuTabs(List<UiElementDescriptor> descriptors)
+    {
+        for (var index = 0; index < descriptors.Count; index++)
+        {
+            if (descriptors[index].Extractor == UiExtractorKind.GameMenu
+                && descriptors[index].Kind == UiElementKind.Tab
+                && descriptors[index].Enabled)
+                descriptors[index] = descriptors[index] with { Enabled = false };
+        }
     }
 }
 

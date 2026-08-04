@@ -68,4 +68,32 @@ public sealed class ObservationContractTests
             ));
         });
     }
+
+    [Test]
+    public void UiEquipmentSlotsKeepStableEnumAndOptionalFieldNumbers()
+    {
+        var field = UiElementFact.Descriptor.FindFieldByNumber(13);
+        var fact = new UiElementFact
+        {
+            Kind = UiElementKind.EquipmentSlot,
+            EquipmentSlotKind = UiEquipmentSlotKind.Hat,
+        };
+
+        Assert.Multiple(() =>
+        {
+            Assert.That((int)UiElementKind.EquipmentSlot, Is.EqualTo(7));
+            Assert.That((int)UiEquipmentSlotKind.Hat, Is.EqualTo(1));
+            Assert.That((int)UiEquipmentSlotKind.LeftRing, Is.EqualTo(2));
+            Assert.That((int)UiEquipmentSlotKind.RightRing, Is.EqualTo(3));
+            Assert.That((int)UiEquipmentSlotKind.Boots, Is.EqualTo(4));
+            Assert.That((int)UiEquipmentSlotKind.Shirt, Is.EqualTo(5));
+            Assert.That((int)UiEquipmentSlotKind.Pants, Is.EqualTo(6));
+            Assert.That((int)UiEquipmentSlotKind.Trinket, Is.EqualTo(7));
+            Assert.That(field?.Name, Is.EqualTo("equipment_slot_kind"));
+            Assert.That(field?.HasPresence, Is.True);
+            Assert.That(fact.HasEquipmentSlotKind, Is.True);
+            fact.ClearEquipmentSlotKind();
+            Assert.That(fact.HasEquipmentSlotKind, Is.False);
+        });
+    }
 }

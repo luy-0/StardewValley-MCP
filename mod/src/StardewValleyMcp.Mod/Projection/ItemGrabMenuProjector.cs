@@ -91,8 +91,8 @@ internal static class ItemGrabMenuProjector
                 refs,
                 includeEmptySlots: true
             );
-            inventories.Add(ToInventoryLink(UiInventorySide.Player, playerSnapshot));
-            inventories.Add(ToInventoryLink(UiInventorySide.Container, containerSnapshot));
+            inventories.Add(UiProjector.ToInventoryLink(UiInventorySide.Player, playerSnapshot));
+            inventories.Add(UiProjector.ToInventoryLink(UiInventorySide.Container, containerSnapshot));
             AddSlots(menu.inventory, playerSnapshot, UiInventorySide.Player, viewport, output);
             AddSlots(
                 menu.ItemsToGrabMenu,
@@ -219,22 +219,6 @@ internal static class ItemGrabMenuProjector
                 return false;
         }
         return true;
-    }
-
-    internal static UiInventoryLink ToInventoryLink(
-        UiInventorySide side,
-        InventorySnapshot snapshot
-    )
-    {
-        var link = new UiInventoryLink
-        {
-            Side = side,
-            InventoryRevision = snapshot.InventoryRevision,
-            SlotCount = snapshot.SlotCount,
-        };
-        if (snapshot.ContainerRef is not null)
-            link.ContainerRef = snapshot.ContainerRef.Clone();
-        return link;
     }
 
     internal static IReadOnlyList<UiElementDescriptor> CreateSlotDescriptors(

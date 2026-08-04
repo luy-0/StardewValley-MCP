@@ -365,6 +365,15 @@ internal sealed class RuntimeMenuActionAdapter : IMenuActionRuntime
             return new MenuActionAttempt(before, Failed(ErrorCode.StaleRef, "UI Element 已失效或不可用"));
         if (Game1.activeClickableMenu is not { } menu)
             return new MenuActionAttempt(before, Failed(ErrorCode.Internal, "当前 UI 菜单不可用"));
+        if (resolved.Target.Extractor == UiExtractorKind.GameMenu
+            && !UiProjectionPolicy.CanActivateGameMenuElement(
+                resolved.Target.Extractor,
+                resolved.Target.PublicKind,
+                fact.Kind,
+                menu.GetType(),
+                typeof(GameMenu)
+            ))
+            return new MenuActionAttempt(before, Failed(ErrorCode.InvalidArgument, "GameMenu 仅允许激活顶部页签"));
 
         if (resolved.Target.Extractor == UiExtractorKind.DialogueAdvance
             && menu.GetType() == typeof(DialogueBox))
@@ -377,7 +386,13 @@ internal sealed class RuntimeMenuActionAdapter : IMenuActionRuntime
             return new MenuActionAttempt(before, Failed(ErrorCode.Internal, "当前 UI 组件不可用"));
         var activated = resolved.Target.Extractor switch
         {
-            UiExtractorKind.GameMenuTab when menu.GetType() == typeof(GameMenu) => true,
+            UiExtractorKind.GameMenu when UiProjectionPolicy.CanActivateGameMenuElement(
+                resolved.Target.Extractor,
+                resolved.Target.PublicKind,
+                fact.Kind,
+                menu.GetType(),
+                typeof(GameMenu)
+            ) => true,
             UiExtractorKind.DialogueResponse when menu.GetType() == typeof(DialogueBox) => true,
             UiExtractorKind.ShopSaleRow when menu.GetType() == typeof(ShopMenu) => true,
             _ => false,
