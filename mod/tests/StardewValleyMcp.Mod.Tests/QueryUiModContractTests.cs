@@ -868,6 +868,14 @@ public sealed class QueryUiModContractTests
         Assert.Multiple(() =>
         {
             Assert.That(
+                InventoryViewResolver.ResolvePlayerMenuCapacity(48, 36),
+                Is.EqualTo(36)
+            );
+            Assert.That(
+                InventoryViewResolver.ResolvePlayerMenuCapacity(12, 36),
+                Is.EqualTo(12)
+            );
+            Assert.That(
                 ItemGrabMenuProjector.HasCompleteSlotCoverage(12, 36, names, true),
                 Is.True
             );
@@ -885,6 +893,49 @@ public sealed class QueryUiModContractTests
                 Is.False
             );
         });
+    }
+
+    [Test]
+    public void ItemGrabProjection_DoesNotInvalidatePlayerRefsOutsideVisibleMenuSlots()
+    {
+        var store = new OpaqueRefStore(InstanceId);
+        var owner = new FakeInventoryOwner(InventoryItemProvenance.Player, 2);
+        var visible = new object();
+        var hidden = new object();
+        owner.Set(0, visible, "visible");
+        owner.Set(1, hidden, "hidden");
+        var full = InventoryProjector.ProjectCapturedSlots(
+            owner,
+            "player",
+            null,
+            new[]
+            {
+                new CapturedInventorySlot(visible, "visible"),
+                new CapturedInventorySlot(hidden, "hidden"),
+            },
+            0,
+            true,
+            store,
+            (_, reference) => new ItemFact { Ref = reference.Clone() }
+        );
+        var hiddenRef = full.Slots[1].Item.Ref.Clone();
+
+        InventoryProjector.ProjectCapturedSlots(
+            owner,
+            "player",
+            null,
+            new[] { new CapturedInventorySlot(visible, "visible") },
+            0,
+            true,
+            store,
+            (_, reference) => new ItemFact { Ref = reference.Clone() },
+            refObservationCapacity: 2
+        );
+
+        Assert.That(
+            store.ResolveInventoryItem(hiddenRef).Status,
+            Is.EqualTo(InventoryItemResolveStatus.Resolved)
+        );
     }
 
     [Test]

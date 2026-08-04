@@ -74,7 +74,10 @@ internal sealed class LiveInventoryTransferAdapter : IInventoryTransferAdapter
             if (!chest.GetMutex().IsLockHeld())
                 return new InventoryTransferCapture(InventoryTransferCaptureStatus.NotReady);
 
-            var playerView = InventoryViewResolver.CreatePlayer(player);
+            var playerView = InventoryViewResolver.CreatePlayerForMenu(
+                player,
+                menu.inventory.capacity
+            );
             var containerView = InventoryViewResolver.CreateAttachedContainer(
                 chest,
                 location,

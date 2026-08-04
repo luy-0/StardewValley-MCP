@@ -48,7 +48,10 @@ internal static class ItemGrabMenuProjector
                 return ItemGrabProjectionResult.Incomplete;
             }
 
-            var playerView = InventoryViewResolver.CreatePlayer(player);
+            var playerView = InventoryViewResolver.CreatePlayerForMenu(
+                player,
+                menu.inventory.capacity
+            );
             var containerView = InventoryViewResolver.CreateAttachedContainer(
                 chest,
                 location,
