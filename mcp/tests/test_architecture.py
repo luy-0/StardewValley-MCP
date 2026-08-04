@@ -263,6 +263,45 @@ def test_dialogue_advance_activation_uses_native_semantic_path() -> None:
     assert semantic_branch < native_click < component_branch
 
 
+def test_inventory_slot_move_is_isolated_fail_closed_and_not_ui_click_driven() -> None:
+    composition = (MOD / "Bootstrap" / "DefaultCapabilitySet.cs").read_text()
+    handler = (MOD / "Capabilities" / "Actions" / "MoveInventoryItemHandler.cs").read_text()
+    adapter = (MOD / "Capabilities" / "Actions" / "InventorySlotMoveRuntimeAdapter.cs").read_text()
+    planner = (MOD / "Capabilities" / "Actions" / "InventorySlotMutationPlanner.cs").read_text()
+    menu_actions = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
+    ui_runtime = (MOD / "Projection" / "UiRuntimeProjector.cs").read_text()
+    transport = (PACKAGE / "transport.py").read_text()
+    server = (PACKAGE / "server.py").read_text()
+    projection = (PACKAGE / "projection.py").read_text()
+
+    assert "new MoveInventoryItemHandler(refs)" in composition
+    for source in (transport, server, projection, menu_actions, ui_runtime):
+        assert "move_inventory_item" not in source
+    for required in (
+        "CanCancel => !_committing",
+        "InventorySlotMutationPlanner.SamePlan(",
+        "RollbackAndVerify(",
+        "UiRuntimeProjector.Capture(",
+        "InventoryPageProjector.IsCompleteBackpackMenu(",
+        "state.Player.CurrentToolIndex != capture.CurrentToolIndex",
+        "ReferenceEquals(value.Component, value.Target)",
+    ):
+        assert required in handler + adapter
+    forbidden = (
+        "Utility.addItemToInventory",
+        "OnItemReceived",
+        "receiveLeftClick",
+        "receiveRightClick",
+        "CursorSlotItem =",
+        "heldItem =",
+        "canStackWith",
+        "getOne()",
+    )
+    runtime = handler + adapter + planner
+    assert not [token for token in forbidden if token in runtime]
+    assert "using StardewValley" not in planner
+
+
 def test_close_menu_blocks_dialogue_family_before_generic_exit_path() -> None:
     source = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
     close = source.split("public MenuActionAttempt Close()", 1)[1].split(
@@ -292,6 +331,7 @@ def test_default_capability_set_is_the_unique_concrete_handler_composition_root(
         "EquipHandler",
         "TransferInventoryItemHandler",
         "SetEquipmentSlotHandler",
+        "MoveInventoryItemHandler",
         "OpenMenuHandler",
         "ActivateUiHandler",
         "CloseMenuHandler",

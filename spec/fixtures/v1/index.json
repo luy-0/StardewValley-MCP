@@ -29,6 +29,7 @@
     "actions/equip.json",
     "actions/transfer-inventory-item.json",
     "actions/set-equipment-slot.json",
+    "actions/move-inventory-item.json",
     "actions/open_menu.json",
     "actions/activate_ui.json",
     "actions/close_menu.json"

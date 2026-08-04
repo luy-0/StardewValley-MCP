@@ -235,6 +235,32 @@ class SetEquipmentSlotResult(_message.Message):
     changed: bool
     def __init__(self, equipment_slot_kind: _Optional[_Union[_facts_pb2.UiEquipmentSlotKind, str]] = ..., equipment_slot_index: _Optional[int] = ..., item: _Optional[_Union[_facts_pb2.ItemFact, _Mapping]] = ..., player_inventory_revision: _Optional[str] = ..., changed: _Optional[bool] = ...) -> None: ...
 
+class MoveInventoryItemRequest(_message.Message):
+    __slots__ = ("item_ref", "destination_slot_ref", "ui_revision", "player_inventory_revision")
+    ITEM_REF_FIELD_NUMBER: _ClassVar[int]
+    DESTINATION_SLOT_REF_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    item_ref: _refs_pb2.Ref
+    destination_slot_ref: _refs_pb2.Ref
+    ui_revision: str
+    player_inventory_revision: str
+    def __init__(self, item_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., destination_slot_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., ui_revision: _Optional[str] = ..., player_inventory_revision: _Optional[str] = ...) -> None: ...
+
+class MoveInventoryItemResult(_message.Message):
+    __slots__ = ("source_slot_index", "destination_slot_index", "changed", "swapped", "player_inventory_revision")
+    SOURCE_SLOT_INDEX_FIELD_NUMBER: _ClassVar[int]
+    DESTINATION_SLOT_INDEX_FIELD_NUMBER: _ClassVar[int]
+    CHANGED_FIELD_NUMBER: _ClassVar[int]
+    SWAPPED_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    source_slot_index: int
+    destination_slot_index: int
+    changed: bool
+    swapped: bool
+    player_inventory_revision: str
+    def __init__(self, source_slot_index: _Optional[int] = ..., destination_slot_index: _Optional[int] = ..., changed: _Optional[bool] = ..., swapped: _Optional[bool] = ..., player_inventory_revision: _Optional[str] = ...) -> None: ...
+
 class OpenMenuRequest(_message.Message):
     __slots__ = ("menu",)
     MENU_FIELD_NUMBER: _ClassVar[int]

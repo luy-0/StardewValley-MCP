@@ -1,0 +1,9 @@
+{
+  "capability": "move_inventory_item",
+  "minimalInput": {"itemRef":{"value":"player-item-ref"},"destinationSlotRef":{"value":"player-slot-ref"},"uiRevision":"0000000000000000000000000000000000000000000000000000000000000000","playerInventoryRevision":"1111111111111111111111111111111111111111111111111111111111111111"},
+  "fullInput": {"itemRef":{"value":"player-item-ref-2"},"destinationSlotRef":{"value":"player-slot-ref-2"},"uiRevision":"2222222222222222222222222222222222222222222222222222222222222222","playerInventoryRevision":"3333333333333333333333333333333333333333333333333333333333333333"},
+  "invalidInput": {"itemRef":{"value":"player-item-ref"},"uiRevision":"0000000000000000000000000000000000000000000000000000000000000000","playerInventoryRevision":"1111111111111111111111111111111111111111111111111111111111111111"},
+  "accepted": {"state":"accepted","phase":"queued"},
+  "succeeded": {"status":"succeeded","commandId":"41000000-0000-4000-8000-000000000013","output":{"sourceSlotIndex":0,"destinationSlotIndex":8,"changed":true,"swapped":true,"playerInventoryRevision":"4444444444444444444444444444444444444444444444444444444444444444"}},
+  "failed": {"status":"failed","commandId":"41000000-0000-4000-8000-000000000013","error":{"code":"stale_ref","message":"目标背包 Slot 或 Inventory Revision 已失效；请重新查询","retryable":false}}
+}

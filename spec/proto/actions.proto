@@ -161,6 +161,21 @@ message SetEquipmentSlotResult {
   bool changed = 5;
 }
 
+message MoveInventoryItemRequest {
+  Ref item_ref = 1;
+  Ref destination_slot_ref = 2;
+  string ui_revision = 3;
+  string player_inventory_revision = 4;
+}
+
+message MoveInventoryItemResult {
+  uint32 source_slot_index = 1;
+  uint32 destination_slot_index = 2;
+  bool changed = 3;
+  bool swapped = 4;
+  string player_inventory_revision = 5;
+}
+
 message OpenMenuRequest {
   MenuKind menu = 1;
 }

@@ -16,7 +16,7 @@ Mod 不实现 MCP，不加载 Skill，也不拥有智能体身份。
 
 ## 当前实现状态
 
-当前已建立独立的 .NET 6 Solution、公共 Proto 生成项目和 SMAPI Host。Host 只在配置的 loopback 地址启动 Proto TCP Listener，通过共享秘密完成 HMAC 认证。Registry 当前显式注册五项只读 Handler 和十一项需要明确授权的变更 Handler，共十六项公共能力；`transfer_inventory_item` 通过当前箱子 UI、Item Ref 与双方 Revision 执行两 Tick 原子转移。`use_tool` 支持 Axe、Pickaxe、Scythe、Hoe 与 Watering Can，并由独立 Driver 观察工具的接受、释放和收敛生命周期。
+当前已建立独立的 .NET 6 Solution、公共 Proto 生成项目和 SMAPI Host。Host 只在配置的 loopback 地址启动 Proto TCP Listener，通过共享秘密完成 HMAC 认证。Registry 当前显式注册五项只读 Handler 和十三项需要明确授权的变更 Handler，共十八项公共能力；`transfer_inventory_item` 通过当前箱子 UI、Item Ref 与双方 Revision 执行两 Tick 原子转移，`set_equipment_slot` 与 `move_inventory_item` 分别负责装备槽变更与玩家背包内的整件移动或交换。`use_tool` 支持 Axe、Pickaxe、Scythe、Hoe 与 Watering Can，并由独立 Driver 观察工具的接受、释放和收敛生命周期。
 
 以下命令均从仓库根目录执行。生成并测试公共协议：
 

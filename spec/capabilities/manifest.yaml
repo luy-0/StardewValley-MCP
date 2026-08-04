@@ -142,6 +142,20 @@ capabilities:
     required_scope: game:write
     risk: [changes_save]
     destructive: true
+  - id: move_inventory_item
+    title: 移动背包物品
+    description: 在当前原版背包页面中将一整件玩家物品移到空槽或与目标槽交换。
+    contract_version: 1.0.0
+    request: MoveInventoryItemRequest
+    result: MoveInventoryItemResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: [changes_save]
+    destructive: true
   - id: activate_ui
     title: 激活界面元素
     description: 在匹配的 UI Revision 上激活 query_ui 返回的可交互元素。

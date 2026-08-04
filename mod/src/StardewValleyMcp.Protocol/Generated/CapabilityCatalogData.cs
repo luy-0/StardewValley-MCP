@@ -112,6 +112,21 @@ internal static class CapabilityCatalogData
                 Destructive = true,
                 Risks = { "changes_relationship", "changes_save" },
             },
+            ["move_inventory_item"] = new CapabilityDescriptor
+            {
+                Id = "move_inventory_item",
+                ContractVersion = "1.0.0",
+                SideEffect = SideEffect.Mutating,
+                Execution = ExecutionMode.LongRunning,
+                Cancellable = true,
+                DefaultTimeoutMs = 10000,
+                MaxTimeoutMs = 30000,
+                RequestType = nameof(MoveInventoryItemRequest),
+                ResultType = nameof(MoveInventoryItemResult),
+                RequiredScope = "game:write",
+                Destructive = true,
+                Risks = { "changes_save" },
+            },
             ["navigate"] = new CapabilityDescriptor
             {
                 Id = "navigate",

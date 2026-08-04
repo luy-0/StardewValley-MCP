@@ -12,10 +12,10 @@ public sealed class ObservationContractTests
     {
         var snapshot = CapabilityCatalog.CreateSnapshotFor(new[]
         {
-            "say", "emote", "face", "navigate", "interact", "use_tool", "equip", "transfer_inventory_item", "set_equipment_slot", "open_menu", "activate_ui", "close_menu",
+            "say", "emote", "face", "navigate", "interact", "use_tool", "equip", "transfer_inventory_item", "set_equipment_slot", "move_inventory_item", "open_menu", "activate_ui", "close_menu",
             "query_runtime", "query_world", "query_inventory", "query_ui", "inspect",
         });
-        Assert.That(snapshot.Capabilities, Has.Count.EqualTo(17));
+        Assert.That(snapshot.Capabilities, Has.Count.EqualTo(18));
         Assert.That(snapshot.Capabilities.Single(item => item.Id == "say").Execution, Is.EqualTo(ExecutionMode.Immediate));
         Assert.That(snapshot.Capabilities.Single(item => item.Id == "face").Execution, Is.EqualTo(ExecutionMode.LongRunning));
         Assert.That(snapshot.Capabilities.Single(item => item.Id == "query_runtime").RequiredScope, Is.EqualTo("game:read"));

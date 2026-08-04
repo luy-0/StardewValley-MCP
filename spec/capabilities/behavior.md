@@ -147,6 +147,15 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 - 失败时必须按原版装备路径尽力恢复背包 Slot、装备槽、Trinket 列表长度、对象身份和可观察装备效果；不承诺撤销已经由任意第三方 Hook 发出的历史事件。回滚仍无法确认时返回 `EXECUTION_FAILED` 并要求重新查询。
 - 成功后返回目标槽类型、序号、新玩家 Inventory Revision 和是否实际变化。清空结果必须省略 `item`；非空装备结果中的 `ItemFact` 不签发物品 Ref。成功后旧 UI Revision 和源 Item Ref 失效，调用方必须重新查询新状态。
 
+### `move_inventory_item`
+
+- 请求必须提供当前原版 Inventory 页中的玩家背包 Item Ref、目标 `ITEM_SLOT` Ref、UI Revision 和玩家 Inventory Revision。目标 Ref 必须完整绑定当前 `GameMenu`、玩家侧、非装备槽、Slot 序号、组件与语义目标；容器槽、装备槽、旧页面或旧组件 Ref 必须拒绝。
+- 能力只搬运同一玩家已解锁背包中的完整 Item 对象。目标为空时执行 move；目标非空时执行 swap，即使两项可以堆叠也不合并；源槽与目标槽相同时幂等成功并返回 `changed=false, swapped=false`。能力不拆分数量、不跨容器、不经游标、不丢弃或消费物品，也不自动寻找空槽。
+- 实现必须分两个 Tick 完成预检与提交。提交前必须重新验证页面、玩家背包 backing、目标组件、两项 Revision、源与目标对象身份和 Stack，以及 `CurrentToolIndex`；同步双槽提交开始后不可取消。
+- 真实写入必须先清空参与槽，再把目标旧对象写回源槽并把源对象写入目标槽，防止同一对象短暂属于两个 Slot。`CurrentToolIndex` 数值始终不得改变；若当前槽参与，整个双槽事务前后只对提交前、提交后的当前 Item 各执行至多一次停止与开始持有生命周期，同槽 no-op 不触发回调。
+- 成功必须确认两槽结果、其他槽不变、所有 Stack 不变、游标仍为空、对象守恒、两项 Revision 在真实写入后变化，并返回源槽、目标槽、`changed`、`swapped` 与新玩家 Inventory Revision。真实写入成功后源与目标旧 Item Ref 失效，Slot Ref 仍绑定同一组件；调用方必须重新查询取得新 Revision 和 Item Ref。同槽 no-op 不改变 Ref 或 Revision。
+- 写入或后置校验失败时，必须以两槽局部 journal 尽力停止提交后的当前 Item、清空计划对象、恢复原对象与原持有状态。回滚不得覆盖第三方在失败窗口写入的未知对象；无法安全恢复或确认时返回 `EXECUTION_FAILED` 并要求重新查询。能力不承诺撤销第三方 Item callback 已产生的历史副作用。
+
 ### `open_menu`
 
 - `menu` 必须是受支持的非 `UNSPECIFIED` 顶层菜单。

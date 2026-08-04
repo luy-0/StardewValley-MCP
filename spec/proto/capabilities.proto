@@ -37,6 +37,7 @@ message CommandRequest {
     CloseMenuRequest close_menu = 19;
     TransferInventoryItemRequest transfer_inventory_item = 20;
     SetEquipmentSlotRequest set_equipment_slot = 21;
+    MoveInventoryItemRequest move_inventory_item = 22;
 
     QueryRuntimeRequest query_runtime = 30;
     QueryWorldRequest query_world = 31;
@@ -60,6 +61,7 @@ message CapabilityResult {
     CloseMenuResult close_menu = 19;
     TransferInventoryItemResult transfer_inventory_item = 20;
     SetEquipmentSlotResult set_equipment_slot = 21;
+    MoveInventoryItemResult move_inventory_item = 22;
 
     QueryRuntimeResult query_runtime = 30;
     QueryWorldResult query_world = 31;
