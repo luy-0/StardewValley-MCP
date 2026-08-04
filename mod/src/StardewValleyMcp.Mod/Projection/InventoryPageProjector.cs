@@ -102,7 +102,10 @@ internal static class InventoryPageProjector
             }
 
             var page = (InventoryPage)currentPage;
-            var playerView = InventoryViewResolver.CreatePlayer(player);
+            var playerView = InventoryViewResolver.CreatePlayerForMenu(
+                player,
+                page.inventory.capacity
+            );
             if (!IsCompleteBackpackMenu(page.inventory, playerView))
             {
                 warnings.Add(Warning(

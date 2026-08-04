@@ -1258,27 +1258,36 @@ public sealed class QueryUiModContractTests
         });
     }
 
-    [TestCase(12)]
-    [TestCase(24)]
-    [TestCase(36)]
-    public void InventoryPageProjection_UsesOnlyUnlockedBackpackSlots(int unlockedSlots)
+    [TestCase(12, 36, 12)]
+    [TestCase(24, 36, 24)]
+    [TestCase(36, 36, 36)]
+    [TestCase(48, 36, 36)]
+    public void InventoryPageProjection_UsesOnlyMenuVisibleBackpackSlots(
+        int playerSlots,
+        int visualSlots,
+        int projectedSlots
+    )
     {
-        var names = Enumerable.Range(0, 36).Select(index => index.ToString()).ToArray();
-        var ids = Enumerable.Range(0, 36).ToArray();
+        var names = Enumerable.Range(0, visualSlots).Select(index => index.ToString()).ToArray();
+        var ids = Enumerable.Range(0, visualSlots).ToArray();
 
         Assert.Multiple(() =>
         {
+            Assert.That(
+                InventoryViewResolver.ResolvePlayerMenuCapacity(playerSlots, visualSlots),
+                Is.EqualTo(projectedSlots)
+            );
             Assert.That(InventoryPageProjector.HasCompleteBackpackCoverage(
-                unlockedSlots,
-                36,
+                projectedSlots,
+                visualSlots,
                 names,
                 ids
             ), Is.True);
             Assert.That(InventoryPageProjector.HasCompleteBackpackCoverage(
-                unlockedSlots,
-                36,
+                projectedSlots,
+                visualSlots,
                 names,
-                ids.Select((id, index) => index == unlockedSlots - 1 ? id + 1 : id).ToArray()
+                ids.Select((id, index) => index == projectedSlots - 1 ? id + 1 : id).ToArray()
             ), Is.False);
         });
     }

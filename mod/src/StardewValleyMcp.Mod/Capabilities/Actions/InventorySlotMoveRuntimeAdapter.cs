@@ -325,7 +325,10 @@ internal sealed class LiveInventorySlotMoveRuntimeAdapter : IInventorySlotMoveRu
                 || player.CursorSlotItem is not null)
                 return InventorySlotMoveCapture.NotReady();
             var page = (InventoryPage)current;
-            var view = InventoryViewResolver.CreatePlayer(player);
+            var view = InventoryViewResolver.CreatePlayerForMenu(
+                player,
+                page.inventory.capacity
+            );
             if (!InventoryPageProjector.IsCompleteBackpackMenu(page.inventory, view)
                 || player.CurrentToolIndex < 0
                 || player.CurrentToolIndex >= view.Capacity

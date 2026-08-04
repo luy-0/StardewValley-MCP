@@ -463,7 +463,10 @@ internal sealed class LiveEquipmentSlotRuntimeAdapter : IEquipmentSlotRuntimeAda
                 return EquipmentSlotCapture.NotReady();
 
             var page = (InventoryPage)current;
-            var playerView = InventoryViewResolver.CreatePlayer(player);
+            var playerView = InventoryViewResolver.CreatePlayerForMenu(
+                player,
+                page.inventory.capacity
+            );
             if (!InventoryPageProjector.IsCompleteBackpackMenu(page.inventory, playerView))
                 return EquipmentSlotCapture.NotReady();
 
@@ -486,8 +489,8 @@ internal sealed class LiveEquipmentSlotRuntimeAdapter : IEquipmentSlotRuntimeAda
                     snapshot.InventoryRevision,
                     StringComparison.Ordinal
                 )
-                || snapshot.SlotCount != player.MaxItems
-                || playerView.Slots.Count != player.MaxItems)
+                || snapshot.SlotCount != playerView.Capacity
+                || playerView.Slots.Count != playerView.Capacity)
                 return EquipmentSlotCapture.Unavailable();
 
             var equipment = CaptureEquipment(page, player);
