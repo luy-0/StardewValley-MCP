@@ -45,7 +45,7 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 | `CHARACTER` | `character` | `query_world.characters[].ref`；可用于导航或交互 |
 | `INVENTORY_ITEM` | `inventory_item` | 玩家背包或可读容器 `InventorySnapshot` 中的非空 Slot Item Ref；均可用于 `inspect`，只有玩家背包来源且匹配当前 Inventory Revision 的 Ref 可用于 `equip` |
 | `CONTAINER` | `inventory` | `InventorySnapshot.container_ref`；表示库存视图，不是地图实体，不可用于导航或交互 |
-| `UI_ELEMENT` | `ui_element` | `query_ui.elements[].ref`；只能在匹配 UI Revision 下用于 `activate_ui` |
+| `UI_ELEMENT` | `ui_element` | `query_ui.elements[].ref`；只能在匹配 UI Revision 下交给该元素种类明确允许的动作能力 |
 
 `query_inventory.container_ref` 接受两类输入：带 `ContainerFact` 的 `WORLD_ENTITY` Ref，或先前 `InventorySnapshot.container_ref` 返回的 `CONTAINER` Ref。前者标识地图上的容器实体，后者标识该容器的库存视图；实现不得仅凭 Ref 字符串格式猜测 Kind。
 
@@ -166,6 +166,16 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 - 成功结果必须按实际 Qualified Item ID 与显示名聚合产出，按 ingredient key 聚合实际材料消耗，并返回请求／完成轮数、新玩家 Inventory Revision 和新 UI Revision。Recipe Fact、材料事实或组件变化会使 UI Revision 失效；无关背包布局变化不使请求失效，提交阶段改用当前材料与容量安全决定是否继续。成功后受影响的 Item Ref 失效，结果中的 Revision 只描述新状态，不是后续写入授权。
 - 首版不支持烹饪、调味料或派生 CraftingPage／CraftingRecipe。提交阶段的罕见原版或第三方异常返回 `EXECUTION_FAILED`，即使此前已有轮次完成也不伪报全部成功；调用方必须先重新查询，不能直接重试。实现应在不覆盖未知物品的前提下把已经创建但未能完整入包的实际产物保留在 Crafting 游标，避免产物只残留于异常栈中的局部变量。
 
+### `purchase_shop_item`
+
+- 请求必须提供当前精确原版商店视口签发的商品行 Ref、当前 UI Revision 与 `1..25` 的购买轮数。能力不接受商品名称或屏幕坐标；商品 Ref 必须仍绑定同一菜单、组件、商品对象、价格与库存事实。
+- 首版只支持能生成精确原版普通 Object 的金币实物商品。配方、回购物、特殊物品、非金币货币、交换物价格、Storage Shop、派生菜单或商品，以及带购买检查或购买回调的商品必须拒绝，不得把说明文字中的价格猜测为金币价格。
+- 实现必须分两个 Tick 完成预检与提交，并在提交前重验世界、玩家、菜单、空 `heldItem`、安全计时、商品 Ref、UI Revision、金币、库存与背包容量。同步购买开始后不可取消；商品滚出当前视口、菜单或商品事实变化时必须以过期 Ref 拒绝。
+- 一次请求必须全有或全无。金币、有限库存或背包容量不足时返回 `NOT_READY`，不得自动减少购买轮数、留下部分购买结果或把余量丢到地面；零价商品合法。购买轮数乘商品模板 Stack 不得超过该物品的单堆叠上限。
+- 成功必须使用原版商店事务取得同一个实际 Item，并把它完整加入玩家背包。售罄商品必须从当前商店可售列表移除；成功后 `heldItem` 必须为空，金币差额必须等于 `total_price`，实际入包数量必须与请求轮数和商品模板 Stack 一致。
+- 成功结果必须返回购买轮数、不带 Ref 的实际 ItemFact、总价、购买前后金币、新玩家 Inventory Revision 与新 UI Revision；有限库存还必须返回余量，无限库存必须省略 `stock_remaining`。所有金币字段使用非负整数，调用方不得从字段缺省推断负数或透支。
+- 商品购买入口只能是本能力；商店商品行即使带稳定 Ref，也不得由 `activate_ui` 通过坐标点击购买。原版事务开始后的罕见异常返回 `EXECUTION_FAILED`，调用方必须重新查询后再决定是否重试；尚未完整入包的实际商品应保留在商店游标，不得丢弃或落地。
+
 ### `open_menu`
 
 - `menu` 必须是受支持的非 `UNSPECIFIED` 顶层菜单。
@@ -224,6 +234,8 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 
 非选择型 `DialogueBox` 必须且只能投影一个 `DIALOGUE_ADVANCE`。当前页后面仍有页面时标签为“继续”，否则为“结束”；判断必须与游戏自身的下一页/关闭图标语义一致。只有正文完整呈现、菜单不在过渡且 `safetyTimer <= 0` 时 `enabled=true`。问题对话只投影 `DIALOGUE_RESPONSE`，不得同时投影推进元素。页面变化、对话关闭或菜单替换后旧推进 Ref 必须 stale；同一稳定页面的重复查询与 `inspect` 必须复用同一 Ref。
 
+精确原版 `ShopMenu` 只投影当前 viewport 的出售行，每行包含稳定 Ref、可读时的 ItemFact、原版单轮价格与有限库存；非金币货币和额外交换物分别使用 `UI_PRICE_CURRENCY_UNREPRESENTED` 与 `UI_PRICE_PARTIAL` warning。商品行始终 `enabled=false`，不得通过 `activate_ui` 点击；普通金币实物只能将该 Ref 与同一 UI Revision 交给 `purchase_shop_item`。滚出 viewport、售罄移除、菜单／组件／商品对象替换后旧 Ref stale；价格或库存变化必须推进 UI Revision。
+
 精确原版 `GameMenu` 当前位于精确原版 Inventory 页时，必须在顶部 Tab 之外投影所有已解锁玩家背包格与实际存在的装备槽。背包视觉组件可以多于玩家 `MaxItems`，但只公开 `0..MaxItems-1` 的真实 Slot；Snapshot 必须恰好有一条 PLAYER `UiInventoryLink`，其 Item Ref 与 Inventory Revision 必须复用同一时刻 `query_inventory(include_empty_slots=true)` 的权威结果。装备槽使用 `EQUIPMENT_SLOT + equipment_slot_kind + 同种类内 index`，固定 Hat、Left Ring、Right Ring、Boots、Shirt、Pants 的 index 为 0，Trinket 使用从 0 开始的 ordinal。装备物品不属于玩家背包，非空槽只嵌入不带 Ref 的完整 `ItemFact`，空槽缺省 `item`；背包空槽缺省 `item_ref`。背包格与装备槽都必须存在、`enabled=false`，不得通过 `activate_ui` 点击。
 
 Inventory 页槽位 UI Ref 表示逻辑槽位而非当前 Item：同一菜单、页面和组件内的内容变化应复用槽位 Ref并更新 UI Revision；页面切走、菜单或组件替换后旧 Ref stale。装备槽事实只受当前 UI Revision 保护，不新增 Equipment Revision。现有 `equip` 仍只选择玩家工具栏/当前手持背包物品，不表示穿戴装备。
@@ -238,9 +250,9 @@ Inventory 页槽位 UI Ref 表示逻辑槽位而非当前 Item：同一菜单、
 
 `modal` 是 V1 的窄 allowlist 分类值：仅精确原版 `DialogueBox` 或 `LetterViewerMenu` 为 `true`，其他类型（包括其派生类）均为 `false`；它不表示菜单一定可关闭或不阻塞游戏。UI 查询不得调用点击、按键、hover、组件填充、菜单更新、切换、购买或第三方 callback。GameMenu 顶层 Tab、Crafting 配方、DialogueBox、ShopMenu、ItemGrabMenu 的完整 extractor 分别以 64、256、64、16、128 个元素为上限；超过上限时整体降级，不得静默截断。
 
-UI warning 使用以下稳定 code：`UI_MENU_UNSUPPORTED` 表示只有 shell；`UI_MENU_FACT_UNAVAILABLE` 表示非关键 Menu 字段不可读；`UI_GAME_MENU_PAGE_UNSUPPORTED` 表示当前 GameMenu page 是稳定不支持的派生/替换页；`UI_GAME_MENU_CAPTURE_INCOMPLETE` 表示 GameMenu 当前页或切换状态暂时不可读；`UI_ELEMENTS_NOT_PRESENTED` 表示对话响应尚未生成 clickable component；`UI_ELEMENTS_LIMIT_UNSUPPORTED` 表示超出完整投影上限；`UI_ELEMENT_PROJECTION_FAILED` 表示元素无法安全投影；`UI_INVENTORY_CAPTURE_INCOMPLETE` 表示当前库存或装备槽关联不可完整确认；`UI_INVENTORY_CURSOR_ITEM_UNSUPPORTED` 表示 Inventory 页游标持有的瞬态物品未纳入公开事实；`UI_ELEMENT_ACTIVATION_UNCERTAIN` 表示无法无副作用证明可激活；`UI_ITEM_FACT_UNAVAILABLE`、`UI_PRICE_CURRENCY_UNREPRESENTED`、`UI_PRICE_PARTIAL` 分别表示 Shop Item、货币或交换物事实不完整。Warnings 按 `(code,ref.value-or-empty,message)` Ordinal 排序且不进入 `ui_revision`。
+UI warning 使用以下稳定 code：`UI_MENU_UNSUPPORTED` 表示只有 shell；`UI_MENU_FACT_UNAVAILABLE` 表示非关键 Menu 字段不可读；`UI_GAME_MENU_PAGE_UNSUPPORTED` 表示当前 GameMenu page 是稳定不支持的派生/替换页；`UI_GAME_MENU_CAPTURE_INCOMPLETE` 表示 GameMenu 当前页或切换状态暂时不可读；`UI_ELEMENTS_NOT_PRESENTED` 表示对话响应尚未生成 clickable component；`UI_ELEMENTS_LIMIT_UNSUPPORTED` 表示超出完整投影上限；`UI_ELEMENT_PROJECTION_FAILED` 表示元素无法安全投影；`UI_INVENTORY_CAPTURE_INCOMPLETE` 表示当前库存或装备槽关联不可完整确认；`UI_INVENTORY_CURSOR_ITEM_UNSUPPORTED` 表示 Inventory 页游标持有的瞬态物品未纳入公开事实；`UI_ITEM_FACT_UNAVAILABLE`、`UI_PRICE_CURRENCY_UNREPRESENTED`、`UI_PRICE_PARTIAL` 分别表示 Shop Item、货币或交换物事实不完整。Warnings 按 `(code,ref.value-or-empty,message)` Ordinal 排序且不进入 `ui_revision`。
 
-元素集合只有在对应 extractor 已完整枚举其公开范围时才可作为负向生命周期证据。`UI_ELEMENTS_NOT_PRESENTED`、`UI_ELEMENTS_LIMIT_UNSUPPORTED`、`UI_ELEMENT_PROJECTION_FAILED`、`UI_INVENTORY_CAPTURE_INCOMPLETE`、`UI_INVENTORY_CURSOR_ITEM_UNSUPPORTED` 或 `UI_GAME_MENU_CAPTURE_INCOMPLETE` 表示本轮元素集合不完整；实现不得据此把未观察到的旧 UI Ref 标记 stale。`UI_MENU_UNSUPPORTED` 与 `UI_GAME_MENU_PAGE_UNSUPPORTED` 的公开元素集合按其受支持范围完整；`UI_MENU_FACT_UNAVAILABLE` 只涉及非关键 Menu shell 字段，`UI_ITEM_FACT_UNAVAILABLE`、`UI_PRICE_CURRENCY_UNREPRESENTED`、`UI_PRICE_PARTIAL` 和 `UI_ELEMENT_ACTIVATION_UNCERTAIN` 只影响已观察元素的附属事实，这些 warning 本身不得阻止元素集合完成。`inspect` 在不完整捕获中找不到目标 UI Ref 时返回可重试的 `FACT_UNAVAILABLE`，后续完整捕获恢复同一元素时必须继续使用原 Ref；完整捕获明确缺少目标时返回 `STALE`，且该 Ref 不得复活。
+元素集合只有在对应 extractor 已完整枚举其公开范围时才可作为负向生命周期证据。`UI_ELEMENTS_NOT_PRESENTED`、`UI_ELEMENTS_LIMIT_UNSUPPORTED`、`UI_ELEMENT_PROJECTION_FAILED`、`UI_INVENTORY_CAPTURE_INCOMPLETE`、`UI_INVENTORY_CURSOR_ITEM_UNSUPPORTED` 或 `UI_GAME_MENU_CAPTURE_INCOMPLETE` 表示本轮元素集合不完整；实现不得据此把未观察到的旧 UI Ref 标记 stale。`UI_MENU_UNSUPPORTED` 与 `UI_GAME_MENU_PAGE_UNSUPPORTED` 的公开元素集合按其受支持范围完整；`UI_MENU_FACT_UNAVAILABLE` 只涉及非关键 Menu shell 字段，`UI_ITEM_FACT_UNAVAILABLE`、`UI_PRICE_CURRENCY_UNREPRESENTED` 和 `UI_PRICE_PARTIAL` 只影响已观察元素的附属事实，这些 warning 本身不得阻止元素集合完成。`inspect` 在不完整捕获中找不到目标 UI Ref 时返回可重试的 `FACT_UNAVAILABLE`，后续完整捕获恢复同一元素时必须继续使用原 Ref；完整捕获明确缺少目标时返回 `STALE`，且该 Ref 不得复活。
 
 ### `inspect`
 

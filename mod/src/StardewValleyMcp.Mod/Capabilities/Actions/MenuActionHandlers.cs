@@ -394,7 +394,6 @@ internal sealed class RuntimeMenuActionAdapter : IMenuActionRuntime
                 typeof(GameMenu)
             ) => true,
             UiExtractorKind.DialogueResponse when menu.GetType() == typeof(DialogueBox) => true,
-            UiExtractorKind.ShopSaleRow when menu.GetType() == typeof(ShopMenu) => true,
             _ => false,
         };
         if (!activated)

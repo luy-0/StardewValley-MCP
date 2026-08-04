@@ -69,6 +69,11 @@ messages:
     fields:
       craftCount: {minimum: 1, maximum: 25}
 
+  PurchaseShopItemRequest:
+    required: [saleRef, purchaseCount, uiRevision]
+    fields:
+      purchaseCount: {minimum: 1, maximum: 25}
+
   OpenMenuRequest:
     required: [menu]
 
@@ -165,6 +170,10 @@ output_messages:
   CraftingMaterialConsumption:
     fields:
       quantity: {minimum: 1}
+
+  PurchaseShopItemResult:
+    fields:
+      purchaseCount: {minimum: 1, maximum: 25}
 
   InspectedRef:
     allOf:

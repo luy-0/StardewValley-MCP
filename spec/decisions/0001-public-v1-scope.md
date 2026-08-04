@@ -10,7 +10,7 @@
 ## 决策
 
 1. 公开协议建立独立的 V1 版本历史，protobuf package 使用 `stardew_valley.mcp.v1`。
-2. V1 的公开能力集合只以 `../capabilities/manifest.yaml` 为权威，当前共 19 项。
+2. V1 的公开能力集合只以 `../capabilities/manifest.yaml` 为权威，当前共 20 项。
 3. Proto 消息存在不自动表示对应能力可以被 Mod 公告或投影为 MCP Tool。
 4. V1 使用一套二进制 Proto 业务协议，不提供平行的线路格式或隐藏能力入口。
 5. 仓库在实现完成前保持 `0.x` 产品版本；公开契约的 `contract_version` 从 `1.0.0` 开始。

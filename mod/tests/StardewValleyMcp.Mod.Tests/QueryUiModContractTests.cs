@@ -525,32 +525,56 @@ public sealed class QueryUiModContractTests
     }
 
     [Test]
-    public void ShopProjector_SelectsOnlyViewportAndUsesFullConservativeFormula()
+    public void ShopProjector_SelectsOnlyViewportAndKeepsRowsQueryOnly()
     {
         Assert.That(UiProjectionPolicy.SelectShopViewport(7, 4, 20), Is.EqualTo(new[] { 7, 8, 9, 10 }));
         Assert.That(UiProjectionPolicy.SelectShopViewport(7, 4, 9), Is.EqualTo(new[] { 7, 8 }));
         Assert.That(UiProjectionPolicy.SelectShopViewport(0, 17, 20), Is.Null);
 
-        var ready = new ShopActivationFacts(true, true, false, false, false, 1, 50, 50, true, false, true);
-        Assert.That(UiProjectionPolicy.ShopEnabled(ready), Is.True);
-        var blockers = new[]
-        {
-            ready with { Visible = false },
-            ready with { SafetyReady = false },
-            ready with { HasHeldItem = true },
-            ready with { ReadOnly = true },
-            ready with { Stock = 0 },
-            ready with { CurrencyAmount = 49 },
-            ready with { HasRequiredTradeItem = false },
-            ready with { HasCanPurchaseCheck = true },
-            ready with { VanillaSafeSalable = false },
-        };
-        Assert.That(blockers.All(value => !UiProjectionPolicy.ShopEnabled(value)), Is.True);
-        Assert.That(UiProjectionPolicy.ShopEnabled(ready with { UnlimitedStock = true, Stock = 0 }), Is.True);
+        var store = new OpaqueRefStore(InstanceId, menuEpochFactory: () => "shop-a");
+        var menu = new object();
+        var owner = new FakeUiOwner(menu);
+        var component = new object();
+        var salable = new object();
+        owner.Set(0, component, salable, "shop-sale-row:0");
+        var projected = UiProjector.ProjectDescriptors(
+            menu,
+            new UiMenuFact { MenuType = "ShopMenu" },
+            UiExtractorKind.ShopSaleRow,
+            "shop:0:0",
+            new[]
+            {
+                new UiElementDescriptor(
+                    UiExtractorKind.ShopSaleRow,
+                    UiElementKind.ItemSlot,
+                    0,
+                    component,
+                    salable,
+                    "shop-sale-row:0",
+                    "防风草种子",
+                    true,
+                    false,
+                    120,
+                    240,
+                    Price: 20,
+                    Stock: 5
+                ),
+            },
+            Array.Empty<QueryWarning>(),
+            owner,
+            store
+        );
+        var row = projected.Snapshot.Elements.Single();
+
         Assert.Multiple(() =>
         {
-            Assert.That(UiProjectionPolicy.IsExactActivationKnownType(typeof(BaseSalable), typeof(BaseSalable)), Is.True);
-            Assert.That(UiProjectionPolicy.IsExactActivationKnownType(typeof(DerivedSalable), typeof(BaseSalable)), Is.False);
+            Assert.That(row.Ref.Value, Is.Not.Empty, "查询仍应签发可供后续语义购买使用的 Ref");
+            Assert.That(row.Label, Is.EqualTo("防风草种子"));
+            Assert.That(row.Visible, Is.True);
+            Assert.That(row.Enabled, Is.False, "Shop 行不是通用 activate_ui 入口");
+            Assert.That(row.Price, Is.EqualTo(20));
+            Assert.That(row.Stock, Is.EqualTo(5));
+            Assert.That(store.ResolveUiElement(row.Ref).Status, Is.EqualTo(UiElementResolveStatus.Resolved));
         });
     }
 
@@ -618,7 +642,7 @@ public sealed class QueryUiModContractTests
             Is.EqualTo(new[]
             {
                 "activate_ui", "close_menu", "craft_item", "emote", "equip", "face", "inspect", "interact",
-                "move_inventory_item", "navigate", "open_menu", "query_inventory", "query_runtime", "query_ui", "query_world", "say",
+                "move_inventory_item", "navigate", "open_menu", "purchase_shop_item", "query_inventory", "query_runtime", "query_ui", "query_world", "say",
                 "set_equipment_slot", "transfer_inventory_item", "use_tool",
             })
         );
@@ -1709,6 +1733,4 @@ public sealed class QueryUiModContractTests
     private class BaseItemGrab { }
     private sealed class DerivedItemGrab : BaseItemGrab { }
     private sealed class BaseLetter { }
-    private class BaseSalable { }
-    private sealed class DerivedSalable : BaseSalable { }
 }

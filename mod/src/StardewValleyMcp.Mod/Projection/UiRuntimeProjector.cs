@@ -104,7 +104,6 @@ internal static class UiRuntimeProjector
                 extractor = UiExtractorKind.ShopSaleRow;
                 completeness = ExtractShop(
                     shop,
-                    player,
                     viewport,
                     descriptors,
                     warnings,
@@ -447,14 +446,13 @@ internal static class UiRuntimeProjector
 
     private static UiElementSetCompleteness ExtractShop(
         ShopMenu menu,
-        Farmer player,
         UiBounds viewport,
         List<UiElementDescriptor> output,
         List<QueryWarning> warnings,
         out string actionState
     )
     {
-        actionState = $"shop:{menu.currentItemIndex}:{menu.currency}:{menu.safetyTimer <= 0}:{menu.heldItem is null}:{menu.readOnly}:{menu.canPurchaseCheck is null}";
+        actionState = $"shop:{menu.currentItemIndex}:{menu.currency}";
         var selected = UiProjectionPolicy.SelectShopViewport(
             menu.currentItemIndex,
             menu.forSaleButtons.Count,
@@ -523,53 +521,15 @@ internal static class UiRuntimeProjector
                         "当前价格使用非金币货币"
                     ));
                 }
-                var tradeRequired = true;
                 if (!string.IsNullOrEmpty(stockInfo.TradeItem))
                 {
                     descriptorWarnings.Add(DescriptorWarning(
                         "UI_PRICE_PARTIAL",
                         "当前商品还需要协议未表示的交换物"
                     ));
-                    var requiredCount = stockInfo.TradeItemCount
-                        ?? ShopMenu.numberRequiredForExtraItemTrade;
-#pragma warning disable CS0618
-                    tradeRequired = requiredCount >= 0
-                        && player.getItemCount(stockInfo.TradeItem) >= requiredCount;
-#pragma warning restore CS0618
-                }
-                if (menu.canPurchaseCheck is not null)
-                {
-                    descriptorWarnings.Add(DescriptorWarning(
-                        "UI_ELEMENT_ACTIVATION_UNCERTAIN",
-                        "当前商品存在不可无副作用验证的购买条件"
-                    ));
-                }
-                var vanillaSafeSalable = UiProjectionPolicy.IsExactActivationKnownType(
-                    salable.GetType(),
-                    typeof(StardewValley.Object)
-                );
-                if (!vanillaSafeSalable)
-                {
-                    descriptorWarnings.Add(DescriptorWarning(
-                        "UI_ELEMENT_ACTIVATION_UNCERTAIN",
-                        "第三方商品的购买条件不能无副作用验证"
-                    ));
                 }
 
                 var unlimited = stockInfo.Stock == ShopMenu.infiniteStock;
-                var enabled = UiProjectionPolicy.ShopEnabled(new ShopActivationFacts(
-                    visible,
-                    menu.safetyTimer <= 0,
-                    menu.heldItem is not null,
-                    menu.readOnly,
-                    unlimited,
-                    stockInfo.Stock,
-                    stockInfo.Price,
-                    ShopMenu.getPlayerCurrencyAmount(player, menu.currency),
-                    tradeRequired,
-                    menu.canPurchaseCheck is not null,
-                    vanillaSafeSalable
-                ));
                 output.Add(new UiElementDescriptor(
                     UiExtractorKind.ShopSaleRow,
                     UiElementKind.ItemSlot,
@@ -579,7 +539,7 @@ internal static class UiRuntimeProjector
                     $"shop-sale-row:{absoluteIndex}",
                     label,
                     visible,
-                    enabled,
+                    false,
                     center.X,
                     center.Y,
                     itemFact,
@@ -723,11 +683,8 @@ internal static class UiRuntimeProjector
                 );
                 break;
             case UiExtractorKind.ShopSaleRow when menu.GetType() == typeof(ShopMenu):
-                if (Game1.player is not { } player)
-                    return new UiElementLookup(UiElementLookupStatus.Unavailable);
                 completeness = ExtractShop(
                     (ShopMenu)menu,
-                    player,
                     viewport,
                     descriptors,
                     warnings,

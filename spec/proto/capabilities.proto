@@ -39,6 +39,7 @@ message CommandRequest {
     SetEquipmentSlotRequest set_equipment_slot = 21;
     MoveInventoryItemRequest move_inventory_item = 22;
     CraftItemRequest craft_item = 23;
+    PurchaseShopItemRequest purchase_shop_item = 24;
 
     QueryRuntimeRequest query_runtime = 30;
     QueryWorldRequest query_world = 31;
@@ -64,6 +65,7 @@ message CapabilityResult {
     SetEquipmentSlotResult set_equipment_slot = 21;
     MoveInventoryItemResult move_inventory_item = 22;
     CraftItemResult craft_item = 23;
+    PurchaseShopItemResult purchase_shop_item = 24;
 
     QueryRuntimeResult query_runtime = 30;
     QueryWorldResult query_world = 31;

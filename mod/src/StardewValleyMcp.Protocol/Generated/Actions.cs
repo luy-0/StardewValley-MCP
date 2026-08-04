@@ -109,34 +109,43 @@ namespace StardewValleyMcp.Protocol.V1 {
             "dGluZ091dHB1dEZhY3QSTgoSbWF0ZXJpYWxzX2NvbnN1bWVkGAUgAygLMjIu",
             "c3RhcmRld192YWxsZXkubWNwLnYxLkNyYWZ0aW5nTWF0ZXJpYWxDb25zdW1w",
             "dGlvbhIhChlwbGF5ZXJfaW52ZW50b3J5X3JldmlzaW9uGAYgASgJEhMKC3Vp",
-            "X3JldmlzaW9uGAcgASgJIkAKD09wZW5NZW51UmVxdWVzdBItCgRtZW51GAEg",
-            "ASgOMh8uc3RhcmRld192YWxsZXkubWNwLnYxLk1lbnVLaW5kIksKDk9wZW5N",
-            "ZW51UmVzdWx0EjkKCnRyYW5zaXRpb24YASABKAsyJS5zdGFyZGV3X3ZhbGxl",
-            "eS5tY3AudjEuTWVudVRyYW5zaXRpb24iWQoRQWN0aXZhdGVVaVJlcXVlc3QS",
-            "LwoLZWxlbWVudF9yZWYYASABKAsyGi5zdGFyZGV3X3ZhbGxleS5tY3AudjEu",
-            "UmVmEhMKC3VpX3JldmlzaW9uGAIgASgJIoQBChBBY3RpdmF0ZVVpUmVzdWx0",
-            "Ei8KC2VsZW1lbnRfcmVmGAEgASgLMhouc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LlJlZhI5Cgp0cmFuc2l0aW9uGAIgASgLMiUuc3RhcmRld192YWxsZXkubWNw",
-            "LnYxLk1lbnVUcmFuc2l0aW9uSgQIAxAEIhIKEENsb3NlTWVudVJlcXVlc3Qi",
-            "ZAoPQ2xvc2VNZW51UmVzdWx0EjkKCnRyYW5zaXRpb24YASABKAsyJS5zdGFy",
-            "ZGV3X3ZhbGxleS5tY3AudjEuTWVudVRyYW5zaXRpb24SFgoOYWxyZWFkeV9j",
-            "bG9zZWQYAiABKAgq3gEKCUVtb3RlS2luZBIaChZFTU9URV9LSU5EX1VOU1BF",
-            "Q0lGSUVEEAASFAoQRU1PVEVfS0lORF9IQVBQWRABEhIKDkVNT1RFX0tJTkRf",
-            "U0FEEAISFAoQRU1PVEVfS0lORF9IRUFSVBADEhoKFkVNT1RFX0tJTkRfRVhD",
-            "TEFNQVRJT04QBBIXChNFTU9URV9LSU5EX1FVRVNUSU9OEAUSFAoQRU1PVEVf",
-            "S0lORF9BTkdSWRAGEhQKEEVNT1RFX0tJTkRfU0xFRVAQBxIUChBFTU9URV9L",
-            "SU5EX01VU0lDEAgqXgoLQXJyaXZhbE1vZGUSHAoYQVJSSVZBTF9NT0RFX1VO",
-            "U1BFQ0lGSUVEEAASFgoSQVJSSVZBTF9NT0RFX0VYQUNUEAESGQoVQVJSSVZB",
-            "TF9NT0RFX0FESkFDRU5UEAIqtgEKGkludmVudG9yeVRyYW5zZmVyRGlyZWN0",
-            "aW9uEiwKKElOVkVOVE9SWV9UUkFOU0ZFUl9ESVJFQ1RJT05fVU5TUEVDSUZJ",
-            "RUQQABI0CjBJTlZFTlRPUllfVFJBTlNGRVJfRElSRUNUSU9OX1BMQVlFUl9U",
-            "T19DT05UQUlORVIQARI0CjBJTlZFTlRPUllfVFJBTlNGRVJfRElSRUNUSU9O",
-            "X0NPTlRBSU5FUl9UT19QTEFZRVIQAirBAQoTQ3JhZnRJdGVtU3RvcFJlYXNv",
-            "bhImCiJDUkFGVF9JVEVNX1NUT1BfUkVBU09OX1VOU1BFQ0lGSUVEEAASJAog",
-            "Q1JBRlRfSVRFTV9TVE9QX1JFQVNPTl9DT01QTEVURUQQARIxCi1DUkFGVF9J",
-            "VEVNX1NUT1BfUkVBU09OX01BVEVSSUFMU19JTlNVRkZJQ0lFTlQQAhIpCiVD",
-            "UkFGVF9JVEVNX1NUT1BfUkVBU09OX0lOVkVOVE9SWV9GVUxMEANCH6oCHFN0",
-            "YXJkZXdWYWxsZXlNY3AuUHJvdG9jb2wuVjFiBnByb3RvMw=="));
+            "X3JldmlzaW9uGAcgASgJInQKF1B1cmNoYXNlU2hvcEl0ZW1SZXF1ZXN0EiwK",
+            "CHNhbGVfcmVmGAEgASgLMhouc3RhcmRld192YWxsZXkubWNwLnYxLlJlZhIW",
+            "Cg5wdXJjaGFzZV9jb3VudBgCIAEoDRITCgt1aV9yZXZpc2lvbhgDIAEoCSKJ",
+            "AgoWUHVyY2hhc2VTaG9wSXRlbVJlc3VsdBIWCg5wdXJjaGFzZV9jb3VudBgB",
+            "IAEoDRItCgRpdGVtGAIgASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkl0",
+            "ZW1GYWN0EhMKC3RvdGFsX3ByaWNlGAMgASgNEhQKDG1vbmV5X2JlZm9yZRgE",
+            "IAEoDRITCgttb25leV9hZnRlchgFIAEoDRIcCg9zdG9ja19yZW1haW5pbmcY",
+            "BiABKA1IAIgBARIhChlwbGF5ZXJfaW52ZW50b3J5X3JldmlzaW9uGAcgASgJ",
+            "EhMKC3VpX3JldmlzaW9uGAggASgJQhIKEF9zdG9ja19yZW1haW5pbmciQAoP",
+            "T3Blbk1lbnVSZXF1ZXN0Ei0KBG1lbnUYASABKA4yHy5zdGFyZGV3X3ZhbGxl",
+            "eS5tY3AudjEuTWVudUtpbmQiSwoOT3Blbk1lbnVSZXN1bHQSOQoKdHJhbnNp",
+            "dGlvbhgBIAEoCzIlLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5NZW51VHJhbnNp",
+            "dGlvbiJZChFBY3RpdmF0ZVVpUmVxdWVzdBIvCgtlbGVtZW50X3JlZhgBIAEo",
+            "CzIaLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWYSEwoLdWlfcmV2aXNpb24Y",
+            "AiABKAkihAEKEEFjdGl2YXRlVWlSZXN1bHQSLwoLZWxlbWVudF9yZWYYASAB",
+            "KAsyGi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUmVmEjkKCnRyYW5zaXRpb24Y",
+            "AiABKAsyJS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuTWVudVRyYW5zaXRpb25K",
+            "BAgDEAQiEgoQQ2xvc2VNZW51UmVxdWVzdCJkCg9DbG9zZU1lbnVSZXN1bHQS",
+            "OQoKdHJhbnNpdGlvbhgBIAEoCzIlLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5N",
+            "ZW51VHJhbnNpdGlvbhIWCg5hbHJlYWR5X2Nsb3NlZBgCIAEoCCreAQoJRW1v",
+            "dGVLaW5kEhoKFkVNT1RFX0tJTkRfVU5TUEVDSUZJRUQQABIUChBFTU9URV9L",
+            "SU5EX0hBUFBZEAESEgoORU1PVEVfS0lORF9TQUQQAhIUChBFTU9URV9LSU5E",
+            "X0hFQVJUEAMSGgoWRU1PVEVfS0lORF9FWENMQU1BVElPThAEEhcKE0VNT1RF",
+            "X0tJTkRfUVVFU1RJT04QBRIUChBFTU9URV9LSU5EX0FOR1JZEAYSFAoQRU1P",
+            "VEVfS0lORF9TTEVFUBAHEhQKEEVNT1RFX0tJTkRfTVVTSUMQCCpeCgtBcnJp",
+            "dmFsTW9kZRIcChhBUlJJVkFMX01PREVfVU5TUEVDSUZJRUQQABIWChJBUlJJ",
+            "VkFMX01PREVfRVhBQ1QQARIZChVBUlJJVkFMX01PREVfQURKQUNFTlQQAiq2",
+            "AQoaSW52ZW50b3J5VHJhbnNmZXJEaXJlY3Rpb24SLAooSU5WRU5UT1JZX1RS",
+            "QU5TRkVSX0RJUkVDVElPTl9VTlNQRUNJRklFRBAAEjQKMElOVkVOVE9SWV9U",
+            "UkFOU0ZFUl9ESVJFQ1RJT05fUExBWUVSX1RPX0NPTlRBSU5FUhABEjQKMElO",
+            "VkVOVE9SWV9UUkFOU0ZFUl9ESVJFQ1RJT05fQ09OVEFJTkVSX1RPX1BMQVlF",
+            "UhACKsEBChNDcmFmdEl0ZW1TdG9wUmVhc29uEiYKIkNSQUZUX0lURU1fU1RP",
+            "UF9SRUFTT05fVU5TUEVDSUZJRUQQABIkCiBDUkFGVF9JVEVNX1NUT1BfUkVB",
+            "U09OX0NPTVBMRVRFRBABEjEKLUNSQUZUX0lURU1fU1RPUF9SRUFTT05fTUFU",
+            "RVJJQUxTX0lOU1VGRklDSUVOVBACEikKJUNSQUZUX0lURU1fU1RPUF9SRUFT",
+            "T05fSU5WRU5UT1JZX0ZVTEwQA0IfqgIcU3RhcmRld1ZhbGxleU1jcC5Qcm90",
+            "b2NvbC5WMWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::StardewValleyMcp.Protocol.V1.CommonReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.RefsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.EmoteKind), typeof(global::StardewValleyMcp.Protocol.V1.ArrivalMode), typeof(global::StardewValleyMcp.Protocol.V1.InventoryTransferDirection), typeof(global::StardewValleyMcp.Protocol.V1.CraftItemStopReason), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -163,6 +172,8 @@ namespace StardewValleyMcp.Protocol.V1 {
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CraftingMaterialConsumption), global::StardewValleyMcp.Protocol.V1.CraftingMaterialConsumption.Parser, new[]{ "IngredientKey", "Quantity" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CraftItemRequest), global::StardewValleyMcp.Protocol.V1.CraftItemRequest.Parser, new[]{ "RecipeRef", "CraftCount", "UiRevision" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CraftItemResult), global::StardewValleyMcp.Protocol.V1.CraftItemResult.Parser, new[]{ "RequestedCraftCount", "CompletedCraftCount", "StopReason", "Outputs", "MaterialsConsumed", "PlayerInventoryRevision", "UiRevision" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.PurchaseShopItemRequest), global::StardewValleyMcp.Protocol.V1.PurchaseShopItemRequest.Parser, new[]{ "SaleRef", "PurchaseCount", "UiRevision" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.PurchaseShopItemResult), global::StardewValleyMcp.Protocol.V1.PurchaseShopItemResult.Parser, new[]{ "PurchaseCount", "Item", "TotalPrice", "MoneyBefore", "MoneyAfter", "StockRemaining", "PlayerInventoryRevision", "UiRevision" }, new[]{ "StockRemaining" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.OpenMenuRequest), global::StardewValleyMcp.Protocol.V1.OpenMenuRequest.Parser, new[]{ "Menu" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.OpenMenuResult), global::StardewValleyMcp.Protocol.V1.OpenMenuResult.Parser, new[]{ "Transition" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.ActivateUiRequest), global::StardewValleyMcp.Protocol.V1.ActivateUiRequest.Parser, new[]{ "ElementRef", "UiRevision" }, null, null, null, null),
@@ -7280,6 +7291,779 @@ namespace StardewValleyMcp.Protocol.V1 {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class PurchaseShopItemRequest : pb::IMessage<PurchaseShopItemRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<PurchaseShopItemRequest> _parser = new pb::MessageParser<PurchaseShopItemRequest>(() => new PurchaseShopItemRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<PurchaseShopItemRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[23]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public PurchaseShopItemRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public PurchaseShopItemRequest(PurchaseShopItemRequest other) : this() {
+      saleRef_ = other.saleRef_ != null ? other.saleRef_.Clone() : null;
+      purchaseCount_ = other.purchaseCount_;
+      uiRevision_ = other.uiRevision_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public PurchaseShopItemRequest Clone() {
+      return new PurchaseShopItemRequest(this);
+    }
+
+    /// <summary>Field number for the "sale_ref" field.</summary>
+    public const int SaleRefFieldNumber = 1;
+    private global::StardewValleyMcp.Protocol.V1.Ref saleRef_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.Ref SaleRef {
+      get { return saleRef_; }
+      set {
+        saleRef_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "purchase_count" field.</summary>
+    public const int PurchaseCountFieldNumber = 2;
+    private uint purchaseCount_;
+    /// <summary>
+    /// 购买轮数；一轮可能包含多件同类物品。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint PurchaseCount {
+      get { return purchaseCount_; }
+      set {
+        purchaseCount_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "ui_revision" field.</summary>
+    public const int UiRevisionFieldNumber = 3;
+    private string uiRevision_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string UiRevision {
+      get { return uiRevision_; }
+      set {
+        uiRevision_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as PurchaseShopItemRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(PurchaseShopItemRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(SaleRef, other.SaleRef)) return false;
+      if (PurchaseCount != other.PurchaseCount) return false;
+      if (UiRevision != other.UiRevision) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (saleRef_ != null) hash ^= SaleRef.GetHashCode();
+      if (PurchaseCount != 0) hash ^= PurchaseCount.GetHashCode();
+      if (UiRevision.Length != 0) hash ^= UiRevision.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (saleRef_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(SaleRef);
+      }
+      if (PurchaseCount != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(PurchaseCount);
+      }
+      if (UiRevision.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(UiRevision);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (saleRef_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(SaleRef);
+      }
+      if (PurchaseCount != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(PurchaseCount);
+      }
+      if (UiRevision.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(UiRevision);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (saleRef_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(SaleRef);
+      }
+      if (PurchaseCount != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(PurchaseCount);
+      }
+      if (UiRevision.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(UiRevision);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(PurchaseShopItemRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.saleRef_ != null) {
+        if (saleRef_ == null) {
+          SaleRef = new global::StardewValleyMcp.Protocol.V1.Ref();
+        }
+        SaleRef.MergeFrom(other.SaleRef);
+      }
+      if (other.PurchaseCount != 0) {
+        PurchaseCount = other.PurchaseCount;
+      }
+      if (other.UiRevision.Length != 0) {
+        UiRevision = other.UiRevision;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (saleRef_ == null) {
+              SaleRef = new global::StardewValleyMcp.Protocol.V1.Ref();
+            }
+            input.ReadMessage(SaleRef);
+            break;
+          }
+          case 16: {
+            PurchaseCount = input.ReadUInt32();
+            break;
+          }
+          case 26: {
+            UiRevision = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            if (saleRef_ == null) {
+              SaleRef = new global::StardewValleyMcp.Protocol.V1.Ref();
+            }
+            input.ReadMessage(SaleRef);
+            break;
+          }
+          case 16: {
+            PurchaseCount = input.ReadUInt32();
+            break;
+          }
+          case 26: {
+            UiRevision = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class PurchaseShopItemResult : pb::IMessage<PurchaseShopItemResult>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<PurchaseShopItemResult> _parser = new pb::MessageParser<PurchaseShopItemResult>(() => new PurchaseShopItemResult());
+    private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<PurchaseShopItemResult> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[24]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public PurchaseShopItemResult() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public PurchaseShopItemResult(PurchaseShopItemResult other) : this() {
+      _hasBits0 = other._hasBits0;
+      purchaseCount_ = other.purchaseCount_;
+      item_ = other.item_ != null ? other.item_.Clone() : null;
+      totalPrice_ = other.totalPrice_;
+      moneyBefore_ = other.moneyBefore_;
+      moneyAfter_ = other.moneyAfter_;
+      stockRemaining_ = other.stockRemaining_;
+      playerInventoryRevision_ = other.playerInventoryRevision_;
+      uiRevision_ = other.uiRevision_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public PurchaseShopItemResult Clone() {
+      return new PurchaseShopItemResult(this);
+    }
+
+    /// <summary>Field number for the "purchase_count" field.</summary>
+    public const int PurchaseCountFieldNumber = 1;
+    private uint purchaseCount_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint PurchaseCount {
+      get { return purchaseCount_; }
+      set {
+        purchaseCount_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "item" field.</summary>
+    public const int ItemFieldNumber = 2;
+    private global::StardewValleyMcp.Protocol.V1.ItemFact item_;
+    /// <summary>
+    /// 实际收入背包的物品，不签发新的物品 Ref。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.ItemFact Item {
+      get { return item_; }
+      set {
+        item_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "total_price" field.</summary>
+    public const int TotalPriceFieldNumber = 3;
+    private uint totalPrice_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint TotalPrice {
+      get { return totalPrice_; }
+      set {
+        totalPrice_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "money_before" field.</summary>
+    public const int MoneyBeforeFieldNumber = 4;
+    private uint moneyBefore_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint MoneyBefore {
+      get { return moneyBefore_; }
+      set {
+        moneyBefore_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "money_after" field.</summary>
+    public const int MoneyAfterFieldNumber = 5;
+    private uint moneyAfter_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint MoneyAfter {
+      get { return moneyAfter_; }
+      set {
+        moneyAfter_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "stock_remaining" field.</summary>
+    public const int StockRemainingFieldNumber = 6;
+    private readonly static uint StockRemainingDefaultValue = 0;
+
+    private uint stockRemaining_;
+    /// <summary>
+    /// 无限库存商品缺省。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint StockRemaining {
+      get { if ((_hasBits0 & 1) != 0) { return stockRemaining_; } else { return StockRemainingDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        stockRemaining_ = value;
+      }
+    }
+    /// <summary>Gets whether the "stock_remaining" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasStockRemaining {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "stock_remaining" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearStockRemaining() {
+      _hasBits0 &= ~1;
+    }
+
+    /// <summary>Field number for the "player_inventory_revision" field.</summary>
+    public const int PlayerInventoryRevisionFieldNumber = 7;
+    private string playerInventoryRevision_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string PlayerInventoryRevision {
+      get { return playerInventoryRevision_; }
+      set {
+        playerInventoryRevision_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "ui_revision" field.</summary>
+    public const int UiRevisionFieldNumber = 8;
+    private string uiRevision_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string UiRevision {
+      get { return uiRevision_; }
+      set {
+        uiRevision_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as PurchaseShopItemResult);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(PurchaseShopItemResult other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (PurchaseCount != other.PurchaseCount) return false;
+      if (!object.Equals(Item, other.Item)) return false;
+      if (TotalPrice != other.TotalPrice) return false;
+      if (MoneyBefore != other.MoneyBefore) return false;
+      if (MoneyAfter != other.MoneyAfter) return false;
+      if (StockRemaining != other.StockRemaining) return false;
+      if (PlayerInventoryRevision != other.PlayerInventoryRevision) return false;
+      if (UiRevision != other.UiRevision) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (PurchaseCount != 0) hash ^= PurchaseCount.GetHashCode();
+      if (item_ != null) hash ^= Item.GetHashCode();
+      if (TotalPrice != 0) hash ^= TotalPrice.GetHashCode();
+      if (MoneyBefore != 0) hash ^= MoneyBefore.GetHashCode();
+      if (MoneyAfter != 0) hash ^= MoneyAfter.GetHashCode();
+      if (HasStockRemaining) hash ^= StockRemaining.GetHashCode();
+      if (PlayerInventoryRevision.Length != 0) hash ^= PlayerInventoryRevision.GetHashCode();
+      if (UiRevision.Length != 0) hash ^= UiRevision.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (PurchaseCount != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(PurchaseCount);
+      }
+      if (item_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Item);
+      }
+      if (TotalPrice != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(TotalPrice);
+      }
+      if (MoneyBefore != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(MoneyBefore);
+      }
+      if (MoneyAfter != 0) {
+        output.WriteRawTag(40);
+        output.WriteUInt32(MoneyAfter);
+      }
+      if (HasStockRemaining) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(StockRemaining);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(PlayerInventoryRevision);
+      }
+      if (UiRevision.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(UiRevision);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (PurchaseCount != 0) {
+        output.WriteRawTag(8);
+        output.WriteUInt32(PurchaseCount);
+      }
+      if (item_ != null) {
+        output.WriteRawTag(18);
+        output.WriteMessage(Item);
+      }
+      if (TotalPrice != 0) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(TotalPrice);
+      }
+      if (MoneyBefore != 0) {
+        output.WriteRawTag(32);
+        output.WriteUInt32(MoneyBefore);
+      }
+      if (MoneyAfter != 0) {
+        output.WriteRawTag(40);
+        output.WriteUInt32(MoneyAfter);
+      }
+      if (HasStockRemaining) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(StockRemaining);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        output.WriteRawTag(58);
+        output.WriteString(PlayerInventoryRevision);
+      }
+      if (UiRevision.Length != 0) {
+        output.WriteRawTag(66);
+        output.WriteString(UiRevision);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (PurchaseCount != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(PurchaseCount);
+      }
+      if (item_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Item);
+      }
+      if (TotalPrice != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(TotalPrice);
+      }
+      if (MoneyBefore != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(MoneyBefore);
+      }
+      if (MoneyAfter != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(MoneyAfter);
+      }
+      if (HasStockRemaining) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(StockRemaining);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PlayerInventoryRevision);
+      }
+      if (UiRevision.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(UiRevision);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(PurchaseShopItemResult other) {
+      if (other == null) {
+        return;
+      }
+      if (other.PurchaseCount != 0) {
+        PurchaseCount = other.PurchaseCount;
+      }
+      if (other.item_ != null) {
+        if (item_ == null) {
+          Item = new global::StardewValleyMcp.Protocol.V1.ItemFact();
+        }
+        Item.MergeFrom(other.Item);
+      }
+      if (other.TotalPrice != 0) {
+        TotalPrice = other.TotalPrice;
+      }
+      if (other.MoneyBefore != 0) {
+        MoneyBefore = other.MoneyBefore;
+      }
+      if (other.MoneyAfter != 0) {
+        MoneyAfter = other.MoneyAfter;
+      }
+      if (other.HasStockRemaining) {
+        StockRemaining = other.StockRemaining;
+      }
+      if (other.PlayerInventoryRevision.Length != 0) {
+        PlayerInventoryRevision = other.PlayerInventoryRevision;
+      }
+      if (other.UiRevision.Length != 0) {
+        UiRevision = other.UiRevision;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            PurchaseCount = input.ReadUInt32();
+            break;
+          }
+          case 18: {
+            if (item_ == null) {
+              Item = new global::StardewValleyMcp.Protocol.V1.ItemFact();
+            }
+            input.ReadMessage(Item);
+            break;
+          }
+          case 24: {
+            TotalPrice = input.ReadUInt32();
+            break;
+          }
+          case 32: {
+            MoneyBefore = input.ReadUInt32();
+            break;
+          }
+          case 40: {
+            MoneyAfter = input.ReadUInt32();
+            break;
+          }
+          case 48: {
+            StockRemaining = input.ReadUInt32();
+            break;
+          }
+          case 58: {
+            PlayerInventoryRevision = input.ReadString();
+            break;
+          }
+          case 66: {
+            UiRevision = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            PurchaseCount = input.ReadUInt32();
+            break;
+          }
+          case 18: {
+            if (item_ == null) {
+              Item = new global::StardewValleyMcp.Protocol.V1.ItemFact();
+            }
+            input.ReadMessage(Item);
+            break;
+          }
+          case 24: {
+            TotalPrice = input.ReadUInt32();
+            break;
+          }
+          case 32: {
+            MoneyBefore = input.ReadUInt32();
+            break;
+          }
+          case 40: {
+            MoneyAfter = input.ReadUInt32();
+            break;
+          }
+          case 48: {
+            StockRemaining = input.ReadUInt32();
+            break;
+          }
+          case 58: {
+            PlayerInventoryRevision = input.ReadString();
+            break;
+          }
+          case 66: {
+            UiRevision = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class OpenMenuRequest : pb::IMessage<OpenMenuRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -7294,7 +8078,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[23]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[25]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7492,7 +8276,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[24]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[26]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7699,7 +8483,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[25]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[27]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7946,7 +8730,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[26]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[28]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8199,7 +8983,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[27]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[29]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8360,7 +9144,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[28]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[30]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

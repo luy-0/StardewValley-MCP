@@ -170,6 +170,20 @@ capabilities:
     required_scope: game:write
     risk: [changes_save, consumes_item]
     destructive: true
+  - id: purchase_shop_item
+    title: 购买商店物品
+    description: 使用当前商店签发的商品 Ref 完成一次有界金币购买批次。
+    contract_version: 1.0.0
+    request: PurchaseShopItemRequest
+    result: PurchaseShopItemResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: [changes_save, spends_money]
+    destructive: true
   - id: activate_ui
     title: 激活界面元素
     description: 在匹配的 UI Revision 上激活 query_ui 返回的可交互元素。

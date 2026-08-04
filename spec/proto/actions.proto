@@ -205,6 +205,26 @@ message CraftItemResult {
   string ui_revision = 7;
 }
 
+message PurchaseShopItemRequest {
+  Ref sale_ref = 1;
+  // 购买轮数；一轮可能包含多件同类物品。
+  uint32 purchase_count = 2;
+  string ui_revision = 3;
+}
+
+message PurchaseShopItemResult {
+  uint32 purchase_count = 1;
+  // 实际收入背包的物品，不签发新的物品 Ref。
+  ItemFact item = 2;
+  uint32 total_price = 3;
+  uint32 money_before = 4;
+  uint32 money_after = 5;
+  // 无限库存商品缺省。
+  optional uint32 stock_remaining = 6;
+  string player_inventory_revision = 7;
+  string ui_revision = 8;
+}
+
 message OpenMenuRequest {
   MenuKind menu = 1;
 }

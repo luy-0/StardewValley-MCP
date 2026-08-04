@@ -172,6 +172,21 @@ internal static class CapabilityCatalogData
                 Destructive = false,
                 Risks = { },
             },
+            ["purchase_shop_item"] = new CapabilityDescriptor
+            {
+                Id = "purchase_shop_item",
+                ContractVersion = "1.0.0",
+                SideEffect = SideEffect.Mutating,
+                Execution = ExecutionMode.LongRunning,
+                Cancellable = true,
+                DefaultTimeoutMs = 10000,
+                MaxTimeoutMs = 30000,
+                RequestType = nameof(PurchaseShopItemRequest),
+                ResultType = nameof(PurchaseShopItemResult),
+                RequiredScope = "game:write",
+                Destructive = true,
+                Risks = { "changes_save", "spends_money" },
+            },
             ["query_inventory"] = new CapabilityDescriptor
             {
                 Id = "query_inventory",

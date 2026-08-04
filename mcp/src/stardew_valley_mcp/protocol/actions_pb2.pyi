@@ -308,6 +308,36 @@ class CraftItemResult(_message.Message):
     ui_revision: str
     def __init__(self, requested_craft_count: _Optional[int] = ..., completed_craft_count: _Optional[int] = ..., stop_reason: _Optional[_Union[CraftItemStopReason, str]] = ..., outputs: _Optional[_Iterable[_Union[_facts_pb2.CraftingOutputFact, _Mapping]]] = ..., materials_consumed: _Optional[_Iterable[_Union[CraftingMaterialConsumption, _Mapping]]] = ..., player_inventory_revision: _Optional[str] = ..., ui_revision: _Optional[str] = ...) -> None: ...
 
+class PurchaseShopItemRequest(_message.Message):
+    __slots__ = ("sale_ref", "purchase_count", "ui_revision")
+    SALE_REF_FIELD_NUMBER: _ClassVar[int]
+    PURCHASE_COUNT_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    sale_ref: _refs_pb2.Ref
+    purchase_count: int
+    ui_revision: str
+    def __init__(self, sale_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., purchase_count: _Optional[int] = ..., ui_revision: _Optional[str] = ...) -> None: ...
+
+class PurchaseShopItemResult(_message.Message):
+    __slots__ = ("purchase_count", "item", "total_price", "money_before", "money_after", "stock_remaining", "player_inventory_revision", "ui_revision")
+    PURCHASE_COUNT_FIELD_NUMBER: _ClassVar[int]
+    ITEM_FIELD_NUMBER: _ClassVar[int]
+    TOTAL_PRICE_FIELD_NUMBER: _ClassVar[int]
+    MONEY_BEFORE_FIELD_NUMBER: _ClassVar[int]
+    MONEY_AFTER_FIELD_NUMBER: _ClassVar[int]
+    STOCK_REMAINING_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    purchase_count: int
+    item: _facts_pb2.ItemFact
+    total_price: int
+    money_before: int
+    money_after: int
+    stock_remaining: int
+    player_inventory_revision: str
+    ui_revision: str
+    def __init__(self, purchase_count: _Optional[int] = ..., item: _Optional[_Union[_facts_pb2.ItemFact, _Mapping]] = ..., total_price: _Optional[int] = ..., money_before: _Optional[int] = ..., money_after: _Optional[int] = ..., stock_remaining: _Optional[int] = ..., player_inventory_revision: _Optional[str] = ..., ui_revision: _Optional[str] = ...) -> None: ...
+
 class OpenMenuRequest(_message.Message):
     __slots__ = ("menu",)
     MENU_FIELD_NUMBER: _ClassVar[int]

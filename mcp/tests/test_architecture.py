@@ -99,7 +99,7 @@ def test_query_ui_runtime_has_no_generic_clickable_mutation_or_callback_invocati
     assert "ClassifyExact" in source
     assert source.count("getCurrentString(") == 1
     assert "GetType().Assembly" not in source
-    assert "IsExactActivationKnownType" in source
+    assert "ShopEnabled" not in source
 
 
 def test_inventory_page_projection_is_isolated_fail_closed_and_read_only() -> None:
@@ -164,6 +164,64 @@ def test_item_grab_projection_is_isolated_read_only_and_not_activatable() -> Non
     assert not [token for token in forbidden if token in item_grab]
     activate = actions.split("public MenuActionAttempt Activate", 1)[1]
     assert "UiExtractorKind.ItemGrabSlot" not in activate
+
+
+def test_shop_rows_are_query_only_and_not_generic_activate_targets() -> None:
+    runtime = (MOD / "Projection" / "UiRuntimeProjector.cs").read_text()
+    actions = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
+
+    shop = runtime.split(
+        "private static UiElementSetCompleteness ExtractShop", 1
+    )[1].split("internal static int TabIndex", 1)[0]
+    activate = actions.split("public MenuActionAttempt Activate", 1)[1]
+
+    for required in (
+        "UiExtractorKind.ShopSaleRow",
+        "ItemFactProjector.Project(item)",
+        "stockInfo.Price",
+        "checked((uint)stockInfo.Stock)",
+        '"shop-sale-row:{absoluteIndex}"',
+    ):
+        assert required in shop
+    assert re.search(r"label,\s+visible,\s+false,\s+center\.X", shop)
+    assert "UiExtractorKind.ShopSaleRow" not in activate
+    assert "typeof(ShopMenu)" not in activate
+    assert "menu.receiveLeftClick(center.X, center.Y)" in activate
+
+
+def test_purchase_shop_item_is_isolated_ref_driven_and_uses_no_coordinate_click() -> None:
+    composition = (MOD / "Bootstrap" / "DefaultCapabilitySet.cs").read_text()
+    handler = (MOD / "Capabilities" / "Actions" / "PurchaseShopItemHandler.cs").read_text()
+    adapter = (MOD / "Capabilities" / "Actions" / "ShopPurchaseRuntimeAdapter.cs").read_text()
+    transport = (PACKAGE / "transport.py").read_text()
+    server = (PACKAGE / "server.py").read_text()
+    projection = (PACKAGE / "projection.py").read_text()
+
+    assert "new PurchaseShopItemHandler(refs)" in composition
+    for source in (transport, server, projection):
+        assert "purchase_shop_item" not in source
+    for required in (
+        "CanCancel => !_committing",
+        "UiExtractorKind.ShopSaleRow",
+        'candidate.Name == "tryToPurchaseItem"',
+        "typeof(ISalable), typeof(ISalable), typeof(int), typeof(int), typeof(int)",
+        "state.Player.GetItemReceiveBehavior(",
+        "if (!needsInventorySpace)",
+        "output.CanBuyItem(state.Player)",
+        "state.Player.addItemToInventory(purchased)",
+        "state.Menu.heldItem = remainder",
+        "InventoryProjector.Project(",
+    ):
+        assert required in handler + adapter
+    for forbidden in (
+        "receiveLeftClick",
+        "receiveRightClick",
+        "createItemDebris",
+        "Game1.oldKBState",
+        "LeftShift",
+        "LeftControl",
+    ):
+        assert forbidden not in handler + adapter
 
 
 def test_inventory_transfer_is_an_isolated_revision_guarded_transaction() -> None:
@@ -400,6 +458,7 @@ def test_default_capability_set_is_the_unique_concrete_handler_composition_root(
         "SetEquipmentSlotHandler",
         "MoveInventoryItemHandler",
         "CraftItemHandler",
+        "PurchaseShopItemHandler",
         "OpenMenuHandler",
         "ActivateUiHandler",
         "CloseMenuHandler",

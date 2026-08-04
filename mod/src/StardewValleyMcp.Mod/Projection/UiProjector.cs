@@ -362,20 +362,6 @@ internal static class UiProjectionPolicy
         return selected;
     }
 
-    public static bool ShopEnabled(ShopActivationFacts facts) =>
-        facts.Visible
-        && facts.SafetyReady
-        && !facts.HasHeldItem
-        && !facts.ReadOnly
-        && (facts.UnlimitedStock || facts.Stock > 0)
-        && facts.CurrencyAmount >= facts.Price
-        && facts.HasRequiredTradeItem
-        && !facts.HasCanPurchaseCheck
-        && facts.VanillaSafeSalable;
-
-    public static bool IsExactActivationKnownType(Type runtimeType, Type knownType) =>
-        runtimeType == knownType;
-
     public static bool CanActivateGameMenuElement(
         UiExtractorKind extractor,
         UiElementKind resolvedKind,
@@ -417,17 +403,3 @@ internal static class UiProjectionPolicy
 }
 
 internal readonly record struct UiBounds(int X, int Y, int Width, int Height);
-
-internal readonly record struct ShopActivationFacts(
-    bool Visible,
-    bool SafetyReady,
-    bool HasHeldItem,
-    bool ReadOnly,
-    bool UnlimitedStock,
-    int Stock,
-    long Price,
-    long CurrencyAmount,
-    bool HasRequiredTradeItem,
-    bool HasCanPurchaseCheck,
-    bool VanillaSafeSalable
-);

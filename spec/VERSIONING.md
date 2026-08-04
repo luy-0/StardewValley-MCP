@@ -35,6 +35,8 @@
 - `set_equipment_slot` 及其 Request/Result 是新增的独立能力分支，属于 V1 Minor 兼容增补。调用方必须使用当前原版背包页面签发的 Equipment Slot Ref、UI Revision 和玩家 Inventory Revision；穿戴时还必须使用当前玩家背包 Item Ref。
 - `move_inventory_item` 及其 Request/Result 是新增的独立能力分支，属于 V1 Minor 兼容增补。调用方必须使用当前原版背包页面签发的玩家 Item Ref、目标 Item Slot Ref、UI Revision 和玩家 Inventory Revision；能力只执行整件移动、整件交换或同槽幂等成功。
 - `craft_item`、`CraftItemStopReason` 及其 Request/Result 是新增的独立能力分支，属于 V1 Minor 兼容增补。调用方必须使用当前 Crafting 页签发的 Recipe Ref 与 UI Revision；批量请求可以在至少完成一轮后以结构化停止原因返回部分成功。
+- `purchase_shop_item` 及其 Request/Result 是新增的独立能力分支，属于 V1 Minor 兼容增补。调用方必须使用当前精确原版商店视口签发的 Sale Ref 与 UI Revision；首版只支持全有或全无的普通金币实物购买。
+- 首个稳定公开版本发布前，Shop 商品行从通用 `activate_ui` 坐标激活中移除并固定为 `enabled=false`，作为 V1 候选契约的发布前纠错；商品行 Ref 继续存在，只能交给 `purchase_shop_item`。稳定版本发布后若再次收窄既有能力输入集合，必须按 Major 变更处理。
 - `UI_ELEMENT_KIND_EQUIPMENT_SLOT`、`UiEquipmentSlotKind` 与 `UiElementFact.equipment_slot_kind` 是 Inventory 页只读投影的 V1 Minor 兼容增补。旧调用方可以忽略新增元素；装备槽始终 `enabled=false`，装备物品不携带 `INVENTORY_ITEM` Ref，也不得据此推断已经提供穿戴或取下动作。
 - `UI_ELEMENT_KIND_CRAFTING_RECIPE`、`CraftingRecipeFact`、材料／产出事实与 `UiElementFact.crafting_recipe` 是 Crafting 页只读投影的 V1 Minor 兼容增补。旧调用方可忽略新增元素；配方元素始终 `enabled=false`，`craftable` 仅表示材料足够，不表示已经提供制作动作。
 
