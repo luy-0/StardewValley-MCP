@@ -7685,7 +7685,8 @@
                   "tab",
                   "option",
                   "item_slot",
-                  "dialogue_response"
+                  "dialogue_response",
+                  "dialogue_advance"
                 ],
                 "type": "string"
               },
@@ -15744,7 +15745,8 @@
                   "tab",
                   "option",
                   "item_slot",
-                  "dialogue_response"
+                  "dialogue_response",
+                  "dialogue_advance"
                 ],
                 "type": "string"
               },

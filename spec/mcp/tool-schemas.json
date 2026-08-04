@@ -257,6 +257,7 @@
     "stardew_valley.mcp.v1.UiElementKind": {
       "jsonToProto": {
         "button": "UI_ELEMENT_KIND_BUTTON",
+        "dialogue_advance": "UI_ELEMENT_KIND_DIALOGUE_ADVANCE",
         "dialogue_response": "UI_ELEMENT_KIND_DIALOGUE_RESPONSE",
         "item_slot": "UI_ELEMENT_KIND_ITEM_SLOT",
         "option": "UI_ELEMENT_KIND_OPTION",
@@ -265,6 +266,7 @@
       },
       "protoToJson": {
         "UI_ELEMENT_KIND_BUTTON": "button",
+        "UI_ELEMENT_KIND_DIALOGUE_ADVANCE": "dialogue_advance",
         "UI_ELEMENT_KIND_DIALOGUE_RESPONSE": "dialogue_response",
         "UI_ELEMENT_KIND_ITEM_SLOT": "item_slot",
         "UI_ELEMENT_KIND_OPTION": "option",
@@ -17412,7 +17414,8 @@
                   "tab",
                   "option",
                   "item_slot",
-                  "dialogue_response"
+                  "dialogue_response",
+                  "dialogue_advance"
                 ],
                 "type": "string"
               },
@@ -19915,7 +19918,8 @@
                   "tab",
                   "option",
                   "item_slot",
-                  "dialogue_response"
+                  "dialogue_response",
+                  "dialogue_advance"
                 ],
                 "type": "string"
               },

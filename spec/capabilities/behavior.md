@@ -139,6 +139,7 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 
 - `element_ref` 必须来自当前 `query_ui`，`ui_revision` 必须完全匹配。
 - 元素必须 `visible=true` 且 `enabled=true`。一次调用只执行一次 Primary Activation，不提供 Click Count。
+- `DIALOGUE_ADVANCE` 是精确原版普通对话的语义推进元素；它没有屏幕几何目标，`center=(0,0)` 只是线路必填的非屏幕占位值。激活必须忽略 Center 并调用游戏原生对话推进流程，不能把它解释为坐标点击或 `close_menu`。
 - 成功要求游戏接受激活，并观察到新的 UI Revision 或与该元素对应的游戏事实变化；否则返回 `EXECUTION_FAILED`。
 
 ### `close_menu`
@@ -181,7 +182,9 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 
 ### `query_ui`
 
-始终返回当前 `ui_revision`。没有菜单时 `menu_open=false`、Menu 缺省且 Elements 为空；有菜单时 Menu 必须存在，Elements 按 `(kind,index,ref.value)` 稳定排序。V1 只对精确原版 `GameMenu` 的顶层 Tab、精确原版 `DialogueBox` 已经出现在 `responseCC` 中的响应，以及精确原版 `ShopMenu` 当前 viewport 的出售行签发 `UI_ELEMENT` Ref；派生类和其他菜单只返回公共 Menu shell、空 Elements 与 `UI_MENU_UNSUPPORTED` warning，不使用通用 clickable fallback。
+始终返回当前 `ui_revision`。没有菜单时 `menu_open=false`、Menu 缺省且 Elements 为空；有菜单时 Menu 必须存在，Elements 按 `(kind,index,ref.value)` 稳定排序。V1 只对精确原版 `GameMenu` 的顶层 Tab、精确原版 `DialogueBox` 已经出现在 `responseCC` 中的响应、精确原版非选择型 `DialogueBox` 的唯一语义推进元素，以及精确原版 `ShopMenu` 当前 viewport 的出售行签发 `UI_ELEMENT` Ref；派生类和其他菜单只返回公共 Menu shell、空 Elements 与 `UI_MENU_UNSUPPORTED` warning，不使用通用 clickable fallback。
+
+非选择型 `DialogueBox` 必须且只能投影一个 `DIALOGUE_ADVANCE`。当前页后面仍有页面时标签为“继续”，否则为“结束”；判断必须与游戏自身的下一页/关闭图标语义一致。只有正文完整呈现、菜单不在过渡且 `safetyTimer <= 0` 时 `enabled=true`。问题对话只投影 `DIALOGUE_RESPONSE`，不得同时投影推进元素。页面变化、对话关闭或菜单替换后旧推进 Ref 必须 stale；同一稳定页面的重复查询与 `inspect` 必须复用同一 Ref。
 
 `modal` 是 V1 的窄 allowlist 分类值：仅精确原版 `DialogueBox` 或 `LetterViewerMenu` 为 `true`，其他类型（包括其派生类）均为 `false`；它不表示菜单一定可关闭或不阻塞游戏。UI 查询不得调用点击、按键、hover、组件填充、菜单更新、切换、购买或第三方 callback。GameMenu、DialogueBox、ShopMenu 的完整 extractor 分别以 32、64、16 个元素为上限；超过上限时整体降级为 shell-only 并返回 `UI_ELEMENTS_LIMIT_UNSUPPORTED`，不得静默截断。
 

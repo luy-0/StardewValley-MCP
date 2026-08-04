@@ -122,7 +122,7 @@ internal sealed record UiElementDescriptor(
     UiExtractorKind Extractor,
     UiElementKind Kind,
     int Index,
-    object Component,
+    object? Component,
     object SemanticTarget,
     string Guard,
     string Label,
@@ -141,7 +141,11 @@ internal sealed record UiElementDescriptor(
 
     public bool IsValid() =>
         Extractor != UiExtractorKind.Unsupported
-        && Kind is UiElementKind.Tab or UiElementKind.DialogueResponse or UiElementKind.ItemSlot
+        && Kind is UiElementKind.Tab
+            or UiElementKind.DialogueResponse
+            or UiElementKind.DialogueAdvance
+            or UiElementKind.ItemSlot
+        && (Kind == UiElementKind.DialogueAdvance ? Component is null : Component is not null)
         && Index >= 0
         && PublicStringPolicy.IsValid(Label)
         && !string.IsNullOrEmpty(Guard);
@@ -271,6 +275,21 @@ internal static class UiProjectionPolicy
         && safetyReady
         && textReadable
         && characterIndex >= textLength - 1;
+
+    public static bool DialogueHasNextPage(
+        bool hasCharacterDialogue,
+        bool continuedOnNextScreen,
+        int brokenUpPageCount,
+        int plainDialogueCount
+    ) => hasCharacterDialogue
+        ? continuedOnNextScreen || brokenUpPageCount > 1
+        : plainDialogueCount > 1;
+
+    public static string DialogueAdvanceLabel(bool hasNextPage) =>
+        hasNextPage ? "继续" : "结束";
+
+    public static UiExtractorKind DialogueExtractor(bool isQuestion) =>
+        isQuestion ? UiExtractorKind.DialogueResponse : UiExtractorKind.DialogueAdvance;
 }
 
 internal readonly record struct UiBounds(int X, int Y, int Width, int Height);

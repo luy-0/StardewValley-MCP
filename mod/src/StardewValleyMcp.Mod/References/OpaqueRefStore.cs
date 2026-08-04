@@ -180,9 +180,7 @@ internal sealed class OpaqueRefStore
             };
             if (status != UiElementResolveStatus.Resolved)
                 return new UiElementResolveResult(status, resolution.Kind, resolution.Error, null);
-            if (binding is not UiElementBinding uiBinding
-                || target is null
-                || uiBinding.ResolvedComponent is null)
+            if (binding is not UiElementBinding uiBinding || target is null)
             {
                 return new UiElementResolveResult(
                     UiElementResolveStatus.Unavailable,
@@ -251,18 +249,16 @@ internal sealed class OpaqueRefStore
                         new InventoryItemRefTarget(target, item.Slot, item.Provenance)
                     ),
                 UiElementBinding ui when ui.Kind == RefKind.UiElement =>
-                    ui.ResolvedComponent is null
-                        ? null
-                        : new UiElementInspectTarget(
-                            new ResolvedUiElementRef(
-                                target,
-                                ui.ResolvedComponent,
-                                ui.MenuEpoch,
-                                ui.Extractor,
-                                ui.PublicKind,
-                                ui.Index
-                            )
-                        ),
+                    new UiElementInspectTarget(
+                        new ResolvedUiElementRef(
+                            target,
+                            ui.ResolvedComponent,
+                            ui.MenuEpoch,
+                            ui.Extractor,
+                            ui.PublicKind,
+                            ui.Index
+                        )
+                    ),
                 _ => null,
             };
             if (inspected is not null)

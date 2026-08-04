@@ -53,7 +53,7 @@ internal static class UiRuntimeProjector
             case UiMenuClassification.DialogueBox:
             {
                 var dialogue = (DialogueBox)menu;
-                extractor = UiExtractorKind.DialogueResponse;
+                extractor = UiProjectionPolicy.DialogueExtractor(dialogue.isQuestion);
                 completeness = ExtractDialogue(
                     dialogue,
                     dialogueCapture!,
@@ -277,7 +277,49 @@ internal static class UiRuntimeProjector
             && menu.characterIndexInDialogue >= capture.Text.Length - 1;
         actionState = $"dialogue:{menu.isQuestion}:{menu.transitioning}:{menu.safetyTimer <= 0}:{fullyPresented}";
         if (!menu.isQuestion)
-            return UiElementSetCompleteness.Complete;
+        {
+            if (!capture.TextReadable)
+                return UiElementSetCompleteness.Incomplete;
+            try
+            {
+                var brokenUpPageCount = menu.characterDialoguesBrokenUp?.Count ?? 0;
+                var plainDialogueCount = menu.dialogues?.Count ?? 0;
+                var hasNextPage = UiProjectionPolicy.DialogueHasNextPage(
+                    menu.characterDialogue is not null,
+                    menu.characterDialogue?.isCurrentStringContinuedOnNextScreen ?? false,
+                    brokenUpPageCount,
+                    plainDialogueCount
+                );
+                var characterDialogueIndex = menu.characterDialogue?.currentDialogueIndex ?? -1;
+                var guard = $"dialogue-advance:{characterDialogueIndex}:{brokenUpPageCount}:{plainDialogueCount}:{hasNextPage}:{capture.Text}";
+                output.Add(new UiElementDescriptor(
+                    UiExtractorKind.DialogueAdvance,
+                    UiElementKind.DialogueAdvance,
+                    0,
+                    null,
+                    menu,
+                    guard,
+                    UiProjectionPolicy.DialogueAdvanceLabel(hasNextPage),
+                    true,
+                    UiProjectionPolicy.DialogueEnabled(
+                        true,
+                        menu.transitioning,
+                        menu.safetyTimer <= 0,
+                        capture.TextReadable,
+                        menu.characterIndexInDialogue,
+                        capture.Text.Length
+                    ),
+                    0,
+                    0
+                ));
+                return UiElementSetCompleteness.Complete;
+            }
+            catch
+            {
+                warnings.Add(ProjectionWarning());
+                return UiElementSetCompleteness.Incomplete;
+            }
+        }
         if (menu.responses is null || menu.responses.Length > DialogueLimit)
         {
             if (menu.responses?.Length > DialogueLimit)
@@ -567,6 +609,17 @@ internal static class UiRuntimeProjector
                 completeness = ExtractDialogue(
                     dialogue,
                     CaptureDialogue(dialogue, warnings),
+                    viewport,
+                    descriptors,
+                    warnings,
+                    out _
+                );
+                break;
+            case UiExtractorKind.DialogueAdvance when menu.GetType() == typeof(DialogueBox):
+                var advance = (DialogueBox)menu;
+                completeness = ExtractDialogue(
+                    advance,
+                    CaptureDialogue(advance, warnings),
                     viewport,
                     descriptors,
                     warnings,

@@ -188,6 +188,25 @@ def test_query_ui_game_menu_and_unsupported_shell_use_generic_projection() -> No
     assert unsupported["warnings"][0]["code"] == "UI_MENU_UNSUPPORTED"
 
 
+def test_query_ui_dialogue_advance_preserves_non_screen_sentinel() -> None:
+    frame = transport_pb2.TransportFrame()
+    json_format.Parse(
+        (FIXTURES / "query-ui.success-dialogue.json").read_text(),
+        frame,
+    )
+    output = project_message(frame.command_event.result.query_ui)
+    projected = {
+        "status": "succeeded",
+        "commandId": frame.command_event.command_id,
+        "output": output,
+    }
+    Draft202012Validator(Catalog.load().tool("query_ui").outputSchema).validate(projected)
+    element = output["snapshot"]["elements"][0]
+    assert element["kind"] == "dialogue_advance"
+    assert element["label"] == "结束"
+    assert element["center"] == {"x": 0, "y": 0}
+
+
 def test_direct_call_cannot_bypass_mod_announcement_intersection() -> None:
     bootstrap = transport_pb2.TransportFrame()
     json_format.Parse((ROOT / "spec" / "fixtures" / "v1" / "bootstrap" / "server-ready.json").read_text(), bootstrap)

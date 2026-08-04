@@ -284,11 +284,18 @@ internal sealed class RuntimeMenuActionAdapter : IMenuActionRuntime
         var fact = CurrentElement(elementRef, before.UiRevision);
         if (fact is null || !fact.Visible || !fact.Enabled)
             return new MenuActionAttempt(before, Failed(ErrorCode.StaleRef, "UI Element 已失效或不可用"));
-        if (resolved.Target.Component is not ClickableComponent component
-            || Game1.activeClickableMenu is not { } menu)
-            return new MenuActionAttempt(before, Failed(ErrorCode.Internal, "当前 UI 组件不可用"));
+        if (Game1.activeClickableMenu is not { } menu)
+            return new MenuActionAttempt(before, Failed(ErrorCode.Internal, "当前 UI 菜单不可用"));
 
-        var center = component.bounds.Center;
+        if (resolved.Target.Extractor == UiExtractorKind.DialogueAdvance
+            && menu.GetType() == typeof(DialogueBox))
+        {
+            ((DialogueBox)menu).receiveLeftClick(0, 0);
+            return new MenuActionAttempt(before, Submitted: true);
+        }
+
+        if (resolved.Target.Component is not ClickableComponent component)
+            return new MenuActionAttempt(before, Failed(ErrorCode.Internal, "当前 UI 组件不可用"));
         var activated = resolved.Target.Extractor switch
         {
             UiExtractorKind.GameMenuTab when menu.GetType() == typeof(GameMenu) => true,
@@ -299,6 +306,7 @@ internal sealed class RuntimeMenuActionAdapter : IMenuActionRuntime
         if (!activated)
             return new MenuActionAttempt(before, Failed(ErrorCode.InvalidArgument, "UI Element 类型不支持激活"));
 
+        var center = component.bounds.Center;
         menu.receiveLeftClick(center.X, center.Y);
         return new MenuActionAttempt(before, Submitted: true);
     }

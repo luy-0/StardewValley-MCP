@@ -102,6 +102,18 @@ def test_query_ui_runtime_has_no_generic_clickable_mutation_or_callback_invocati
     assert "IsExactActivationKnownType" in source
 
 
+def test_dialogue_advance_activation_uses_native_semantic_path() -> None:
+    source = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
+    semantic_branch = source.index(
+        "resolved.Target.Extractor == UiExtractorKind.DialogueAdvance"
+    )
+    native_click = source.index("((DialogueBox)menu).receiveLeftClick(0, 0)")
+    component_branch = source.index(
+        "resolved.Target.Component is not ClickableComponent component"
+    )
+    assert semantic_branch < native_click < component_branch
+
+
 def test_default_capability_set_is_the_unique_concrete_handler_composition_root() -> None:
     composition_path = MOD / "Bootstrap" / "DefaultCapabilitySet.cs"
     registry = (MOD / "Runtime" / "CapabilityRegistry.cs").read_text()

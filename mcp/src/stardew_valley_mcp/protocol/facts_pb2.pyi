@@ -44,6 +44,7 @@ class UiElementKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     UI_ELEMENT_KIND_OPTION: _ClassVar[UiElementKind]
     UI_ELEMENT_KIND_ITEM_SLOT: _ClassVar[UiElementKind]
     UI_ELEMENT_KIND_DIALOGUE_RESPONSE: _ClassVar[UiElementKind]
+    UI_ELEMENT_KIND_DIALOGUE_ADVANCE: _ClassVar[UiElementKind]
 ENTITY_KIND_UNSPECIFIED: EntityKind
 ENTITY_KIND_TREE: EntityKind
 ENTITY_KIND_FRUIT_TREE: EntityKind
@@ -71,6 +72,7 @@ UI_ELEMENT_KIND_TAB: UiElementKind
 UI_ELEMENT_KIND_OPTION: UiElementKind
 UI_ELEMENT_KIND_ITEM_SLOT: UiElementKind
 UI_ELEMENT_KIND_DIALOGUE_RESPONSE: UiElementKind
+UI_ELEMENT_KIND_DIALOGUE_ADVANCE: UiElementKind
 
 class RuntimeSnapshot(_message.Message):
     __slots__ = ("date", "time_of_day", "player", "weather", "ui")

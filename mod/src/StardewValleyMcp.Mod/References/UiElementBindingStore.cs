@@ -29,6 +29,7 @@ internal enum UiExtractorKind
     Unsupported,
     GameMenuTab,
     DialogueResponse,
+    DialogueAdvance,
     ShopSaleRow,
 }
 
@@ -36,7 +37,7 @@ internal readonly record struct UiElementBindingIdentity(
     UiExtractorKind Extractor,
     UiElementKind PublicKind,
     int Index,
-    object Component,
+    object? Component,
     object SemanticTarget,
     string Guard
 );
@@ -166,7 +167,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
 {
     private readonly IUiElementRefOwner _owner;
     private readonly WeakReference<object> _menu;
-    private readonly WeakReference<object> _component;
+    private readonly WeakReference<object>? _component;
     private readonly WeakReference<object> _semanticTarget;
     private readonly string _guard;
 
@@ -182,7 +183,9 @@ internal sealed class UiElementBinding : IOpaqueBinding
         Token = token;
         _owner = owner;
         _menu = new WeakReference<object>(menu);
-        _component = new WeakReference<object>(identity.Component);
+        _component = identity.Component is null
+            ? null
+            : new WeakReference<object>(identity.Component);
         _semanticTarget = new WeakReference<object>(identity.SemanticTarget);
         MenuEpoch = menuEpoch;
         Extractor = identity.Extractor;
@@ -215,10 +218,16 @@ internal sealed class UiElementBinding : IOpaqueBinding
         && _owner.TryGetMenuIdentity(out var previousMenu)
         && owner.TryGetMenuIdentity(out var currentMenu)
         && ReferenceEquals(previousMenu, currentMenu)
-        && _component.TryGetTarget(out var previousComponent)
-        && ReferenceEquals(previousComponent, identity.Component)
+        && ComponentMatches(identity.Component)
         && _semanticTarget.TryGetTarget(out var previousTarget)
         && ReferenceEquals(previousTarget, identity.SemanticTarget);
+
+    private bool ComponentMatches(object? component) =>
+        component is null
+            ? _component is null
+            : _component is not null
+                && _component.TryGetTarget(out var previous)
+                && ReferenceEquals(previous, component);
 
     public OpaqueBindingCurrentStatus ResolveCurrent(out object? target)
     {
@@ -226,7 +235,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
         ResolvedComponent = null;
         if (Stale
             || !_menu.TryGetTarget(out var menu)
-            || !_component.TryGetTarget(out var component)
+            || !TryGetComponent(out var component)
             || !_semanticTarget.TryGetTarget(out var semanticTarget)
             || !_owner.TryGetMenuIdentity(out var ownerMenu)
             || !ReferenceEquals(menu, ownerMenu))
@@ -243,9 +252,8 @@ internal sealed class UiElementBinding : IOpaqueBinding
         if (current.Status == UiElementLookupStatus.Unavailable)
             return OpaqueBindingCurrentStatus.Unavailable;
         if (current.Status == UiElementLookupStatus.Stale
-            || current.Component is null
             || current.SemanticTarget is null
-            || !ReferenceEquals(component, current.Component)
+            || !ComponentsMatch(component, current.Component)
             || !ReferenceEquals(semanticTarget, current.SemanticTarget)
             || !string.Equals(_guard, current.Guard, StringComparison.Ordinal))
             return OpaqueBindingCurrentStatus.Stale;
@@ -253,6 +261,15 @@ internal sealed class UiElementBinding : IOpaqueBinding
         ResolvedComponent = current.Component;
         return OpaqueBindingCurrentStatus.Resolved;
     }
+
+    private bool TryGetComponent(out object? component)
+    {
+        component = null;
+        return _component is null || _component.TryGetTarget(out component);
+    }
+
+    private static bool ComponentsMatch(object? left, object? right) =>
+        left is null ? right is null : ReferenceEquals(left, right);
 }
 
 internal readonly record struct UiProjectionSession(
@@ -272,7 +289,7 @@ internal enum UiElementResolveStatus
 
 internal sealed record ResolvedUiElementRef(
     object Target,
-    object Component,
+    object? Component,
     string MenuEpoch,
     UiExtractorKind Extractor,
     UiElementKind PublicKind,

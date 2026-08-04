@@ -435,6 +435,82 @@ public sealed class QueryUiModContractTests
             Assert.That(UiProjectionPolicy.DialogueEnabled(true, true, true, true, 4, 5), Is.False);
             Assert.That(UiProjectionPolicy.DialogueEnabled(true, false, false, true, 4, 5), Is.False);
             Assert.That(UiProjectionPolicy.DialogueEnabled(true, false, true, true, 3, 5), Is.False);
+            Assert.That(UiProjectionPolicy.DialogueExtractor(true), Is.EqualTo(UiExtractorKind.DialogueResponse));
+            Assert.That(UiProjectionPolicy.DialogueExtractor(false), Is.EqualTo(UiExtractorKind.DialogueAdvance));
+            Assert.That(UiProjectionPolicy.DialogueHasNextPage(false, false, 0, 2), Is.True);
+            Assert.That(UiProjectionPolicy.DialogueHasNextPage(false, false, 0, 1), Is.False);
+            Assert.That(UiProjectionPolicy.DialogueHasNextPage(true, true, 1, 0), Is.True);
+            Assert.That(UiProjectionPolicy.DialogueHasNextPage(true, false, 2, 0), Is.True);
+            Assert.That(UiProjectionPolicy.DialogueHasNextPage(true, false, 1, 0), Is.False);
+            Assert.That(UiProjectionPolicy.DialogueAdvanceLabel(true), Is.EqualTo("继续"));
+            Assert.That(UiProjectionPolicy.DialogueAdvanceLabel(false), Is.EqualTo("结束"));
+        });
+    }
+
+    [Test]
+    public void DialogueAdvance_UsesSemanticBindingAndPageChangeStalesOldRef()
+    {
+        var store = new OpaqueRefStore(InstanceId, menuEpochFactory: () => "dialogue-a");
+        var menu = new object();
+        var owner = new FakeUiOwner(menu);
+        owner.Set(0, null, menu, "dialogue-page:1");
+        var first = ProjectDialogueAdvance(store, menu, owner, "dialogue-page:1", "继续", enabled: true);
+        var repeated = ProjectDialogueAdvance(store, menu, owner, "dialogue-page:1", "继续", enabled: true);
+        var reference = first.Snapshot.Elements.Single().Ref;
+
+        var inspected = store.ResolveForInspect(reference);
+        var inspectFact = InspectFactProjector.ProjectUiElement(
+            reference,
+            new UiRuntimeProjectionCapture(repeated, UiElementSetCompleteness.Complete),
+            new List<QueryWarning>()
+        );
+
+        owner.Set(0, null, menu, "dialogue-page:2");
+        var next = ProjectDialogueAdvance(store, menu, owner, "dialogue-page:2", "结束", enabled: true);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(repeated.Snapshot.Elements.Single().Ref.Value, Is.EqualTo(reference.Value));
+            Assert.That(first.Snapshot.Elements.Single().Center, Is.EqualTo(new PixelPoint { X = 0, Y = 0 }));
+            Assert.That(inspected.Resolution.Status, Is.EqualTo(RefStatus.Resolved));
+            Assert.That(inspected.Target, Is.TypeOf<UiElementInspectTarget>());
+            Assert.That(inspectFact.Ref.Value, Is.EqualTo(reference.Value));
+            Assert.That(next.Snapshot.Elements.Single().Ref.Value, Is.Not.EqualTo(reference.Value));
+            Assert.That(store.ResolveUiElement(reference).Status, Is.EqualTo(UiElementResolveStatus.Stale));
+        });
+    }
+
+    [Test]
+    public void DialogueAdvance_IncompleteCapturePreservesOldRefAsUnavailable()
+    {
+        var store = new OpaqueRefStore(InstanceId, menuEpochFactory: () => "dialogue-a");
+        var menu = new object();
+        var owner = new FakeUiOwner(menu);
+        owner.Set(0, null, menu, "dialogue-page:1");
+        var first = ProjectDialogueAdvance(store, menu, owner, "dialogue-page:1", "继续", enabled: true);
+        var reference = first.Snapshot.Elements.Single().Ref;
+
+        owner.Unavailable = true;
+        var incomplete = Project(
+            store,
+            menu,
+            owner,
+            Array.Empty<UiElementDescriptor>(),
+            new[] { new QueryWarning { Code = "UI_MENU_FACT_UNAVAILABLE", Message = "当前菜单事实不可读" } },
+            UiExtractorKind.DialogueAdvance,
+            UiElementSetCompleteness.Incomplete
+        );
+        var unavailable = store.ResolveForInspect(reference);
+
+        owner.Unavailable = false;
+        owner.Set(0, null, menu, "dialogue-page:1");
+        var recovered = ProjectDialogueAdvance(store, menu, owner, "dialogue-page:1", "继续", enabled: true);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(incomplete.Snapshot.Elements, Is.Empty);
+            Assert.That(unavailable.Resolution.Status, Is.EqualTo(RefStatus.FactUnavailable));
+            Assert.That(recovered.Snapshot.Elements.Single().Ref.Value, Is.EqualTo(reference.Value));
         });
     }
 
@@ -619,6 +695,37 @@ public sealed class QueryUiModContractTests
             200 + index
         );
 
+    private static QueryUiResult ProjectDialogueAdvance(
+        OpaqueRefStore store,
+        object menu,
+        FakeUiOwner owner,
+        string guard,
+        string label,
+        bool enabled
+    ) => Project(
+        store,
+        menu,
+        owner,
+        new[]
+        {
+            new UiElementDescriptor(
+                UiExtractorKind.DialogueAdvance,
+                UiElementKind.DialogueAdvance,
+                0,
+                null,
+                menu,
+                guard,
+                label,
+                true,
+                enabled,
+                0,
+                0
+            ),
+        },
+        Array.Empty<QueryWarning>(),
+        UiExtractorKind.DialogueAdvance
+    );
+
     private static UiSnapshot Snapshot() => new()
     {
         MenuOpen = true,
@@ -651,12 +758,12 @@ public sealed class QueryUiModContractTests
     private sealed class FakeUiOwner : IUiElementRefOwner
     {
         private readonly object _menu;
-        private readonly Dictionary<int, (object Component, object Target, string Guard)> _current = new();
+        private readonly Dictionary<int, (object? Component, object Target, string Guard)> _current = new();
 
         public FakeUiOwner(object menu) => _menu = menu;
         public bool Unavailable { get; set; }
 
-        public void Set(int index, object component, object target, string guard) =>
+        public void Set(int index, object? component, object target, string guard) =>
             _current[index] = (component, target, guard);
 
         public void Remove(int index) => _current.Remove(index);

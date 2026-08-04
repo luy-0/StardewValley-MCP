@@ -946,13 +946,23 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         "query-world.success-minimal.json", "query-world.success-complete.json",
         "query-inventory.success-minimal.json", "query-inventory.success-complete.json",
         "query-ui.success-no-menu.json", "query-ui.success-menu.json",
-        "query-ui.success-unsupported-menu.json",
+        "query-ui.success-unsupported-menu.json", "query-ui.success-dialogue.json",
         "inspect.success-minimal.json", "inspect.success-complete.json",
     ]
     for name in standalone:
         frame = transport_pb2.TransportFrame()
         json_format.ParseDict(load_json(FIXTURE_ROOT / "observation" / name), frame, ignore_unknown_fields=False)
         require(frame.command_event.state == 3, f"observation 最小/完整 Fixture 非成功: {name}")
+        if name == "query-ui.success-dialogue.json":
+            elements = frame.command_event.result.query_ui.snapshot.elements
+            require(
+                len(elements) == 1
+                and elements[0].kind == 6
+                and elements[0].label == "结束"
+                and elements[0].center.x == 0
+                and elements[0].center.y == 0,
+                "普通对话 UI Fixture 未覆盖 DIALOGUE_ADVANCE 语义",
+            )
         verify_event_shape(frame.command_event)
     invalid = load_json(FIXTURE_ROOT / "observation" / "invalid-inputs.json")
     require(invalid.get("schemaVersion") == 1 and len(invalid.get("cases", [])) >= 5, "observation invalid-inputs 覆盖不足")

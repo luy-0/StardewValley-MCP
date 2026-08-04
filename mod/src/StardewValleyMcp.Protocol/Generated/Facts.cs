@@ -166,12 +166,13 @@ namespace StardewValleyMcp.Protocol.V1 {
             "RUQQABIWChJDSEFSQUNURVJfS0lORF9OUEMQARIaChZDSEFSQUNURVJfS0lO",
             "RF9NT05TVEVSEAISHgoaQ0hBUkFDVEVSX0tJTkRfRkFSTV9BTklNQUwQAxIW",
             "ChJDSEFSQUNURVJfS0lORF9QRVQQBBIYChRDSEFSQUNURVJfS0lORF9IT1JT",
-            "RRAFKscBCg1VaUVsZW1lbnRLaW5kEh8KG1VJX0VMRU1FTlRfS0lORF9VTlNQ",
+            "RRAFKu0BCg1VaUVsZW1lbnRLaW5kEh8KG1VJX0VMRU1FTlRfS0lORF9VTlNQ",
             "RUNJRklFRBAAEhoKFlVJX0VMRU1FTlRfS0lORF9CVVRUT04QARIXChNVSV9F",
             "TEVNRU5UX0tJTkRfVEFCEAISGgoWVUlfRUxFTUVOVF9LSU5EX09QVElPThAD",
             "Eh0KGVVJX0VMRU1FTlRfS0lORF9JVEVNX1NMT1QQBBIlCiFVSV9FTEVNRU5U",
-            "X0tJTkRfRElBTE9HVUVfUkVTUE9OU0UQBUIfqgIcU3RhcmRld1ZhbGxleU1j",
-            "cC5Qcm90b2NvbC5WMWIGcHJvdG8z"));
+            "X0tJTkRfRElBTE9HVUVfUkVTUE9OU0UQBRIkCiBVSV9FTEVNRU5UX0tJTkRf",
+            "RElBTE9HVUVfQURWQU5DRRAGQh+qAhxTdGFyZGV3VmFsbGV5TWNwLlByb3Rv",
+            "Y29sLlYxYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::StardewValleyMcp.Protocol.V1.CommonReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.RefsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.EntityKind), typeof(global::StardewValleyMcp.Protocol.V1.CharacterKind), typeof(global::StardewValleyMcp.Protocol.V1.UiElementKind), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -248,6 +249,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [pbr::OriginalName("UI_ELEMENT_KIND_OPTION")] Option = 3,
     [pbr::OriginalName("UI_ELEMENT_KIND_ITEM_SLOT")] ItemSlot = 4,
     [pbr::OriginalName("UI_ELEMENT_KIND_DIALOGUE_RESPONSE")] DialogueResponse = 5,
+    [pbr::OriginalName("UI_ELEMENT_KIND_DIALOGUE_ADVANCE")] DialogueAdvance = 6,
   }
 
   #endregion
