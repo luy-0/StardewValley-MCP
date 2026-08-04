@@ -210,6 +210,47 @@ def test_inventory_transfer_is_an_isolated_revision_guarded_transaction() -> Non
     assert "StardewValley.Objects" not in planner
 
 
+def test_equipment_slot_write_is_isolated_fail_closed_and_not_ui_click_driven() -> None:
+    composition = (MOD / "Bootstrap" / "DefaultCapabilitySet.cs").read_text()
+    handler = (MOD / "Capabilities" / "Actions" / "SetEquipmentSlotHandler.cs").read_text()
+    adapter = (MOD / "Capabilities" / "Actions" / "EquipmentSlotRuntimeAdapter.cs").read_text()
+    menu_actions = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
+    ui_runtime = (MOD / "Projection" / "UiRuntimeProjector.cs").read_text()
+    transport = (PACKAGE / "transport.py").read_text()
+    server = (PACKAGE / "server.py").read_text()
+    projection = (PACKAGE / "projection.py").read_text()
+
+    assert "new SetEquipmentSlotHandler(refs)" in composition
+    assert "set_equipment_slot" not in transport
+    assert "set_equipment_slot" not in server
+    assert "set_equipment_slot" not in projection
+    assert "set_equipment_slot" not in menu_actions
+    assert "set_equipment_slot" not in ui_runtime
+    for required in (
+        "CanCancel => !_committing",
+        "EquipmentSlotMutationPlanner.SamePlan(",
+        "RollbackAndVerify(",
+        "UiRuntimeProjector.Capture(",
+        "InventoryPageProjector.TryClassifyEquipmentComponent(",
+        "item.GetType() == typeof(Hat)",
+        "item.GetType() != typeof(CombinedRing)",
+        "ring.GetType() == typeof(Ring)",
+        "state.Player.CurrentToolIndex != capture.CurrentToolIndex",
+    ):
+        assert required in handler + adapter
+    forbidden = (
+        "PerformSpecialItemPlaceReplacement",
+        "PerformSpecialItemGrabReplacement",
+        "receiveLeftClick",
+        "receiveRightClick",
+        "CursorSlotItem =",
+        "move_inventory_item",
+        "behaviorFunction",
+        "behaviorOnItemGrab",
+    )
+    assert not [token for token in forbidden if token in handler + adapter]
+
+
 def test_dialogue_advance_activation_uses_native_semantic_path() -> None:
     source = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
     semantic_branch = source.index(
@@ -250,6 +291,7 @@ def test_default_capability_set_is_the_unique_concrete_handler_composition_root(
         "UseToolHandler",
         "EquipHandler",
         "TransferInventoryItemHandler",
+        "SetEquipmentSlotHandler",
         "OpenMenuHandler",
         "ActivateUiHandler",
         "CloseMenuHandler",

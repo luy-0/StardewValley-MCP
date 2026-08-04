@@ -1,6 +1,6 @@
 # 快速开始
 
-当前预览版提供十六项公共 Tool：五项观察能力和十一项需要明确授权的变更能力，其中 `transfer_inventory_item` 用于当前受支持箱子菜单中的单项原子转移。MCP 默认只暴露只读能力；只有显式加入 `--allow-write`，才会暴露当前 Mod 同时公告的操作能力。
+当前预览版提供十七项公共 Tool：五项观察能力和十二项需要明确授权的变更能力，其中 `transfer_inventory_item` 用于当前受支持箱子菜单中的单项原子转移，`set_equipment_slot` 用于当前原版背包页面中的穿戴、替换与取下。MCP 默认只暴露只读能力；只有显式加入 `--allow-write`，才会暴露当前 Mod 同时公告的操作能力。
 
 当前采用源码优先发布方式，不提供预编译 Mod 或安装器。Agent 从源码自动安装时，请使用根目录的 [`AGENT-GUIDE.md`](../AGENT-GUIDE.md)。
 

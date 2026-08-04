@@ -619,7 +619,7 @@ public sealed class QueryUiModContractTests
             {
                 "activate_ui", "close_menu", "emote", "equip", "face", "inspect", "interact",
                 "navigate", "open_menu", "query_inventory", "query_runtime", "query_ui", "query_world", "say",
-                "transfer_inventory_item", "use_tool",
+                "set_equipment_slot", "transfer_inventory_item", "use_tool",
             })
         );
     }

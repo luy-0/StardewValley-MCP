@@ -243,6 +243,24 @@
       "cancellable": true,
       "contract_version": "1.0.0",
       "default_timeout_ms": 10000,
+      "description": "在当前原版背包页面中穿戴、替换或取下一个受支持的装备。",
+      "destructive": true,
+      "execution": "long_running",
+      "id": "set_equipment_slot",
+      "max_timeout_ms": 30000,
+      "request": "SetEquipmentSlotRequest",
+      "required_scope": "game:write",
+      "result": "SetEquipmentSlotResult",
+      "risk": [
+        "changes_save"
+      ],
+      "side_effect": "mutating",
+      "title": "设置装备槽"
+    },
+    {
+      "cancellable": true,
+      "contract_version": "1.0.0",
+      "default_timeout_ms": 10000,
       "description": "在当前受支持的箱子菜单中原子转移一项明确物品的指定数量。",
       "destructive": true,
       "execution": "long_running",
@@ -19695,6 +19713,1125 @@
       "requestType": "SayRequest",
       "resultType": "SayResult",
       "title": "发送聊天文本"
+    },
+    {
+      "annotations": {
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "readOnlyHint": false
+      },
+      "capabilityId": "set_equipment_slot",
+      "description": "在当前原版背包页面中穿戴、替换或取下一个受支持的装备。",
+      "inputSchema": {
+        "$defs": {
+          "Ref": {
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "maxLength": 512,
+                "minLength": 1,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "type": "object"
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "required": [
+                  "itemRef"
+                ]
+              },
+              {
+                "required": [
+                  "clear"
+                ]
+              }
+            ]
+          }
+        ],
+        "properties": {
+          "clear": {
+            "const": true,
+            "type": "boolean"
+          },
+          "equipmentSlotRef": {
+            "$ref": "#/$defs/Ref"
+          },
+          "itemRef": {
+            "$ref": "#/$defs/Ref"
+          },
+          "playerInventoryRevision": {
+            "maxLength": 512,
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "uiRevision": {
+            "maxLength": 512,
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          }
+        },
+        "required": [
+          "equipmentSlotRef",
+          "playerInventoryRevision",
+          "uiRevision"
+        ],
+        "type": "object"
+      },
+      "name": "stardew_set_equipment_slot",
+      "outputSchema": {
+        "$defs": {
+          "FailedToolError": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "busy"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "capability_changed"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "capability_denied"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "command_cancelled"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "command_timeout"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "conflict"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "context_expired"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "execution_failed"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "internal_error"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "not_found"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "not_ready"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "out_of_range"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "route_unavailable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "stale_ref"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "unauthenticated"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "upstream_protocol_error"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "ItemFact": {
+            "additionalProperties": false,
+            "properties": {
+              "category": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "qualifiedItemId": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "quality": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "ref": {
+                "$ref": "#/$defs/Ref"
+              },
+              "stack": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "tool": {
+                "type": "boolean"
+              },
+              "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "category",
+              "displayName",
+              "qualifiedItemId",
+              "quality",
+              "stack",
+              "tool",
+              "toolLevel"
+            ],
+            "type": "object"
+          },
+          "Ref": {
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "maxLength": 512,
+                "minLength": 1,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "type": "object"
+          },
+          "SetEquipmentSlotResult": {
+            "additionalProperties": false,
+            "properties": {
+              "changed": {
+                "type": "boolean"
+              },
+              "equipmentSlotIndex": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "equipmentSlotKind": {
+                "enum": [
+                  "unspecified",
+                  "hat",
+                  "left_ring",
+                  "right_ring",
+                  "boots",
+                  "shirt",
+                  "pants",
+                  "trinket"
+                ],
+                "type": "string"
+              },
+              "item": {
+                "$ref": "#/$defs/ItemFact"
+              },
+              "playerInventoryRevision": {
+                "maxLength": 512,
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "changed",
+              "equipmentSlotIndex",
+              "equipmentSlotKind",
+              "playerInventoryRevision"
+            ],
+            "type": "object"
+          },
+          "StardewToolError": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "busy"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "capability_changed"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "capability_denied"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "command_cancelled"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "command_timeout"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "conflict"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "context_expired"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "execution_failed"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "internal_error"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "not_found"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "not_ready"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "out_of_range"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "route_unavailable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "stale_ref"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "unauthenticated"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "unknown_outcome"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "upstream_protocol_error"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "UnknownToolError": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "unknown_outcome"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              }
+            ]
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "commandId": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "output": {
+                "$ref": "#/$defs/SetEquipmentSlotResult"
+              },
+              "status": {
+                "const": "succeeded"
+              }
+            },
+            "required": [
+              "status",
+              "commandId",
+              "output"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "commandId": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "error": {
+                "$ref": "#/$defs/FailedToolError"
+              },
+              "status": {
+                "const": "failed"
+              }
+            },
+            "required": [
+              "status",
+              "commandId",
+              "error"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "commandId": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "error": {
+                "$ref": "#/$defs/UnknownToolError"
+              },
+              "status": {
+                "const": "unknown"
+              }
+            },
+            "required": [
+              "status",
+              "commandId",
+              "error"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "requestType": "SetEquipmentSlotRequest",
+      "resultType": "SetEquipmentSlotResult",
+      "title": "设置装备槽"
     },
     {
       "annotations": {

@@ -207,6 +207,34 @@ class TransferInventoryItemResult(_message.Message):
     container_inventory_revision: str
     def __init__(self, transferred_quantity: _Optional[int] = ..., source_slot_index: _Optional[int] = ..., source_remaining_quantity: _Optional[int] = ..., player_inventory_revision: _Optional[str] = ..., container_inventory_revision: _Optional[str] = ...) -> None: ...
 
+class SetEquipmentSlotRequest(_message.Message):
+    __slots__ = ("equipment_slot_ref", "item_ref", "clear", "ui_revision", "player_inventory_revision")
+    EQUIPMENT_SLOT_REF_FIELD_NUMBER: _ClassVar[int]
+    ITEM_REF_FIELD_NUMBER: _ClassVar[int]
+    CLEAR_FIELD_NUMBER: _ClassVar[int]
+    UI_REVISION_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    equipment_slot_ref: _refs_pb2.Ref
+    item_ref: _refs_pb2.Ref
+    clear: bool
+    ui_revision: str
+    player_inventory_revision: str
+    def __init__(self, equipment_slot_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., item_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., clear: _Optional[bool] = ..., ui_revision: _Optional[str] = ..., player_inventory_revision: _Optional[str] = ...) -> None: ...
+
+class SetEquipmentSlotResult(_message.Message):
+    __slots__ = ("equipment_slot_kind", "equipment_slot_index", "item", "player_inventory_revision", "changed")
+    EQUIPMENT_SLOT_KIND_FIELD_NUMBER: _ClassVar[int]
+    EQUIPMENT_SLOT_INDEX_FIELD_NUMBER: _ClassVar[int]
+    ITEM_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    CHANGED_FIELD_NUMBER: _ClassVar[int]
+    equipment_slot_kind: _facts_pb2.UiEquipmentSlotKind
+    equipment_slot_index: int
+    item: _facts_pb2.ItemFact
+    player_inventory_revision: str
+    changed: bool
+    def __init__(self, equipment_slot_kind: _Optional[_Union[_facts_pb2.UiEquipmentSlotKind, str]] = ..., equipment_slot_index: _Optional[int] = ..., item: _Optional[_Union[_facts_pb2.ItemFact, _Mapping]] = ..., player_inventory_revision: _Optional[str] = ..., changed: _Optional[bool] = ...) -> None: ...
+
 class OpenMenuRequest(_message.Message):
     __slots__ = ("menu",)
     MENU_FIELD_NUMBER: _ClassVar[int]

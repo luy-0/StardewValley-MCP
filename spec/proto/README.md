@@ -12,7 +12,7 @@ Proto 只定义“可以编码什么”，不单独定义“何时发送、谁�
 | `refs.proto` | 不透明 Ref 与解析状态 |
 | `facts.proto` | 游戏运行时、世界、库存与 UI 事实 |
 | `queries.proto` | 五项观察能力的请求与结果 |
-| `actions.proto` | 十一项操作能力的请求与结果 |
+| `actions.proto` | 十二项操作能力的请求与结果 |
 | `capabilities.proto` | 统一命令、结果、取消与状态查询 |
 | `transport.proto` | 握手、认证、Session Fence 与线路 Frame |
 

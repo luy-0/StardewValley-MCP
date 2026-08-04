@@ -55,6 +55,12 @@ messages:
     fields:
       quantity: {minimum: 1, maximum: 2147483647}
 
+  SetEquipmentSlotRequest:
+    required: [equipmentSlotRef, uiRevision, playerInventoryRevision]
+    required_oneofs: [value]
+    fields:
+      clear: {const: true}
+
   OpenMenuRequest:
     required: [menu]
 

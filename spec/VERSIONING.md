@@ -32,6 +32,7 @@
 - `UI_ELEMENT_KIND_DIALOGUE_ADVANCE=6` 以及普通 `DialogueBox` 新增的语义推进元素，是追加枚举值与结果元素的 V1 Minor 兼容增补。旧调用方必须忽略无法识别的 UI Kind，不能尝试激活未知元素；依赖 MCP Tool Schema 的调用方需要更新 Tool Catalog 后才能识别并使用 `dialogue_advance`。
 - `UiInventorySide`、`UiInventoryLink`、`UiSnapshot.inventories`、`UiElementFact.inventory_side/item_ref` 以及受支持 `ItemGrabMenu` 的只读槽位元素，是可忽略字段与结果元素的 V1 Minor 兼容增补。旧调用方可以忽略库存关联；槽位始终 `enabled=false`，不得因既有 `ITEM_SLOT` 枚举而推断其可由 `activate_ui` 执行。依赖 MCP Tool Schema 的调用方需要更新 Tool Catalog 后才能读取两侧 Revision、Container Ref 与 Item Ref。
 - `transfer_inventory_item`、`InventoryTransferDirection` 及其 Request/Result 是新增的独立能力分支，属于 V1 Minor 兼容增补。旧实现不会公告该能力，旧 MCP 也不会暴露对应 Tool；新调用方必须从当前 `query_ui` 取得 UI Revision、双方 Inventory Revision 和源 Item Ref，不能把已有槽位元素解释为可点击。
+- `set_equipment_slot` 及其 Request/Result 是新增的独立能力分支，属于 V1 Minor 兼容增补。调用方必须使用当前原版背包页面签发的 Equipment Slot Ref、UI Revision 和玩家 Inventory Revision；穿戴时还必须使用当前玩家背包 Item Ref。
 - `UI_ELEMENT_KIND_EQUIPMENT_SLOT`、`UiEquipmentSlotKind` 与 `UiElementFact.equipment_slot_kind` 是 Inventory 页只读投影的 V1 Minor 兼容增补。旧调用方可以忽略新增元素；装备槽始终 `enabled=false`，装备物品不携带 `INVENTORY_ITEM` Ref，也不得据此推断已经提供穿戴或取下动作。
 
 ## Agent Skill 指引兼容规则

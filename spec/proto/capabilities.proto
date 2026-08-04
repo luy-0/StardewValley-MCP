@@ -36,6 +36,7 @@ message CommandRequest {
     ActivateUiRequest activate_ui = 18;
     CloseMenuRequest close_menu = 19;
     TransferInventoryItemRequest transfer_inventory_item = 20;
+    SetEquipmentSlotRequest set_equipment_slot = 21;
 
     QueryRuntimeRequest query_runtime = 30;
     QueryWorldRequest query_world = 31;
@@ -58,6 +59,7 @@ message CapabilityResult {
     ActivateUiResult activate_ui = 18;
     CloseMenuResult close_menu = 19;
     TransferInventoryItemResult transfer_inventory_item = 20;
+    SetEquipmentSlotResult set_equipment_slot = 21;
 
     QueryRuntimeResult query_runtime = 30;
     QueryWorldResult query_world = 31;

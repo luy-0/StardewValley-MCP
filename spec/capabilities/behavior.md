@@ -138,6 +138,15 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 - 提交不得模拟坐标、按键或左右键，也不得调用菜单 click/callback。成功必须返回实际转移数量、原源 Slot、源剩余数量和双方新 Revision；实际数量必须等于请求数量，双方完整库存的源减少、目标增加与总数量守恒必须通过后置验证。成功后旧 Item Ref 不代表新位置，调用方应重新查询取得新 Ref。
 - Recipe、Stardrop、矮人语翻译指南及其他会被原生 ItemGrabMenu 消费或触发特殊效果的物品必须拒绝。数量超过源 Stack 返回 `OUT_OF_RANGE`；任一 Revision、Ref 或对象身份变化返回 `STALE_REF`；无菜单、不支持菜单、`heldItem` 非空、Mutex 未就绪或容量不足返回 `NOT_READY`；不可读事实返回 `INTERNAL`；同步提交或后置条件失败必须先回滚本 Tick 的库存内容变更，再返回 `EXECUTION_FAILED`。罕见的“提交后投影失败”已经观察过空源 Slot 时，旧源 Item Ref 可以按单调生命周期变为 stale，即使原物品对象与堆叠已回滚；调用方必须重新查询，不得要求旧 Ref 复活。
 
+### `set_equipment_slot`
+
+- 请求必须提供当前原版 Inventory 页签发的 Equipment Slot Ref、UI Revision、玩家 Inventory Revision，以及 `item_ref` 或 `clear=true` 两者之一。`clear=false` 无效；游标持有物品、菜单或页签不受支持时返回 `NOT_READY`。
+- `item_ref` 必须来自当前玩家背包。能力只接受精确原版 Hat、Ring、Boots、Shirt、Pants、Trinket，以及内部成员均为精确原版 Ring 的 Combined Ring；类型错槽、派生类型、堆叠异常和原版特殊转换物品返回 `INVALID_ARGUMENT`。
+- 穿戴时新装备必须先离开背包再进入装备槽，防止同一网络对象同时拥有两个 Parent。替换后的旧装备必须回到新装备的原源 Slot，即使其他 Slot 已满；取下时只能使用玩家已解锁容量内最低序号的空 Slot。背包已满时取下返回 `NOT_READY`；清空已经为空的槽幂等成功且 `changed=false`。
+- 实现必须分两个 Tick 预检与提交，并在提交前重新验证菜单、页面、组件、两项 Revision、源物品、旧装备和确定性目的 Slot。同步提交开始后不可取消；`CurrentToolIndex` 数值始终不得改变。正常成功路径中，当前手持 Slot 的停止与开始持有生命周期各至多触发一次；失败回滚必须按反向路径恢复最终可观察的持有状态，因此不承诺把正向与回滚两段合计为一次。
+- 失败时必须按原版装备路径尽力恢复背包 Slot、装备槽、Trinket 列表长度、对象身份和可观察装备效果；不承诺撤销已经由任意第三方 Hook 发出的历史事件。回滚仍无法确认时返回 `EXECUTION_FAILED` 并要求重新查询。
+- 成功后返回目标槽类型、序号、新玩家 Inventory Revision 和是否实际变化。清空结果必须省略 `item`；非空装备结果中的 `ItemFact` 不签发物品 Ref。成功后旧 UI Revision 和源 Item Ref 失效，调用方必须重新查询新状态。
+
 ### `open_menu`
 
 - `menu` 必须是受支持的非 `UNSPECIFIED` 顶层菜单。

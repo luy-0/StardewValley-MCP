@@ -142,6 +142,25 @@ message TransferInventoryItemResult {
   string container_inventory_revision = 5;
 }
 
+message SetEquipmentSlotRequest {
+  Ref equipment_slot_ref = 1;
+  oneof value {
+    Ref item_ref = 2;
+    bool clear = 3;
+  }
+  string ui_revision = 4;
+  string player_inventory_revision = 5;
+}
+
+message SetEquipmentSlotResult {
+  UiEquipmentSlotKind equipment_slot_kind = 1;
+  uint32 equipment_slot_index = 2;
+  // 清空后缺省；装备槽中的 ItemFact 不签发物品 Ref。
+  optional ItemFact item = 3;
+  string player_inventory_revision = 4;
+  bool changed = 5;
+}
+
 message OpenMenuRequest {
   MenuKind menu = 1;
 }

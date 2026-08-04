@@ -51,7 +51,7 @@ Skill 开发入口，只包含接口定义、编写模板、最小示例和一�
 
 ## 项目状态
 
-当前预览版已经具备独立的 Mod、MCP Python 包，以及公共 V1 契约定义的十六项原语能力：五项只读能力和十一项需要明确授权的变更能力。新增的 `transfer_inventory_item` 使用当前箱子 UI 与双方 Inventory Revision，按明确 Item Ref 原子转移指定数量；MCP 默认仍只读，只有显式启用写权限，并且公共 Manifest、MCP 支持集与 Mod 握手公告同时包含对应能力时，才会暴露操作 Tool。仓库同时提供 Agent `SKILL.md` 模板、两个最小示例、静态校验工具和源码安装指南。
+当前预览版已经具备独立的 Mod、MCP Python 包，以及公共 V1 契约定义的十七项原语能力：五项只读能力和十二项需要明确授权的变更能力。`transfer_inventory_item` 使用当前箱子 UI 与双方 Inventory Revision，按明确 Item Ref 原子转移指定数量；`set_equipment_slot` 使用当前原版背包页签发的装备槽 Ref 与玩家物品 Ref，执行穿戴、替换或取下。MCP 默认仍只读，只有显式启用写权限，并且公共 Manifest、MCP 支持集与 Mod 握手公告同时包含对应能力时，才会暴露操作 Tool。仓库同时提供 Agent `SKILL.md` 模板、两个最小示例、静态校验工具和源码安装指南。
 
 普通用户的源码安装与调用方法见[快速开始](docs/getting-started.md)；需要自动完成安装的 Agent 使用 [AGENT-GUIDE.md](AGENT-GUIDE.md)。本地完整回归入口为：
 

@@ -217,6 +217,21 @@ internal static class CapabilityCatalogData
                 Destructive = false,
                 Risks = { "external_communication" },
             },
+            ["set_equipment_slot"] = new CapabilityDescriptor
+            {
+                Id = "set_equipment_slot",
+                ContractVersion = "1.0.0",
+                SideEffect = SideEffect.Mutating,
+                Execution = ExecutionMode.LongRunning,
+                Cancellable = true,
+                DefaultTimeoutMs = 10000,
+                MaxTimeoutMs = 30000,
+                RequestType = nameof(SetEquipmentSlotRequest),
+                ResultType = nameof(SetEquipmentSlotResult),
+                RequiredScope = "game:write",
+                Destructive = true,
+                Risks = { "changes_save" },
+            },
             ["transfer_inventory_item"] = new CapabilityDescriptor
             {
                 Id = "transfer_inventory_item",

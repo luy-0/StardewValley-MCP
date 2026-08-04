@@ -79,30 +79,41 @@ namespace StardewValleyMcp.Protocol.V1 {
             "bVJlc3VsdBIcChR0cmFuc2ZlcnJlZF9xdWFudGl0eRgBIAEoDRIZChFzb3Vy",
             "Y2Vfc2xvdF9pbmRleBgCIAEoDRIhChlzb3VyY2VfcmVtYWluaW5nX3F1YW50",
             "aXR5GAMgASgNEiEKGXBsYXllcl9pbnZlbnRvcnlfcmV2aXNpb24YBCABKAkS",
-            "JAocY29udGFpbmVyX2ludmVudG9yeV9yZXZpc2lvbhgFIAEoCSJACg9PcGVu",
-            "TWVudVJlcXVlc3QSLQoEbWVudRgBIAEoDjIfLnN0YXJkZXdfdmFsbGV5Lm1j",
-            "cC52MS5NZW51S2luZCJLCg5PcGVuTWVudVJlc3VsdBI5Cgp0cmFuc2l0aW9u",
-            "GAEgASgLMiUuc3RhcmRld192YWxsZXkubWNwLnYxLk1lbnVUcmFuc2l0aW9u",
-            "IlkKEUFjdGl2YXRlVWlSZXF1ZXN0Ei8KC2VsZW1lbnRfcmVmGAEgASgLMhou",
-            "c3RhcmRld192YWxsZXkubWNwLnYxLlJlZhITCgt1aV9yZXZpc2lvbhgCIAEo",
-            "CSKEAQoQQWN0aXZhdGVVaVJlc3VsdBIvCgtlbGVtZW50X3JlZhgBIAEoCzIa",
-            "LnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWYSOQoKdHJhbnNpdGlvbhgCIAEo",
-            "CzIlLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5NZW51VHJhbnNpdGlvbkoECAMQ",
-            "BCISChBDbG9zZU1lbnVSZXF1ZXN0ImQKD0Nsb3NlTWVudVJlc3VsdBI5Cgp0",
-            "cmFuc2l0aW9uGAEgASgLMiUuc3RhcmRld192YWxsZXkubWNwLnYxLk1lbnVU",
-            "cmFuc2l0aW9uEhYKDmFscmVhZHlfY2xvc2VkGAIgASgIKt4BCglFbW90ZUtp",
-            "bmQSGgoWRU1PVEVfS0lORF9VTlNQRUNJRklFRBAAEhQKEEVNT1RFX0tJTkRf",
-            "SEFQUFkQARISCg5FTU9URV9LSU5EX1NBRBACEhQKEEVNT1RFX0tJTkRfSEVB",
-            "UlQQAxIaChZFTU9URV9LSU5EX0VYQ0xBTUFUSU9OEAQSFwoTRU1PVEVfS0lO",
-            "RF9RVUVTVElPThAFEhQKEEVNT1RFX0tJTkRfQU5HUlkQBhIUChBFTU9URV9L",
-            "SU5EX1NMRUVQEAcSFAoQRU1PVEVfS0lORF9NVVNJQxAIKl4KC0Fycml2YWxN",
-            "b2RlEhwKGEFSUklWQUxfTU9ERV9VTlNQRUNJRklFRBAAEhYKEkFSUklWQUxf",
-            "TU9ERV9FWEFDVBABEhkKFUFSUklWQUxfTU9ERV9BREpBQ0VOVBACKrYBChpJ",
-            "bnZlbnRvcnlUcmFuc2ZlckRpcmVjdGlvbhIsCihJTlZFTlRPUllfVFJBTlNG",
-            "RVJfRElSRUNUSU9OX1VOU1BFQ0lGSUVEEAASNAowSU5WRU5UT1JZX1RSQU5T",
-            "RkVSX0RJUkVDVElPTl9QTEFZRVJfVE9fQ09OVEFJTkVSEAESNAowSU5WRU5U",
-            "T1JZX1RSQU5TRkVSX0RJUkVDVElPTl9DT05UQUlORVJfVE9fUExBWUVSEAJC",
-            "H6oCHFN0YXJkZXdWYWxsZXlNY3AuUHJvdG9jb2wuVjFiBnByb3RvMw=="));
+            "JAocY29udGFpbmVyX2ludmVudG9yeV9yZXZpc2lvbhgFIAEoCSLTAQoXU2V0",
+            "RXF1aXBtZW50U2xvdFJlcXVlc3QSNgoSZXF1aXBtZW50X3Nsb3RfcmVmGAEg",
+            "ASgLMhouc3RhcmRld192YWxsZXkubWNwLnYxLlJlZhIuCghpdGVtX3JlZhgC",
+            "IAEoCzIaLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWZIABIPCgVjbGVhchgD",
+            "IAEoCEgAEhMKC3VpX3JldmlzaW9uGAQgASgJEiEKGXBsYXllcl9pbnZlbnRv",
+            "cnlfcmV2aXNpb24YBSABKAlCBwoFdmFsdWUi8AEKFlNldEVxdWlwbWVudFNs",
+            "b3RSZXN1bHQSRwoTZXF1aXBtZW50X3Nsb3Rfa2luZBgBIAEoDjIqLnN0YXJk",
+            "ZXdfdmFsbGV5Lm1jcC52MS5VaUVxdWlwbWVudFNsb3RLaW5kEhwKFGVxdWlw",
+            "bWVudF9zbG90X2luZGV4GAIgASgNEjIKBGl0ZW0YAyABKAsyHy5zdGFyZGV3",
+            "X3ZhbGxleS5tY3AudjEuSXRlbUZhY3RIAIgBARIhChlwbGF5ZXJfaW52ZW50",
+            "b3J5X3JldmlzaW9uGAQgASgJEg8KB2NoYW5nZWQYBSABKAhCBwoFX2l0ZW0i",
+            "QAoPT3Blbk1lbnVSZXF1ZXN0Ei0KBG1lbnUYASABKA4yHy5zdGFyZGV3X3Zh",
+            "bGxleS5tY3AudjEuTWVudUtpbmQiSwoOT3Blbk1lbnVSZXN1bHQSOQoKdHJh",
+            "bnNpdGlvbhgBIAEoCzIlLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5NZW51VHJh",
+            "bnNpdGlvbiJZChFBY3RpdmF0ZVVpUmVxdWVzdBIvCgtlbGVtZW50X3JlZhgB",
+            "IAEoCzIaLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWYSEwoLdWlfcmV2aXNp",
+            "b24YAiABKAkihAEKEEFjdGl2YXRlVWlSZXN1bHQSLwoLZWxlbWVudF9yZWYY",
+            "ASABKAsyGi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUmVmEjkKCnRyYW5zaXRp",
+            "b24YAiABKAsyJS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuTWVudVRyYW5zaXRp",
+            "b25KBAgDEAQiEgoQQ2xvc2VNZW51UmVxdWVzdCJkCg9DbG9zZU1lbnVSZXN1",
+            "bHQSOQoKdHJhbnNpdGlvbhgBIAEoCzIlLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
+            "MS5NZW51VHJhbnNpdGlvbhIWCg5hbHJlYWR5X2Nsb3NlZBgCIAEoCCreAQoJ",
+            "RW1vdGVLaW5kEhoKFkVNT1RFX0tJTkRfVU5TUEVDSUZJRUQQABIUChBFTU9U",
+            "RV9LSU5EX0hBUFBZEAESEgoORU1PVEVfS0lORF9TQUQQAhIUChBFTU9URV9L",
+            "SU5EX0hFQVJUEAMSGgoWRU1PVEVfS0lORF9FWENMQU1BVElPThAEEhcKE0VN",
+            "T1RFX0tJTkRfUVVFU1RJT04QBRIUChBFTU9URV9LSU5EX0FOR1JZEAYSFAoQ",
+            "RU1PVEVfS0lORF9TTEVFUBAHEhQKEEVNT1RFX0tJTkRfTVVTSUMQCCpeCgtB",
+            "cnJpdmFsTW9kZRIcChhBUlJJVkFMX01PREVfVU5TUEVDSUZJRUQQABIWChJB",
+            "UlJJVkFMX01PREVfRVhBQ1QQARIZChVBUlJJVkFMX01PREVfQURKQUNFTlQQ",
+            "Aiq2AQoaSW52ZW50b3J5VHJhbnNmZXJEaXJlY3Rpb24SLAooSU5WRU5UT1JZ",
+            "X1RSQU5TRkVSX0RJUkVDVElPTl9VTlNQRUNJRklFRBAAEjQKMElOVkVOVE9S",
+            "WV9UUkFOU0ZFUl9ESVJFQ1RJT05fUExBWUVSX1RPX0NPTlRBSU5FUhABEjQK",
+            "MElOVkVOVE9SWV9UUkFOU0ZFUl9ESVJFQ1RJT05fQ09OVEFJTkVSX1RPX1BM",
+            "QVlFUhACQh+qAhxTdGFyZGV3VmFsbGV5TWNwLlByb3RvY29sLlYxYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::StardewValleyMcp.Protocol.V1.CommonReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.RefsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.EmoteKind), typeof(global::StardewValleyMcp.Protocol.V1.ArrivalMode), typeof(global::StardewValleyMcp.Protocol.V1.InventoryTransferDirection), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -122,6 +133,8 @@ namespace StardewValleyMcp.Protocol.V1 {
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.EquipResult), global::StardewValleyMcp.Protocol.V1.EquipResult.Parser, new[]{ "SlotIndex", "Item", "Changed" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest), global::StardewValleyMcp.Protocol.V1.TransferInventoryItemRequest.Parser, new[]{ "Direction", "ItemRef", "Quantity", "UiRevision", "PlayerInventoryRevision", "ContainerInventoryRevision" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult), global::StardewValleyMcp.Protocol.V1.TransferInventoryItemResult.Parser, new[]{ "TransferredQuantity", "SourceSlotIndex", "SourceRemainingQuantity", "PlayerInventoryRevision", "ContainerInventoryRevision" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotRequest), global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotRequest.Parser, new[]{ "EquipmentSlotRef", "ItemRef", "Clear", "UiRevision", "PlayerInventoryRevision" }, new[]{ "Value" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotResult), global::StardewValleyMcp.Protocol.V1.SetEquipmentSlotResult.Parser, new[]{ "EquipmentSlotKind", "EquipmentSlotIndex", "Item", "PlayerInventoryRevision", "Changed" }, new[]{ "Item" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.OpenMenuRequest), global::StardewValleyMcp.Protocol.V1.OpenMenuRequest.Parser, new[]{ "Menu" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.OpenMenuResult), global::StardewValleyMcp.Protocol.V1.OpenMenuResult.Parser, new[]{ "Transition" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.ActivateUiRequest), global::StardewValleyMcp.Protocol.V1.ActivateUiRequest.Parser, new[]{ "ElementRef", "UiRevision" }, null, null, null, null),
@@ -4869,6 +4882,779 @@ namespace StardewValleyMcp.Protocol.V1 {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class SetEquipmentSlotRequest : pb::IMessage<SetEquipmentSlotRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<SetEquipmentSlotRequest> _parser = new pb::MessageParser<SetEquipmentSlotRequest>(() => new SetEquipmentSlotRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<SetEquipmentSlotRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[16]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public SetEquipmentSlotRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public SetEquipmentSlotRequest(SetEquipmentSlotRequest other) : this() {
+      equipmentSlotRef_ = other.equipmentSlotRef_ != null ? other.equipmentSlotRef_.Clone() : null;
+      uiRevision_ = other.uiRevision_;
+      playerInventoryRevision_ = other.playerInventoryRevision_;
+      switch (other.ValueCase) {
+        case ValueOneofCase.ItemRef:
+          ItemRef = other.ItemRef.Clone();
+          break;
+        case ValueOneofCase.Clear:
+          Clear = other.Clear;
+          break;
+      }
+
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public SetEquipmentSlotRequest Clone() {
+      return new SetEquipmentSlotRequest(this);
+    }
+
+    /// <summary>Field number for the "equipment_slot_ref" field.</summary>
+    public const int EquipmentSlotRefFieldNumber = 1;
+    private global::StardewValleyMcp.Protocol.V1.Ref equipmentSlotRef_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.Ref EquipmentSlotRef {
+      get { return equipmentSlotRef_; }
+      set {
+        equipmentSlotRef_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "item_ref" field.</summary>
+    public const int ItemRefFieldNumber = 2;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.Ref ItemRef {
+      get { return valueCase_ == ValueOneofCase.ItemRef ? (global::StardewValleyMcp.Protocol.V1.Ref) value_ : null; }
+      set {
+        value_ = value;
+        valueCase_ = value == null ? ValueOneofCase.None : ValueOneofCase.ItemRef;
+      }
+    }
+
+    /// <summary>Field number for the "clear" field.</summary>
+    public const int ClearFieldNumber = 3;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Clear {
+      get { return HasClear ? (bool) value_ : false; }
+      set {
+        value_ = value;
+        valueCase_ = ValueOneofCase.Clear;
+      }
+    }
+    /// <summary>Gets whether the "clear" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasClear {
+      get { return valueCase_ == ValueOneofCase.Clear; }
+    }
+    /// <summary> Clears the value of the oneof if it's currently set to "clear" </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearClear() {
+      if (HasClear) {
+        ClearValue();
+      }
+    }
+
+    /// <summary>Field number for the "ui_revision" field.</summary>
+    public const int UiRevisionFieldNumber = 4;
+    private string uiRevision_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string UiRevision {
+      get { return uiRevision_; }
+      set {
+        uiRevision_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "player_inventory_revision" field.</summary>
+    public const int PlayerInventoryRevisionFieldNumber = 5;
+    private string playerInventoryRevision_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string PlayerInventoryRevision {
+      get { return playerInventoryRevision_; }
+      set {
+        playerInventoryRevision_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    private object value_;
+    /// <summary>Enum of possible cases for the "value" oneof.</summary>
+    public enum ValueOneofCase {
+      None = 0,
+      ItemRef = 2,
+      Clear = 3,
+    }
+    private ValueOneofCase valueCase_ = ValueOneofCase.None;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public ValueOneofCase ValueCase {
+      get { return valueCase_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearValue() {
+      valueCase_ = ValueOneofCase.None;
+      value_ = null;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as SetEquipmentSlotRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(SetEquipmentSlotRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(EquipmentSlotRef, other.EquipmentSlotRef)) return false;
+      if (!object.Equals(ItemRef, other.ItemRef)) return false;
+      if (Clear != other.Clear) return false;
+      if (UiRevision != other.UiRevision) return false;
+      if (PlayerInventoryRevision != other.PlayerInventoryRevision) return false;
+      if (ValueCase != other.ValueCase) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (equipmentSlotRef_ != null) hash ^= EquipmentSlotRef.GetHashCode();
+      if (valueCase_ == ValueOneofCase.ItemRef) hash ^= ItemRef.GetHashCode();
+      if (HasClear) hash ^= Clear.GetHashCode();
+      if (UiRevision.Length != 0) hash ^= UiRevision.GetHashCode();
+      if (PlayerInventoryRevision.Length != 0) hash ^= PlayerInventoryRevision.GetHashCode();
+      hash ^= (int) valueCase_;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (equipmentSlotRef_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(EquipmentSlotRef);
+      }
+      if (valueCase_ == ValueOneofCase.ItemRef) {
+        output.WriteRawTag(18);
+        output.WriteMessage(ItemRef);
+      }
+      if (HasClear) {
+        output.WriteRawTag(24);
+        output.WriteBool(Clear);
+      }
+      if (UiRevision.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(UiRevision);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(PlayerInventoryRevision);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (equipmentSlotRef_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(EquipmentSlotRef);
+      }
+      if (valueCase_ == ValueOneofCase.ItemRef) {
+        output.WriteRawTag(18);
+        output.WriteMessage(ItemRef);
+      }
+      if (HasClear) {
+        output.WriteRawTag(24);
+        output.WriteBool(Clear);
+      }
+      if (UiRevision.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(UiRevision);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        output.WriteRawTag(42);
+        output.WriteString(PlayerInventoryRevision);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (equipmentSlotRef_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(EquipmentSlotRef);
+      }
+      if (valueCase_ == ValueOneofCase.ItemRef) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(ItemRef);
+      }
+      if (HasClear) {
+        size += 1 + 1;
+      }
+      if (UiRevision.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(UiRevision);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PlayerInventoryRevision);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(SetEquipmentSlotRequest other) {
+      if (other == null) {
+        return;
+      }
+      if (other.equipmentSlotRef_ != null) {
+        if (equipmentSlotRef_ == null) {
+          EquipmentSlotRef = new global::StardewValleyMcp.Protocol.V1.Ref();
+        }
+        EquipmentSlotRef.MergeFrom(other.EquipmentSlotRef);
+      }
+      if (other.UiRevision.Length != 0) {
+        UiRevision = other.UiRevision;
+      }
+      if (other.PlayerInventoryRevision.Length != 0) {
+        PlayerInventoryRevision = other.PlayerInventoryRevision;
+      }
+      switch (other.ValueCase) {
+        case ValueOneofCase.ItemRef:
+          if (ItemRef == null) {
+            ItemRef = new global::StardewValleyMcp.Protocol.V1.Ref();
+          }
+          ItemRef.MergeFrom(other.ItemRef);
+          break;
+        case ValueOneofCase.Clear:
+          Clear = other.Clear;
+          break;
+      }
+
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (equipmentSlotRef_ == null) {
+              EquipmentSlotRef = new global::StardewValleyMcp.Protocol.V1.Ref();
+            }
+            input.ReadMessage(EquipmentSlotRef);
+            break;
+          }
+          case 18: {
+            global::StardewValleyMcp.Protocol.V1.Ref subBuilder = new global::StardewValleyMcp.Protocol.V1.Ref();
+            if (valueCase_ == ValueOneofCase.ItemRef) {
+              subBuilder.MergeFrom(ItemRef);
+            }
+            input.ReadMessage(subBuilder);
+            ItemRef = subBuilder;
+            break;
+          }
+          case 24: {
+            Clear = input.ReadBool();
+            break;
+          }
+          case 34: {
+            UiRevision = input.ReadString();
+            break;
+          }
+          case 42: {
+            PlayerInventoryRevision = input.ReadString();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            if (equipmentSlotRef_ == null) {
+              EquipmentSlotRef = new global::StardewValleyMcp.Protocol.V1.Ref();
+            }
+            input.ReadMessage(EquipmentSlotRef);
+            break;
+          }
+          case 18: {
+            global::StardewValleyMcp.Protocol.V1.Ref subBuilder = new global::StardewValleyMcp.Protocol.V1.Ref();
+            if (valueCase_ == ValueOneofCase.ItemRef) {
+              subBuilder.MergeFrom(ItemRef);
+            }
+            input.ReadMessage(subBuilder);
+            ItemRef = subBuilder;
+            break;
+          }
+          case 24: {
+            Clear = input.ReadBool();
+            break;
+          }
+          case 34: {
+            UiRevision = input.ReadString();
+            break;
+          }
+          case 42: {
+            PlayerInventoryRevision = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class SetEquipmentSlotResult : pb::IMessage<SetEquipmentSlotResult>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<SetEquipmentSlotResult> _parser = new pb::MessageParser<SetEquipmentSlotResult>(() => new SetEquipmentSlotResult());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<SetEquipmentSlotResult> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[17]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public SetEquipmentSlotResult() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public SetEquipmentSlotResult(SetEquipmentSlotResult other) : this() {
+      equipmentSlotKind_ = other.equipmentSlotKind_;
+      equipmentSlotIndex_ = other.equipmentSlotIndex_;
+      item_ = other.item_ != null ? other.item_.Clone() : null;
+      playerInventoryRevision_ = other.playerInventoryRevision_;
+      changed_ = other.changed_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public SetEquipmentSlotResult Clone() {
+      return new SetEquipmentSlotResult(this);
+    }
+
+    /// <summary>Field number for the "equipment_slot_kind" field.</summary>
+    public const int EquipmentSlotKindFieldNumber = 1;
+    private global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind equipmentSlotKind_ = global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind.Unspecified;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind EquipmentSlotKind {
+      get { return equipmentSlotKind_; }
+      set {
+        equipmentSlotKind_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "equipment_slot_index" field.</summary>
+    public const int EquipmentSlotIndexFieldNumber = 2;
+    private uint equipmentSlotIndex_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint EquipmentSlotIndex {
+      get { return equipmentSlotIndex_; }
+      set {
+        equipmentSlotIndex_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "item" field.</summary>
+    public const int ItemFieldNumber = 3;
+    private global::StardewValleyMcp.Protocol.V1.ItemFact item_;
+    /// <summary>
+    /// 清空后缺省；装备槽中的 ItemFact 不签发物品 Ref。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.ItemFact Item {
+      get { return item_; }
+      set {
+        item_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "player_inventory_revision" field.</summary>
+    public const int PlayerInventoryRevisionFieldNumber = 4;
+    private string playerInventoryRevision_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string PlayerInventoryRevision {
+      get { return playerInventoryRevision_; }
+      set {
+        playerInventoryRevision_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "changed" field.</summary>
+    public const int ChangedFieldNumber = 5;
+    private bool changed_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Changed {
+      get { return changed_; }
+      set {
+        changed_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as SetEquipmentSlotResult);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(SetEquipmentSlotResult other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (EquipmentSlotKind != other.EquipmentSlotKind) return false;
+      if (EquipmentSlotIndex != other.EquipmentSlotIndex) return false;
+      if (!object.Equals(Item, other.Item)) return false;
+      if (PlayerInventoryRevision != other.PlayerInventoryRevision) return false;
+      if (Changed != other.Changed) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (EquipmentSlotKind != global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind.Unspecified) hash ^= EquipmentSlotKind.GetHashCode();
+      if (EquipmentSlotIndex != 0) hash ^= EquipmentSlotIndex.GetHashCode();
+      if (item_ != null) hash ^= Item.GetHashCode();
+      if (PlayerInventoryRevision.Length != 0) hash ^= PlayerInventoryRevision.GetHashCode();
+      if (Changed != false) hash ^= Changed.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (EquipmentSlotKind != global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind.Unspecified) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) EquipmentSlotKind);
+      }
+      if (EquipmentSlotIndex != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(EquipmentSlotIndex);
+      }
+      if (item_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(Item);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(PlayerInventoryRevision);
+      }
+      if (Changed != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(Changed);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (EquipmentSlotKind != global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind.Unspecified) {
+        output.WriteRawTag(8);
+        output.WriteEnum((int) EquipmentSlotKind);
+      }
+      if (EquipmentSlotIndex != 0) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(EquipmentSlotIndex);
+      }
+      if (item_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(Item);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(PlayerInventoryRevision);
+      }
+      if (Changed != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(Changed);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (EquipmentSlotKind != global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind.Unspecified) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) EquipmentSlotKind);
+      }
+      if (EquipmentSlotIndex != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(EquipmentSlotIndex);
+      }
+      if (item_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Item);
+      }
+      if (PlayerInventoryRevision.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(PlayerInventoryRevision);
+      }
+      if (Changed != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(SetEquipmentSlotResult other) {
+      if (other == null) {
+        return;
+      }
+      if (other.EquipmentSlotKind != global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind.Unspecified) {
+        EquipmentSlotKind = other.EquipmentSlotKind;
+      }
+      if (other.EquipmentSlotIndex != 0) {
+        EquipmentSlotIndex = other.EquipmentSlotIndex;
+      }
+      if (other.item_ != null) {
+        if (item_ == null) {
+          Item = new global::StardewValleyMcp.Protocol.V1.ItemFact();
+        }
+        Item.MergeFrom(other.Item);
+      }
+      if (other.PlayerInventoryRevision.Length != 0) {
+        PlayerInventoryRevision = other.PlayerInventoryRevision;
+      }
+      if (other.Changed != false) {
+        Changed = other.Changed;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            EquipmentSlotKind = (global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind) input.ReadEnum();
+            break;
+          }
+          case 16: {
+            EquipmentSlotIndex = input.ReadUInt32();
+            break;
+          }
+          case 26: {
+            if (item_ == null) {
+              Item = new global::StardewValleyMcp.Protocol.V1.ItemFact();
+            }
+            input.ReadMessage(Item);
+            break;
+          }
+          case 34: {
+            PlayerInventoryRevision = input.ReadString();
+            break;
+          }
+          case 40: {
+            Changed = input.ReadBool();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            EquipmentSlotKind = (global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind) input.ReadEnum();
+            break;
+          }
+          case 16: {
+            EquipmentSlotIndex = input.ReadUInt32();
+            break;
+          }
+          case 26: {
+            if (item_ == null) {
+              Item = new global::StardewValleyMcp.Protocol.V1.ItemFact();
+            }
+            input.ReadMessage(Item);
+            break;
+          }
+          case 34: {
+            PlayerInventoryRevision = input.ReadString();
+            break;
+          }
+          case 40: {
+            Changed = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class OpenMenuRequest : pb::IMessage<OpenMenuRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -4883,7 +5669,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[16]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[18]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5081,7 +5867,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[17]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[19]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5288,7 +6074,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[18]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[20]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5535,7 +6321,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[19]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[21]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5788,7 +6574,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[20]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[22]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5949,7 +6735,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[21]; }
+      get { return global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor.MessageTypes[23]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

@@ -15,6 +15,7 @@ internal static class DefaultCapabilitySet
             new UseToolHandler(refs),
             new EquipHandler(refs),
             new TransferInventoryItemHandler(refs),
+            new SetEquipmentSlotHandler(refs),
             new OpenMenuHandler(refs),
             new ActivateUiHandler(refs),
             new CloseMenuHandler(refs),

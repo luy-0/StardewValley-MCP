@@ -128,6 +128,20 @@ capabilities:
     required_scope: game:write
     risk: [changes_save]
     destructive: true
+  - id: set_equipment_slot
+    title: 设置装备槽
+    description: 在当前原版背包页面中穿戴、替换或取下一个受支持的装备。
+    contract_version: 1.0.0
+    request: SetEquipmentSlotRequest
+    result: SetEquipmentSlotResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: [changes_save]
+    destructive: true
   - id: activate_ui
     title: 激活界面元素
     description: 在匹配的 UI Revision 上激活 query_ui 返回的可交互元素。
