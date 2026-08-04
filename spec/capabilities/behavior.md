@@ -210,7 +210,7 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 
 ### `query_ui`
 
-始终返回当前 `ui_revision`。没有菜单时 `menu_open=false`、Menu 缺省且 Elements 为空；有菜单时 Menu 必须存在，Elements 按 `(kind,inventory_side-or-unspecified,equipment-slot-kind-or-unspecified,index,ref.value)` 稳定排序。V1 只对精确原版 `GameMenu` 的顶层 Tab 与下述 Inventory 页元素、精确原版 `DialogueBox` 已经出现在 `responseCC` 中的响应、精确原版非选择型 `DialogueBox` 的唯一语义推进元素、精确原版 `ShopMenu` 当前 viewport 的出售行，以及下述受支持 `ItemGrabMenu` 的两侧槽位签发 `UI_ELEMENT` Ref；派生类和其他菜单只返回公共 Menu shell、空 Elements 与 `UI_MENU_UNSUPPORTED` warning，不使用通用 clickable fallback。
+始终返回当前 `ui_revision`。没有菜单时 `menu_open=false`、Menu 缺省且 Elements 为空；有菜单时 Menu 必须存在，Elements 按 `(kind,inventory_side-or-unspecified,equipment-slot-kind-or-unspecified,index,ref.value)` 稳定排序。V1 只对精确原版 `GameMenu` 的顶层 Tab 与下述 Inventory／Crafting 页元素、精确原版 `DialogueBox` 已经出现在 `responseCC` 中的响应、精确原版非选择型 `DialogueBox` 的唯一语义推进元素、精确原版 `ShopMenu` 当前 viewport 的出售行，以及下述受支持 `ItemGrabMenu` 的两侧槽位签发 `UI_ELEMENT` Ref；派生类和其他菜单只返回公共 Menu shell、空 Elements 与 `UI_MENU_UNSUPPORTED` warning，不使用通用 clickable fallback。
 
 非选择型 `DialogueBox` 必须且只能投影一个 `DIALOGUE_ADVANCE`。当前页后面仍有页面时标签为“继续”，否则为“结束”；判断必须与游戏自身的下一页/关闭图标语义一致。只有正文完整呈现、菜单不在过渡且 `safetyTimer <= 0` 时 `enabled=true`。问题对话只投影 `DIALOGUE_RESPONSE`，不得同时投影推进元素。页面变化、对话关闭或菜单替换后旧推进 Ref 必须 stale；同一稳定页面的重复查询与 `inspect` 必须复用同一 Ref。
 
@@ -218,11 +218,15 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 
 Inventory 页槽位 UI Ref 表示逻辑槽位而非当前 Item：同一菜单、页面和组件内的内容变化应复用槽位 Ref并更新 UI Revision；页面切走、菜单或组件替换后旧 Ref stale。装备槽事实只受当前 UI Revision 保护，不新增 Equipment Revision。现有 `equip` 仍只选择玩家工具栏/当前手持背包物品，不表示穿戴装备。
 
+精确原版 `GameMenu` 当前位于精确原版、非烹饪 `CraftingPage` 时，必须投影该页已构建的全部配方组件，不得从全局数据重新构造或按名称搜索。当前配方页元素 `visible=true`，其他页为 `false`；所有 `CRAFTING_RECIPE` 元素均 `enabled=false`，`activate_ui` 不得执行它们。每个事实必须包含配方键、显示名、已知状态、只表示材料充足的 `craftable`、所有材料需求及当前可用数量，以及全部可能产出与单次数量。材料可用量同时计入玩家背包和当前页指定的材料容器，并保留原版类别与特殊野种匹配。
+
+配方以原版 component `myID - 201` 作为全局 `index`并稳定排序，上限为 256。翻动配方页、材料变化或 held-item 状态变化必须推进 UI Revision，但已构建配方的 Ref 保持稳定；切换 Tab、关闭菜单、页面或 component／recipe 绑定被替换后旧 Ref stale。任一配方、材料容器或序号无法完整确认，或数量超过上限时，整批配方按 `UI_CRAFTING_CAPTURE_INCOMPLETE` 处理，不得部分签发 Ref。查询不得创建产出 Item、推进 RNG、消耗材料、调用点击或更新制作计数。
+
 受支持的 `ItemGrabMenu` 仅限精确原版菜单，来源为当前 Location 中仍附着的精确原版普通 Chest、Big Chest 或内置 Fridge，并且菜单两侧 backing、容量和完整槽位组件都与权威库存一致。Global、Junimo、Mini Shipping、Separate Wallet、AutoLoader、Enricher、派生 Chest、非 Chest 来源与其他特殊菜单保持 shell-only。玩家侧与容器侧各在 `inventories` 中提供一条 `side + inventory_revision + slot_count` 轻量关联，容器侧另带 `container_ref`；每个槽位元素保留该侧真实 0-based `index`，以 `inventory_side` 区分两侧，非空时只附 `item_ref` 与显示名称，不重复完整 `ItemFact`。两侧关联、Item Ref、Container Ref 与 Revision 必须复用 `query_inventory(include_empty_slots=true)` 的 resolver 与 projector；空槽也必须公开且没有 `item_ref`。当前版本的槽位一律 `enabled=false`，不得通过 `activate_ui` 点击。
 
 受支持 ItemGrabMenu 存在 `heldItem`，或 backing、组件拓扑、关键库存事实暂时不可完整读取时，返回空元素与 `UI_INVENTORY_CAPTURE_INCOMPLETE`，本轮按 incomplete 处理，不得淘汰旧槽位 Ref。精确 Inventory 页存在 `CursorSlotItem` 时使用 `UI_INVENTORY_CURSOR_ITEM_UNSUPPORTED`；其当前 page、backing、组件映射、装备拓扑或关键 getter 暂时不可信时使用 `UI_INVENTORY_CAPTURE_INCOMPLETE`。GameMenu 当前页或 `readyToClose` 状态不可读时使用 `UI_GAME_MENU_CAPTURE_INCOMPLETE`。上述 GameMenu incomplete 轮次必须移除全部页内元素与 PLAYER link，并把所有顶部 Tab 标为 disabled；旧页内 Ref为 `FACT_UNAVAILABLE`。只有当前 page 非空且 runtime type 明确不是原版 InventoryPage 时，才使用 `UI_GAME_MENU_PAGE_UNSUPPORTED` 返回完整 Tab-only 集合并使旧页内 Ref stale。
 
-`modal` 是 V1 的窄 allowlist 分类值：仅精确原版 `DialogueBox` 或 `LetterViewerMenu` 为 `true`，其他类型（包括其派生类）均为 `false`；它不表示菜单一定可关闭或不阻塞游戏。UI 查询不得调用点击、按键、hover、组件填充、菜单更新、切换、购买或第三方 callback。GameMenu、DialogueBox、ShopMenu、ItemGrabMenu 的完整 extractor 分别以 64、64、16、128 个元素为上限；超过上限时整体降级，不得静默截断。
+`modal` 是 V1 的窄 allowlist 分类值：仅精确原版 `DialogueBox` 或 `LetterViewerMenu` 为 `true`，其他类型（包括其派生类）均为 `false`；它不表示菜单一定可关闭或不阻塞游戏。UI 查询不得调用点击、按键、hover、组件填充、菜单更新、切换、购买或第三方 callback。GameMenu 顶层 Tab、Crafting 配方、DialogueBox、ShopMenu、ItemGrabMenu 的完整 extractor 分别以 64、256、64、16、128 个元素为上限；超过上限时整体降级，不得静默截断。
 
 UI warning 使用以下稳定 code：`UI_MENU_UNSUPPORTED` 表示只有 shell；`UI_MENU_FACT_UNAVAILABLE` 表示非关键 Menu 字段不可读；`UI_GAME_MENU_PAGE_UNSUPPORTED` 表示当前 GameMenu page 是稳定不支持的派生/替换页；`UI_GAME_MENU_CAPTURE_INCOMPLETE` 表示 GameMenu 当前页或切换状态暂时不可读；`UI_ELEMENTS_NOT_PRESENTED` 表示对话响应尚未生成 clickable component；`UI_ELEMENTS_LIMIT_UNSUPPORTED` 表示超出完整投影上限；`UI_ELEMENT_PROJECTION_FAILED` 表示元素无法安全投影；`UI_INVENTORY_CAPTURE_INCOMPLETE` 表示当前库存或装备槽关联不可完整确认；`UI_INVENTORY_CURSOR_ITEM_UNSUPPORTED` 表示 Inventory 页游标持有的瞬态物品未纳入公开事实；`UI_ELEMENT_ACTIVATION_UNCERTAIN` 表示无法无副作用证明可激活；`UI_ITEM_FACT_UNAVAILABLE`、`UI_PRICE_CURRENCY_UNREPRESENTED`、`UI_PRICE_PARTIAL` 分别表示 Shop Item、货币或交换物事实不完整。Warnings 按 `(code,ref.value-or-empty,message)` Ordinal 排序且不进入 `ui_revision`。
 

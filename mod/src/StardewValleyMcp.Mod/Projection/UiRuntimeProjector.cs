@@ -69,6 +69,19 @@ internal static class UiRuntimeProjector
                         warnings
                     ).Completeness;
                 }
+                if (completeness == UiElementSetCompleteness.Complete)
+                {
+                    var crafting = CraftingPageProjector.Extract(
+                        gameMenu,
+                        player,
+                        viewport,
+                        descriptors,
+                        warnings
+                    );
+                    completeness = crafting.Completeness;
+                    if (!string.IsNullOrEmpty(crafting.ActionState))
+                        actionState = $"{actionState}:{crafting.ActionState}";
+                }
                 break;
             }
             case UiMenuClassification.DialogueBox:
@@ -673,6 +686,16 @@ internal static class UiRuntimeProjector
                         viewport,
                         descriptors,
                         gameMenuInventories,
+                        warnings
+                    ).Completeness;
+                }
+                if (completeness == UiElementSetCompleteness.Complete)
+                {
+                    completeness = CraftingPageProjector.Extract(
+                        gameMenu,
+                        gameMenuPlayer,
+                        viewport,
+                        descriptors,
                         warnings
                     ).Completeness;
                 }

@@ -199,7 +199,8 @@ internal sealed record UiElementDescriptor(
     IReadOnlyList<UiDescriptorWarning>? DescriptorWarnings = null,
     UiInventorySide? InventorySide = null,
     Ref? ItemRef = null,
-    UiEquipmentSlotKind? EquipmentSlotKind = null
+    UiEquipmentSlotKind? EquipmentSlotKind = null,
+    CraftingRecipeFact? CraftingRecipe = null
 )
 {
     public IReadOnlyList<UiDescriptorWarning> Warnings =>
@@ -212,6 +213,7 @@ internal sealed record UiElementDescriptor(
             or UiElementKind.DialogueAdvance
             or UiElementKind.ItemSlot
             or UiElementKind.EquipmentSlot
+            or UiElementKind.CraftingRecipe
         && (Kind == UiElementKind.DialogueAdvance ? Component is null : Component is not null)
         && (InventorySide is null
             || Kind == UiElementKind.ItemSlot
@@ -220,6 +222,7 @@ internal sealed record UiElementDescriptor(
                 && Price is null
                 && Stock is null
                 && EquipmentSlotKind is null
+                && CraftingRecipe is null
                 && !Enabled)
         && (ItemRef is null || InventorySide is not null)
         && (EquipmentSlotKind is null
@@ -229,9 +232,21 @@ internal sealed record UiElementDescriptor(
                 && ItemRef is null
                 && Price is null
                 && Stock is null
+                && CraftingRecipe is null
                 && (Item is null || Item.Ref is null)
                 && !Enabled)
         && (Kind != UiElementKind.EquipmentSlot || EquipmentSlotKind is not null)
+        && (CraftingRecipe is null
+            || Kind == UiElementKind.CraftingRecipe
+                && Component is not null
+                && InventorySide is null
+                && ItemRef is null
+                && EquipmentSlotKind is null
+                && Item is null
+                && Price is null
+                && Stock is null
+                && !Enabled)
+        && (Kind != UiElementKind.CraftingRecipe || CraftingRecipe is not null)
         && Index >= 0
         && PublicStringPolicy.IsValid(Label)
         && !string.IsNullOrEmpty(Guard);
@@ -260,6 +275,8 @@ internal sealed record UiElementDescriptor(
             fact.ItemRef = ItemRef.Clone();
         if (EquipmentSlotKind.HasValue)
             fact.EquipmentSlotKind = EquipmentSlotKind.Value;
+        if (CraftingRecipe is not null)
+            fact.CraftingRecipe = CraftingRecipe.Clone();
         return fact;
     }
 }

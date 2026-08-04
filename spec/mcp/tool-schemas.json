@@ -269,6 +269,7 @@
     "stardew_valley.mcp.v1.UiElementKind": {
       "jsonToProto": {
         "button": "UI_ELEMENT_KIND_BUTTON",
+        "crafting_recipe": "UI_ELEMENT_KIND_CRAFTING_RECIPE",
         "dialogue_advance": "UI_ELEMENT_KIND_DIALOGUE_ADVANCE",
         "dialogue_response": "UI_ELEMENT_KIND_DIALOGUE_RESPONSE",
         "equipment_slot": "UI_ELEMENT_KIND_EQUIPMENT_SLOT",
@@ -279,6 +280,7 @@
       },
       "protoToJson": {
         "UI_ELEMENT_KIND_BUTTON": "button",
+        "UI_ELEMENT_KIND_CRAFTING_RECIPE": "crafting_recipe",
         "UI_ELEMENT_KIND_DIALOGUE_ADVANCE": "dialogue_advance",
         "UI_ELEMENT_KIND_DIALOGUE_RESPONSE": "dialogue_response",
         "UI_ELEMENT_KIND_EQUIPMENT_SLOT": "equipment_slot",
@@ -19665,6 +19667,106 @@
       "name": "stardew_query_ui",
       "outputSchema": {
         "$defs": {
+          "CraftingMaterialRequirement": {
+            "additionalProperties": false,
+            "properties": {
+              "availableQuantity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "ingredientKey": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "requiredQuantity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "availableQuantity",
+              "displayName",
+              "ingredientKey",
+              "requiredQuantity"
+            ],
+            "type": "object"
+          },
+          "CraftingOutputFact": {
+            "additionalProperties": false,
+            "properties": {
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "qualifiedItemId": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "quantity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "displayName",
+              "qualifiedItemId",
+              "quantity"
+            ],
+            "type": "object"
+          },
+          "CraftingRecipeFact": {
+            "additionalProperties": false,
+            "properties": {
+              "craftable": {
+                "type": "boolean"
+              },
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "known": {
+                "type": "boolean"
+              },
+              "materials": {
+                "items": {
+                  "$ref": "#/$defs/CraftingMaterialRequirement"
+                },
+                "type": "array"
+              },
+              "possibleOutputs": {
+                "items": {
+                  "$ref": "#/$defs/CraftingOutputFact"
+                },
+                "type": "array"
+              },
+              "recipeKey": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "craftable",
+              "displayName",
+              "known",
+              "materials",
+              "possibleOutputs",
+              "recipeKey"
+            ],
+            "type": "object"
+          },
           "FailedToolError": {
             "oneOf": [
               {
@@ -20637,6 +20739,9 @@
               "center": {
                 "$ref": "#/$defs/PixelPoint"
               },
+              "craftingRecipe": {
+                "$ref": "#/$defs/CraftingRecipeFact"
+              },
               "enabled": {
                 "type": "boolean"
               },
@@ -20681,7 +20786,8 @@
                   "item_slot",
                   "dialogue_response",
                   "dialogue_advance",
-                  "equipment_slot"
+                  "equipment_slot",
+                  "crafting_recipe"
                 ],
                 "type": "string"
               },
@@ -21148,6 +21254,106 @@
               "capacity",
               "containerKind",
               "itemCount"
+            ],
+            "type": "object"
+          },
+          "CraftingMaterialRequirement": {
+            "additionalProperties": false,
+            "properties": {
+              "availableQuantity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "ingredientKey": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "requiredQuantity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "availableQuantity",
+              "displayName",
+              "ingredientKey",
+              "requiredQuantity"
+            ],
+            "type": "object"
+          },
+          "CraftingOutputFact": {
+            "additionalProperties": false,
+            "properties": {
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "qualifiedItemId": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "quantity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "displayName",
+              "qualifiedItemId",
+              "quantity"
+            ],
+            "type": "object"
+          },
+          "CraftingRecipeFact": {
+            "additionalProperties": false,
+            "properties": {
+              "craftable": {
+                "type": "boolean"
+              },
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "known": {
+                "type": "boolean"
+              },
+              "materials": {
+                "items": {
+                  "$ref": "#/$defs/CraftingMaterialRequirement"
+                },
+                "type": "array"
+              },
+              "possibleOutputs": {
+                "items": {
+                  "$ref": "#/$defs/CraftingOutputFact"
+                },
+                "type": "array"
+              },
+              "recipeKey": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "craftable",
+              "displayName",
+              "known",
+              "materials",
+              "possibleOutputs",
+              "recipeKey"
             ],
             "type": "object"
           },
@@ -23205,6 +23411,9 @@
               "center": {
                 "$ref": "#/$defs/PixelPoint"
               },
+              "craftingRecipe": {
+                "$ref": "#/$defs/CraftingRecipeFact"
+              },
               "enabled": {
                 "type": "boolean"
               },
@@ -23249,7 +23458,8 @@
                   "item_slot",
                   "dialogue_response",
                   "dialogue_advance",
-                  "equipment_slot"
+                  "equipment_slot",
+                  "crafting_recipe"
                 ],
                 "type": "string"
               },

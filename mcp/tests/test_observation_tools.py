@@ -272,6 +272,47 @@ def test_query_ui_inventory_page_reuses_player_inventory_and_projects_equipment(
     assert all(not element["enabled"] for element in equipment)
 
 
+def test_query_ui_crafting_page_projects_all_pages_as_read_only_recipe_facts() -> None:
+    frame = transport_pb2.TransportFrame()
+    json_format.Parse(
+        (FIXTURES / "query-ui.success-crafting-page.json").read_text(),
+        frame,
+    )
+    output = project_message(frame.command_event.result.query_ui)
+    projected = {
+        "status": "succeeded",
+        "commandId": frame.command_event.command_id,
+        "output": output,
+    }
+    Draft202012Validator(Catalog.load().tool("query_ui").outputSchema).validate(projected)
+    recipes = [
+        element for element in output["snapshot"]["elements"]
+        if element["kind"] == "crafting_recipe"
+    ]
+    assert [element["index"] for element in recipes] == [0, 1]
+    assert [element["visible"] for element in recipes] == [True, False]
+    assert all(element["enabled"] is False for element in recipes)
+    assert recipes[0]["craftingRecipe"] == {
+        "recipeKey": "Wood Fence",
+        "displayName": "木围栏",
+        "known": True,
+        "craftable": True,
+        "materials": [{
+            "ingredientKey": "388",
+            "displayName": "木材",
+            "requiredQuantity": 2,
+            "availableQuantity": 8,
+        }],
+        "possibleOutputs": [{
+            "qualifiedItemId": "(O)322",
+            "displayName": "木围栏",
+            "quantity": 1,
+        }],
+    }
+    assert recipes[1]["craftingRecipe"]["craftable"] is False
+
+
+
 def test_direct_call_cannot_bypass_mod_announcement_intersection() -> None:
     bootstrap = transport_pb2.TransportFrame()
     json_format.Parse((ROOT / "spec" / "fixtures" / "v1" / "bootstrap" / "server-ready.json").read_text(), bootstrap)

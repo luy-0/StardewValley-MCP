@@ -5667,6 +5667,106 @@
             ],
             "type": "object"
           },
+          "CraftingMaterialRequirement": {
+            "additionalProperties": false,
+            "properties": {
+              "availableQuantity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "ingredientKey": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "requiredQuantity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "availableQuantity",
+              "displayName",
+              "ingredientKey",
+              "requiredQuantity"
+            ],
+            "type": "object"
+          },
+          "CraftingOutputFact": {
+            "additionalProperties": false,
+            "properties": {
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "qualifiedItemId": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "quantity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "displayName",
+              "qualifiedItemId",
+              "quantity"
+            ],
+            "type": "object"
+          },
+          "CraftingRecipeFact": {
+            "additionalProperties": false,
+            "properties": {
+              "craftable": {
+                "type": "boolean"
+              },
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "known": {
+                "type": "boolean"
+              },
+              "materials": {
+                "items": {
+                  "$ref": "#/$defs/CraftingMaterialRequirement"
+                },
+                "type": "array"
+              },
+              "possibleOutputs": {
+                "items": {
+                  "$ref": "#/$defs/CraftingOutputFact"
+                },
+                "type": "array"
+              },
+              "recipeKey": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "craftable",
+              "displayName",
+              "known",
+              "materials",
+              "possibleOutputs",
+              "recipeKey"
+            ],
+            "type": "object"
+          },
           "CropFact": {
             "additionalProperties": false,
             "properties": {
@@ -7721,6 +7821,9 @@
               "center": {
                 "$ref": "#/$defs/PixelPoint"
               },
+              "craftingRecipe": {
+                "$ref": "#/$defs/CraftingRecipeFact"
+              },
               "enabled": {
                 "type": "boolean"
               },
@@ -7765,7 +7868,8 @@
                   "item_slot",
                   "dialogue_response",
                   "dialogue_advance",
-                  "equipment_slot"
+                  "equipment_slot",
+                  "crafting_recipe"
                 ],
                 "type": "string"
               },
@@ -15861,6 +15965,106 @@
       "name": "stardew_query_ui",
       "outputSchema": {
         "$defs": {
+          "CraftingMaterialRequirement": {
+            "additionalProperties": false,
+            "properties": {
+              "availableQuantity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "ingredientKey": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "requiredQuantity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "availableQuantity",
+              "displayName",
+              "ingredientKey",
+              "requiredQuantity"
+            ],
+            "type": "object"
+          },
+          "CraftingOutputFact": {
+            "additionalProperties": false,
+            "properties": {
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "qualifiedItemId": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "quantity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "displayName",
+              "qualifiedItemId",
+              "quantity"
+            ],
+            "type": "object"
+          },
+          "CraftingRecipeFact": {
+            "additionalProperties": false,
+            "properties": {
+              "craftable": {
+                "type": "boolean"
+              },
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "known": {
+                "type": "boolean"
+              },
+              "materials": {
+                "items": {
+                  "$ref": "#/$defs/CraftingMaterialRequirement"
+                },
+                "type": "array"
+              },
+              "possibleOutputs": {
+                "items": {
+                  "$ref": "#/$defs/CraftingOutputFact"
+                },
+                "type": "array"
+              },
+              "recipeKey": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "craftable",
+              "displayName",
+              "known",
+              "materials",
+              "possibleOutputs",
+              "recipeKey"
+            ],
+            "type": "object"
+          },
           "FailedToolError": {
             "oneOf": [
               {
@@ -16833,6 +17037,9 @@
               "center": {
                 "$ref": "#/$defs/PixelPoint"
               },
+              "craftingRecipe": {
+                "$ref": "#/$defs/CraftingRecipeFact"
+              },
               "enabled": {
                 "type": "boolean"
               },
@@ -16877,7 +17084,8 @@
                   "item_slot",
                   "dialogue_response",
                   "dialogue_advance",
-                  "equipment_slot"
+                  "equipment_slot",
+                  "crafting_recipe"
                 ],
                 "type": "string"
               },

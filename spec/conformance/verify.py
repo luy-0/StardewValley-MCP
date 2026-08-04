@@ -951,6 +951,7 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         "query-ui.success-no-menu.json", "query-ui.success-menu.json",
         "query-ui.success-unsupported-menu.json", "query-ui.success-dialogue.json",
         "query-ui.success-item-grab.json", "query-ui.success-inventory-page.json",
+        "query-ui.success-crafting-page.json",
         "inspect.success-minimal.json", "inspect.success-complete.json",
     ]
     for name in standalone:
@@ -1012,6 +1013,25 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
                 and not equipment[1].HasField("item")
                 and all(not element.enabled for element in equipment),
                 "Inventory 页 Fixture 未覆盖装备槽、空槽或无 Ref Item Fact",
+            )
+        if name == "query-ui.success-crafting-page.json":
+            snapshot = frame.command_event.result.query_ui.snapshot
+            recipes = [element for element in snapshot.elements if element.kind == 8]
+            require(
+                len(recipes) == 2
+                and [element.index for element in recipes] == [0, 1]
+                and [element.visible for element in recipes] == [True, False]
+                and all(not element.enabled for element in recipes),
+                "Crafting 页 Fixture 未覆盖全局序号、跨页可见性或只读语义",
+            )
+            require(
+                recipes[0].crafting_recipe.recipe_key == "Wood Fence"
+                and recipes[0].crafting_recipe.craftable
+                and recipes[0].crafting_recipe.materials[0].available_quantity == 8
+                and recipes[1].crafting_recipe.recipe_key == "Chest"
+                and not recipes[1].crafting_recipe.craftable
+                and recipes[1].crafting_recipe.possible_outputs[0].qualified_item_id == "(BC)130",
+                "Crafting 页 Fixture 未覆盖配方、材料或可能产出事实",
             )
         verify_event_shape(frame.command_event)
     invalid = load_json(FIXTURE_ROOT / "observation" / "invalid-inputs.json")

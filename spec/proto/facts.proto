@@ -287,6 +287,7 @@ enum UiElementKind {
   UI_ELEMENT_KIND_DIALOGUE_RESPONSE = 5;
   UI_ELEMENT_KIND_DIALOGUE_ADVANCE = 6;
   UI_ELEMENT_KIND_EQUIPMENT_SLOT = 7;
+  UI_ELEMENT_KIND_CRAFTING_RECIPE = 8;
 }
 
 enum UiInventorySide {
@@ -304,6 +305,32 @@ enum UiEquipmentSlotKind {
   UI_EQUIPMENT_SLOT_KIND_SHIRT = 5;
   UI_EQUIPMENT_SLOT_KIND_PANTS = 6;
   UI_EQUIPMENT_SLOT_KIND_TRINKET = 7;
+}
+
+message CraftingMaterialRequirement {
+  // 原版配方中的物品 ID、类别编号或特殊匹配键。
+  string ingredient_key = 1;
+  string display_name = 2;
+  uint32 required_quantity = 3;
+  // 包括玩家背包和当前 Crafting 页指定的材料容器。
+  uint32 available_quantity = 4;
+}
+
+message CraftingOutputFact {
+  string qualified_item_id = 1;
+  string display_name = 2;
+  uint32 quantity = 3;
+}
+
+message CraftingRecipeFact {
+  string recipe_key = 1;
+  string display_name = 2;
+  bool known = 3;
+  // 只表示当前材料足够，不表示已验证制作提交或背包容量。
+  bool craftable = 4;
+  repeated CraftingMaterialRequirement materials = 5;
+  // 多个元素表示原版制作时可能随机选择其一。
+  repeated CraftingOutputFact possible_outputs = 6;
 }
 
 message UiInventoryLink {
@@ -349,4 +376,6 @@ message UiElementFact {
   optional Ref item_ref = 12;
   // 仅 Inventory 页装备槽存在；index 是同种类内从 0 开始的序号。
   optional UiEquipmentSlotKind equipment_slot_kind = 13;
+  // 仅精确原版 Crafting 页的 CRAFTING_RECIPE 元素存在。
+  optional CraftingRecipeFact crafting_recipe = 14;
 }

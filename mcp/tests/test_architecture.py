@@ -302,6 +302,34 @@ def test_inventory_slot_move_is_isolated_fail_closed_and_not_ui_click_driven() -
     assert "using StardewValley" not in planner
 
 
+def test_crafting_projection_is_read_only_modular_and_descriptor_projected() -> None:
+    runtime = (MOD / "Projection" / "UiRuntimeProjector.cs").read_text()
+    page = (MOD / "Projection" / "CraftingPageProjector.cs").read_text()
+    fact = (MOD / "Projection" / "CraftingRecipeFactProjector.cs").read_text()
+    ui = (MOD / "Projection" / "UiProjector.cs").read_text()
+    menu_actions = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
+    transport = (PACKAGE / "transport.py").read_text()
+    projection = (PACKAGE / "projection.py").read_text()
+
+    assert "CraftingPageProjector.Extract(" in runtime
+    assert "CraftingRecipeFactProjector.Project(" in page
+    assert "CraftingRecipe: item.Fact" in page
+    assert "UiElementKind.CraftingRecipe" in ui
+    assert "CraftingRecipe" not in transport
+    assert "crafting_recipe" not in projection
+    for forbidden in (
+        "createItem(",
+        "consumeIngredients(",
+        "receiveLeftClick(",
+        "receiveRightClick(",
+        "addItemToInventory",
+        "createItemDebris(",
+        "GetItemData(",
+    ):
+        assert forbidden not in page + fact
+    assert "GameMenu 仅允许激活顶部页签" in menu_actions
+
+
 def test_close_menu_blocks_dialogue_family_before_generic_exit_path() -> None:
     source = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
     close = source.split("public MenuActionAttempt Close()", 1)[1].split(
