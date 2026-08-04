@@ -93,6 +93,7 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 - 成功要求 Final Position 满足 Arrival，且最终朝向满足可选要求。路径不存在、目标消失或抵达条件不成立不能返回成功。
 - `resolved_destination` 是本次锁定并实际用于抵达判断的玩家落脚 Tile；它不是 Ref 指向对象自身的 Tile。`route_location_ids` 只记录玩家实际到达过的 Location，首项为起点、末项为终点，不得返回尚未执行的规划路线。
 - 导航在已确认过玩家位置后以 `FAILED` 结束时，Error 必须在 `navigation.last_confirmed_position` 返回最后一次主线程确认的 `location_id` 与 Tile；该上下文只描述停止位置，不把失败伪装为 `NavigateResult`，也不承诺未确认的移动已经完成。
+- 导航因 Coordinator Deadline 以 `TIMED_OUT/DEADLINE_EXCEEDED` 结束，且已经取得路线计划或确认过位置时，Error 的 `navigation` 必须包含 `route_segments_total`、`route_segments_completed`、`interruption_reason="deadline_exceeded"` 与 `resume_hint`；有最后确认位置时也必须包含 `last_confirmed_position`。路线段等于计划中一条正常 Warp 边，只有进入该边 Target Location 并通过稳定门禁后才计入已完成段数；Location 数量不得替代路线段数。调用方可使用原最终目标重新调用 `navigate`，不得把续跑提示解释为自动重放授权。
 - 提交 PFC 或门动作前允许取消；取消或 Deadline 必须清除当前 PFC、移动方向与尚未提交的门输入。已经触发地图切换时继续收敛到稳定 Location，再按 Coordinator 的停止信号结束，不能传送回滚。
 
 ### `interact`

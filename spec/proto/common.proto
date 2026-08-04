@@ -61,6 +61,14 @@ message Error {
 message NavigationFailureContext {
   // Mod 最后一次在游戏主线程确认的玩家位置。
   optional WorldPosition last_confirmed_position = 1;
+  // 正常 Warp 路线中的计划段数；一段等于一条 Source 到 Target Location 的 Warp 边。
+  optional uint32 route_segments_total = 2;
+  // 已完成并通过目标 Location 稳定门禁的路线段数。
+  optional uint32 route_segments_completed = 3;
+  // 结构化中断原因，例如 "deadline_exceeded"。
+  optional string interruption_reason = 4;
+  // 面向调用方的安全续跑建议，不替代原始目标或重新规划。
+  optional string resume_hint = 5;
 }
 
 message GameDate {

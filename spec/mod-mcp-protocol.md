@@ -202,6 +202,8 @@ Mod 只允许以下状态转换：
 
 达到 Deadline 后，Mod 必须请求 Handler 停止并最终返回 `TIMED_OUT`。如果底层游戏调用无法立即中断，Handler 仍必须阻止后续步骤，并且不得先报告 `TIMED_OUT` 后继续产生新的游戏副作用。
 
+Coordinator 是 `TIMED_OUT/DEADLINE_EXCEEDED` 的唯一构造者。长时 Handler 可以在 Coordinator 写入 Error 前补充已确认的停止上下文，但不得自行构造超时终态或 Result；导航的路线进度字段及其段计数规则由 [`capabilities/behavior.md`](capabilities/behavior.md) 定义。
+
 MCP 自己的等待 Deadline 可以更短；本地等待超时只产生 `UNKNOWN`，不能伪造 Mod 的 `TIMED_OUT`。
 
 ## 13. 取消

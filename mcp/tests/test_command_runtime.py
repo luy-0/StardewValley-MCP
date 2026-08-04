@@ -240,6 +240,69 @@ def test_navigation_failure_projects_last_confirmed_position() -> None:
     asyncio.run(exercise())
 
 
+def test_navigation_timeout_projects_route_progress_and_resume_hint() -> None:
+    async def exercise() -> None:
+        connection = _QueueConnection()
+        connection.snapshot = _snapshot_with_navigate()
+        runtime = CommandRuntime(
+            connection,
+            Catalog.load(CatalogPolicy(None, frozenset({"game:read", "game:write"}))),
+        )
+        command_id = "37373737-3737-4737-8737-373737373737"
+        execute = asyncio.create_task(
+            runtime.execute(
+                command_id,
+                "navigate",
+                actions_pb2.NavigateRequest(
+                    position=common_pb2.WorldPosition(location_id="Hospital", x=10, y=15),
+                    arrival=actions_pb2.ARRIVAL_MODE_EXACT,
+                ),
+            )
+        )
+        await _until(lambda: len(connection.sent) == 1)
+        await connection.incoming.put(
+            _event(command_id, capabilities_pb2.COMMAND_STATE_ACCEPTED, reply_to=connection.sent[0].message_id)
+        )
+        timed_out = _event(command_id, capabilities_pb2.COMMAND_STATE_TIMED_OUT)
+        timed_out.command_event.error.CopyFrom(
+            common_pb2.Error(
+                code=common_pb2.ERROR_CODE_DEADLINE_EXCEEDED,
+                message="命令已超过期限",
+                navigation=common_pb2.NavigationFailureContext(
+                    last_confirmed_position=common_pb2.WorldPosition(location_id="Town", x=36, y=57),
+                    route_segments_total=3,
+                    route_segments_completed=2,
+                    interruption_reason="deadline_exceeded",
+                    resume_hint="可按原目标重新调用 navigate 继续执行。",
+                ),
+            )
+        )
+        await connection.incoming.put(timed_out)
+
+        result = await execute
+        assert result == {
+            "status": "failed",
+            "commandId": command_id,
+            "error": {
+                "code": "command_timeout",
+                "message": "命令已超过期限",
+                "retryable": False,
+                "details": {
+                    "navigation": {
+                        "lastConfirmedPosition": {"locationId": "Town", "x": 36, "y": 57},
+                        "routeSegmentsTotal": 3,
+                        "routeSegmentsCompleted": 2,
+                        "interruptionReason": "deadline_exceeded",
+                        "resumeHint": "可按原目标重新调用 navigate 继续执行。",
+                    }
+                },
+            },
+        }
+        await runtime.aclose()
+
+    asyncio.run(exercise())
+
+
 def test_disconnect_recovers_by_status_with_same_command_id_only() -> None:
     async def exercise() -> None:
         connection = _QueueConnection()

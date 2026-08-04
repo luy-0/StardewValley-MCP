@@ -673,8 +673,17 @@ def verify_lifecycle_fixtures(transport_pb2: Any, index: dict[str, Any], top_lev
     require(not timed_out.reply_to, "TIMED_OUT 终态事件必须作为主动事件发送")
     require(timed_out.command_event.command_id == command_id, "TIMED_OUT Command ID 不一致")
     require(timed_out.command_event.state == 6, "TIMED_OUT state 错误")
+    require(timed_out.command_event.phase == "timed_out", "TIMED_OUT phase 错误")
     require(timed_out.command_event.WhichOneof("outcome") == "error", "TIMED_OUT 必须仅携带 Error")
     require(timed_out.command_event.error.code == 12, "TIMED_OUT 必须使用 ERROR_CODE_DEADLINE_EXCEEDED")
+    require(timed_out.command_event.error.message == "命令已超过期限", "TIMED_OUT 消息错误")
+    navigation = timed_out.command_event.error.navigation
+    require(navigation.last_confirmed_position.location_id == "Town", "导航超时 Fixture 最后 Location 错误")
+    require(navigation.last_confirmed_position.x == 36 and navigation.last_confirmed_position.y == 57, "导航超时 Fixture 最后 Tile 错误")
+    require(navigation.route_segments_total == 3, "导航超时 Fixture 路线总段数错误")
+    require(navigation.route_segments_completed == 2, "导航超时 Fixture 已完成段数错误")
+    require(navigation.interruption_reason == "deadline_exceeded", "导航超时 Fixture 中断原因错误")
+    require(navigation.resume_hint == "可按原目标重新调用 navigate 继续执行。", "导航超时 Fixture 续跑提示错误")
     verify_event_shape(timed_out.command_event, "navigate")
 
     expired = frames_by_path["commands/navigate.status-expired.json"]

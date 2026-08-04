@@ -6930,8 +6930,28 @@
           "NavigationFailureContext": {
             "additionalProperties": false,
             "properties": {
+              "interruptionReason": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
               "lastConfirmedPosition": {
                 "$ref": "#/$defs/WorldPosition"
+              },
+              "resumeHint": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "routeSegmentsCompleted": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "routeSegmentsTotal": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
               }
             },
             "type": "object"
@@ -10373,8 +10393,28 @@
           "NavigationFailureContext": {
             "additionalProperties": false,
             "properties": {
+              "interruptionReason": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
               "lastConfirmedPosition": {
                 "$ref": "#/$defs/WorldPosition"
+              },
+              "resumeHint": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "routeSegmentsCompleted": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "routeSegmentsTotal": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
               }
             },
             "type": "object"

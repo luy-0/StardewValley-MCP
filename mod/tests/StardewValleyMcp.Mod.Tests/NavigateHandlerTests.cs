@@ -232,6 +232,38 @@ public sealed class NavigateHandlerTests
     public void DeadlineAlwaysCleansTheOwnedPath() =>
         AssertStopCleansPath(ContinuationStopSignal.DeadlineExceeded);
 
+    [Test]
+    public void SameMapDeadlineReportsZeroRouteSegmentsAndLastConfirmedPosition()
+    {
+        var handler = NewHandler(out var resolver, out var navigation);
+        resolver.Target = Target("Farm", 9, 6);
+        navigation.State = Player("Farm", 5, 6);
+        navigation.StartResults.Enqueue(LocalNavigationStart.Started);
+        var continuation = handler.Start(
+            CommandId,
+            PositionRequest("Farm", 9, 6, ArrivalMode.Exact)
+        );
+
+        Assert.That(continuation.Tick(ContinuationStopSignal.None), Is.TypeOf<ContinuationStep.Pending>());
+        Assert.That(
+            continuation.Tick(ContinuationStopSignal.DeadlineExceeded),
+            Is.TypeOf<ContinuationStep.Stopped>()
+        );
+        var error = new Error { Code = ErrorCode.DeadlineExceeded, Message = "命令已超过期限" };
+        ((IStopErrorContextProvider)continuation).EnrichStopError(
+            ContinuationStopSignal.DeadlineExceeded,
+            error
+        );
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(error.Navigation.LastConfirmedPosition, Is.EqualTo(Position("Farm", 5, 6)));
+            Assert.That(error.Navigation.RouteSegmentsTotal, Is.Zero);
+            Assert.That(error.Navigation.RouteSegmentsCompleted, Is.Zero);
+            Assert.That(error.Navigation.InterruptionReason, Is.EqualTo("deadline_exceeded"));
+        });
+    }
+
     private static void AssertStopCleansPath(ContinuationStopSignal signal)
     {
         var handler = NewHandler(out var resolver, out var navigation);

@@ -92,10 +92,18 @@ class Error(_message.Message):
     def __init__(self, code: _Optional[_Union[ErrorCode, str]] = ..., message: _Optional[str] = ..., navigation: _Optional[_Union[NavigationFailureContext, _Mapping]] = ...) -> None: ...
 
 class NavigationFailureContext(_message.Message):
-    __slots__ = ("last_confirmed_position",)
+    __slots__ = ("last_confirmed_position", "route_segments_total", "route_segments_completed", "interruption_reason", "resume_hint")
     LAST_CONFIRMED_POSITION_FIELD_NUMBER: _ClassVar[int]
+    ROUTE_SEGMENTS_TOTAL_FIELD_NUMBER: _ClassVar[int]
+    ROUTE_SEGMENTS_COMPLETED_FIELD_NUMBER: _ClassVar[int]
+    INTERRUPTION_REASON_FIELD_NUMBER: _ClassVar[int]
+    RESUME_HINT_FIELD_NUMBER: _ClassVar[int]
     last_confirmed_position: WorldPosition
-    def __init__(self, last_confirmed_position: _Optional[_Union[WorldPosition, _Mapping]] = ...) -> None: ...
+    route_segments_total: int
+    route_segments_completed: int
+    interruption_reason: str
+    resume_hint: str
+    def __init__(self, last_confirmed_position: _Optional[_Union[WorldPosition, _Mapping]] = ..., route_segments_total: _Optional[int] = ..., route_segments_completed: _Optional[int] = ..., interruption_reason: _Optional[str] = ..., resume_hint: _Optional[str] = ...) -> None: ...
 
 class GameDate(_message.Message):
     __slots__ = ("season", "day_of_month", "year")

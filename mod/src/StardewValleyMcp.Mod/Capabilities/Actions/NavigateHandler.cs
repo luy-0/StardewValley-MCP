@@ -93,7 +93,7 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
         Message = message,
     };
 
-    private sealed class NavigateContinuation : ICommandContinuation
+    private sealed class NavigateContinuation : ICommandContinuation, IStopErrorContextProvider
     {
         internal const int StableFramesRequired = 10;
         internal const int WalkTransitionProbeTicks = 30;
@@ -470,14 +470,32 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
                 || !SameLocation(_actualRoute[^1], current.LocationId))
                 _actualRoute.Add(current.LocationId);
 
+            _edgeIndex++;
             if (_deferredStop != ContinuationStopSignal.None)
             {
                 Cleanup();
                 return new ContinuationStep.Stopped();
             }
-            _edgeIndex++;
             _phase = NavigationPhase.Handoff;
             return new ContinuationStep.Pending();
+        }
+
+        public void EnrichStopError(ContinuationStopSignal signal, Error error)
+        {
+            if (signal != ContinuationStopSignal.DeadlineExceeded
+                || (_lastConfirmedPosition is null && _plan.Count == 0))
+                return;
+
+            var navigation = new NavigationFailureContext
+            {
+                RouteSegmentsTotal = (uint)_plan.Count,
+                RouteSegmentsCompleted = (uint)Math.Min(_edgeIndex, _plan.Count),
+                InterruptionReason = "deadline_exceeded",
+                ResumeHint = "可按原目标重新调用 navigate 继续执行。",
+            };
+            if (_lastConfirmedPosition is not null)
+                navigation.LastConfirmedPosition = _lastConfirmedPosition.Clone();
+            error.Navigation = navigation;
         }
 
         private ContinuationStep TickHandoff()

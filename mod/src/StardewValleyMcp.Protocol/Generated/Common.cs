@@ -28,51 +28,56 @@ namespace StardewValleyMcp.Protocol.V1 {
             "b3ISLgoEY29kZRgBIAEoDjIgLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5FcnJv",
             "ckNvZGUSDwoHbWVzc2FnZRgCIAEoCRJICgpuYXZpZ2F0aW9uGAUgASgLMi8u",
             "c3RhcmRld192YWxsZXkubWNwLnYxLk5hdmlnYXRpb25GYWlsdXJlQ29udGV4",
-            "dEgAiAEBQg0KC19uYXZpZ2F0aW9uSgQIAxAESgQIBBAFIoIBChhOYXZpZ2F0",
+            "dEgAiAEBQg0KC19uYXZpZ2F0aW9uSgQIAxAESgQIBBAFIuYCChhOYXZpZ2F0",
             "aW9uRmFpbHVyZUNvbnRleHQSSgoXbGFzdF9jb25maXJtZWRfcG9zaXRpb24Y",
             "ASABKAsyJC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuV29ybGRQb3NpdGlvbkgA",
-            "iAEBQhoKGF9sYXN0X2NvbmZpcm1lZF9wb3NpdGlvbiI+CghHYW1lRGF0ZRIO",
-            "CgZzZWFzb24YASABKAkSFAoMZGF5X29mX21vbnRoGAIgASgNEgwKBHllYXIY",
-            "AyABKA0iIQoJVGlsZVBvaW50EgkKAXgYASABKAUSCQoBeRgCIAEoBSI6Cg1X",
-            "b3JsZFBvc2l0aW9uEhMKC2xvY2F0aW9uX2lkGAEgASgJEgkKAXgYAiABKAUS",
-            "CQoBeRgDIAEoBSJUCghUaWxlQXJlYRITCgtsb2NhdGlvbl9pZBgBIAEoCRIJ",
-            "CgF4GAIgASgFEgkKAXkYAyABKAUSDQoFd2lkdGgYBCABKA0SDgoGaGVpZ2h0",
-            "GAUgASgNIlIKClJhZGl1c0FyZWESNAoGY2VudGVyGAEgASgLMiQuc3RhcmRl",
-            "d192YWxsZXkubWNwLnYxLldvcmxkUG9zaXRpb24SDgoGcmFkaXVzGAIgASgN",
-            "IiIKClBpeGVsUG9pbnQSCQoBeBgBIAEoBRIJCgF5GAIgASgFIj4KDlJlc291",
-            "cmNlQ2hhbmdlEg4KBmJlZm9yZRgBIAEoARINCgVhZnRlchgCIAEoARINCgVk",
-            "ZWx0YRgDIAEoASJCCg5FeGVjdXRpb25TdGF0cxIVCg1lbGFwc2VkX3RpY2tz",
-            "GAEgASgNEhkKEWNvbXBsZXRpb25fcmVhc29uGAIgASgJInoKDk1lbnVUcmFu",
-            "c2l0aW9uEhgKEG1lbnVfdHlwZV9iZWZvcmUYASABKAkSFwoPbWVudV90eXBl",
-            "X2FmdGVyGAIgASgJEhoKEnVpX3JldmlzaW9uX2JlZm9yZRgDIAEoCRIZChF1",
-            "aV9yZXZpc2lvbl9hZnRlchgEIAEoCSp1CglEaXJlY3Rpb24SGQoVRElSRUNU",
-            "SU9OX1VOU1BFQ0lGSUVEEAASEAoMRElSRUNUSU9OX1VQEAESEwoPRElSRUNU",
-            "SU9OX1JJR0hUEAISEgoORElSRUNUSU9OX0RPV04QAxISCg5ESVJFQ1RJT05f",
-            "TEVGVBAEKscBCghNZW51S2luZBIZChVNRU5VX0tJTkRfVU5TUEVDSUZJRUQQ",
-            "ABIXChNNRU5VX0tJTkRfSU5WRU5UT1JZEAESFAoQTUVOVV9LSU5EX1NLSUxM",
-            "UxACEhQKEE1FTlVfS0lORF9TT0NJQUwQAxIRCg1NRU5VX0tJTkRfTUFQEAQS",
-            "FgoSTUVOVV9LSU5EX0NSQUZUSU5HEAUSGQoVTUVOVV9LSU5EX0NPTExFQ1RJ",
-            "T05TEAYSFQoRTUVOVV9LSU5EX09QVElPTlMQByr1BAoJRXJyb3JDb2RlEhoK",
-            "FkVSUk9SX0NPREVfVU5TUEVDSUZJRUQQABIfChtFUlJPUl9DT0RFX0lOVkFM",
-            "SURfQVJHVU1FTlQQARIeChpFUlJPUl9DT0RFX1VOQVVUSEVOVElDQVRFRBAC",
-            "EiAKHEVSUk9SX0NPREVfUEVSTUlTU0lPTl9ERU5JRUQQAxIiCh5FUlJPUl9D",
-            "T0RFX1VOU1VQUE9SVEVEX1ZFUlNJT04QBBIlCiFFUlJPUl9DT0RFX1VOU1VQ",
-            "UE9SVEVEX0NBUEFCSUxJVFkQBRIlCiFFUlJPUl9DT0RFX0NBUEFCSUxJVFlf",
-            "U0VUX0NIQU5HRUQQBhIaChZFUlJPUl9DT0RFX1NUQUxFX0xFQVNFEAcSFwoT",
-            "RVJST1JfQ09ERV9DT05GTElDVBAIEhMKD0VSUk9SX0NPREVfQlVTWRAJEhgK",
-            "FEVSUk9SX0NPREVfTk9UX1JFQURZEAoSGAoURVJST1JfQ09ERV9OT1RfRk9V",
-            "TkQQCxIgChxFUlJPUl9DT0RFX0RFQURMSU5FX0VYQ0VFREVEEAwSGAoURVJS",
-            "T1JfQ09ERV9DQU5DRUxMRUQQDRIYChRFUlJPUl9DT0RFX1NUQUxFX1JFRhAO",
-            "EhsKF0VSUk9SX0NPREVfT1VUX09GX1JBTkdFEA8SKQolRVJST1JfQ09ERV9J",
-            "REVNUE9URU5DWV9SRUNPUkRfRVhQSVJFRBAQEh8KG0VSUk9SX0NPREVfRVhF",
-            "Q1VUSU9OX0ZBSUxFRBAREiEKHUVSUk9SX0NPREVfUFJPVE9DT0xfVklPTEFU",
-            "SU9OEBISFwoTRVJST1JfQ09ERV9JTlRFUk5BTBATQh+qAhxTdGFyZGV3VmFs",
-            "bGV5TWNwLlByb3RvY29sLlYxYgZwcm90bzM="));
+            "iAEBEiEKFHJvdXRlX3NlZ21lbnRzX3RvdGFsGAIgASgNSAGIAQESJQoYcm91",
+            "dGVfc2VnbWVudHNfY29tcGxldGVkGAMgASgNSAKIAQESIAoTaW50ZXJydXB0",
+            "aW9uX3JlYXNvbhgEIAEoCUgDiAEBEhgKC3Jlc3VtZV9oaW50GAUgASgJSASI",
+            "AQFCGgoYX2xhc3RfY29uZmlybWVkX3Bvc2l0aW9uQhcKFV9yb3V0ZV9zZWdt",
+            "ZW50c190b3RhbEIbChlfcm91dGVfc2VnbWVudHNfY29tcGxldGVkQhYKFF9p",
+            "bnRlcnJ1cHRpb25fcmVhc29uQg4KDF9yZXN1bWVfaGludCI+CghHYW1lRGF0",
+            "ZRIOCgZzZWFzb24YASABKAkSFAoMZGF5X29mX21vbnRoGAIgASgNEgwKBHll",
+            "YXIYAyABKA0iIQoJVGlsZVBvaW50EgkKAXgYASABKAUSCQoBeRgCIAEoBSI6",
+            "Cg1Xb3JsZFBvc2l0aW9uEhMKC2xvY2F0aW9uX2lkGAEgASgJEgkKAXgYAiAB",
+            "KAUSCQoBeRgDIAEoBSJUCghUaWxlQXJlYRITCgtsb2NhdGlvbl9pZBgBIAEo",
+            "CRIJCgF4GAIgASgFEgkKAXkYAyABKAUSDQoFd2lkdGgYBCABKA0SDgoGaGVp",
+            "Z2h0GAUgASgNIlIKClJhZGl1c0FyZWESNAoGY2VudGVyGAEgASgLMiQuc3Rh",
+            "cmRld192YWxsZXkubWNwLnYxLldvcmxkUG9zaXRpb24SDgoGcmFkaXVzGAIg",
+            "ASgNIiIKClBpeGVsUG9pbnQSCQoBeBgBIAEoBRIJCgF5GAIgASgFIj4KDlJl",
+            "c291cmNlQ2hhbmdlEg4KBmJlZm9yZRgBIAEoARINCgVhZnRlchgCIAEoARIN",
+            "CgVkZWx0YRgDIAEoASJCCg5FeGVjdXRpb25TdGF0cxIVCg1lbGFwc2VkX3Rp",
+            "Y2tzGAEgASgNEhkKEWNvbXBsZXRpb25fcmVhc29uGAIgASgJInoKDk1lbnVU",
+            "cmFuc2l0aW9uEhgKEG1lbnVfdHlwZV9iZWZvcmUYASABKAkSFwoPbWVudV90",
+            "eXBlX2FmdGVyGAIgASgJEhoKEnVpX3JldmlzaW9uX2JlZm9yZRgDIAEoCRIZ",
+            "ChF1aV9yZXZpc2lvbl9hZnRlchgEIAEoCSp1CglEaXJlY3Rpb24SGQoVRElS",
+            "RUNUSU9OX1VOU1BFQ0lGSUVEEAASEAoMRElSRUNUSU9OX1VQEAESEwoPRElS",
+            "RUNUSU9OX1JJR0hUEAISEgoORElSRUNUSU9OX0RPV04QAxISCg5ESVJFQ1RJ",
+            "T05fTEVGVBAEKscBCghNZW51S2luZBIZChVNRU5VX0tJTkRfVU5TUEVDSUZJ",
+            "RUQQABIXChNNRU5VX0tJTkRfSU5WRU5UT1JZEAESFAoQTUVOVV9LSU5EX1NL",
+            "SUxMUxACEhQKEE1FTlVfS0lORF9TT0NJQUwQAxIRCg1NRU5VX0tJTkRfTUFQ",
+            "EAQSFgoSTUVOVV9LSU5EX0NSQUZUSU5HEAUSGQoVTUVOVV9LSU5EX0NPTExF",
+            "Q1RJT05TEAYSFQoRTUVOVV9LSU5EX09QVElPTlMQByr1BAoJRXJyb3JDb2Rl",
+            "EhoKFkVSUk9SX0NPREVfVU5TUEVDSUZJRUQQABIfChtFUlJPUl9DT0RFX0lO",
+            "VkFMSURfQVJHVU1FTlQQARIeChpFUlJPUl9DT0RFX1VOQVVUSEVOVElDQVRF",
+            "RBACEiAKHEVSUk9SX0NPREVfUEVSTUlTU0lPTl9ERU5JRUQQAxIiCh5FUlJP",
+            "Ul9DT0RFX1VOU1VQUE9SVEVEX1ZFUlNJT04QBBIlCiFFUlJPUl9DT0RFX1VO",
+            "U1VQUE9SVEVEX0NBUEFCSUxJVFkQBRIlCiFFUlJPUl9DT0RFX0NBUEFCSUxJ",
+            "VFlfU0VUX0NIQU5HRUQQBhIaChZFUlJPUl9DT0RFX1NUQUxFX0xFQVNFEAcS",
+            "FwoTRVJST1JfQ09ERV9DT05GTElDVBAIEhMKD0VSUk9SX0NPREVfQlVTWRAJ",
+            "EhgKFEVSUk9SX0NPREVfTk9UX1JFQURZEAoSGAoURVJST1JfQ09ERV9OT1Rf",
+            "Rk9VTkQQCxIgChxFUlJPUl9DT0RFX0RFQURMSU5FX0VYQ0VFREVEEAwSGAoU",
+            "RVJST1JfQ09ERV9DQU5DRUxMRUQQDRIYChRFUlJPUl9DT0RFX1NUQUxFX1JF",
+            "RhAOEhsKF0VSUk9SX0NPREVfT1VUX09GX1JBTkdFEA8SKQolRVJST1JfQ09E",
+            "RV9JREVNUE9URU5DWV9SRUNPUkRfRVhQSVJFRBAQEh8KG0VSUk9SX0NPREVf",
+            "RVhFQ1VUSU9OX0ZBSUxFRBAREiEKHUVSUk9SX0NPREVfUFJPVE9DT0xfVklP",
+            "TEFUSU9OEBISFwoTRVJST1JfQ09ERV9JTlRFUk5BTBATQh+qAhxTdGFyZGV3",
+            "VmFsbGV5TWNwLlByb3RvY29sLlYxYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.Direction), typeof(global::StardewValleyMcp.Protocol.V1.MenuKind), typeof(global::StardewValleyMcp.Protocol.V1.ErrorCode), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.Error), global::StardewValleyMcp.Protocol.V1.Error.Parser, new[]{ "Code", "Message", "Navigation" }, new[]{ "Navigation" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.NavigationFailureContext), global::StardewValleyMcp.Protocol.V1.NavigationFailureContext.Parser, new[]{ "LastConfirmedPosition" }, new[]{ "LastConfirmedPosition" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.NavigationFailureContext), global::StardewValleyMcp.Protocol.V1.NavigationFailureContext.Parser, new[]{ "LastConfirmedPosition", "RouteSegmentsTotal", "RouteSegmentsCompleted", "InterruptionReason", "ResumeHint" }, new[]{ "LastConfirmedPosition", "RouteSegmentsTotal", "RouteSegmentsCompleted", "InterruptionReason", "ResumeHint" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.GameDate), global::StardewValleyMcp.Protocol.V1.GameDate.Parser, new[]{ "Season", "DayOfMonth", "Year" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.TilePoint), global::StardewValleyMcp.Protocol.V1.TilePoint.Parser, new[]{ "X", "Y" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.WorldPosition), global::StardewValleyMcp.Protocol.V1.WorldPosition.Parser, new[]{ "LocationId", "X", "Y" }, null, null, null, null),
@@ -435,6 +440,7 @@ namespace StardewValleyMcp.Protocol.V1 {
   {
     private static readonly pb::MessageParser<NavigationFailureContext> _parser = new pb::MessageParser<NavigationFailureContext>(() => new NavigationFailureContext());
     private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<NavigationFailureContext> Parser { get { return _parser; } }
@@ -462,7 +468,12 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public NavigationFailureContext(NavigationFailureContext other) : this() {
+      _hasBits0 = other._hasBits0;
       lastConfirmedPosition_ = other.lastConfirmedPosition_ != null ? other.lastConfirmedPosition_.Clone() : null;
+      routeSegmentsTotal_ = other.routeSegmentsTotal_;
+      routeSegmentsCompleted_ = other.routeSegmentsCompleted_;
+      interruptionReason_ = other.interruptionReason_;
+      resumeHint_ = other.resumeHint_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -487,6 +498,124 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "route_segments_total" field.</summary>
+    public const int RouteSegmentsTotalFieldNumber = 2;
+    private readonly static uint RouteSegmentsTotalDefaultValue = 0;
+
+    private uint routeSegmentsTotal_;
+    /// <summary>
+    /// 正常 Warp 路线中的计划段数；一段等于一条 Source 到 Target Location 的 Warp 边。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint RouteSegmentsTotal {
+      get { if ((_hasBits0 & 1) != 0) { return routeSegmentsTotal_; } else { return RouteSegmentsTotalDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        routeSegmentsTotal_ = value;
+      }
+    }
+    /// <summary>Gets whether the "route_segments_total" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasRouteSegmentsTotal {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "route_segments_total" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearRouteSegmentsTotal() {
+      _hasBits0 &= ~1;
+    }
+
+    /// <summary>Field number for the "route_segments_completed" field.</summary>
+    public const int RouteSegmentsCompletedFieldNumber = 3;
+    private readonly static uint RouteSegmentsCompletedDefaultValue = 0;
+
+    private uint routeSegmentsCompleted_;
+    /// <summary>
+    /// 已完成并通过目标 Location 稳定门禁的路线段数。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint RouteSegmentsCompleted {
+      get { if ((_hasBits0 & 2) != 0) { return routeSegmentsCompleted_; } else { return RouteSegmentsCompletedDefaultValue; } }
+      set {
+        _hasBits0 |= 2;
+        routeSegmentsCompleted_ = value;
+      }
+    }
+    /// <summary>Gets whether the "route_segments_completed" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasRouteSegmentsCompleted {
+      get { return (_hasBits0 & 2) != 0; }
+    }
+    /// <summary>Clears the value of the "route_segments_completed" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearRouteSegmentsCompleted() {
+      _hasBits0 &= ~2;
+    }
+
+    /// <summary>Field number for the "interruption_reason" field.</summary>
+    public const int InterruptionReasonFieldNumber = 4;
+    private readonly static string InterruptionReasonDefaultValue = "";
+
+    private string interruptionReason_;
+    /// <summary>
+    /// 结构化中断原因，例如 "deadline_exceeded"。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string InterruptionReason {
+      get { return interruptionReason_ ?? InterruptionReasonDefaultValue; }
+      set {
+        interruptionReason_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+    /// <summary>Gets whether the "interruption_reason" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasInterruptionReason {
+      get { return interruptionReason_ != null; }
+    }
+    /// <summary>Clears the value of the "interruption_reason" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearInterruptionReason() {
+      interruptionReason_ = null;
+    }
+
+    /// <summary>Field number for the "resume_hint" field.</summary>
+    public const int ResumeHintFieldNumber = 5;
+    private readonly static string ResumeHintDefaultValue = "";
+
+    private string resumeHint_;
+    /// <summary>
+    /// 面向调用方的安全续跑建议，不替代原始目标或重新规划。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ResumeHint {
+      get { return resumeHint_ ?? ResumeHintDefaultValue; }
+      set {
+        resumeHint_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+    /// <summary>Gets whether the "resume_hint" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasResumeHint {
+      get { return resumeHint_ != null; }
+    }
+    /// <summary>Clears the value of the "resume_hint" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearResumeHint() {
+      resumeHint_ = null;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -503,6 +632,10 @@ namespace StardewValleyMcp.Protocol.V1 {
         return true;
       }
       if (!object.Equals(LastConfirmedPosition, other.LastConfirmedPosition)) return false;
+      if (RouteSegmentsTotal != other.RouteSegmentsTotal) return false;
+      if (RouteSegmentsCompleted != other.RouteSegmentsCompleted) return false;
+      if (InterruptionReason != other.InterruptionReason) return false;
+      if (ResumeHint != other.ResumeHint) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -511,6 +644,10 @@ namespace StardewValleyMcp.Protocol.V1 {
     public override int GetHashCode() {
       int hash = 1;
       if (lastConfirmedPosition_ != null) hash ^= LastConfirmedPosition.GetHashCode();
+      if (HasRouteSegmentsTotal) hash ^= RouteSegmentsTotal.GetHashCode();
+      if (HasRouteSegmentsCompleted) hash ^= RouteSegmentsCompleted.GetHashCode();
+      if (HasInterruptionReason) hash ^= InterruptionReason.GetHashCode();
+      if (HasResumeHint) hash ^= ResumeHint.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -533,6 +670,22 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(10);
         output.WriteMessage(LastConfirmedPosition);
       }
+      if (HasRouteSegmentsTotal) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(RouteSegmentsTotal);
+      }
+      if (HasRouteSegmentsCompleted) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(RouteSegmentsCompleted);
+      }
+      if (HasInterruptionReason) {
+        output.WriteRawTag(34);
+        output.WriteString(InterruptionReason);
+      }
+      if (HasResumeHint) {
+        output.WriteRawTag(42);
+        output.WriteString(ResumeHint);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -547,6 +700,22 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(10);
         output.WriteMessage(LastConfirmedPosition);
       }
+      if (HasRouteSegmentsTotal) {
+        output.WriteRawTag(16);
+        output.WriteUInt32(RouteSegmentsTotal);
+      }
+      if (HasRouteSegmentsCompleted) {
+        output.WriteRawTag(24);
+        output.WriteUInt32(RouteSegmentsCompleted);
+      }
+      if (HasInterruptionReason) {
+        output.WriteRawTag(34);
+        output.WriteString(InterruptionReason);
+      }
+      if (HasResumeHint) {
+        output.WriteRawTag(42);
+        output.WriteString(ResumeHint);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -559,6 +728,18 @@ namespace StardewValleyMcp.Protocol.V1 {
       int size = 0;
       if (lastConfirmedPosition_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(LastConfirmedPosition);
+      }
+      if (HasRouteSegmentsTotal) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(RouteSegmentsTotal);
+      }
+      if (HasRouteSegmentsCompleted) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(RouteSegmentsCompleted);
+      }
+      if (HasInterruptionReason) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(InterruptionReason);
+      }
+      if (HasResumeHint) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ResumeHint);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -577,6 +758,18 @@ namespace StardewValleyMcp.Protocol.V1 {
           LastConfirmedPosition = new global::StardewValleyMcp.Protocol.V1.WorldPosition();
         }
         LastConfirmedPosition.MergeFrom(other.LastConfirmedPosition);
+      }
+      if (other.HasRouteSegmentsTotal) {
+        RouteSegmentsTotal = other.RouteSegmentsTotal;
+      }
+      if (other.HasRouteSegmentsCompleted) {
+        RouteSegmentsCompleted = other.RouteSegmentsCompleted;
+      }
+      if (other.HasInterruptionReason) {
+        InterruptionReason = other.InterruptionReason;
+      }
+      if (other.HasResumeHint) {
+        ResumeHint = other.ResumeHint;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -604,6 +797,22 @@ namespace StardewValleyMcp.Protocol.V1 {
             input.ReadMessage(LastConfirmedPosition);
             break;
           }
+          case 16: {
+            RouteSegmentsTotal = input.ReadUInt32();
+            break;
+          }
+          case 24: {
+            RouteSegmentsCompleted = input.ReadUInt32();
+            break;
+          }
+          case 34: {
+            InterruptionReason = input.ReadString();
+            break;
+          }
+          case 42: {
+            ResumeHint = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -628,6 +837,22 @@ namespace StardewValleyMcp.Protocol.V1 {
               LastConfirmedPosition = new global::StardewValleyMcp.Protocol.V1.WorldPosition();
             }
             input.ReadMessage(LastConfirmedPosition);
+            break;
+          }
+          case 16: {
+            RouteSegmentsTotal = input.ReadUInt32();
+            break;
+          }
+          case 24: {
+            RouteSegmentsCompleted = input.ReadUInt32();
+            break;
+          }
+          case 34: {
+            InterruptionReason = input.ReadString();
+            break;
+          }
+          case 42: {
+            ResumeHint = input.ReadString();
             break;
           }
         }

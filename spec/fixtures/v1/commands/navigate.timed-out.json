@@ -8,10 +8,17 @@
   "commandEvent": {
     "commandId": "b4fa7d40-6f82-4054-9164-222222222222",
     "state": "COMMAND_STATE_TIMED_OUT",
-    "phase": "deadline_exceeded",
+    "phase": "timed_out",
     "error": {
       "code": "ERROR_CODE_DEADLINE_EXCEEDED",
-      "message": "命令在执行截止时间内未完成。"
+      "message": "命令已超过期限",
+      "navigation": {
+        "lastConfirmedPosition": {"locationId": "Town", "x": 36, "y": 57},
+        "routeSegmentsTotal": 3,
+        "routeSegmentsCompleted": 2,
+        "interruptionReason": "deadline_exceeded",
+        "resumeHint": "可按原目标重新调用 navigate 继续执行。"
+      }
     }
   }
 }
