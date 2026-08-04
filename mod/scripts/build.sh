@@ -11,7 +11,8 @@ usage() {
   -h, --help 显示本帮助
 
 默认不写入游戏目录。非标准位置通过 STARDEW_VALLEY_GAME_PATH 指定。
-依赖：.NET 6 SDK、Stardew Valley 1.6 与 SMAPI 4.1.0 或更高版本。
+依赖：能构建 net6.0 的 .NET SDK、Microsoft.NETCore.App 6.x Runtime、
+Stardew Valley 1.6 与 SMAPI 4.1.0 或更高版本。
 USAGE
 }
 
@@ -34,7 +35,11 @@ for argument in "$@"; do
 done
 
 if ! command -v dotnet >/dev/null 2>&1; then
-  echo "缺少 .NET 6 SDK：https://dotnet.microsoft.com/download/dotnet/6.0" >&2
+  echo "缺少 .NET SDK；兼容性说明见 docs/runtime-compatibility.md。" >&2
+  exit 1
+fi
+if ! dotnet --list-runtimes | grep -Eq '^Microsoft\.NETCore\.App 6\.'; then
+  echo "缺少 Microsoft.NETCore.App 6.x Runtime；net6.0 测试无法启动。" >&2
   exit 1
 fi
 

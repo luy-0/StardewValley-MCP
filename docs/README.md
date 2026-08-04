@@ -9,6 +9,7 @@ Agent 自动安装入口是 [`../AGENT-GUIDE.md`](../AGENT-GUIDE.md)。
 ## 文档范围
 
 - [安装、MCP 客户端配置与排障](getting-started.md)；
+- [.NET 构建工具与游戏宿主兼容性](runtime-compatibility.md)；
 - [Agent 自动安装指南](../AGENT-GUIDE.md)；
 - [Agent Skill 开发面](../skill/README.md)；
 - [公共契约索引](../spec/README.md)；

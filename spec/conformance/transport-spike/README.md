@@ -4,7 +4,7 @@
 
 ## 运行
 
-前置条件是 .NET 6 SDK 与 Python 3，不需要 NuGet 包或 Python 第三方包。在仓库根目录执行：
+前置条件是能构建 `net6.0` 的 .NET SDK、Microsoft.NETCore.App 6.x Runtime 与 Python 3，不需要 NuGet 包或 Python 第三方包。CI 的 SDK／Runtime 分层原因见 [`../../../docs/runtime-compatibility.md`](../../../docs/runtime-compatibility.md)。在仓库根目录执行：
 
 ```bash
 ./spec/conformance/transport-spike/run.sh

@@ -18,9 +18,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: 6.0.x
+          # 10.x 是受支持的构建 SDK；6.x Runtime 用于运行与游戏宿主一致的测试。
+          dotnet-version: |
+            10.0.x
+            6.0.x
+      - name: 验证 .NET 构建与宿主运行时
+        shell: bash
+        run: |
+          dotnet --version | grep -E '^10\.'
+          dotnet --list-runtimes | grep -E '^Microsoft\.NETCore\.App 6\.'
       - uses: astral-sh/setup-uv@v7
         with:
           version: "0.11.32"
