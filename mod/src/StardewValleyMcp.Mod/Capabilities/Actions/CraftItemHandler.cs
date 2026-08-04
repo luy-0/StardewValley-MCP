@@ -145,11 +145,11 @@ internal sealed class CraftItemContinuation : ICommandContinuation
                 CraftItem = result,
             });
         }
-        catch
+        catch (Exception exception)
         {
             return Failed(
                 ErrorCode.ExecutionFailed,
-                "制作提交失败；如产物已被保留在游标，请重新查询当前界面与背包"
+                $"制作提交失败：{exception.GetBaseException().Message}；如产物已被保留在游标，请重新查询当前界面与背包"
             );
         }
     }

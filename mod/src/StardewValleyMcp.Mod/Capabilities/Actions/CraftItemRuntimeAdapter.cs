@@ -1,8 +1,6 @@
 using StardewModdingAPI;
-using System.Reflection;
 using StardewValley;
 using StardewValley.Inventories;
-using StardewValley.ItemTypeDefinitions;
 using StardewValley.Menus;
 using StardewValleyMcp.Protocol.V1;
 
@@ -61,11 +59,6 @@ internal sealed record CraftItemCommitResult(
 
 internal sealed class LiveCraftItemRuntimeAdapter : ICraftItemRuntimeAdapter
 {
-    private static readonly MethodInfo? CraftingQuestMethod = typeof(Farmer).GetMethods(
-            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic
-        )
-        .SingleOrDefault(candidate => candidate.Name == "checkForQuestComplete"
-            && candidate.GetParameters().Length == 8);
     private readonly OpaqueRefStore _refs;
 
     public LiveCraftItemRuntimeAdapter(OpaqueRefStore refs) => _refs = refs;
@@ -146,14 +139,9 @@ internal sealed class LiveCraftItemRuntimeAdapter : ICraftItemRuntimeAdapter
                 stop = CraftItemRuntimeStopReason.MaterialsInsufficient;
                 break;
             }
-            if (!CanAcceptEveryPossibleOutput(recipe, state.Player))
-            {
-                stop = CraftItemRuntimeStopReason.InventoryFull;
-                break;
-            }
-
             var crafted = recipe.createItem();
-            if (crafted is null || !state.Player.couldInventoryAcceptThisItem(crafted))
+            if (crafted is null
+                || PreparePlayerInsertion(state, crafted) is null)
             {
                 stop = CraftItemRuntimeStopReason.InventoryFull;
                 break;
@@ -176,20 +164,33 @@ internal sealed class LiveCraftItemRuntimeAdapter : ICraftItemRuntimeAdapter
             // 原版先把产物放到 Crafting 游标，再更新任务与统计；在后续任一
             // 回调失败时保留这个可观察的恢复点，避免随机产物只留在局部变量中。
             state.Page.heldItem = crafted;
-            UpdateCraftingQuest(state.Player, bookkeepingItem);
+            UpdateCraftingQuest(state.Player, recipe, bookkeepingItem);
             if (!state.Player.craftingRecipes.ContainsKey(recipe.name))
                 throw new InvalidOperationException("玩家已知配方状态已变化");
             state.Player.craftingRecipes[recipe.name] += recipe.numberProducedPerCraft;
             Game1.stats.checkForCraftingAchievements();
 
-            var pendingOutput = state.Page.heldItem;
-            if (!ReferenceEquals(pendingOutput, crafted))
+            if (!ReferenceEquals(state.Page.heldItem, crafted))
                 throw new InvalidOperationException("制作产物恢复点已变化");
-            var remainder = state.Player.addItemToInventory(pendingOutput);
-            state.Page.heldItem = remainder;
-            if (remainder is not null)
+            var insertion = PreparePlayerInsertion(state, crafted)
+                ?? throw new InvalidOperationException("制作后背包无法完整容纳产物");
+            var commit = InventoryTransferRuntimeCommitter.Commit(
+                insertion.Source,
+                insertion.Target,
+                insertion.Plan
+            );
+            try
             {
-                throw new InvalidOperationException("制作产物未能完整进入背包");
+                state.Page.heldItem = insertion.Source[0];
+                if (state.Page.heldItem is not null)
+                    throw new InvalidOperationException("制作产物未能完整进入背包");
+                commit.Complete();
+            }
+            catch
+            {
+                commit.Rollback();
+                state.Page.heldItem = crafted;
+                throw;
             }
 
             outputs[outputKey] = checked(outputs.GetValueOrDefault(outputKey) + producedQuantity);
@@ -292,33 +293,40 @@ internal sealed class LiveCraftItemRuntimeAdapter : ICraftItemRuntimeAdapter
         return items;
     }
 
-    private static bool CanAcceptEveryPossibleOutput(CraftingRecipe recipe, Farmer player)
+    private static PlayerOutputInsertion? PreparePlayerInsertion(
+        LiveCraftItemCommitState state,
+        Item crafted
+    )
     {
-        if (recipe.itemToProduce.Count == 0 || recipe.numberProducedPerCraft <= 0)
-            throw new InvalidOperationException("Crafting 配方产出无效");
-        foreach (var itemId in recipe.itemToProduce)
-        {
-            var qualifiedId = recipe.bigCraftable ? $"(BC){itemId}" : $"(O){itemId}";
-            var data = ItemRegistry.GetDataOrErrorItem(qualifiedId);
-            if (data.IsErrorItem)
-                throw new InvalidOperationException("Crafting 配方产出无法解析");
-            var representative = ItemRegistry.Create(
-                data.QualifiedItemId,
-                recipe.numberProducedPerCraft
-            );
-            if (!player.couldInventoryAcceptThisItem(representative))
-                return false;
-        }
-        return true;
+        var playerView = InventoryViewResolver.CreatePlayerForMenu(
+            state.Player,
+            state.Page.inventory.capacity
+        );
+        if (playerView.BackingIdentity is not IList<Item> playerBacking)
+            throw new InvalidOperationException("玩家背包写入目标不可用");
+        IList<Item> source = new List<Item> { crafted };
+        var planned = InventoryTransferPlanner.Plan(
+            0,
+            InventoryTransferRuntimeItemFactory.Wrap(
+                new Item?[] { crafted }
+            ),
+            InventoryTransferRuntimeItemFactory.Wrap(playerView.Slots),
+            crafted.Stack
+        );
+        return planned.Status == InventoryTransferPlanStatus.Success
+            ? new PlayerOutputInsertion(source, playerBacking, planned.Value!)
+            : null;
     }
 
-    private static void UpdateCraftingQuest(Farmer player, Item crafted)
+    private static void UpdateCraftingQuest(
+        Farmer player,
+        CraftingRecipe recipe,
+        Item crafted
+    )
     {
-        if (CraftingQuestMethod is null)
-            throw new InvalidOperationException("原版制作任务更新入口不可用");
-        CraftingQuestMethod.Invoke(
-            player,
-            new object?[] { null, -1, -1, crafted, null, 2, -1, false }
+        player.NotifyQuests(
+            quest => quest.OnRecipeCrafted(recipe, crafted, probe: false),
+            onlyOneQuest: false
         );
     }
 
@@ -332,5 +340,11 @@ internal sealed class LiveCraftItemRuntimeAdapter : ICraftItemRuntimeAdapter
         GameMenu Menu,
         CraftingPage Page,
         Farmer Player
+    );
+
+    private sealed record PlayerOutputInsertion(
+        IList<Item> Source,
+        IList<Item> Target,
+        InventoryTransferPlan Plan
     );
 }
