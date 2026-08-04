@@ -388,6 +388,14 @@ public sealed class QueryUiModContractTests
             value => value.Elements[0].Item = new ItemFact { QualifiedItemId = "(O)24" },
             value => value.Elements[0].Price = 0,
             value => value.Elements[0].Stock = 0,
+            value => value.Elements[0].InventorySide = UiInventorySide.Player,
+            value => value.Elements[0].ItemRef = new Ref { Value = "item-ref" },
+            value => value.Inventories.Add(new UiInventoryLink
+            {
+                Side = UiInventorySide.Player,
+                InventoryRevision = "inventory-revision",
+                SlotCount = 36,
+            }),
         };
 
         Assert.That(Hash(baseSnapshot, "epoch-b"), Is.Not.EqualTo(baseline));
@@ -405,8 +413,10 @@ public sealed class QueryUiModContractTests
     {
         Assert.Multiple(() =>
         {
-            Assert.That(UiProjectionPolicy.ClassifyExact(typeof(BaseGameMenu), typeof(BaseGameMenu), typeof(BaseDialogue), typeof(BaseShop)), Is.EqualTo(UiMenuClassification.GameMenu));
-            Assert.That(UiProjectionPolicy.ClassifyExact(typeof(DerivedGameMenu), typeof(BaseGameMenu), typeof(BaseDialogue), typeof(BaseShop)), Is.EqualTo(UiMenuClassification.Unsupported));
+            Assert.That(UiProjectionPolicy.ClassifyExact(typeof(BaseGameMenu), typeof(BaseGameMenu), typeof(BaseDialogue), typeof(BaseShop), typeof(BaseItemGrab)), Is.EqualTo(UiMenuClassification.GameMenu));
+            Assert.That(UiProjectionPolicy.ClassifyExact(typeof(BaseItemGrab), typeof(BaseGameMenu), typeof(BaseDialogue), typeof(BaseShop), typeof(BaseItemGrab)), Is.EqualTo(UiMenuClassification.ItemGrabMenu));
+            Assert.That(UiProjectionPolicy.ClassifyExact(typeof(DerivedGameMenu), typeof(BaseGameMenu), typeof(BaseDialogue), typeof(BaseShop), typeof(BaseItemGrab)), Is.EqualTo(UiMenuClassification.Unsupported));
+            Assert.That(UiProjectionPolicy.ClassifyExact(typeof(DerivedItemGrab), typeof(BaseGameMenu), typeof(BaseDialogue), typeof(BaseShop), typeof(BaseItemGrab)), Is.EqualTo(UiMenuClassification.Unsupported));
             Assert.That(UiProjectionPolicy.IsExactModal(typeof(BaseDialogue), typeof(BaseDialogue), typeof(BaseLetter)), Is.True);
             Assert.That(UiProjectionPolicy.IsExactModal(typeof(DerivedDialogue), typeof(BaseDialogue), typeof(BaseLetter)), Is.False);
         });
@@ -636,6 +646,223 @@ public sealed class QueryUiModContractTests
         });
     }
 
+    [Test]
+    public void ItemGrabProjection_ReusesInventorySnapshotsAndSeparatesBothSlotSides()
+    {
+        var store = new OpaqueRefStore(InstanceId, menuEpochFactory: () => "item-grab-a");
+        var playerOwner = new FakeInventoryOwner(InventoryItemProvenance.Player, 2);
+        var containerOwner = new FakeInventoryOwner(InventoryItemProvenance.Container, 2);
+        var playerItem = new object();
+        var containerItem = new object();
+        playerOwner.Set(0, playerItem, "player-item");
+        containerOwner.Set(1, containerItem, "container-item");
+        var playerSnapshot = InventoryProjector.ProjectCapturedSlots(
+            playerOwner,
+            "player",
+            null,
+            new[]
+            {
+                new CapturedInventorySlot(playerItem, "player-item"),
+                new CapturedInventorySlot(null, ""),
+            },
+            0,
+            true,
+            store,
+            (_, reference) => new ItemFact
+            {
+                Ref = reference.Clone(),
+                QualifiedItemId = "(O)24",
+                DisplayName = "防风草",
+                Stack = 1,
+            }
+        );
+        var containerRef = new Ref { Value = "container-ref" };
+        var containerSnapshot = InventoryProjector.ProjectCapturedSlots(
+            containerOwner,
+            "chest",
+            containerRef,
+            new[]
+            {
+                new CapturedInventorySlot(null, ""),
+                new CapturedInventorySlot(containerItem, "container-item"),
+            },
+            int.MinValue,
+            true,
+            store,
+            (_, reference) => new ItemFact
+            {
+                Ref = reference.Clone(),
+                QualifiedItemId = "(O)388",
+                DisplayName = "木材",
+                Stack = 12,
+            }
+        );
+        var playerComponents = new object[]
+        {
+            new FakeSlotComponent(new UiBounds(0, 0, 64, 64)),
+            new FakeSlotComponent(new UiBounds(64, 0, 64, 64)),
+        };
+        var containerComponents = new object[]
+        {
+            new FakeSlotComponent(new UiBounds(0, 80, 64, 64)),
+            new FakeSlotComponent(new UiBounds(64, 80, 64, 64)),
+        };
+        var descriptors = ItemGrabMenuProjector.CreateSlotDescriptors(
+                playerComponents,
+                playerSnapshot,
+                UiInventorySide.Player,
+                component => ((FakeSlotComponent)component).Bounds,
+                _ => true,
+                new UiBounds(0, 0, 400, 300)
+            )
+            .Concat(ItemGrabMenuProjector.CreateSlotDescriptors(
+                containerComponents,
+                containerSnapshot,
+                UiInventorySide.Container,
+                component => ((FakeSlotComponent)component).Bounds,
+                _ => true,
+                new UiBounds(0, 0, 400, 300)
+            ))
+            .ToArray();
+        var menu = new object();
+        var uiOwner = new FakeUiOwner(menu);
+        foreach (var descriptor in descriptors)
+        {
+            uiOwner.Set(
+                descriptor.InventorySide!.Value,
+                descriptor.Index,
+                descriptor.Component,
+                descriptor.SemanticTarget,
+                descriptor.Guard
+            );
+        }
+        var inventories = new[]
+        {
+            ItemGrabMenuProjector.ToInventoryLink(UiInventorySide.Container, containerSnapshot),
+            ItemGrabMenuProjector.ToInventoryLink(UiInventorySide.Player, playerSnapshot),
+        };
+        var result = UiProjector.ProjectDescriptors(
+            menu,
+            new UiMenuFact { MenuType = "ItemGrabMenu" },
+            UiExtractorKind.ItemGrabSlot,
+            "item-grab",
+            descriptors,
+            Array.Empty<QueryWarning>(),
+            uiOwner,
+            store,
+            UiElementSetCompleteness.Complete,
+            inventories
+        );
+
+        var playerZero = result.Snapshot.Elements.Single(item =>
+            item.InventorySide == UiInventorySide.Player && item.Index == 0);
+        var containerZero = result.Snapshot.Elements.Single(item =>
+            item.InventorySide == UiInventorySide.Container && item.Index == 0);
+        var containerOne = result.Snapshot.Elements.Single(item =>
+            item.InventorySide == UiInventorySide.Container && item.Index == 1);
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.Snapshot.Inventories.Select(item => item.Side), Is.EqualTo(new[]
+            {
+                UiInventorySide.Player,
+                UiInventorySide.Container,
+            }));
+            Assert.That(result.Snapshot.Inventories[0].InventoryRevision, Is.EqualTo(playerSnapshot.InventoryRevision));
+            Assert.That(result.Snapshot.Inventories[1].InventoryRevision, Is.EqualTo(containerSnapshot.InventoryRevision));
+            Assert.That(result.Snapshot.Inventories[1].ContainerRef, Is.EqualTo(containerRef));
+            Assert.That(playerZero.Ref.Value, Is.Not.EqualTo(containerZero.Ref.Value));
+            Assert.That(playerZero.ItemRef, Is.EqualTo(playerSnapshot.Slots[0].Item.Ref));
+            Assert.That(containerOne.ItemRef, Is.EqualTo(containerSnapshot.Slots[1].Item.Ref));
+            Assert.That(containerZero.ItemRef, Is.Null);
+            Assert.That(result.Snapshot.Elements.All(item => item.Item is null), Is.True);
+            Assert.That(result.Snapshot.Elements.All(item => !item.Enabled), Is.True);
+            Assert.That(store.ResolveUiElement(playerZero.Ref).Status, Is.EqualTo(UiElementResolveStatus.Resolved));
+            Assert.That(store.ResolveUiElement(containerZero.Ref).Status, Is.EqualTo(UiElementResolveStatus.Resolved));
+        });
+    }
+
+    [Test]
+    public void ItemGrabProjection_IncompleteCapturePreservesBothSidedSlotRefs()
+    {
+        var store = new OpaqueRefStore(InstanceId, menuEpochFactory: () => "item-grab-a");
+        var menu = new object();
+        var owner = new FakeUiOwner(menu);
+        var playerComponent = new object();
+        var containerComponent = new object();
+        var player = ItemGrabDescriptor(UiInventorySide.Player, playerComponent);
+        var container = ItemGrabDescriptor(UiInventorySide.Container, containerComponent);
+        owner.Set(UiInventorySide.Player, 0, playerComponent, playerComponent, player.Guard);
+        owner.Set(UiInventorySide.Container, 0, containerComponent, containerComponent, container.Guard);
+        var links = new[]
+        {
+            new UiInventoryLink
+            {
+                Side = UiInventorySide.Player,
+                InventoryRevision = "player-revision",
+                SlotCount = 1,
+            },
+            new UiInventoryLink
+            {
+                Side = UiInventorySide.Container,
+                InventoryRevision = "container-revision",
+                SlotCount = 1,
+                ContainerRef = new Ref { Value = "container-ref" },
+            },
+        };
+        var first = ProjectItemGrab(store, menu, owner, new[] { player, container }, links);
+        var firstRefs = first.Snapshot.Elements.Select(item => item.Ref.Clone()).ToArray();
+
+        owner.Unavailable = true;
+        var incomplete = ProjectItemGrab(
+            store,
+            menu,
+            owner,
+            Array.Empty<UiElementDescriptor>(),
+            Array.Empty<UiInventoryLink>(),
+            UiElementSetCompleteness.Incomplete
+        );
+        var unavailable = firstRefs.Select(store.ResolveForInspect).ToArray();
+        owner.Unavailable = false;
+        var recovered = ProjectItemGrab(store, menu, owner, new[] { player, container }, links);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(incomplete.Snapshot.Elements, Is.Empty);
+            Assert.That(unavailable.All(item => item.Resolution.Status == RefStatus.FactUnavailable), Is.True);
+            Assert.That(
+                recovered.Snapshot.Elements.Select(item => item.Ref.Value),
+                Is.EqualTo(firstRefs.Select(item => item.Value))
+            );
+        });
+    }
+
+    [Test]
+    public void ItemGrabProjection_PlayerMayExposeOnlyUnlockedSlotsWithinThirtySixVisualSlots()
+    {
+        var names = Enumerable.Range(0, 36).Select(index => index.ToString()).ToArray();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(
+                ItemGrabMenuProjector.HasCompleteSlotCoverage(12, 36, names, true),
+                Is.True
+            );
+            Assert.That(
+                ItemGrabMenuProjector.HasCompleteSlotCoverage(12, 36, names, false),
+                Is.False
+            );
+            Assert.That(
+                ItemGrabMenuProjector.HasCompleteSlotCoverage(
+                    12,
+                    36,
+                    names.Select((name, index) => index == 11 ? "12" : name).ToArray(),
+                    true
+                ),
+                Is.False
+            );
+        });
+    }
+
     private static QueryUiResult Project(
         OpaqueRefStore store,
         object menu,
@@ -661,6 +888,44 @@ public sealed class QueryUiModContractTests
         owner,
         store,
         completeness
+    );
+
+    private static QueryUiResult ProjectItemGrab(
+        OpaqueRefStore store,
+        object menu,
+        FakeUiOwner owner,
+        IReadOnlyList<UiElementDescriptor> descriptors,
+        IReadOnlyList<UiInventoryLink> inventories,
+        UiElementSetCompleteness completeness = UiElementSetCompleteness.Complete
+    ) => UiProjector.ProjectDescriptors(
+        menu,
+        new UiMenuFact { MenuType = "ItemGrabMenu" },
+        UiExtractorKind.ItemGrabSlot,
+        "item-grab",
+        descriptors,
+        Array.Empty<QueryWarning>(),
+        owner,
+        store,
+        completeness,
+        inventories
+    );
+
+    private static UiElementDescriptor ItemGrabDescriptor(
+        UiInventorySide side,
+        object component
+    ) => new(
+        UiExtractorKind.ItemGrabSlot,
+        UiElementKind.ItemSlot,
+        0,
+        component,
+        component,
+        $"item-grab-slot:{side}:0",
+        "",
+        true,
+        false,
+        32,
+        32,
+        InventorySide: side
     );
 
     private static UiRuntimeProjectionCapture Capture(
@@ -758,15 +1023,23 @@ public sealed class QueryUiModContractTests
     private sealed class FakeUiOwner : IUiElementRefOwner
     {
         private readonly object _menu;
-        private readonly Dictionary<int, (object? Component, object Target, string Guard)> _current = new();
+        private readonly Dictionary<(UiInventorySide Side, int Index), (object? Component, object Target, string Guard)> _current = new();
 
         public FakeUiOwner(object menu) => _menu = menu;
         public bool Unavailable { get; set; }
 
         public void Set(int index, object? component, object target, string guard) =>
-            _current[index] = (component, target, guard);
+            Set(UiInventorySide.Unspecified, index, component, target, guard);
 
-        public void Remove(int index) => _current.Remove(index);
+        public void Set(
+            UiInventorySide side,
+            int index,
+            object? component,
+            object target,
+            string guard
+        ) => _current[(side, index)] = (component, target, guard);
+
+        public void Remove(int index) => _current.Remove((UiInventorySide.Unspecified, index));
 
         public bool TryGetMenuIdentity(out object menu)
         {
@@ -778,7 +1051,7 @@ public sealed class QueryUiModContractTests
         {
             if (Unavailable)
                 return new UiElementLookup(UiElementLookupStatus.Unavailable);
-            if (!_current.TryGetValue(identity.Index, out var current))
+            if (!_current.TryGetValue((identity.InventorySide, identity.Index), out var current))
                 return new UiElementLookup(UiElementLookupStatus.Stale);
             return new UiElementLookup(
                 UiElementLookupStatus.Resolved,
@@ -792,11 +1065,50 @@ public sealed class QueryUiModContractTests
     private sealed record TestUiInspectTarget(RefKind Value)
         : InspectableRefTarget(Value);
 
+    private sealed record FakeSlotComponent(UiBounds Bounds);
+
+    private sealed class FakeInventoryOwner : IInventoryRefOwner
+    {
+        private readonly object _identity = new();
+        private readonly Dictionary<int, InventorySlotLookup> _slots = new();
+
+        public FakeInventoryOwner(InventoryItemProvenance provenance, int capacity)
+        {
+            Provenance = provenance;
+            Capacity = capacity;
+        }
+
+        public InventoryItemProvenance Provenance { get; }
+        public int Capacity { get; }
+
+        public void Set(int index, object? target, string guard) =>
+            _slots[index] = new InventorySlotLookup(
+                InventorySlotLookupStatus.Resolved,
+                target,
+                guard
+            );
+
+        public bool TryGetIdentity(out object identity)
+        {
+            identity = _identity;
+            return true;
+        }
+
+        public InventorySlotLookup ResolveCurrentSlot(int slot) =>
+            slot >= 0 && slot < Capacity && _slots.TryGetValue(slot, out var current)
+                ? current
+                : slot >= 0 && slot < Capacity
+                    ? new InventorySlotLookup(InventorySlotLookupStatus.Resolved)
+                    : new InventorySlotLookup(InventorySlotLookupStatus.Stale);
+    }
+
     private class BaseGameMenu { }
     private sealed class DerivedGameMenu : BaseGameMenu { }
     private class BaseDialogue { }
     private sealed class DerivedDialogue : BaseDialogue { }
     private sealed class BaseShop { }
+    private class BaseItemGrab { }
+    private sealed class DerivedItemGrab : BaseItemGrab { }
     private sealed class BaseLetter { }
     private class BaseSalable { }
     private sealed class DerivedSalable : BaseSalable { }

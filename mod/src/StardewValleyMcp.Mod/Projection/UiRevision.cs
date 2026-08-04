@@ -52,12 +52,21 @@ internal static class UiRevision
     {
         var ordered = snapshot.Elements
             .OrderBy(element => element.Kind)
+            .ThenBy(element => element.HasInventorySide
+                ? element.InventorySide
+                : UiInventorySide.Unspecified)
             .ThenBy(element => element.Index)
             .ThenBy(element => element.Ref?.Value ?? "", StringComparer.Ordinal)
             .Select(element => element.Clone())
             .ToArray();
         snapshot.Elements.Clear();
         snapshot.Elements.AddRange(ordered);
+        var inventories = snapshot.Inventories
+            .OrderBy(link => link.Side)
+            .Select(link => link.Clone())
+            .ToArray();
+        snapshot.Inventories.Clear();
+        snapshot.Inventories.AddRange(inventories);
     }
 
     private static void WriteText(Stream stream, string value)

@@ -7675,8 +7675,19 @@
                 "minimum": 0,
                 "type": "integer"
               },
+              "inventorySide": {
+                "enum": [
+                  "unspecified",
+                  "player",
+                  "container"
+                ],
+                "type": "string"
+              },
               "item": {
                 "$ref": "#/$defs/ItemFact"
+              },
+              "itemRef": {
+                "$ref": "#/$defs/Ref"
               },
               "kind": {
                 "enum": [
@@ -15735,8 +15746,19 @@
                 "minimum": 0,
                 "type": "integer"
               },
+              "inventorySide": {
+                "enum": [
+                  "unspecified",
+                  "player",
+                  "container"
+                ],
+                "type": "string"
+              },
               "item": {
                 "$ref": "#/$defs/ItemFact"
+              },
+              "itemRef": {
+                "$ref": "#/$defs/Ref"
               },
               "kind": {
                 "enum": [
@@ -15779,6 +15801,38 @@
               "label",
               "ref",
               "visible"
+            ],
+            "type": "object"
+          },
+          "UiInventoryLink": {
+            "additionalProperties": false,
+            "properties": {
+              "containerRef": {
+                "$ref": "#/$defs/Ref"
+              },
+              "inventoryRevision": {
+                "maxLength": 512,
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              "side": {
+                "enum": [
+                  "unspecified",
+                  "player",
+                  "container"
+                ],
+                "type": "string"
+              },
+              "slotCount": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "inventoryRevision",
+              "side",
+              "slotCount"
             ],
             "type": "object"
           },
@@ -15834,6 +15888,12 @@
                 },
                 "type": "array"
               },
+              "inventories": {
+                "items": {
+                  "$ref": "#/$defs/UiInventoryLink"
+                },
+                "type": "array"
+              },
               "menu": {
                 "$ref": "#/$defs/UiMenuFact"
               },
@@ -15848,6 +15908,7 @@
             },
             "required": [
               "elements",
+              "inventories",
               "menuOpen",
               "uiRevision"
             ],

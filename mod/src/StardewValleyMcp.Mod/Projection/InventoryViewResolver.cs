@@ -11,6 +11,7 @@ internal sealed record ReadableInventoryView(
     ChestInventoryBacking BackingKind,
     int Capacity,
     IReadOnlyList<Item?> Slots,
+    object BackingIdentity,
     Ref? ContainerRef,
     int RevisionSelectedSlot
 );
@@ -27,6 +28,7 @@ internal static class InventoryViewResolver
             ChestInventoryBacking.Player,
             capacity,
             slots,
+            player.Items,
             null,
             player.CurrentToolIndex
         );
@@ -50,13 +52,35 @@ internal static class InventoryViewResolver
             && !string.Equals(resolved.Role, "inventory-view", StringComparison.Ordinal))
             throw Invalid("Container Ref 类型无效");
 
-        var currentGuard = resolved.Guard;
-        if (!TryReadCurrentContainer(
+        return CreateAttachedContainer(
             chest,
             resolved.Location,
             player,
+            refs,
             resolved.LocatorKind,
-            currentGuard,
+            resolved.X,
+            resolved.Y,
+            resolved.Guard
+        );
+    }
+
+    internal static ReadableInventoryView CreateAttachedContainer(
+        Chest chest,
+        GameLocation location,
+        Farmer player,
+        OpaqueRefStore refs,
+        RefLocatorKind locatorKind,
+        int x,
+        int y,
+        string expectedGuard
+    )
+    {
+        if (!TryReadCurrentContainer(
+            chest,
+            location,
+            player,
+            locatorKind,
+            expectedGuard,
             out var backing,
             out var backingKind,
             out var capacity
@@ -65,27 +89,28 @@ internal static class InventoryViewResolver
 
         var viewRef = refs.GetOrCreate(
             chest,
-            resolved.Location,
+            location,
             RefKind.Container,
-            resolved.LocatorKind,
-            resolved.X,
-            resolved.Y,
-            currentGuard,
+            locatorKind,
+            x,
+            y,
+            expectedGuard,
             "inventory-view"
         );
         var slots = Capture(backing, capacity);
         return new ReadableInventoryView(
             new ChestInventoryRefOwner(
                 chest,
-                resolved.Location,
+                location,
                 player,
-                resolved.LocatorKind,
-                currentGuard
+                locatorKind,
+                expectedGuard
             ),
-            ContainerKindClassifier.Classify(chest, resolved.LocatorKind),
+            ContainerKindClassifier.Classify(chest, locatorKind),
             backingKind,
             capacity,
             slots,
+            backing,
             viewRef,
             int.MinValue
         );

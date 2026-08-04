@@ -102,6 +102,40 @@ def test_query_ui_runtime_has_no_generic_clickable_mutation_or_callback_invocati
     assert "IsExactActivationKnownType" in source
 
 
+def test_item_grab_projection_is_isolated_read_only_and_not_activatable() -> None:
+    runtime = (MOD / "Projection" / "UiRuntimeProjector.cs").read_text()
+    item_grab = (MOD / "Projection" / "ItemGrabMenuProjector.cs").read_text()
+    actions = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
+
+    assert runtime.count("ItemGrabMenuProjector.Extract(") == 2
+    assert "TryLocateSupportedContainer" not in runtime
+    assert "typeof(ItemGrabMenu)" in runtime
+    for required in (
+        "menu.source == ItemGrabMenu.source_chest",
+        "candidate.GetType() == typeof(Chest)",
+        "Chest.SpecialChestTypes.BigChest",
+        "current.GetFridge(",
+        "current.Objects.Pairs",
+        "menu.heldItem is not null",
+        "InventoryViewResolver.CreatePlayer(player)",
+        "InventoryViewResolver.CreateAttachedContainer(",
+        "InventoryProjector.Project(",
+        "UI_INVENTORY_CAPTURE_INCOMPLETE",
+    ):
+        assert required in item_grab
+    forbidden = (
+        "receiveLeftClick",
+        "receiveRightClick",
+        "actualInventory[",
+        ".AddItem(",
+        ".removeItem",
+        ".Invoke(",
+    )
+    assert not [token for token in forbidden if token in item_grab]
+    activate = actions.split("public MenuActionAttempt Activate", 1)[1]
+    assert "UiExtractorKind.ItemGrabSlot" not in activate
+
+
 def test_dialogue_advance_activation_uses_native_semantic_path() -> None:
     source = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
     semantic_branch = source.index(

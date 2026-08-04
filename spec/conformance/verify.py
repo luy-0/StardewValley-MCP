@@ -947,6 +947,7 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         "query-inventory.success-minimal.json", "query-inventory.success-complete.json",
         "query-ui.success-no-menu.json", "query-ui.success-menu.json",
         "query-ui.success-unsupported-menu.json", "query-ui.success-dialogue.json",
+        "query-ui.success-item-grab.json",
         "inspect.success-minimal.json", "inspect.success-complete.json",
     ]
     for name in standalone:
@@ -962,6 +963,25 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
                 and elements[0].center.x == 0
                 and elements[0].center.y == 0,
                 "普通对话 UI Fixture 未覆盖 DIALOGUE_ADVANCE 语义",
+            )
+        if name == "query-ui.success-item-grab.json":
+            snapshot = frame.command_event.result.query_ui.snapshot
+            require(
+                [link.side for link in snapshot.inventories] == [1, 2]
+                and snapshot.inventories[0].container_ref.value == ""
+                and snapshot.inventories[1].container_ref.value == "inventory-container-view",
+                "物品菜单 UI Fixture 未覆盖两侧库存关联",
+            )
+            require(
+                len(snapshot.elements) == 4
+                and [element.inventory_side for element in snapshot.elements] == [1, 1, 2, 2]
+                and snapshot.elements[0].item_ref.value == "inventory-player-item-0"
+                and snapshot.elements[1].item_ref.value == ""
+                and snapshot.elements[2].item_ref.value == ""
+                and snapshot.elements[3].item_ref.value == "inventory-container-item-1"
+                and all(not element.enabled for element in snapshot.elements)
+                and all(not element.HasField("item") for element in snapshot.elements),
+                "物品菜单 UI Fixture 未覆盖空槽、Item Ref 或只读语义",
             )
         verify_event_shape(frame.command_event)
     invalid = load_json(FIXTURE_ROOT / "observation" / "invalid-inputs.json")

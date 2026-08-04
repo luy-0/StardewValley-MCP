@@ -207,6 +207,36 @@ def test_query_ui_dialogue_advance_preserves_non_screen_sentinel() -> None:
     assert element["center"] == {"x": 0, "y": 0}
 
 
+def test_query_ui_item_grab_projects_lightweight_two_sided_inventory_links() -> None:
+    frame = transport_pb2.TransportFrame()
+    json_format.Parse(
+        (FIXTURES / "query-ui.success-item-grab.json").read_text(),
+        frame,
+    )
+    output = project_message(frame.command_event.result.query_ui)
+    projected = {
+        "status": "succeeded",
+        "commandId": frame.command_event.command_id,
+        "output": output,
+    }
+    Draft202012Validator(Catalog.load().tool("query_ui").outputSchema).validate(projected)
+    snapshot = output["snapshot"]
+    assert [link["side"] for link in snapshot["inventories"]] == ["player", "container"]
+    assert "containerRef" not in snapshot["inventories"][0]
+    assert snapshot["inventories"][1]["containerRef"] == {"value": "inventory-container-view"}
+    assert [element["inventorySide"] for element in snapshot["elements"]] == [
+        "player",
+        "player",
+        "container",
+        "container",
+    ]
+    assert snapshot["elements"][0]["itemRef"] == {"value": "inventory-player-item-0"}
+    assert "itemRef" not in snapshot["elements"][1]
+    assert "itemRef" not in snapshot["elements"][2]
+    assert snapshot["elements"][3]["itemRef"] == {"value": "inventory-container-item-1"}
+    assert all("item" not in element and element["enabled"] is False for element in snapshot["elements"])
+
+
 def test_direct_call_cannot_bypass_mod_announcement_intersection() -> None:
     bootstrap = transport_pb2.TransportFrame()
     json_format.Parse((ROOT / "spec" / "fixtures" / "v1" / "bootstrap" / "server-ready.json").read_text(), bootstrap)

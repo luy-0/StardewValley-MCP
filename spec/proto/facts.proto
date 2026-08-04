@@ -288,11 +288,28 @@ enum UiElementKind {
   UI_ELEMENT_KIND_DIALOGUE_ADVANCE = 6;
 }
 
+enum UiInventorySide {
+  UI_INVENTORY_SIDE_UNSPECIFIED = 0;
+  UI_INVENTORY_SIDE_PLAYER = 1;
+  UI_INVENTORY_SIDE_CONTAINER = 2;
+}
+
+message UiInventoryLink {
+  // ItemGrabMenu 中的库存一侧；不得用 Slot Index 偏移代替。
+  UiInventorySide side = 1;
+  // 与同一时刻 query_inventory 返回值完全一致。
+  string inventory_revision = 2;
+  uint32 slot_count = 3;
+  // 仅容器侧存在；玩家侧必须缺省。
+  optional Ref container_ref = 4;
+}
+
 message UiSnapshot {
   string ui_revision = 1;
   bool menu_open = 2;
   optional UiMenuFact menu = 3;
   repeated UiElementFact elements = 4;
+  repeated UiInventoryLink inventories = 5;
 }
 
 message UiMenuFact {
@@ -314,4 +331,8 @@ message UiElementFact {
   optional ItemFact item = 8;
   optional int64 price = 9;
   optional uint32 stock = 10;
+  // 仅库存槽位存在；Shop Item Slot 必须缺省。
+  optional UiInventorySide inventory_side = 11;
+  // 库存槽位非空时存在；完整 ItemFact 由 query_inventory 或 inspect 返回。
+  optional Ref item_ref = 12;
 }

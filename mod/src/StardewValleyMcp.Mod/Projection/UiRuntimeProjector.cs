@@ -27,7 +27,8 @@ internal static class UiRuntimeProjector
             runtimeType,
             typeof(GameMenu),
             typeof(DialogueBox),
-            typeof(ShopMenu)
+            typeof(ShopMenu),
+            typeof(ItemGrabMenu)
         );
         var warnings = new List<QueryWarning>();
         var dialogueCapture = classification == UiMenuClassification.DialogueBox
@@ -36,6 +37,7 @@ internal static class UiRuntimeProjector
         var shell = CreateShell(menu, runtimeType, classification, dialogueCapture, warnings);
         var viewport = new UiBounds(0, 0, Game1.uiViewport.Width, Game1.uiViewport.Height);
         var descriptors = new List<UiElementDescriptor>();
+        var inventories = new List<UiInventoryLink>();
         var extractor = UiExtractorKind.Unsupported;
         var actionState = "";
         var completeness = UiElementSetCompleteness.Complete;
@@ -78,6 +80,29 @@ internal static class UiRuntimeProjector
                 );
                 break;
             }
+            case UiMenuClassification.ItemGrabMenu:
+            {
+                extractor = UiExtractorKind.ItemGrabSlot;
+                var itemGrab = ItemGrabMenuProjector.Extract(
+                    (ItemGrabMenu)menu,
+                    player,
+                    refs,
+                    viewport,
+                    descriptors,
+                    inventories,
+                    warnings
+                );
+                actionState = "item-grab";
+                completeness = itemGrab.Completeness;
+                if (!itemGrab.Supported)
+                {
+                    extractor = UiExtractorKind.Unsupported;
+                    actionState = "";
+                    descriptors.Clear();
+                    inventories.Clear();
+                }
+                break;
+            }
             default:
                 warnings.Add(Warning(
                     "UI_MENU_UNSUPPORTED",
@@ -88,7 +113,7 @@ internal static class UiRuntimeProjector
 
         if (descriptors.Any(descriptor => !descriptor.IsValid()))
             completeness = UiElementSetCompleteness.Incomplete;
-        var owner = new RuntimeUiElementRefOwner(menu, extractor);
+        var owner = new RuntimeUiElementRefOwner(menu, extractor, refs);
         var result = UiProjector.ProjectDescriptors(
             menu,
             shell,
@@ -98,7 +123,8 @@ internal static class UiRuntimeProjector
             warnings,
             owner,
             refs,
-            completeness
+            completeness,
+            inventories
         );
         return new UiRuntimeProjectionCapture(result, completeness);
     }
@@ -592,7 +618,8 @@ internal static class UiRuntimeProjector
     internal static UiElementLookup ResolveCurrentElement(
         IClickableMenu menu,
         UiExtractorKind extractor,
-        UiElementBindingIdentity identity
+        UiElementBindingIdentity identity,
+        OpaqueRefStore refs
     )
     {
         var warnings = new List<QueryWarning>();
@@ -638,6 +665,23 @@ internal static class UiRuntimeProjector
                     out _
                 );
                 break;
+            case UiExtractorKind.ItemGrabSlot when menu.GetType() == typeof(ItemGrabMenu):
+                if (Game1.player is not { } itemGrabPlayer)
+                    return new UiElementLookup(UiElementLookupStatus.Unavailable);
+                var inventories = new List<UiInventoryLink>();
+                var capture = ItemGrabMenuProjector.Extract(
+                    (ItemGrabMenu)menu,
+                    itemGrabPlayer,
+                    refs,
+                    viewport,
+                    descriptors,
+                    inventories,
+                    warnings
+                );
+                if (!capture.Supported)
+                    return new UiElementLookup(UiElementLookupStatus.Stale);
+                completeness = capture.Completeness;
+                break;
             default:
                 return new UiElementLookup(UiElementLookupStatus.Stale);
         }
@@ -648,6 +692,8 @@ internal static class UiRuntimeProjector
         var current = descriptors.FirstOrDefault(descriptor =>
             descriptor.Extractor == identity.Extractor
             && descriptor.Kind == identity.PublicKind
+            && (descriptor.InventorySide ?? UiInventorySide.Unspecified)
+                == identity.InventorySide
             && descriptor.Index == identity.Index);
         if (current is null)
             return new UiElementLookup(UiElementLookupStatus.Stale);
@@ -674,11 +720,17 @@ internal sealed class RuntimeUiElementRefOwner : IUiElementRefOwner
 {
     private readonly WeakReference<IClickableMenu> _menu;
     private readonly UiExtractorKind _extractor;
+    private readonly OpaqueRefStore _refs;
 
-    public RuntimeUiElementRefOwner(IClickableMenu menu, UiExtractorKind extractor)
+    public RuntimeUiElementRefOwner(
+        IClickableMenu menu,
+        UiExtractorKind extractor,
+        OpaqueRefStore refs
+    )
     {
         _menu = new WeakReference<IClickableMenu>(menu);
         _extractor = extractor;
+        _refs = refs;
     }
 
     public bool TryGetMenuIdentity(out object menu)
@@ -701,7 +753,7 @@ internal sealed class RuntimeUiElementRefOwner : IUiElementRefOwner
                 || identity.Extractor != _extractor)
                 return new UiElementLookup(UiElementLookupStatus.Stale);
 
-            return UiRuntimeProjector.ResolveCurrentElement(menu, _extractor, identity);
+            return UiRuntimeProjector.ResolveCurrentElement(menu, _extractor, identity, _refs);
         }
         catch
         {

@@ -23,7 +23,8 @@ internal static class UiProjector
         IEnumerable<QueryWarning> warnings,
         IUiElementRefOwner owner,
         OpaqueRefStore refs,
-        UiElementSetCompleteness completeness = UiElementSetCompleteness.Complete
+        UiElementSetCompleteness completeness = UiElementSetCompleteness.Complete,
+        IReadOnlyList<UiInventoryLink>? inventories = null
     )
     {
         ArgumentNullException.ThrowIfNull(menu);
@@ -34,11 +35,44 @@ internal static class UiProjector
             throw new UiProjectionException("UI 基本事实不符合公开约束");
         if (extractor == UiExtractorKind.Unsupported && descriptors.Count != 0)
             throw new InvalidOperationException("Unsupported menu 不得投影元素");
-        var identities = new HashSet<(UiExtractorKind Extractor, UiElementKind Kind, int Index)>();
+        if (inventories is not null)
+        {
+            var sides = new HashSet<UiInventorySide>();
+            foreach (var link in inventories)
+            {
+                if (link.Side is not UiInventorySide.Player and not UiInventorySide.Container
+                    || !sides.Add(link.Side)
+                    || !PublicStringPolicy.IsNonEmptyValid(link.InventoryRevision)
+                    || link.Side == UiInventorySide.Player && link.ContainerRef is not null
+                    || link.Side == UiInventorySide.Container && link.ContainerRef is null)
+                    throw new UiProjectionException("UI 库存关联不符合公开约束");
+            }
+            if (extractor != UiExtractorKind.ItemGrabSlot && sides.Count != 0
+                || extractor == UiExtractorKind.ItemGrabSlot
+                    && completeness == UiElementSetCompleteness.Complete
+                    && descriptors.Count != 0
+                    && !sides.SetEquals(new[]
+                    {
+                        UiInventorySide.Player,
+                        UiInventorySide.Container,
+                    }))
+                throw new UiProjectionException("UI 库存关联与 extractor 不一致");
+        }
+        var identities = new HashSet<(
+            UiExtractorKind Extractor,
+            UiElementKind Kind,
+            UiInventorySide Side,
+            int Index
+        )>();
         foreach (var descriptor in descriptors.Where(item => item.IsValid()))
         {
             if (descriptor.Extractor != extractor
-                || !identities.Add((descriptor.Extractor, descriptor.Kind, descriptor.Index)))
+                || !identities.Add((
+                    descriptor.Extractor,
+                    descriptor.Kind,
+                    descriptor.InventorySide ?? UiInventorySide.Unspecified,
+                    descriptor.Index
+                )))
                 throw new InvalidOperationException("UI descriptor identity 不唯一");
         }
 
@@ -48,6 +82,8 @@ internal static class UiProjector
             MenuOpen = true,
             Menu = shell.Clone(),
         };
+        if (inventories is not null)
+            snapshot.Inventories.AddRange(inventories.Select(item => item.Clone()));
         var resultWarnings = warnings.Select(item => item.Clone()).ToList();
         var skipped = 0;
         foreach (var descriptor in descriptors)
@@ -63,6 +99,7 @@ internal static class UiProjector
                 new UiElementBindingIdentity(
                     descriptor.Extractor,
                     descriptor.Kind,
+                    descriptor.InventorySide ?? UiInventorySide.Unspecified,
                     descriptor.Index,
                     descriptor.Component,
                     descriptor.SemanticTarget,
@@ -133,7 +170,9 @@ internal sealed record UiElementDescriptor(
     ItemFact? Item = null,
     long? Price = null,
     uint? Stock = null,
-    IReadOnlyList<UiDescriptorWarning>? DescriptorWarnings = null
+    IReadOnlyList<UiDescriptorWarning>? DescriptorWarnings = null,
+    UiInventorySide? InventorySide = null,
+    Ref? ItemRef = null
 )
 {
     public IReadOnlyList<UiDescriptorWarning> Warnings =>
@@ -146,6 +185,14 @@ internal sealed record UiElementDescriptor(
             or UiElementKind.DialogueAdvance
             or UiElementKind.ItemSlot
         && (Kind == UiElementKind.DialogueAdvance ? Component is null : Component is not null)
+        && (InventorySide is null
+            || Kind == UiElementKind.ItemSlot
+                && InventorySide is (UiInventorySide.Player or UiInventorySide.Container)
+                && Item is null
+                && Price is null
+                && Stock is null
+                && !Enabled)
+        && (ItemRef is null || InventorySide is not null)
         && Index >= 0
         && PublicStringPolicy.IsValid(Label)
         && !string.IsNullOrEmpty(Guard);
@@ -168,6 +215,10 @@ internal sealed record UiElementDescriptor(
             fact.Price = Price.Value;
         if (Stock.HasValue)
             fact.Stock = Stock.Value;
+        if (InventorySide.HasValue)
+            fact.InventorySide = InventorySide.Value;
+        if (ItemRef is not null)
+            fact.ItemRef = ItemRef.Clone();
         return fact;
     }
 }
@@ -188,6 +239,7 @@ internal enum UiMenuClassification
     GameMenu,
     DialogueBox,
     ShopMenu,
+    ItemGrabMenu,
 }
 
 internal static class UiProjectionPolicy
@@ -196,7 +248,8 @@ internal static class UiProjectionPolicy
         Type runtimeType,
         Type gameMenuType,
         Type dialogueBoxType,
-        Type shopMenuType
+        Type shopMenuType,
+        Type itemGrabMenuType
     )
     {
         if (runtimeType == gameMenuType)
@@ -205,6 +258,8 @@ internal static class UiProjectionPolicy
             return UiMenuClassification.DialogueBox;
         if (runtimeType == shopMenuType)
             return UiMenuClassification.ShopMenu;
+        if (runtimeType == itemGrabMenuType)
+            return UiMenuClassification.ItemGrabMenu;
         return UiMenuClassification.Unsupported;
     }
 

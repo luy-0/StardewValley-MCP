@@ -31,11 +31,13 @@ internal enum UiExtractorKind
     DialogueResponse,
     DialogueAdvance,
     ShopSaleRow,
+    ItemGrabSlot,
 }
 
 internal readonly record struct UiElementBindingIdentity(
     UiExtractorKind Extractor,
     UiElementKind PublicKind,
+    UiInventorySide InventorySide,
     int Index,
     object? Component,
     object SemanticTarget,
@@ -84,7 +86,12 @@ internal sealed class UiElementBindingStore
             || !string.Equals(state.Epoch, session.MenuEpoch, StringComparison.Ordinal))
             throw new InvalidOperationException("UI 投影 Session 已失效");
 
-        var key = new UiBindingKey(identity.Extractor, identity.PublicKind, identity.Index);
+        var key = new UiBindingKey(
+            identity.Extractor,
+            identity.PublicKind,
+            identity.InventorySide,
+            identity.Index
+        );
         if (state.Bindings.TryGetValue(key, out var current))
         {
             if (current.Matches(owner, identity, session.MenuEpoch))
@@ -138,6 +145,7 @@ internal sealed class UiElementBindingStore
     private readonly record struct UiBindingKey(
         UiExtractorKind Extractor,
         UiElementKind PublicKind,
+        UiInventorySide InventorySide,
         int Index
     );
 
@@ -190,6 +198,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
         MenuEpoch = menuEpoch;
         Extractor = identity.Extractor;
         PublicKind = identity.PublicKind;
+        InventorySide = identity.InventorySide;
         Index = identity.Index;
         _guard = identity.Guard;
         ObservedGeneration = observedGeneration;
@@ -200,6 +209,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
     public string MenuEpoch { get; }
     public UiExtractorKind Extractor { get; }
     public UiElementKind PublicKind { get; }
+    public UiInventorySide InventorySide { get; }
     public int Index { get; }
     public long ObservedGeneration { get; set; }
     public bool Stale { get; set; }
@@ -213,6 +223,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
         && string.Equals(MenuEpoch, menuEpoch, StringComparison.Ordinal)
         && Extractor == identity.Extractor
         && PublicKind == identity.PublicKind
+        && InventorySide == identity.InventorySide
         && Index == identity.Index
         && string.Equals(_guard, identity.Guard, StringComparison.Ordinal)
         && _owner.TryGetMenuIdentity(out var previousMenu)
@@ -244,6 +255,7 @@ internal sealed class UiElementBinding : IOpaqueBinding
         var current = _owner.ResolveCurrentElement(new UiElementBindingIdentity(
             Extractor,
             PublicKind,
+            InventorySide,
             Index,
             component,
             semanticTarget,
@@ -293,6 +305,7 @@ internal sealed record ResolvedUiElementRef(
     string MenuEpoch,
     UiExtractorKind Extractor,
     UiElementKind PublicKind,
+    UiInventorySide InventorySide,
     int Index
 );
 

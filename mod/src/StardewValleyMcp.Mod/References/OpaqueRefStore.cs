@@ -199,6 +199,7 @@ internal sealed class OpaqueRefStore
                     uiBinding.MenuEpoch,
                     uiBinding.Extractor,
                     uiBinding.PublicKind,
+                    uiBinding.InventorySide,
                     uiBinding.Index
                 )
             );
@@ -256,6 +257,7 @@ internal sealed class OpaqueRefStore
                             ui.MenuEpoch,
                             ui.Extractor,
                             ui.PublicKind,
+                            ui.InventorySide,
                             ui.Index
                         )
                     ),

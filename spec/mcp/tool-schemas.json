@@ -273,6 +273,18 @@
         "UI_ELEMENT_KIND_TAB": "tab",
         "UI_ELEMENT_KIND_UNSPECIFIED": "unspecified"
       }
+    },
+    "stardew_valley.mcp.v1.UiInventorySide": {
+      "jsonToProto": {
+        "container": "UI_INVENTORY_SIDE_CONTAINER",
+        "player": "UI_INVENTORY_SIDE_PLAYER",
+        "unspecified": "UI_INVENTORY_SIDE_UNSPECIFIED"
+      },
+      "protoToJson": {
+        "UI_INVENTORY_SIDE_CONTAINER": "container",
+        "UI_INVENTORY_SIDE_PLAYER": "player",
+        "UI_INVENTORY_SIDE_UNSPECIFIED": "unspecified"
+      }
     }
   },
   "protocolVersion": "1.0.0",
@@ -17404,8 +17416,19 @@
                 "minimum": 0,
                 "type": "integer"
               },
+              "inventorySide": {
+                "enum": [
+                  "unspecified",
+                  "player",
+                  "container"
+                ],
+                "type": "string"
+              },
               "item": {
                 "$ref": "#/$defs/ItemFact"
+              },
+              "itemRef": {
+                "$ref": "#/$defs/Ref"
               },
               "kind": {
                 "enum": [
@@ -17448,6 +17471,38 @@
               "label",
               "ref",
               "visible"
+            ],
+            "type": "object"
+          },
+          "UiInventoryLink": {
+            "additionalProperties": false,
+            "properties": {
+              "containerRef": {
+                "$ref": "#/$defs/Ref"
+              },
+              "inventoryRevision": {
+                "maxLength": 512,
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              "side": {
+                "enum": [
+                  "unspecified",
+                  "player",
+                  "container"
+                ],
+                "type": "string"
+              },
+              "slotCount": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "inventoryRevision",
+              "side",
+              "slotCount"
             ],
             "type": "object"
           },
@@ -17503,6 +17558,12 @@
                 },
                 "type": "array"
               },
+              "inventories": {
+                "items": {
+                  "$ref": "#/$defs/UiInventoryLink"
+                },
+                "type": "array"
+              },
               "menu": {
                 "$ref": "#/$defs/UiMenuFact"
               },
@@ -17517,6 +17578,7 @@
             },
             "required": [
               "elements",
+              "inventories",
               "menuOpen",
               "uiRevision"
             ],
@@ -19908,8 +19970,19 @@
                 "minimum": 0,
                 "type": "integer"
               },
+              "inventorySide": {
+                "enum": [
+                  "unspecified",
+                  "player",
+                  "container"
+                ],
+                "type": "string"
+              },
               "item": {
                 "$ref": "#/$defs/ItemFact"
+              },
+              "itemRef": {
+                "$ref": "#/$defs/Ref"
               },
               "kind": {
                 "enum": [

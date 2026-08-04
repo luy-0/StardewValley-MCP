@@ -45,6 +45,12 @@ class UiElementKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     UI_ELEMENT_KIND_ITEM_SLOT: _ClassVar[UiElementKind]
     UI_ELEMENT_KIND_DIALOGUE_RESPONSE: _ClassVar[UiElementKind]
     UI_ELEMENT_KIND_DIALOGUE_ADVANCE: _ClassVar[UiElementKind]
+
+class UiInventorySide(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    UI_INVENTORY_SIDE_UNSPECIFIED: _ClassVar[UiInventorySide]
+    UI_INVENTORY_SIDE_PLAYER: _ClassVar[UiInventorySide]
+    UI_INVENTORY_SIDE_CONTAINER: _ClassVar[UiInventorySide]
 ENTITY_KIND_UNSPECIFIED: EntityKind
 ENTITY_KIND_TREE: EntityKind
 ENTITY_KIND_FRUIT_TREE: EntityKind
@@ -73,6 +79,9 @@ UI_ELEMENT_KIND_OPTION: UiElementKind
 UI_ELEMENT_KIND_ITEM_SLOT: UiElementKind
 UI_ELEMENT_KIND_DIALOGUE_RESPONSE: UiElementKind
 UI_ELEMENT_KIND_DIALOGUE_ADVANCE: UiElementKind
+UI_INVENTORY_SIDE_UNSPECIFIED: UiInventorySide
+UI_INVENTORY_SIDE_PLAYER: UiInventorySide
+UI_INVENTORY_SIDE_CONTAINER: UiInventorySide
 
 class RuntimeSnapshot(_message.Message):
     __slots__ = ("date", "time_of_day", "player", "weather", "ui")
@@ -478,17 +487,31 @@ class InventorySlot(_message.Message):
     item: ItemFact
     def __init__(self, index: _Optional[int] = ..., item: _Optional[_Union[ItemFact, _Mapping]] = ...) -> None: ...
 
+class UiInventoryLink(_message.Message):
+    __slots__ = ("side", "inventory_revision", "slot_count", "container_ref")
+    SIDE_FIELD_NUMBER: _ClassVar[int]
+    INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    SLOT_COUNT_FIELD_NUMBER: _ClassVar[int]
+    CONTAINER_REF_FIELD_NUMBER: _ClassVar[int]
+    side: UiInventorySide
+    inventory_revision: str
+    slot_count: int
+    container_ref: _refs_pb2.Ref
+    def __init__(self, side: _Optional[_Union[UiInventorySide, str]] = ..., inventory_revision: _Optional[str] = ..., slot_count: _Optional[int] = ..., container_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ...) -> None: ...
+
 class UiSnapshot(_message.Message):
-    __slots__ = ("ui_revision", "menu_open", "menu", "elements")
+    __slots__ = ("ui_revision", "menu_open", "menu", "elements", "inventories")
     UI_REVISION_FIELD_NUMBER: _ClassVar[int]
     MENU_OPEN_FIELD_NUMBER: _ClassVar[int]
     MENU_FIELD_NUMBER: _ClassVar[int]
     ELEMENTS_FIELD_NUMBER: _ClassVar[int]
+    INVENTORIES_FIELD_NUMBER: _ClassVar[int]
     ui_revision: str
     menu_open: bool
     menu: UiMenuFact
     elements: _containers.RepeatedCompositeFieldContainer[UiElementFact]
-    def __init__(self, ui_revision: _Optional[str] = ..., menu_open: _Optional[bool] = ..., menu: _Optional[_Union[UiMenuFact, _Mapping]] = ..., elements: _Optional[_Iterable[_Union[UiElementFact, _Mapping]]] = ...) -> None: ...
+    inventories: _containers.RepeatedCompositeFieldContainer[UiInventoryLink]
+    def __init__(self, ui_revision: _Optional[str] = ..., menu_open: _Optional[bool] = ..., menu: _Optional[_Union[UiMenuFact, _Mapping]] = ..., elements: _Optional[_Iterable[_Union[UiElementFact, _Mapping]]] = ..., inventories: _Optional[_Iterable[_Union[UiInventoryLink, _Mapping]]] = ...) -> None: ...
 
 class UiMenuFact(_message.Message):
     __slots__ = ("menu_type", "menu_kind", "title", "modal", "dialogue_text")
@@ -505,7 +528,7 @@ class UiMenuFact(_message.Message):
     def __init__(self, menu_type: _Optional[str] = ..., menu_kind: _Optional[_Union[_common_pb2.MenuKind, str]] = ..., title: _Optional[str] = ..., modal: _Optional[bool] = ..., dialogue_text: _Optional[str] = ...) -> None: ...
 
 class UiElementFact(_message.Message):
-    __slots__ = ("ref", "kind", "label", "visible", "enabled", "center", "index", "item", "price", "stock")
+    __slots__ = ("ref", "kind", "label", "visible", "enabled", "center", "index", "item", "price", "stock", "inventory_side", "item_ref")
     REF_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
     LABEL_FIELD_NUMBER: _ClassVar[int]
@@ -516,6 +539,8 @@ class UiElementFact(_message.Message):
     ITEM_FIELD_NUMBER: _ClassVar[int]
     PRICE_FIELD_NUMBER: _ClassVar[int]
     STOCK_FIELD_NUMBER: _ClassVar[int]
+    INVENTORY_SIDE_FIELD_NUMBER: _ClassVar[int]
+    ITEM_REF_FIELD_NUMBER: _ClassVar[int]
     ref: _refs_pb2.Ref
     kind: UiElementKind
     label: str
@@ -526,4 +551,6 @@ class UiElementFact(_message.Message):
     item: ItemFact
     price: int
     stock: int
-    def __init__(self, ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., kind: _Optional[_Union[UiElementKind, str]] = ..., label: _Optional[str] = ..., visible: _Optional[bool] = ..., enabled: _Optional[bool] = ..., center: _Optional[_Union[_common_pb2.PixelPoint, _Mapping]] = ..., index: _Optional[int] = ..., item: _Optional[_Union[ItemFact, _Mapping]] = ..., price: _Optional[int] = ..., stock: _Optional[int] = ...) -> None: ...
+    inventory_side: UiInventorySide
+    item_ref: _refs_pb2.Ref
+    def __init__(self, ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., kind: _Optional[_Union[UiElementKind, str]] = ..., label: _Optional[str] = ..., visible: _Optional[bool] = ..., enabled: _Optional[bool] = ..., center: _Optional[_Union[_common_pb2.PixelPoint, _Mapping]] = ..., index: _Optional[int] = ..., item: _Optional[_Union[ItemFact, _Mapping]] = ..., price: _Optional[int] = ..., stock: _Optional[int] = ..., inventory_side: _Optional[_Union[UiInventorySide, str]] = ..., item_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ...) -> None: ...
