@@ -888,6 +888,11 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
             inspect_success_frames = frames
     require(success_frames is not None, "observation 缺少 query-world 成功场景")
     require(inspect_success_frames is not None, "observation 缺少 inspect 成功场景")
+    world_result = next(
+        frame.command_event.result.query_world
+        for frame in success_frames
+        if frame.WhichOneof("body") == "command_event" and frame.command_event.state == 3
+    )
     inspect_request = next(
         frame.command_request.inspect
         for frame in inspect_success_frames
@@ -897,6 +902,19 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         frame.command_event.result.inspect
         for frame in inspect_success_frames
         if frame.WhichOneof("body") == "command_event" and frame.command_event.state == 3
+    )
+    world_hoe_dirt = next(
+        (entity for entity in world_result.snapshot.entities if entity.ref.value == "entity-a"),
+        None,
+    )
+    inspected_hoe_dirt = inspect_result.items[0].world_entity
+    require(world_hoe_dirt is not None, "Query World Fixture 缺少空 HoeDirt Fact")
+    require(
+        world_hoe_dirt == inspected_hoe_dirt
+        and world_hoe_dirt.kind == 14
+        and world_hoe_dirt.WhichOneof("details") == "hoe_dirt"
+        and world_hoe_dirt.hoe_dirt.watered,
+        "query_world 与 inspect 未返回一致的空 HoeDirt 含水事实",
     )
     require(
         [reference.value for reference in inspect_request.refs]

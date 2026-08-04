@@ -99,6 +99,7 @@
         "fruit_tree": "ENTITY_KIND_FRUIT_TREE",
         "furniture": "ENTITY_KIND_FURNITURE",
         "generic_object": "ENTITY_KIND_GENERIC_OBJECT",
+        "hoe_dirt": "ENTITY_KIND_HOE_DIRT",
         "loose_item": "ENTITY_KIND_LOOSE_ITEM",
         "machine": "ENTITY_KIND_MACHINE",
         "resource_clump": "ENTITY_KIND_RESOURCE_CLUMP",
@@ -115,6 +116,7 @@
         "ENTITY_KIND_FRUIT_TREE": "fruit_tree",
         "ENTITY_KIND_FURNITURE": "furniture",
         "ENTITY_KIND_GENERIC_OBJECT": "generic_object",
+        "ENTITY_KIND_HOE_DIRT": "hoe_dirt",
         "ENTITY_KIND_LOOSE_ITEM": "loose_item",
         "ENTITY_KIND_MACHINE": "machine",
         "ENTITY_KIND_RESOURCE_CLUMP": "resource_clump",
@@ -12734,7 +12736,8 @@
                 "loose_item",
                 "door",
                 "warp",
-                "generic_object"
+                "generic_object",
+                "hoe_dirt"
               ],
               "type": "string"
             },
@@ -13534,6 +13537,18 @@
             "required": [
               "qualifiedItemId",
               "runtimeType"
+            ],
+            "type": "object"
+          },
+          "HoeDirtFact": {
+            "additionalProperties": false,
+            "properties": {
+              "watered": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "watered"
             ],
             "type": "object"
           },
@@ -14517,6 +14532,12 @@
                     },
                     {
                       "required": [
+                        "tree",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "fruitTree",
                         "crop"
                       ]
@@ -14583,6 +14604,12 @@
                     },
                     {
                       "required": [
+                        "fruitTree",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "crop",
                         "resourceNode"
                       ]
@@ -14643,6 +14670,12 @@
                     },
                     {
                       "required": [
+                        "crop",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "resourceNode",
                         "resourceClump"
                       ]
@@ -14697,6 +14730,12 @@
                     },
                     {
                       "required": [
+                        "resourceNode",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "resourceClump",
                         "machine"
                       ]
@@ -14745,6 +14784,12 @@
                     },
                     {
                       "required": [
+                        "resourceClump",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "machine",
                         "container"
                       ]
@@ -14787,6 +14832,12 @@
                     },
                     {
                       "required": [
+                        "machine",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "container",
                         "bed"
                       ]
@@ -14823,6 +14874,12 @@
                     },
                     {
                       "required": [
+                        "container",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "bed",
                         "furniture"
                       ]
@@ -14853,6 +14910,12 @@
                     },
                     {
                       "required": [
+                        "bed",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "furniture",
                         "looseItem"
                       ]
@@ -14877,6 +14940,12 @@
                     },
                     {
                       "required": [
+                        "furniture",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "looseItem",
                         "door"
                       ]
@@ -14895,6 +14964,12 @@
                     },
                     {
                       "required": [
+                        "looseItem",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "door",
                         "warp"
                       ]
@@ -14907,8 +14982,26 @@
                     },
                     {
                       "required": [
+                        "door",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "warp",
                         "genericObject"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "warp",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "genericObject",
+                        "hoeDirt"
                       ]
                     }
                   ]
@@ -14945,6 +15038,9 @@
               "genericObject": {
                 "$ref": "#/$defs/GenericObjectFact"
               },
+              "hoeDirt": {
+                "$ref": "#/$defs/HoeDirtFact"
+              },
               "kind": {
                 "enum": [
                   "unspecified",
@@ -14960,7 +15056,8 @@
                   "loose_item",
                   "door",
                   "warp",
-                  "generic_object"
+                  "generic_object",
+                  "hoe_dirt"
                 ],
                 "type": "string"
               },
@@ -18377,6 +18474,18 @@
             ],
             "type": "object"
           },
+          "HoeDirtFact": {
+            "additionalProperties": false,
+            "properties": {
+              "watered": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "watered"
+            ],
+            "type": "object"
+          },
           "HorseFact": {
             "additionalProperties": false,
             "properties": {
@@ -19964,6 +20073,12 @@
                     },
                     {
                       "required": [
+                        "tree",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "fruitTree",
                         "crop"
                       ]
@@ -20030,6 +20145,12 @@
                     },
                     {
                       "required": [
+                        "fruitTree",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "crop",
                         "resourceNode"
                       ]
@@ -20090,6 +20211,12 @@
                     },
                     {
                       "required": [
+                        "crop",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "resourceNode",
                         "resourceClump"
                       ]
@@ -20144,6 +20271,12 @@
                     },
                     {
                       "required": [
+                        "resourceNode",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "resourceClump",
                         "machine"
                       ]
@@ -20192,6 +20325,12 @@
                     },
                     {
                       "required": [
+                        "resourceClump",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "machine",
                         "container"
                       ]
@@ -20234,6 +20373,12 @@
                     },
                     {
                       "required": [
+                        "machine",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "container",
                         "bed"
                       ]
@@ -20270,6 +20415,12 @@
                     },
                     {
                       "required": [
+                        "container",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "bed",
                         "furniture"
                       ]
@@ -20300,6 +20451,12 @@
                     },
                     {
                       "required": [
+                        "bed",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "furniture",
                         "looseItem"
                       ]
@@ -20324,6 +20481,12 @@
                     },
                     {
                       "required": [
+                        "furniture",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "looseItem",
                         "door"
                       ]
@@ -20342,6 +20505,12 @@
                     },
                     {
                       "required": [
+                        "looseItem",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "door",
                         "warp"
                       ]
@@ -20354,8 +20523,26 @@
                     },
                     {
                       "required": [
+                        "door",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
                         "warp",
                         "genericObject"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "warp",
+                        "hoeDirt"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "genericObject",
+                        "hoeDirt"
                       ]
                     }
                   ]
@@ -20392,6 +20579,9 @@
               "genericObject": {
                 "$ref": "#/$defs/GenericObjectFact"
               },
+              "hoeDirt": {
+                "$ref": "#/$defs/HoeDirtFact"
+              },
               "kind": {
                 "enum": [
                   "unspecified",
@@ -20407,7 +20597,8 @@
                   "loose_item",
                   "door",
                   "warp",
-                  "generic_object"
+                  "generic_object",
+                  "hoe_dirt"
                 ],
                 "type": "string"
               },

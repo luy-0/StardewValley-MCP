@@ -113,6 +113,24 @@ public sealed class QueryWorldModContractTests
     }
 
     [Test]
+    public void EmptyHoeDirtExposesWateredStateWithoutChangingCropFact()
+    {
+        var dry = HoeDirtProjectionPolicy.Create(0);
+        var wet = HoeDirtProjectionPolicy.Create(1);
+        var other = HoeDirtProjectionPolicy.Create(2);
+        var crop = new CropFact { Watered = true };
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(dry.Watered, Is.False);
+            Assert.That(wet.Watered, Is.True);
+            Assert.That(other.Watered, Is.False);
+            Assert.That(crop.Watered, Is.True);
+            Assert.That(EntityKind.HoeDirt, Is.EqualTo((EntityKind)14));
+        });
+    }
+
+    [Test]
     public void RefEnvelopeDistinguishesRestartFromUnknownCurrentToken()
     {
         const string currentInstance = "11111111-1111-4111-8111-111111111111";

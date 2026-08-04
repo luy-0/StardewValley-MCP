@@ -28,6 +28,7 @@
 ### 当前 V1 的兼容性增补
 
 - `Error.navigation` 是可选的 `NavigationFailureContext`，用于失败导航的最后确认位置，以及正常超时时的路线段进度和续跑提示。它是旧接收方可安全忽略的附加线路字段，也是 MCP `error.details.navigation` 的可选附加字段，因此属于 V1 Minor 兼容增补；调用方不得要求所有错误或所有导航失败都存在该字段。
+- `ENTITY_KIND_HOE_DIRT=14`、`WorldEntityFact.hoe_dirt=33` 与 `HoeDirtFact` 是 V1 的追加线路定义，旧接收方可以按 Proto 未知字段规则忽略，因此线路层属于 Minor 兼容增补。空 `HoeDirt` 不再作为 `ENTITY_KIND_GENERIC_OBJECT` 返回；曾只按 `generic_object` 过滤已耕地的调用方需要改为请求 `hoe_dirt`，而带作物的土地仍使用既有 `CropFact.watered`。
 
 ## Agent Skill 指引兼容规则
 

@@ -57,6 +57,7 @@ internal static class WorldProjector
                     STree tree => ProjectTree(location, x, y, tree, refs),
                     FruitTree fruitTree => ProjectFruitTree(location, x, y, fruitTree, refs),
                     HoeDirt { crop: not null } dirt => ProjectCrop(location, x, y, dirt, refs),
+                    HoeDirt dirt => ProjectHoeDirt(location, x, y, dirt, refs, warnings),
                     _ => ProjectGenericTerrainFeature(location, x, y, pair.Value, refs, warnings),
                 },
                 () => ProjectGenericFallback(
@@ -310,6 +311,7 @@ internal static class WorldProjector
                 STree tree => ProjectTree(location, x, y, tree, refs),
                 FruitTree fruitTree => ProjectFruitTree(location, x, y, fruitTree, refs),
                 HoeDirt { crop: not null } dirt => ProjectCrop(location, x, y, dirt, refs),
+                HoeDirt dirt => ProjectHoeDirt(location, x, y, dirt, refs, warnings),
                 TerrainFeature feature => ProjectGenericTerrainFeature(
                     location,
                     x,
@@ -543,6 +545,35 @@ internal static class WorldProjector
                 Regrows = crop.RegrowsAfterHarvest(),
             },
         };
+    }
+
+    private static WorldEntityFact ProjectHoeDirt(
+        GameLocation location,
+        int x,
+        int y,
+        HoeDirt dirt,
+        OpaqueRefStore refs,
+        ICollection<QueryWarning> warnings
+    )
+    {
+        var fact = new WorldEntityFact
+        {
+            Ref = refs.GetOrCreate(
+                dirt,
+                location,
+                RefKind.WorldEntity,
+                RefLocatorKind.TerrainFeature,
+                x,
+                y,
+                "hoe_dirt"
+            ),
+            Kind = EntityKind.HoeDirt,
+            Position = Position(location, x, y),
+            DisplayName = "HoeDirt",
+            HoeDirt = HoeDirtProjectionPolicy.Create(dirt.state.Value),
+        };
+        WorldEntityProjectionGuard.ApplyActionable(fact, dirt.isActionable, warnings);
+        return fact;
     }
 
     private static WorldEntityFact ProjectObject(
@@ -1356,6 +1387,11 @@ internal readonly record struct ScanArea(int X, int Y, int Width, int Height)
 {
     public bool Contains(int x, int y) =>
         x >= X && x < X + Width && y >= Y && y < Y + Height;
+}
+
+internal static class HoeDirtProjectionPolicy
+{
+    public static HoeDirtFact Create(int state) => new() { Watered = state == 1 };
 }
 
 internal static class WorldProjectionPolicy

@@ -34,9 +34,9 @@ def test_actionable_presence_distinguishes_false_from_unknown() -> None:
     query_world = frame.command_event.result.query_world
     entities = {entity.ref.value: entity for entity in query_world.snapshot.entities}
 
-    assert entities["entity-a"].HasField("actionable")
-    assert entities["entity-a"].actionable is False
-    assert not entities["entity-b"].HasField("actionable")
+    assert entities["entity-b"].HasField("actionable")
+    assert entities["entity-b"].actionable is False
+    assert not entities["entity-a"].HasField("actionable")
     assert [
         (item.code, item.ref.value, item.message)
         for item in query_world.warnings
@@ -44,7 +44,7 @@ def test_actionable_presence_distinguishes_false_from_unknown() -> None:
     ] == [
         (
             "ENTITY_ACTIONABLE_UNKNOWN",
-            "entity-b",
+            "entity-a",
             "无法在无副作用的前提下确定该实体对当前玩家是否可操作。",
         )
     ]
@@ -55,8 +55,8 @@ def test_query_world_actionable_presence_matches_generated_output_schema() -> No
     output = project_message(frame.command_event.result.query_world)
     entities = {entity["ref"]["value"]: entity for entity in output["snapshot"]["entities"]}
 
-    assert entities["entity-a"]["actionable"] is False
-    assert "actionable" not in entities["entity-b"]
+    assert entities["entity-b"]["actionable"] is False
+    assert "actionable" not in entities["entity-a"]
 
     result = {
         "status": "succeeded",

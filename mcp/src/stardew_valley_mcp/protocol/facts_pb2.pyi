@@ -25,6 +25,7 @@ class EntityKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     ENTITY_KIND_DOOR: _ClassVar[EntityKind]
     ENTITY_KIND_WARP: _ClassVar[EntityKind]
     ENTITY_KIND_GENERIC_OBJECT: _ClassVar[EntityKind]
+    ENTITY_KIND_HOE_DIRT: _ClassVar[EntityKind]
 
 class CharacterKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -57,6 +58,7 @@ ENTITY_KIND_LOOSE_ITEM: EntityKind
 ENTITY_KIND_DOOR: EntityKind
 ENTITY_KIND_WARP: EntityKind
 ENTITY_KIND_GENERIC_OBJECT: EntityKind
+ENTITY_KIND_HOE_DIRT: EntityKind
 CHARACTER_KIND_UNSPECIFIED: CharacterKind
 CHARACTER_KIND_NPC: CharacterKind
 CHARACTER_KIND_MONSTER: CharacterKind
@@ -163,7 +165,7 @@ class TileFact(_message.Message):
     def __init__(self, position: _Optional[_Union[_common_pb2.WorldPosition, _Mapping]] = ..., passable: _Optional[bool] = ..., occupied: _Optional[bool] = ..., diggable: _Optional[bool] = ..., water: _Optional[bool] = ..., terrain_kind: _Optional[str] = ...) -> None: ...
 
 class WorldEntityFact(_message.Message):
-    __slots__ = ("ref", "kind", "position", "display_name", "actionable", "tree", "fruit_tree", "crop", "resource_node", "resource_clump", "machine", "container", "bed", "furniture", "loose_item", "door", "warp", "generic_object")
+    __slots__ = ("ref", "kind", "position", "display_name", "actionable", "tree", "fruit_tree", "crop", "resource_node", "resource_clump", "machine", "container", "bed", "furniture", "loose_item", "door", "warp", "generic_object", "hoe_dirt")
     REF_FIELD_NUMBER: _ClassVar[int]
     KIND_FIELD_NUMBER: _ClassVar[int]
     POSITION_FIELD_NUMBER: _ClassVar[int]
@@ -182,6 +184,7 @@ class WorldEntityFact(_message.Message):
     DOOR_FIELD_NUMBER: _ClassVar[int]
     WARP_FIELD_NUMBER: _ClassVar[int]
     GENERIC_OBJECT_FIELD_NUMBER: _ClassVar[int]
+    HOE_DIRT_FIELD_NUMBER: _ClassVar[int]
     ref: _refs_pb2.Ref
     kind: EntityKind
     position: _common_pb2.WorldPosition
@@ -200,7 +203,8 @@ class WorldEntityFact(_message.Message):
     door: DoorFact
     warp: WarpFact
     generic_object: GenericObjectFact
-    def __init__(self, ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., kind: _Optional[_Union[EntityKind, str]] = ..., position: _Optional[_Union[_common_pb2.WorldPosition, _Mapping]] = ..., display_name: _Optional[str] = ..., actionable: _Optional[bool] = ..., tree: _Optional[_Union[TreeFact, _Mapping]] = ..., fruit_tree: _Optional[_Union[FruitTreeFact, _Mapping]] = ..., crop: _Optional[_Union[CropFact, _Mapping]] = ..., resource_node: _Optional[_Union[ResourceNodeFact, _Mapping]] = ..., resource_clump: _Optional[_Union[ResourceClumpFact, _Mapping]] = ..., machine: _Optional[_Union[MachineFact, _Mapping]] = ..., container: _Optional[_Union[ContainerFact, _Mapping]] = ..., bed: _Optional[_Union[BedFact, _Mapping]] = ..., furniture: _Optional[_Union[FurnitureFact, _Mapping]] = ..., loose_item: _Optional[_Union[LooseItemFact, _Mapping]] = ..., door: _Optional[_Union[DoorFact, _Mapping]] = ..., warp: _Optional[_Union[WarpFact, _Mapping]] = ..., generic_object: _Optional[_Union[GenericObjectFact, _Mapping]] = ...) -> None: ...
+    hoe_dirt: HoeDirtFact
+    def __init__(self, ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., kind: _Optional[_Union[EntityKind, str]] = ..., position: _Optional[_Union[_common_pb2.WorldPosition, _Mapping]] = ..., display_name: _Optional[str] = ..., actionable: _Optional[bool] = ..., tree: _Optional[_Union[TreeFact, _Mapping]] = ..., fruit_tree: _Optional[_Union[FruitTreeFact, _Mapping]] = ..., crop: _Optional[_Union[CropFact, _Mapping]] = ..., resource_node: _Optional[_Union[ResourceNodeFact, _Mapping]] = ..., resource_clump: _Optional[_Union[ResourceClumpFact, _Mapping]] = ..., machine: _Optional[_Union[MachineFact, _Mapping]] = ..., container: _Optional[_Union[ContainerFact, _Mapping]] = ..., bed: _Optional[_Union[BedFact, _Mapping]] = ..., furniture: _Optional[_Union[FurnitureFact, _Mapping]] = ..., loose_item: _Optional[_Union[LooseItemFact, _Mapping]] = ..., door: _Optional[_Union[DoorFact, _Mapping]] = ..., warp: _Optional[_Union[WarpFact, _Mapping]] = ..., generic_object: _Optional[_Union[GenericObjectFact, _Mapping]] = ..., hoe_dirt: _Optional[_Union[HoeDirtFact, _Mapping]] = ...) -> None: ...
 
 class TreeFact(_message.Message):
     __slots__ = ("growth_stage", "stump", "tapped", "mossy", "health")
@@ -247,6 +251,12 @@ class CropFact(_message.Message):
     dead: bool
     regrows: bool
     def __init__(self, crop_id: _Optional[str] = ..., harvest_item_id: _Optional[str] = ..., growth_phase: _Optional[int] = ..., ready_for_harvest: _Optional[bool] = ..., watered: _Optional[bool] = ..., dead: _Optional[bool] = ..., regrows: _Optional[bool] = ...) -> None: ...
+
+class HoeDirtFact(_message.Message):
+    __slots__ = ("watered",)
+    WATERED_FIELD_NUMBER: _ClassVar[int]
+    watered: bool
+    def __init__(self, watered: _Optional[bool] = ...) -> None: ...
 
 class ResourceNodeFact(_message.Message):
     __slots__ = ("node_kind", "hits_to_destroy", "required_tool")

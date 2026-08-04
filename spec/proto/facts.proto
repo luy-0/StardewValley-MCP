@@ -54,6 +54,7 @@ enum EntityKind {
   ENTITY_KIND_DOOR = 11;
   ENTITY_KIND_WARP = 12;
   ENTITY_KIND_GENERIC_OBJECT = 13;
+  ENTITY_KIND_HOE_DIRT = 14;
 }
 
 message WorldSnapshot {
@@ -98,6 +99,7 @@ message WorldEntityFact {
     DoorFact door = 30;
     WarpFact warp = 31;
     GenericObjectFact generic_object = 32;
+    HoeDirtFact hoe_dirt = 33;
   }
 }
 
@@ -125,6 +127,11 @@ message CropFact {
   bool watered = 5;
   bool dead = 6;
   bool regrows = 7;
+}
+
+// 不含作物的已耕地事实。带作物的 HoeDirt 继续使用 CropFact。
+message HoeDirtFact {
+  bool watered = 1;
 }
 
 message ResourceNodeFact {
