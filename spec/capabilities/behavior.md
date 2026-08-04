@@ -146,7 +146,8 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 
 - 没有菜单时以 `already_closed=true` 幂等成功。
 - 有菜单时，成功要求 `menu_type_after` 为空且新的 UI Snapshot 表示没有菜单。
-- 游戏拒绝关闭的强制 Modal 返回 `NOT_READY`。
+- 精确原版、非选择型 `DialogueBox` 仅在末页正文已经完整呈现、非过渡、等待计时结束、非事件对话且没有后续对象对话时允许关闭；角色对话还必须处于最终 Dialogue entry 且没有 continued 或 broken-up 后续页。实现必须调用游戏原生对话推进流程并观察菜单真正关闭，不得用 `exitThisMenu`、Escape 或通用坐标点击强退。
+- 多页、问题、事件或状态不可安全判定的 `DialogueBox`（包括派生类），以及游戏拒绝关闭的其他强制 Modal，都返回 `NOT_READY`。
 
 ## 5. 查询能力
 

@@ -93,6 +93,88 @@ public sealed class MenuActionHandlerTests
     }
 
     [Test]
+    public void DialogueClosePolicy_AllowsOnlyReadyFinalNonEventDialogue()
+    {
+        var ready = new DialogueCloseFacts(
+            IsQuestion: false,
+            EventUp: false,
+            Transitioning: false,
+            SafetyReady: true,
+            TextReadable: true,
+            CharacterIndex: 4,
+            TextLength: 5,
+            HasCharacterDialogue: false,
+            ContinuedOnNextScreen: false,
+            BrokenUpPageCount: 0,
+            PlainDialogueCount: 1,
+            CharacterDialogueIsFinal: true,
+            ObjectDialogueCount: 1
+        );
+
+        Assert.That(DialogueClosePolicy.CanClose(ready), Is.True);
+        var blockers = new[]
+        {
+            ready with { IsQuestion = true },
+            ready with { EventUp = true },
+            ready with { Transitioning = true },
+            ready with { SafetyReady = false },
+            ready with { TextReadable = false },
+            ready with { CharacterIndex = 3 },
+            ready with { PlainDialogueCount = 2 },
+            ready with { ObjectDialogueCount = 2 },
+            ready with
+            {
+                HasCharacterDialogue = true,
+                ContinuedOnNextScreen = true,
+            },
+            ready with
+            {
+                HasCharacterDialogue = true,
+                BrokenUpPageCount = 2,
+            },
+            ready with
+            {
+                HasCharacterDialogue = true,
+                BrokenUpPageCount = 1,
+                CharacterDialogueIsFinal = false,
+            },
+        };
+        Assert.That(blockers.All(facts => !DialogueClosePolicy.CanClose(facts)), Is.True);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(DialogueClosePolicy.CanClose(ready with
+            {
+                HasCharacterDialogue = true,
+                BrokenUpPageCount = 1,
+                CharacterDialogueIsFinal = true,
+            }), Is.True);
+            Assert.That(DialogueClosePolicy.CanClose(ready with
+            {
+                ObjectDialogueCount = 0,
+            }), Is.True);
+        });
+    }
+
+    [Test]
+    public void CloseMenu_DoesNotSucceedWhileNativeFlowKeepsMenuOpen()
+    {
+        var runtime = new FakeRuntime(Menu(MenuKind.Unspecified, "dialogue-before"))
+        {
+            KeepMenuOpenAfterClose = true,
+        };
+        var continuation = new CloseMenuContinuation(runtime);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(continuation.Tick(ContinuationStopSignal.None), Is.TypeOf<ContinuationStep.Pending>());
+            Assert.That(continuation.Tick(ContinuationStopSignal.None), Is.TypeOf<ContinuationStep.Pending>());
+            Assert.That(runtime.Closed, Is.True);
+            Assert.That(continuation.CanCancel, Is.False);
+        });
+    }
+
+    [Test]
     public void ActivateUi_RequiresCurrentRevisionVisibleEnabledAndObservesNewRevision()
     {
         var runtime = new FakeRuntime(Menu(MenuKind.Inventory, Revision("a")));
@@ -149,6 +231,7 @@ public sealed class MenuActionHandlerTests
         public MenuKind? Opened { get; private set; }
         public bool Closed { get; private set; }
         public bool DelayCloseObservation { get; init; }
+        public bool KeepMenuOpenAfterClose { get; init; }
         public Error? ActivationError { get; init; }
         public string? ActivatedRef { get; private set; }
 
@@ -190,7 +273,7 @@ public sealed class MenuActionHandlerTests
             if (!before.MenuOpen)
                 return new MenuActionAttempt(before);
             Closed = true;
-            if (!DelayCloseObservation)
+            if (!DelayCloseObservation && !KeepMenuOpenAfterClose)
                 _current = NoMenu(Revision("c"));
             return new MenuActionAttempt(before, Submitted: true);
         }

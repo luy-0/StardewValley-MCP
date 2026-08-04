@@ -114,6 +114,22 @@ def test_dialogue_advance_activation_uses_native_semantic_path() -> None:
     assert semantic_branch < native_click < component_branch
 
 
+def test_close_menu_blocks_dialogue_family_before_generic_exit_path() -> None:
+    source = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
+    close = source.split("public MenuActionAttempt Close()", 1)[1].split(
+        "public MenuActionAttempt Activate", 1
+    )[0]
+    family_guard = close.index("menu is DialogueBox dialogue")
+    exact_guard = close.index("dialogue.GetType() != typeof(DialogueBox)")
+    native_close = close.index("dialogue.receiveLeftClick(0, 0)")
+    generic_ready = close.index("!menu.readyToClose()")
+    generic_exit = close.index("menu.exitThisMenu()")
+    assert family_guard < exact_guard < native_close < generic_ready < generic_exit
+    assert "dialogue.exitThisMenu" not in close
+    helper = close.split("private static bool CanSafelyCloseDialogue", 1)[1]
+    assert helper.index("try") < helper.index("isOnFinalDialogue()") < helper.index("catch")
+
+
 def test_default_capability_set_is_the_unique_concrete_handler_composition_root() -> None:
     composition_path = MOD / "Bootstrap" / "DefaultCapabilitySet.cs"
     registry = (MOD / "Runtime" / "CapabilityRegistry.cs").read_text()
