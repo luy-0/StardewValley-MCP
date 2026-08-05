@@ -4,7 +4,7 @@
   "fence": {
     "sessionId": "f2d85b2e-4d60-4e32-bf42-fedcba654321",
     "leaseEpoch": "7",
-    "capabilityDigest": "8c0c486fd9e32c9c729eb9ab4a1e62eb9382898ab5ef37dd1420dafcc1be393e"
+    "capabilityDigest": "9410f4fa5448d409d780e12b32141708b97021e20fa8a1bfc5393870c2685a7d"
   },
   "getCommandStatusResponse": {
     "commandId": "b4fa7d40-6f82-4054-9164-222222222222",

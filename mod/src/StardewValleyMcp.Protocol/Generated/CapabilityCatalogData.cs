@@ -125,7 +125,7 @@ internal static class CapabilityCatalogData
                 ResultType = nameof(InteractResult),
                 RequiredScope = "game:write",
                 Destructive = true,
-                Risks = { "changes_relationship", "changes_save" },
+                Risks = { "changes_relationship", "changes_save", "consumes_item" },
             },
             ["move_inventory_item"] = new CapabilityDescriptor
             {

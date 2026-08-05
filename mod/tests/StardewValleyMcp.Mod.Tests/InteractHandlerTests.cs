@@ -37,23 +37,18 @@ public sealed class InteractHandlerTests
         });
     }
 
-    [TestCase("Town", 5, 5, true, ErrorCode.InvalidArgument)]
-    [TestCase("Farm", 5, 6, true, ErrorCode.OutOfRange)]
-    [TestCase("Farm", 5, 5, false, ErrorCode.NotReady)]
-    public void ResolveRejectsOtherLocationNonAdjacentAndHeldNonTool(
+    [TestCase("Town", 5, 5, ErrorCode.InvalidArgument)]
+    [TestCase("Farm", 5, 6, ErrorCode.OutOfRange)]
+    public void ResolveRejectsOtherLocationAndNonAdjacentTarget(
         string location,
         int playerX,
         int playerY,
-        bool heldItemAllowed,
         ErrorCode expected
     )
     {
         var handler = NewHandler(out var resolver, out var interaction);
         resolver.Target = Target("Farm", 5, 4);
-        interaction.State = Observation(location, playerX, playerY) with
-        {
-            HeldItemAllowed = heldItemAllowed,
-        };
+        interaction.State = Observation(location, playerX, playerY);
 
         var failed = (ContinuationStep.Failed)handler
             .Start(CommandId, PositionRequest("Farm", 5, 4))
@@ -62,6 +57,60 @@ public sealed class InteractHandlerTests
         Assert.Multiple(() =>
         {
             Assert.That(failed.Error.Code, Is.EqualTo(expected));
+            Assert.That(interaction.SubmitCalls, Is.Zero);
+        });
+    }
+
+    [Test]
+    public void HeldNonToolCanUseNativeInteractionAndProduceInventoryEffect()
+    {
+        var handler = NewHandler(out var resolver, out var interaction);
+        resolver.Target = Target("Farm", 5, 4);
+        interaction.State = Observation("Farm", 5, 5) with
+        {
+            HeldItemQualifiedId = "(O)472",
+        };
+        interaction.OnSubmit = () => interaction.State = interaction.State with
+        {
+            InventoryState = "seed-stack-decreased",
+        };
+        var continuation = handler.Start(CommandId, PositionRequest("Farm", 5, 4));
+
+        TickThroughSubmit(continuation);
+        var succeeded = (ContinuationStep.Succeeded)continuation.Tick(ContinuationStopSignal.None);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(interaction.SubmitCalls, Is.EqualTo(1));
+            Assert.That(
+                succeeded.Result.Interact.Execution.CompletionReason,
+                Is.EqualTo("inventory_changed")
+            );
+        });
+    }
+
+    [Test]
+    public void HeldItemReplacementBeforeSubmissionFailsWithoutInteracting()
+    {
+        var handler = NewHandler(out var resolver, out var interaction);
+        resolver.Target = Target("Farm", 5, 4);
+        interaction.State = Observation("Farm", 5, 5) with
+        {
+            HeldItemQualifiedId = "(O)472",
+        };
+        var continuation = handler.Start(CommandId, PositionRequest("Farm", 5, 4));
+
+        continuation.Tick(ContinuationStopSignal.None);
+        interaction.State = interaction.State with
+        {
+            HeldItemIdentity = new object(),
+        };
+        var failed = (ContinuationStep.Failed)continuation.Tick(ContinuationStopSignal.None);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(failed.Error.Code, Is.EqualTo(ErrorCode.ExecutionFailed));
+            Assert.That(failed.Error.Message, Does.Contain("手持物已经改变"));
             Assert.That(interaction.SubmitCalls, Is.Zero);
         });
     }
@@ -291,7 +340,9 @@ public sealed class InteractHandlerTests
     private static InteractionObservation Observation(string locationId, int x, int y) => new(
         true,
         true,
-        true,
+        new object(),
+        "(T)Pickaxe",
+        0,
         locationId,
         x,
         y,

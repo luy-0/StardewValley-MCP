@@ -137,7 +137,8 @@
       "result": "InteractResult",
       "risk": [
         "changes_save",
-        "changes_relationship"
+        "changes_relationship",
+        "consumes_item"
       ],
       "side_effect": "mutating",
       "title": "与目标交互"

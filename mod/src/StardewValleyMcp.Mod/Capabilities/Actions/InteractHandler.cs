@@ -84,6 +84,10 @@ internal sealed class InteractHandler : ILongRunningCapabilityHandler
         private uint _elapsedTicks;
         private bool _microMoveStarted;
         private bool _submitted;
+        private bool _heldItemLocked;
+        private object? _heldItemIdentity;
+        private string _heldItemQualifiedId = "";
+        private int _heldItemSlot;
 
         public InteractContinuation(
             IActionTargetResolver targets,
@@ -152,6 +156,10 @@ internal sealed class InteractHandler : ILongRunningCapabilityHandler
                 return Fail(precondition);
 
             _target = resolution.Target;
+            _heldItemIdentity = current.HeldItemIdentity;
+            _heldItemQualifiedId = current.HeldItemQualifiedId;
+            _heldItemSlot = current.HeldItemSlot;
+            _heldItemLocked = true;
             _startX = current.PlayerX;
             _startY = current.PlayerY;
             _direction = DirectionFrom(
@@ -264,6 +272,15 @@ internal sealed class InteractHandler : ILongRunningCapabilityHandler
                 return Error(ErrorCode.NotReady, "游戏世界尚未就绪");
             if (!SameLocation(current.LocationId, _target!.LocationId))
                 return Error(ErrorCode.ExecutionFailed, "玩家不在目标 Location");
+            if (_heldItemLocked
+                && (!ReferenceEquals(current.HeldItemIdentity, _heldItemIdentity)
+                    || current.HeldItemSlot != _heldItemSlot
+                    || !string.Equals(
+                        current.HeldItemQualifiedId,
+                        _heldItemQualifiedId,
+                        StringComparison.Ordinal
+                    )))
+                return Error(ErrorCode.ExecutionFailed, "提交交互前当前手持物已经改变");
             return null;
         }
 
@@ -281,8 +298,6 @@ internal sealed class InteractHandler : ILongRunningCapabilityHandler
                 return Error(ErrorCode.InvalidArgument, "interact 目标必须位于玩家当前 Location");
             if (Math.Abs(target.X - current.PlayerX) + Math.Abs(target.Y - current.PlayerY) != 1)
                 return Error(ErrorCode.OutOfRange, "interact 目标必须与玩家 cardinal-adjacent");
-            if (!current.HeldItemAllowed)
-                return Error(ErrorCode.NotReady, "请先清空手持非工具物品");
             if (!current.CanAct)
                 return Error(ErrorCode.NotReady, "玩家当前不能安全交互");
             return null;

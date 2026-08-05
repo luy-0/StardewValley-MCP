@@ -340,8 +340,9 @@ def verify_action_fixtures() -> None:
             )
         if capability == "interact":
             require(
-                document["failed"]["error"]["code"] == "not_ready",
-                "interact Fixture 未固定非工具手持物门禁错误",
+                document["failed"]["error"]["code"] == "execution_failed"
+                and "手持物已经改变" in document["failed"]["error"]["message"],
+                "interact Fixture 未固定提交前手持物变化错误",
             )
         if capability == "use_tool":
             output = document["succeeded"]["output"]

@@ -70,7 +70,7 @@ capabilities:
     default_timeout_ms: 10000
     max_timeout_ms: 30000
     required_scope: game:write
-    risk: [changes_save, changes_relationship]
+    risk: [changes_save, changes_relationship, consumes_item]
     destructive: true
   - id: use_tool
     title: 使用当前工具
