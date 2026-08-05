@@ -57,7 +57,15 @@ class SkillValidationTests(unittest.TestCase):
         skill_dirs = [path.parent for root in roots for path in root.rglob("SKILL.md")]
         names = {path.name for path in skill_dirs}
         self.assertTrue(
-            {"stardew-skill-template", "stardew-nearby-overview", "stardew-remove-tree"}.issubset(names)
+            {
+                "stardew-skill-template",
+                "stardew-nearby-overview",
+                "stardew-remove-tree",
+                "stardew-plant-seed",
+                "stardew-water-crops",
+                "stardew-harvest-crops",
+                "stardew-sleep-until-next-day",
+            }.issubset(names)
         )
         self.assertEqual([], [issue for path in skill_dirs for issue in validate_skill(path, self.catalog)])
 

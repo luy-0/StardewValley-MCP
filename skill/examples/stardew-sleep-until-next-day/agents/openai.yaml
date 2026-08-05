@@ -1,0 +1,4 @@
+interface:
+  display_name: "星露谷回家睡觉"
+  short_description: "回到唯一住宅、找到床并以日期变化确认睡到第二天"
+  default_prompt: "使用 $stardew-sleep-until-next-day 回家并睡到第二天。"

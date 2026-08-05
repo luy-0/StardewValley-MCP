@@ -1,0 +1,4 @@
+interface:
+  display_name: "星露谷单格种植"
+  short_description: "在一格空耕地种下一颗指定种子，并复查作物与背包"
+  default_prompt: "使用 $stardew-plant-seed 在指定的一格空耕地种下一颗种子。"

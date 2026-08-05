@@ -1,0 +1,4 @@
+interface:
+  display_name: "星露谷整片浇水"
+  short_description: "逐格浇灌查询范围内未浇水作物，并复查余水与进度"
+  default_prompt: "使用 $stardew-water-crops 给当前这片作物全部浇水。"

@@ -1,0 +1,4 @@
+interface:
+  display_name: "星露谷整片收获"
+  short_description: "按手摘或镰刀方式逐格收获成熟作物并复查结果"
+  default_prompt: "使用 $stardew-harvest-crops 收获当前这片已经成熟的作物。"

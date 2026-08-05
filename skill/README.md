@@ -7,11 +7,17 @@ skill/
 ├── templates/stardew-skill-template/  可复制的标准 SKILL.md 模板
 ├── examples/stardew-nearby-overview/  只读附近概览示例
 ├── examples/stardew-remove-tree/      受控移除普通树示例
+├── examples/stardew-plant-seed/       单格种植并复查示例
+├── examples/stardew-water-crops/      范围内逐格浇水示例
+├── examples/stardew-harvest-crops/    范围内逐格收获示例
+├── examples/stardew-sleep-until-next-day/  回家上床与换日示例
 ├── scripts/validate_skills.py         静态校验器
 └── tests/                             校验器测试
 ```
 
 Agent Runtime 读取 `SKILL.md` 后直接调用现有 `stardew_*` MCP Tool。MCP 和 Mod 不加载这些目录，也不会把示例注册成新的公共能力；默认只读和 `--allow-write` 权限边界保持不变。
+
+这些目录是公开原子能力如何组成任务闭环的参考实现，不构成覆盖全部玩法的官方 Skill 集合。每个变更示例都坚持“查询 → 单次动作 → 复查”，批量目标由 Agent 做有界循环。
 
 ## 创建 Skill
 
