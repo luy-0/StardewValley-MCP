@@ -23,7 +23,7 @@ Proto 是字段和编号权威，Manifest 是公开集合与策略权威；本�
 
 ### Inventory Revision
 
-以下任一内容变化都必须生成新 `inventory_revision`：Slot 数量、Slot 中的物品身份、堆叠、品质、工具等级或当前选中 Slot。所有 `QueryInventoryResult.snapshot.slots[].item.ref` 都是可用于 `inspect` 的 `INVENTORY_ITEM` Ref，包括玩家背包与可读容器中的非空 Slot。只有由 `player_inventory` 选择器（或其缺省等价形式）生成、且调用时仍匹配当前玩家背包与 `inventory_revision` 的 Item Ref 可以用于 `equip`；容器库存 Item Ref 不得用于 `equip`。当前受支持箱子菜单两侧的 Item Ref 可以按下述 `transfer_inventory_item` 规则用于单次转移。Machine、Loose Item 和 UI 中嵌套的 `ItemFact` 可以没有 Ref；即使存在，是否可用于 `inspect` 仍由服务端 Ref Binding 决定，且不得据此获得变更权限。
+以下任一内容变化都必须生成新 `inventory_revision`：Slot 数量、Slot 中的物品身份、堆叠、品质、工具等级、喷壶余水／容量／无限水状态或当前选中 Slot。所有 `QueryInventoryResult.snapshot.slots[].item.ref` 都是可用于 `inspect` 的 `INVENTORY_ITEM` Ref，包括玩家背包与可读容器中的非空 Slot。只有由 `player_inventory` 选择器（或其缺省等价形式）生成、且调用时仍匹配当前玩家背包与 `inventory_revision` 的 Item Ref 可以用于 `equip`；容器库存 Item Ref 不得用于 `equip`。当前受支持箱子菜单两侧的 Item Ref 可以按下述 `transfer_inventory_item` 规则用于单次转移。Machine、Loose Item 和 UI 中嵌套的 `ItemFact` 可以没有 Ref；即使存在，是否可用于 `inspect` 仍由服务端 Ref Binding 决定，且不得据此获得变更权限。
 
 ### World Revision 与普通 Ref
 
@@ -201,7 +201,7 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 
 ### `query_runtime`
 
-返回日期、时间、天气、玩家位置、资源和 UI 摘要。游戏尚未加载 Save 时返回 `NOT_READY`，不能返回由零值拼成的假 Snapshot。
+返回日期、时间、天气、玩家位置、资源、UI 摘要及当前玩家保存的 `home_location_id`。该字段沿用游戏自身的住宅 Location 标识；多人小屋必须保持其唯一室内 ID，不得退化为可能重名的短建筑名。游戏尚未加载 Save 时返回 `NOT_READY`，不能返回由零值拼成的假 Snapshot。
 
 ### `query_world`
 
@@ -220,6 +220,7 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 ### `query_inventory`
 
 - 未提供 Container 时默认玩家背包；`player_inventory` 空消息与缺省语义相同。
+- Watering Can 的 `ItemFact` 必须存在 `water_remaining`、`water_capacity` 与 `bottomless`；其他物品必须缺省这三个可选字段，不能用零值冒充喷壶事实。
 - `container_ref` 必须解析为带 `ContainerFact` 的 `WORLD_ENTITY` 或当前可读取的 `CONTAINER` 库存视图，否则返回 `STALE_REF`、`NOT_FOUND` 或 `INVALID_ARGUMENT`。
 - V1 的可读取世界容器是当前已加载 Location 中由 `query_world` 返回的 Chest/Fridge 类实体；不通过显示名、坐标字符串或短地图名旁路 Ref 校验。
 - `container_kind` 的稳定值固定为 `player`、`fridge`、`junimo_chest`、`mini_shipping_bin`、`auto_loader`、`big_chest`、`chest` 或 `container`；`query_world` 与 `query_inventory` 必须使用同一分类规则。
@@ -261,7 +262,7 @@ UI warning 使用以下稳定 code：`UI_MENU_UNSUPPORTED` 表示只有 shell；
 
 ## 6. 事实覆盖边界
 
-V1 为常见树木、作物、空的已耕地、资源、机器、容器、床、家具、掉落物、门、Warp 和角色提供类型化 Fact。没有作物的 `HoeDirt` 必须投影为 `ENTITY_KIND_HOE_DIRT` 与 `HoeDirtFact`，其中 `watered` 表示该格当前是否已浇水；同一 Ref 经 `query_world` 与 `inspect` 读取时必须得到一致的 `HoeDirtFact`。带作物的 `HoeDirt` 继续投影为 `ENTITY_KIND_CROP` 与 `CropFact`，其含水状态仍以 `CropFact.watered` 表达，不得同时附加 `HoeDirtFact`。其他原版或第三方 Mod 地图对象使用 `ENTITY_KIND_GENERIC_OBJECT` 与 `GenericObjectFact` 提供最小 Runtime Type、Qualified Item ID、位置、显示名和可交互性；实现不得静默丢弃无法类型化但位于查询区域的可见对象。
+V1 为常见树木、作物、空的已耕地、资源、机器、容器、床、家具、掉落物、门、Warp 和角色提供类型化 Fact。没有作物的 `HoeDirt` 必须投影为 `ENTITY_KIND_HOE_DIRT` 与 `HoeDirtFact`，其中 `watered` 表示该格当前是否已浇水；同一 Ref 经 `query_world` 与 `inspect` 读取时必须得到一致的 `HoeDirtFact`。带作物的 `HoeDirt` 继续投影为 `ENTITY_KIND_CROP` 与 `CropFact`，其含水状态仍以 `CropFact.watered` 表达，不得同时附加 `HoeDirtFact`；`harvest_action` 明确区分原生交互收获与镰刀收获。可睡床的 `BedFact.sleep_position` 必须使用床的实际睡眠触发格，不能拿家具锚点或占用格集合代替。其他原版或第三方 Mod 地图对象使用 `ENTITY_KIND_GENERIC_OBJECT` 与 `GenericObjectFact` 提供最小 Runtime Type、Qualified Item ID、位置、显示名和可交互性；实现不得静默丢弃无法类型化但位于查询区域的可见对象。
 
 单个 Character 或 FarmAnimal 的第三方 getter 抛出异常时，实现必须保留只由已知枚举位置、opaque Ref，以及可由安全 CLR 类型判断的现有 `CharacterKind` 构成的最小 `CharacterFact`，并附 `CHARACTER_PROJECTION_FALLBACK` warning；不得继续猜测名称、朝向或类型详情，也不得输出 Proto 中不存在的 runtime type 字段。同一 World Entity 或 Character 已由 `query_world` 生成安全 fallback 后，`inspect` 必须保留调用方传入的 Ref，并返回相同语义的最小 Fact 与 fallback warning；不得重试已知失败 getter、重新签发 Ref 或降级为 `FACT_UNAVAILABLE`。如果连枚举位置也不可读，则跳过该角色并附不带 Ref 的 `CHARACTER_PROJECTION_SKIPPED` warning，不得编造坐标。Location 的 `GetFridgePosition`/`GetFridge` 抛出异常时，只跳过该冰箱并附不带 Ref 的 `FRIDGE_DISCOVERY_FAILED` warning，不得中止其他实体投影或生成悬空 Ref。
 

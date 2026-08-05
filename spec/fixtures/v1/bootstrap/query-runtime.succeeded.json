@@ -24,7 +24,8 @@
             "maxEnergy": 270.0,
             "health": 100,
             "maxHealth": 100,
-            "canMove": true
+            "canMove": true,
+            "homeLocationId": "FarmHouse"
           },
           "weather": {"raining": false, "lightning": false, "snowing": false, "greenRain": false, "festivalDay": false},
           "ui": {"menuOpen": false, "menuType": ""}

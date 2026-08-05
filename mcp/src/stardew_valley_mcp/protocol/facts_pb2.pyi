@@ -27,6 +27,12 @@ class EntityKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     ENTITY_KIND_GENERIC_OBJECT: _ClassVar[EntityKind]
     ENTITY_KIND_HOE_DIRT: _ClassVar[EntityKind]
 
+class CropHarvestAction(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    CROP_HARVEST_ACTION_UNSPECIFIED: _ClassVar[CropHarvestAction]
+    CROP_HARVEST_ACTION_INTERACT: _ClassVar[CropHarvestAction]
+    CROP_HARVEST_ACTION_SCYTHE: _ClassVar[CropHarvestAction]
+
 class CharacterKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     CHARACTER_KIND_UNSPECIFIED: _ClassVar[CharacterKind]
@@ -79,6 +85,9 @@ ENTITY_KIND_DOOR: EntityKind
 ENTITY_KIND_WARP: EntityKind
 ENTITY_KIND_GENERIC_OBJECT: EntityKind
 ENTITY_KIND_HOE_DIRT: EntityKind
+CROP_HARVEST_ACTION_UNSPECIFIED: CropHarvestAction
+CROP_HARVEST_ACTION_INTERACT: CropHarvestAction
+CROP_HARVEST_ACTION_SCYTHE: CropHarvestAction
 CHARACTER_KIND_UNSPECIFIED: CharacterKind
 CHARACTER_KIND_NPC: CharacterKind
 CHARACTER_KIND_MONSTER: CharacterKind
@@ -121,7 +130,7 @@ class RuntimeSnapshot(_message.Message):
     def __init__(self, date: _Optional[_Union[_common_pb2.GameDate, _Mapping]] = ..., time_of_day: _Optional[int] = ..., player: _Optional[_Union[PlayerFact, _Mapping]] = ..., weather: _Optional[_Union[WeatherFact, _Mapping]] = ..., ui: _Optional[_Union[UiSummary, _Mapping]] = ...) -> None: ...
 
 class PlayerFact(_message.Message):
-    __slots__ = ("position", "facing", "money", "energy", "max_energy", "health", "max_health", "can_move")
+    __slots__ = ("position", "facing", "money", "energy", "max_energy", "health", "max_health", "can_move", "home_location_id")
     POSITION_FIELD_NUMBER: _ClassVar[int]
     FACING_FIELD_NUMBER: _ClassVar[int]
     MONEY_FIELD_NUMBER: _ClassVar[int]
@@ -130,6 +139,7 @@ class PlayerFact(_message.Message):
     HEALTH_FIELD_NUMBER: _ClassVar[int]
     MAX_HEALTH_FIELD_NUMBER: _ClassVar[int]
     CAN_MOVE_FIELD_NUMBER: _ClassVar[int]
+    HOME_LOCATION_ID_FIELD_NUMBER: _ClassVar[int]
     position: _common_pb2.WorldPosition
     facing: _common_pb2.Direction
     money: int
@@ -138,7 +148,8 @@ class PlayerFact(_message.Message):
     health: int
     max_health: int
     can_move: bool
-    def __init__(self, position: _Optional[_Union[_common_pb2.WorldPosition, _Mapping]] = ..., facing: _Optional[_Union[_common_pb2.Direction, str]] = ..., money: _Optional[int] = ..., energy: _Optional[float] = ..., max_energy: _Optional[float] = ..., health: _Optional[int] = ..., max_health: _Optional[int] = ..., can_move: _Optional[bool] = ...) -> None: ...
+    home_location_id: str
+    def __init__(self, position: _Optional[_Union[_common_pb2.WorldPosition, _Mapping]] = ..., facing: _Optional[_Union[_common_pb2.Direction, str]] = ..., money: _Optional[int] = ..., energy: _Optional[float] = ..., max_energy: _Optional[float] = ..., health: _Optional[int] = ..., max_health: _Optional[int] = ..., can_move: _Optional[bool] = ..., home_location_id: _Optional[str] = ...) -> None: ...
 
 class WeatherFact(_message.Message):
     __slots__ = ("raining", "lightning", "snowing", "green_rain", "festival_day")
@@ -269,7 +280,7 @@ class FruitTreeFact(_message.Message):
     def __init__(self, fruit_item_id: _Optional[str] = ..., growth_stage: _Optional[int] = ..., days_until_mature: _Optional[int] = ..., fruit_count: _Optional[int] = ..., stump: _Optional[bool] = ...) -> None: ...
 
 class CropFact(_message.Message):
-    __slots__ = ("crop_id", "harvest_item_id", "growth_phase", "ready_for_harvest", "watered", "dead", "regrows")
+    __slots__ = ("crop_id", "harvest_item_id", "growth_phase", "ready_for_harvest", "watered", "dead", "regrows", "harvest_action")
     CROP_ID_FIELD_NUMBER: _ClassVar[int]
     HARVEST_ITEM_ID_FIELD_NUMBER: _ClassVar[int]
     GROWTH_PHASE_FIELD_NUMBER: _ClassVar[int]
@@ -277,6 +288,7 @@ class CropFact(_message.Message):
     WATERED_FIELD_NUMBER: _ClassVar[int]
     DEAD_FIELD_NUMBER: _ClassVar[int]
     REGROWS_FIELD_NUMBER: _ClassVar[int]
+    HARVEST_ACTION_FIELD_NUMBER: _ClassVar[int]
     crop_id: str
     harvest_item_id: str
     growth_phase: int
@@ -284,7 +296,8 @@ class CropFact(_message.Message):
     watered: bool
     dead: bool
     regrows: bool
-    def __init__(self, crop_id: _Optional[str] = ..., harvest_item_id: _Optional[str] = ..., growth_phase: _Optional[int] = ..., ready_for_harvest: _Optional[bool] = ..., watered: _Optional[bool] = ..., dead: _Optional[bool] = ..., regrows: _Optional[bool] = ...) -> None: ...
+    harvest_action: CropHarvestAction
+    def __init__(self, crop_id: _Optional[str] = ..., harvest_item_id: _Optional[str] = ..., growth_phase: _Optional[int] = ..., ready_for_harvest: _Optional[bool] = ..., watered: _Optional[bool] = ..., dead: _Optional[bool] = ..., regrows: _Optional[bool] = ..., harvest_action: _Optional[_Union[CropHarvestAction, str]] = ...) -> None: ...
 
 class HoeDirtFact(_message.Message):
     __slots__ = ("watered",)
@@ -319,7 +332,7 @@ class ResourceClumpFact(_message.Message):
     def __init__(self, clump_kind: _Optional[str] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., health: _Optional[int] = ..., required_tool: _Optional[str] = ..., required_tool_level: _Optional[int] = ...) -> None: ...
 
 class ItemFact(_message.Message):
-    __slots__ = ("ref", "qualified_item_id", "display_name", "stack", "quality", "category", "tool", "tool_level")
+    __slots__ = ("ref", "qualified_item_id", "display_name", "stack", "quality", "category", "tool", "tool_level", "water_remaining", "water_capacity", "bottomless")
     REF_FIELD_NUMBER: _ClassVar[int]
     QUALIFIED_ITEM_ID_FIELD_NUMBER: _ClassVar[int]
     DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
@@ -328,6 +341,9 @@ class ItemFact(_message.Message):
     CATEGORY_FIELD_NUMBER: _ClassVar[int]
     TOOL_FIELD_NUMBER: _ClassVar[int]
     TOOL_LEVEL_FIELD_NUMBER: _ClassVar[int]
+    WATER_REMAINING_FIELD_NUMBER: _ClassVar[int]
+    WATER_CAPACITY_FIELD_NUMBER: _ClassVar[int]
+    BOTTOMLESS_FIELD_NUMBER: _ClassVar[int]
     ref: _refs_pb2.Ref
     qualified_item_id: str
     display_name: str
@@ -336,7 +352,10 @@ class ItemFact(_message.Message):
     category: str
     tool: bool
     tool_level: int
-    def __init__(self, ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., qualified_item_id: _Optional[str] = ..., display_name: _Optional[str] = ..., stack: _Optional[int] = ..., quality: _Optional[int] = ..., category: _Optional[str] = ..., tool: _Optional[bool] = ..., tool_level: _Optional[int] = ...) -> None: ...
+    water_remaining: int
+    water_capacity: int
+    bottomless: bool
+    def __init__(self, ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., qualified_item_id: _Optional[str] = ..., display_name: _Optional[str] = ..., stack: _Optional[int] = ..., quality: _Optional[int] = ..., category: _Optional[str] = ..., tool: _Optional[bool] = ..., tool_level: _Optional[int] = ..., water_remaining: _Optional[int] = ..., water_capacity: _Optional[int] = ..., bottomless: _Optional[bool] = ...) -> None: ...
 
 class MachineFact(_message.Message):
     __slots__ = ("qualified_item_id", "ready_for_harvest", "minutes_until_ready", "held_item")
@@ -361,12 +380,14 @@ class ContainerFact(_message.Message):
     def __init__(self, container_kind: _Optional[str] = ..., capacity: _Optional[int] = ..., item_count: _Optional[int] = ...) -> None: ...
 
 class BedFact(_message.Message):
-    __slots__ = ("can_sleep", "occupied_tiles")
+    __slots__ = ("can_sleep", "occupied_tiles", "sleep_position")
     CAN_SLEEP_FIELD_NUMBER: _ClassVar[int]
     OCCUPIED_TILES_FIELD_NUMBER: _ClassVar[int]
+    SLEEP_POSITION_FIELD_NUMBER: _ClassVar[int]
     can_sleep: bool
     occupied_tiles: _containers.RepeatedCompositeFieldContainer[_common_pb2.WorldPosition]
-    def __init__(self, can_sleep: _Optional[bool] = ..., occupied_tiles: _Optional[_Iterable[_Union[_common_pb2.WorldPosition, _Mapping]]] = ...) -> None: ...
+    sleep_position: _common_pb2.WorldPosition
+    def __init__(self, can_sleep: _Optional[bool] = ..., occupied_tiles: _Optional[_Iterable[_Union[_common_pb2.WorldPosition, _Mapping]]] = ..., sleep_position: _Optional[_Union[_common_pb2.WorldPosition, _Mapping]] = ...) -> None: ...
 
 class FurnitureFact(_message.Message):
     __slots__ = ("furniture_kind", "rotation", "occupied_tiles")

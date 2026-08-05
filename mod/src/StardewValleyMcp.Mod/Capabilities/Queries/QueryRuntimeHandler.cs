@@ -27,6 +27,7 @@ internal sealed class QueryRuntimeHandler : IImmediateCapabilityHandler
             var player = Game1.player;
             var location = player.currentLocation;
             var weather = location.GetWeather();
+            var savedHomeLocationId = player.homeLocation.Value ?? "";
             var result = new QueryRuntimeResult
             {
                 Snapshot = new RuntimeSnapshot
@@ -60,6 +61,7 @@ internal sealed class QueryRuntimeHandler : IImmediateCapabilityHandler
                         Health = player.health,
                         MaxHealth = player.maxHealth,
                         CanMove = player.CanMove,
+                        HomeLocationId = RuntimeProjectionPolicy.HomeLocationId(savedHomeLocationId),
                     },
                     Weather = new WeatherFact
                     {

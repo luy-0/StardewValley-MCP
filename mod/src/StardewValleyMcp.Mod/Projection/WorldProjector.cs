@@ -594,6 +594,9 @@ internal static class WorldProjector
                 Watered = dirt.state.Value == 1,
                 Dead = dead,
                 Regrows = crop.RegrowsAfterHarvest(),
+                HarvestAction = WorldProjectionPolicy.HarvestActionFor(
+                    crop.GetHarvestMethod() == StardewValley.GameData.Crops.HarvestMethod.Scythe
+                ),
             },
         };
     }
@@ -922,7 +925,17 @@ internal static class WorldProjector
             $"bed:{bed.GetType().FullName}:{bed.QualifiedItemId}",
             fact =>
             {
-                fact.Bed = new BedFact { CanSleep = bed.bedType != BedFurniture.BedType.Child };
+                var bedSpot = bed.GetBedSpot();
+                fact.Bed = new BedFact
+                {
+                    CanSleep = bed.bedType != BedFurniture.BedType.Child
+                        && !bed.IsBeingSleptIn(),
+                    SleepPosition = WorldProjectionPolicy.SleepPosition(
+                        location.NameOrUniqueName,
+                        bedSpot.X,
+                        bedSpot.Y
+                    ),
+                };
                 fact.Bed.OccupiedTiles.AddRange(occupied);
             },
             RefLocatorKind.Furniture
@@ -1448,6 +1461,16 @@ internal static class HoeDirtProjectionPolicy
 internal static class WorldProjectionPolicy
 {
     public static bool HasResolvedDestination(string locationId) => LocationIdPolicy.IsValid(locationId);
+
+    public static CropHarvestAction HarvestActionFor(bool usesScythe) =>
+        usesScythe ? Protocol.V1.CropHarvestAction.Scythe : Protocol.V1.CropHarvestAction.Interact;
+
+    public static WorldPosition SleepPosition(string locationId, int x, int y) => new()
+    {
+        LocationId = locationId,
+        X = x,
+        Y = y,
+    };
 
     public static void ApplyWarpActionability(WorldEntityFact fact, bool npcOnly) =>
         fact.Actionable = !npcOnly;

@@ -30,189 +30,198 @@ namespace StardewValleyMcp.Protocol.V1 {
             "bWVfb2ZfZGF5GAIgASgNEjEKBnBsYXllchgDIAEoCzIhLnN0YXJkZXdfdmFs",
             "bGV5Lm1jcC52MS5QbGF5ZXJGYWN0EjMKB3dlYXRoZXIYBCABKAsyIi5zdGFy",
             "ZGV3X3ZhbGxleS5tY3AudjEuV2VhdGhlckZhY3QSLAoCdWkYBSABKAsyIC5z",
-            "dGFyZGV3X3ZhbGxleS5tY3AudjEuVWlTdW1tYXJ5It8BCgpQbGF5ZXJGYWN0",
+            "dGFyZGV3X3ZhbGxleS5tY3AudjEuVWlTdW1tYXJ5IvkBCgpQbGF5ZXJGYWN0",
             "EjYKCHBvc2l0aW9uGAEgASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYxLldv",
             "cmxkUG9zaXRpb24SMAoGZmFjaW5nGAIgASgOMiAuc3RhcmRld192YWxsZXku",
             "bWNwLnYxLkRpcmVjdGlvbhINCgVtb25leRgDIAEoAxIOCgZlbmVyZ3kYBCAB",
             "KAESEgoKbWF4X2VuZXJneRgFIAEoARIOCgZoZWFsdGgYBiABKAUSEgoKbWF4",
-            "X2hlYWx0aBgHIAEoBRIQCghjYW5fbW92ZRgIIAEoCCJsCgtXZWF0aGVyRmFj",
-            "dBIPCgdyYWluaW5nGAEgASgIEhEKCWxpZ2h0bmluZxgCIAEoCBIPCgdzbm93",
-            "aW5nGAMgASgIEhIKCmdyZWVuX3JhaW4YBCABKAgSFAoMZmVzdGl2YWxfZGF5",
-            "GAUgASgIIjEKCVVpU3VtbWFyeRIRCgltZW51X29wZW4YASABKAgSEQoJbWVu",
-            "dV90eXBlGAIgASgJIsYCCg1Xb3JsZFNuYXBzaG90EhYKDndvcmxkX3Jldmlz",
-            "aW9uGAEgASgJEi0KBGFyZWEYAiABKAsyHy5zdGFyZGV3X3ZhbGxleS5tY3Au",
-            "djEuVGlsZUFyZWESEAoIb3V0ZG9vcnMYAyABKAgSLgoFdGlsZXMYBCADKAsy",
-            "Hy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVGlsZUZhY3QSOAoIZW50aXRpZXMY",
-            "BSADKAsyJi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuV29ybGRFbnRpdHlGYWN0",
-            "EjgKCmNoYXJhY3RlcnMYBiADKAsyJC5zdGFyZGV3X3ZhbGxleS5tY3AudjEu",
-            "Q2hhcmFjdGVyRmFjdBIaChJlbnRpdGllc190cnVuY2F0ZWQYByABKAgSHAoU",
-            "Y2hhcmFjdGVyc190cnVuY2F0ZWQYCCABKAginQEKCFRpbGVGYWN0EjYKCHBv",
-            "c2l0aW9uGAEgASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYxLldvcmxkUG9z",
-            "aXRpb24SEAoIcGFzc2FibGUYAiABKAgSEAoIb2NjdXBpZWQYAyABKAgSEAoI",
-            "ZGlnZ2FibGUYBCABKAgSDQoFd2F0ZXIYBSABKAgSFAoMdGVycmFpbl9raW5k",
-            "GAYgASgJIoYICg9Xb3JsZEVudGl0eUZhY3QSJwoDcmVmGAEgASgLMhouc3Rh",
-            "cmRld192YWxsZXkubWNwLnYxLlJlZhIvCgRraW5kGAIgASgOMiEuc3RhcmRl",
-            "d192YWxsZXkubWNwLnYxLkVudGl0eUtpbmQSNgoIcG9zaXRpb24YAyABKAsy",
-            "JC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuV29ybGRQb3NpdGlvbhIUCgxkaXNw",
-            "bGF5X25hbWUYBCABKAkSFwoKYWN0aW9uYWJsZRgFIAEoCEgBiAEBEi8KBHRy",
-            "ZWUYFCABKAsyHy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVHJlZUZhY3RIABI6",
-            "CgpmcnVpdF90cmVlGBUgASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYxLkZy",
-            "dWl0VHJlZUZhY3RIABIvCgRjcm9wGBYgASgLMh8uc3RhcmRld192YWxsZXku",
-            "bWNwLnYxLkNyb3BGYWN0SAASQAoNcmVzb3VyY2Vfbm9kZRgXIAEoCzInLnN0",
-            "YXJkZXdfdmFsbGV5Lm1jcC52MS5SZXNvdXJjZU5vZGVGYWN0SAASQgoOcmVz",
-            "b3VyY2VfY2x1bXAYGCABKAsyKC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUmVz",
-            "b3VyY2VDbHVtcEZhY3RIABI1CgdtYWNoaW5lGBkgASgLMiIuc3RhcmRld192",
-            "YWxsZXkubWNwLnYxLk1hY2hpbmVGYWN0SAASOQoJY29udGFpbmVyGBogASgL",
-            "MiQuc3RhcmRld192YWxsZXkubWNwLnYxLkNvbnRhaW5lckZhY3RIABItCgNi",
-            "ZWQYGyABKAsyHi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQmVkRmFjdEgAEjkK",
-            "CWZ1cm5pdHVyZRgcIAEoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5GdXJu",
-            "aXR1cmVGYWN0SAASOgoKbG9vc2VfaXRlbRgdIAEoCzIkLnN0YXJkZXdfdmFs",
-            "bGV5Lm1jcC52MS5Mb29zZUl0ZW1GYWN0SAASLwoEZG9vchgeIAEoCzIfLnN0",
-            "YXJkZXdfdmFsbGV5Lm1jcC52MS5Eb29yRmFjdEgAEi8KBHdhcnAYHyABKAsy",
-            "Hy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuV2FycEZhY3RIABJCCg5nZW5lcmlj",
-            "X29iamVjdBggIAEoCzIoLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5HZW5lcmlj",
-            "T2JqZWN0RmFjdEgAEjYKCGhvZV9kaXJ0GCEgASgLMiIuc3RhcmRld192YWxs",
-            "ZXkubWNwLnYxLkhvZURpcnRGYWN0SABCCQoHZGV0YWlsc0INCgtfYWN0aW9u",
-            "YWJsZSJeCghUcmVlRmFjdBIUCgxncm93dGhfc3RhZ2UYASABKA0SDQoFc3R1",
-            "bXAYAiABKAgSDgoGdGFwcGVkGAMgASgIEg0KBW1vc3N5GAQgASgIEg4KBmhl",
-            "YWx0aBgFIAEoASJ7Cg1GcnVpdFRyZWVGYWN0EhUKDWZydWl0X2l0ZW1faWQY",
-            "ASABKAkSFAoMZ3Jvd3RoX3N0YWdlGAIgASgNEhkKEWRheXNfdW50aWxfbWF0",
-            "dXJlGAMgASgNEhMKC2ZydWl0X2NvdW50GAQgASgNEg0KBXN0dW1wGAUgASgI",
-            "IpUBCghDcm9wRmFjdBIPCgdjcm9wX2lkGAEgASgJEhcKD2hhcnZlc3RfaXRl",
-            "bV9pZBgCIAEoCRIUCgxncm93dGhfcGhhc2UYAyABKA0SGQoRcmVhZHlfZm9y",
-            "X2hhcnZlc3QYBCABKAgSDwoHd2F0ZXJlZBgFIAEoCBIMCgRkZWFkGAYgASgI",
-            "Eg8KB3JlZ3Jvd3MYByABKAgiHgoLSG9lRGlydEZhY3QSDwoHd2F0ZXJlZBgB",
-            "IAEoCCJVChBSZXNvdXJjZU5vZGVGYWN0EhEKCW5vZGVfa2luZBgBIAEoCRIX",
-            "Cg9oaXRzX3RvX2Rlc3Ryb3kYAiABKA0SFQoNcmVxdWlyZWRfdG9vbBgDIAEo",
-            "CSKKAQoRUmVzb3VyY2VDbHVtcEZhY3QSEgoKY2x1bXBfa2luZBgBIAEoCRIN",
-            "CgV3aWR0aBgCIAEoDRIOCgZoZWlnaHQYAyABKA0SDgoGaGVhbHRoGAQgASgN",
-            "EhUKDXJlcXVpcmVkX3Rvb2wYBSABKAkSGwoTcmVxdWlyZWRfdG9vbF9sZXZl",
-            "bBgGIAEoDSLFAQoISXRlbUZhY3QSLAoDcmVmGAEgASgLMhouc3RhcmRld192",
-            "YWxsZXkubWNwLnYxLlJlZkgAiAEBEhkKEXF1YWxpZmllZF9pdGVtX2lkGAIg",
-            "ASgJEhQKDGRpc3BsYXlfbmFtZRgDIAEoCRINCgVzdGFjaxgEIAEoDRIPCgdx",
-            "dWFsaXR5GAUgASgNEhAKCGNhdGVnb3J5GAYgASgJEgwKBHRvb2wYByABKAgS",
-            "EgoKdG9vbF9sZXZlbBgIIAEoDUIGCgRfcmVmIqcBCgtNYWNoaW5lRmFjdBIZ",
-            "ChFxdWFsaWZpZWRfaXRlbV9pZBgBIAEoCRIZChFyZWFkeV9mb3JfaGFydmVz",
-            "dBgCIAEoCBIbChNtaW51dGVzX3VudGlsX3JlYWR5GAMgASgFEjcKCWhlbGRf",
-            "aXRlbRgEIAEoCzIfLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5JdGVtRmFjdEgA",
-            "iAEBQgwKCl9oZWxkX2l0ZW0iTQoNQ29udGFpbmVyRmFjdBIWCg5jb250YWlu",
-            "ZXJfa2luZBgBIAEoCRIQCghjYXBhY2l0eRgCIAEoDRISCgppdGVtX2NvdW50",
-            "GAMgASgNIloKB0JlZEZhY3QSEQoJY2FuX3NsZWVwGAEgASgIEjwKDm9jY3Vw",
-            "aWVkX3RpbGVzGAIgAygLMiQuc3RhcmRld192YWxsZXkubWNwLnYxLldvcmxk",
-            "UG9zaXRpb24idwoNRnVybml0dXJlRmFjdBIWCg5mdXJuaXR1cmVfa2luZBgB",
-            "IAEoCRIQCghyb3RhdGlvbhgCIAEoDRI8Cg5vY2N1cGllZF90aWxlcxgDIAMo",
-            "CzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5Xb3JsZFBvc2l0aW9uIlMKDUxv",
-            "b3NlSXRlbUZhY3QSLQoEaXRlbRgBIAEoCzIfLnN0YXJkZXdfdmFsbGV5Lm1j",
-            "cC52MS5JdGVtRmFjdBITCgtjYW5fcGlja191cBgCIAEoCCKSAQoIRG9vckZh",
-            "Y3QSEwoGbG9ja2VkGAEgASgISACIAQESGgoSdGFyZ2V0X2xvY2F0aW9uX2lk",
-            "GAIgASgJEjoKC3RhcmdldF90aWxlGAMgASgLMiAuc3RhcmRld192YWxsZXku",
-            "bWNwLnYxLlRpbGVQb2ludEgBiAEBQgkKB19sb2NrZWRCDgoMX3RhcmdldF90",
-            "aWxlIlcKCFdhcnBGYWN0EjkKC2Rlc3RpbmF0aW9uGAEgASgLMiQuc3RhcmRl",
-            "d192YWxsZXkubWNwLnYxLldvcmxkUG9zaXRpb24SEAoIbnBjX29ubHkYAiAB",
-            "KAgiRAoRR2VuZXJpY09iamVjdEZhY3QSFAoMcnVudGltZV90eXBlGAEgASgJ",
-            "EhkKEXF1YWxpZmllZF9pdGVtX2lkGAIgASgJIosECg1DaGFyYWN0ZXJGYWN0",
-            "EicKA3JlZhgBIAEoCzIaLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWYSMgoE",
-            "a2luZBgCIAEoDjIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5DaGFyYWN0ZXJL",
-            "aW5kEgwKBG5hbWUYAyABKAkSFAoMZGlzcGxheV9uYW1lGAQgASgJEjYKCHBv",
-            "c2l0aW9uGAUgASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYxLldvcmxkUG9z",
-            "aXRpb24SMAoGZmFjaW5nGAYgASgOMiAuc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LkRpcmVjdGlvbhItCgNucGMYFCABKAsyHi5zdGFyZGV3X3ZhbGxleS5tY3Au",
-            "djEuTnBjRmFjdEgAEjUKB21vbnN0ZXIYFSABKAsyIi5zdGFyZGV3X3ZhbGxl",
-            "eS5tY3AudjEuTW9uc3RlckZhY3RIABI8CgtmYXJtX2FuaW1hbBgWIAEoCzIl",
-            "LnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5GYXJtQW5pbWFsRmFjdEgAEi0KA3Bl",
-            "dBgXIAEoCzIeLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5QZXRGYWN0SAASMQoF",
-            "aG9yc2UYGCABKAsyIC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuSG9yc2VGYWN0",
-            "SABCCQoHZGV0YWlscyJRCgdOcGNGYWN0EhUKDWNhbl9zb2NpYWxpemUYASAB",
-            "KAgSGQoRZnJpZW5kc2hpcF9wb2ludHMYAiABKAUSFAoMaGFzX2RpYWxvZ3Vl",
-            "GAMgASgIIkkKC01vbnN0ZXJGYWN0Eg4KBmhlYWx0aBgBIAEoBRISCgptYXhf",
-            "aGVhbHRoGAIgASgFEhYKDmNvbnRhY3RfZGFtYWdlGAMgASgFInkKDkZhcm1B",
-            "bmltYWxGYWN0EhMKC2FuaW1hbF90eXBlGAEgASgJEhUKDXByb2R1Y2VfcmVh",
-            "ZHkYAiABKAgSFAoMcGV0dGVkX3RvZGF5GAMgASgIEhIKCmZyaWVuZHNoaXAY",
-            "BCABKAUSEQoJaGFwcGluZXNzGAUgASgFIkUKB1BldEZhY3QSEAoIcGV0X3R5",
-            "cGUYASABKAkSFAoMcGV0dGVkX3RvZGF5GAIgASgIEhIKCmZyaWVuZHNoaXAY",
-            "AyABKAUiHgoJSG9yc2VGYWN0EhEKCWhhc19yaWRlchgBIAEoCCLaAQoRSW52",
-            "ZW50b3J5U25hcHNob3QSGgoSaW52ZW50b3J5X3JldmlzaW9uGAEgASgJEhYK",
-            "DmNvbnRhaW5lcl9raW5kGAIgASgJEjYKDWNvbnRhaW5lcl9yZWYYAyABKAsy",
-            "Gi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUmVmSACIAQESEgoKc2xvdF9jb3Vu",
-            "dBgEIAEoDRIzCgVzbG90cxgFIAMoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
-            "MS5JbnZlbnRvcnlTbG90QhAKDl9jb250YWluZXJfcmVmIlsKDUludmVudG9y",
-            "eVNsb3QSDQoFaW5kZXgYASABKA0SMgoEaXRlbRgCIAEoCzIfLnN0YXJkZXdf",
-            "dmFsbGV5Lm1jcC52MS5JdGVtRmFjdEgAiAEBQgcKBV9pdGVtIoIBChtDcmFm",
-            "dGluZ01hdGVyaWFsUmVxdWlyZW1lbnQSFgoOaW5ncmVkaWVudF9rZXkYASAB",
-            "KAkSFAoMZGlzcGxheV9uYW1lGAIgASgJEhkKEXJlcXVpcmVkX3F1YW50aXR5",
-            "GAMgASgNEhoKEmF2YWlsYWJsZV9xdWFudGl0eRgEIAEoDSJXChJDcmFmdGlu",
-            "Z091dHB1dEZhY3QSGQoRcXVhbGlmaWVkX2l0ZW1faWQYASABKAkSFAoMZGlz",
-            "cGxheV9uYW1lGAIgASgJEhAKCHF1YW50aXR5GAMgASgNIuwBChJDcmFmdGlu",
-            "Z1JlY2lwZUZhY3QSEgoKcmVjaXBlX2tleRgBIAEoCRIUCgxkaXNwbGF5X25h",
-            "bWUYAiABKAkSDQoFa25vd24YAyABKAgSEQoJY3JhZnRhYmxlGAQgASgIEkUK",
-            "CW1hdGVyaWFscxgFIAMoCzIyLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5DcmFm",
-            "dGluZ01hdGVyaWFsUmVxdWlyZW1lbnQSQwoQcG9zc2libGVfb3V0cHV0cxgG",
-            "IAMoCzIpLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5DcmFmdGluZ091dHB1dEZh",
-            "Y3QiwQEKD1VpSW52ZW50b3J5TGluaxI0CgRzaWRlGAEgASgOMiYuc3RhcmRl",
-            "d192YWxsZXkubWNwLnYxLlVpSW52ZW50b3J5U2lkZRIaChJpbnZlbnRvcnlf",
-            "cmV2aXNpb24YAiABKAkSEgoKc2xvdF9jb3VudBgDIAEoDRI2Cg1jb250YWlu",
-            "ZXJfcmVmGAQgASgLMhouc3RhcmRld192YWxsZXkubWNwLnYxLlJlZkgAiAEB",
-            "QhAKDl9jb250YWluZXJfcmVmIugBCgpVaVNuYXBzaG90EhMKC3VpX3Jldmlz",
-            "aW9uGAEgASgJEhEKCW1lbnVfb3BlbhgCIAEoCBI0CgRtZW51GAMgASgLMiEu",
-            "c3RhcmRld192YWxsZXkubWNwLnYxLlVpTWVudUZhY3RIAIgBARI2CghlbGVt",
-            "ZW50cxgEIAMoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5VaUVsZW1lbnRG",
-            "YWN0EjsKC2ludmVudG9yaWVzGAUgAygLMiYuc3RhcmRld192YWxsZXkubWNw",
-            "LnYxLlVpSW52ZW50b3J5TGlua0IHCgVfbWVudSKbAQoKVWlNZW51RmFjdBIR",
-            "CgltZW51X3R5cGUYASABKAkSNwoJbWVudV9raW5kGAIgASgOMh8uc3RhcmRl",
-            "d192YWxsZXkubWNwLnYxLk1lbnVLaW5kSACIAQESDQoFdGl0bGUYAyABKAkS",
-            "DQoFbW9kYWwYBCABKAgSFQoNZGlhbG9ndWVfdGV4dBgFIAEoCUIMCgpfbWVu",
-            "dV9raW5kIrMFCg1VaUVsZW1lbnRGYWN0EicKA3JlZhgBIAEoCzIaLnN0YXJk",
-            "ZXdfdmFsbGV5Lm1jcC52MS5SZWYSMgoEa2luZBgCIAEoDjIkLnN0YXJkZXdf",
-            "dmFsbGV5Lm1jcC52MS5VaUVsZW1lbnRLaW5kEg0KBWxhYmVsGAMgASgJEg8K",
-            "B3Zpc2libGUYBCABKAgSDwoHZW5hYmxlZBgFIAEoCBIxCgZjZW50ZXIYBiAB",
-            "KAsyIS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUGl4ZWxQb2ludBINCgVpbmRl",
-            "eBgHIAEoDRIyCgRpdGVtGAggASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYx",
-            "Lkl0ZW1GYWN0SACIAQESEgoFcHJpY2UYCSABKANIAYgBARISCgVzdG9jaxgK",
-            "IAEoDUgCiAEBEkMKDmludmVudG9yeV9zaWRlGAsgASgOMiYuc3RhcmRld192",
-            "YWxsZXkubWNwLnYxLlVpSW52ZW50b3J5U2lkZUgDiAEBEjEKCGl0ZW1fcmVm",
-            "GAwgASgLMhouc3RhcmRld192YWxsZXkubWNwLnYxLlJlZkgEiAEBEkwKE2Vx",
-            "dWlwbWVudF9zbG90X2tpbmQYDSABKA4yKi5zdGFyZGV3X3ZhbGxleS5tY3Au",
-            "djEuVWlFcXVpcG1lbnRTbG90S2luZEgFiAEBEkcKD2NyYWZ0aW5nX3JlY2lw",
-            "ZRgOIAEoCzIpLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5DcmFmdGluZ1JlY2lw",
-            "ZUZhY3RIBogBAUIHCgVfaXRlbUIICgZfcHJpY2VCCAoGX3N0b2NrQhEKD19p",
-            "bnZlbnRvcnlfc2lkZUILCglfaXRlbV9yZWZCFgoUX2VxdWlwbWVudF9zbG90",
-            "X2tpbmRCEgoQX2NyYWZ0aW5nX3JlY2lwZSqWAwoKRW50aXR5S2luZBIbChdF",
-            "TlRJVFlfS0lORF9VTlNQRUNJRklFRBAAEhQKEEVOVElUWV9LSU5EX1RSRUUQ",
-            "ARIaChZFTlRJVFlfS0lORF9GUlVJVF9UUkVFEAISFAoQRU5USVRZX0tJTkRf",
-            "Q1JPUBADEh0KGUVOVElUWV9LSU5EX1JFU09VUkNFX05PREUQBBIeChpFTlRJ",
-            "VFlfS0lORF9SRVNPVVJDRV9DTFVNUBAFEhcKE0VOVElUWV9LSU5EX01BQ0hJ",
-            "TkUQBhIZChVFTlRJVFlfS0lORF9DT05UQUlORVIQBxITCg9FTlRJVFlfS0lO",
-            "RF9CRUQQCBIZChVFTlRJVFlfS0lORF9GVVJOSVRVUkUQCRIaChZFTlRJVFlf",
-            "S0lORF9MT09TRV9JVEVNEAoSFAoQRU5USVRZX0tJTkRfRE9PUhALEhQKEEVO",
-            "VElUWV9LSU5EX1dBUlAQDBIeChpFTlRJVFlfS0lORF9HRU5FUklDX09CSkVD",
-            "VBANEhgKFEVOVElUWV9LSU5EX0hPRV9ESVJUEA4qtQEKDUNoYXJhY3Rlcktp",
-            "bmQSHgoaQ0hBUkFDVEVSX0tJTkRfVU5TUEVDSUZJRUQQABIWChJDSEFSQUNU",
-            "RVJfS0lORF9OUEMQARIaChZDSEFSQUNURVJfS0lORF9NT05TVEVSEAISHgoa",
-            "Q0hBUkFDVEVSX0tJTkRfRkFSTV9BTklNQUwQAxIWChJDSEFSQUNURVJfS0lO",
-            "RF9QRVQQBBIYChRDSEFSQUNURVJfS0lORF9IT1JTRRAFKrYCCg1VaUVsZW1l",
-            "bnRLaW5kEh8KG1VJX0VMRU1FTlRfS0lORF9VTlNQRUNJRklFRBAAEhoKFlVJ",
-            "X0VMRU1FTlRfS0lORF9CVVRUT04QARIXChNVSV9FTEVNRU5UX0tJTkRfVEFC",
-            "EAISGgoWVUlfRUxFTUVOVF9LSU5EX09QVElPThADEh0KGVVJX0VMRU1FTlRf",
-            "S0lORF9JVEVNX1NMT1QQBBIlCiFVSV9FTEVNRU5UX0tJTkRfRElBTE9HVUVf",
-            "UkVTUE9OU0UQBRIkCiBVSV9FTEVNRU5UX0tJTkRfRElBTE9HVUVfQURWQU5D",
-            "RRAGEiIKHlVJX0VMRU1FTlRfS0lORF9FUVVJUE1FTlRfU0xPVBAHEiMKH1VJ",
-            "X0VMRU1FTlRfS0lORF9DUkFGVElOR19SRUNJUEUQCCpzCg9VaUludmVudG9y",
-            "eVNpZGUSIQodVUlfSU5WRU5UT1JZX1NJREVfVU5TUEVDSUZJRUQQABIcChhV",
-            "SV9JTlZFTlRPUllfU0lERV9QTEFZRVIQARIfChtVSV9JTlZFTlRPUllfU0lE",
-            "RV9DT05UQUlORVIQAiq0AgoTVWlFcXVpcG1lbnRTbG90S2luZBImCiJVSV9F",
-            "UVVJUE1FTlRfU0xPVF9LSU5EX1VOU1BFQ0lGSUVEEAASHgoaVUlfRVFVSVBN",
-            "RU5UX1NMT1RfS0lORF9IQVQQARIkCiBVSV9FUVVJUE1FTlRfU0xPVF9LSU5E",
-            "X0xFRlRfUklORxACEiUKIVVJX0VRVUlQTUVOVF9TTE9UX0tJTkRfUklHSFRf",
-            "UklORxADEiAKHFVJX0VRVUlQTUVOVF9TTE9UX0tJTkRfQk9PVFMQBBIgChxV",
-            "SV9FUVVJUE1FTlRfU0xPVF9LSU5EX1NISVJUEAUSIAocVUlfRVFVSVBNRU5U",
-            "X1NMT1RfS0lORF9QQU5UUxAGEiIKHlVJX0VRVUlQTUVOVF9TTE9UX0tJTkRf",
-            "VFJJTktFVBAHQh+qAhxTdGFyZGV3VmFsbGV5TWNwLlByb3RvY29sLlYxYgZw",
-            "cm90bzM="));
+            "X2hlYWx0aBgHIAEoBRIQCghjYW5fbW92ZRgIIAEoCBIYChBob21lX2xvY2F0",
+            "aW9uX2lkGAkgASgJImwKC1dlYXRoZXJGYWN0Eg8KB3JhaW5pbmcYASABKAgS",
+            "EQoJbGlnaHRuaW5nGAIgASgIEg8KB3Nub3dpbmcYAyABKAgSEgoKZ3JlZW5f",
+            "cmFpbhgEIAEoCBIUCgxmZXN0aXZhbF9kYXkYBSABKAgiMQoJVWlTdW1tYXJ5",
+            "EhEKCW1lbnVfb3BlbhgBIAEoCBIRCgltZW51X3R5cGUYAiABKAkixgIKDVdv",
+            "cmxkU25hcHNob3QSFgoOd29ybGRfcmV2aXNpb24YASABKAkSLQoEYXJlYRgC",
+            "IAEoCzIfLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5UaWxlQXJlYRIQCghvdXRk",
+            "b29ycxgDIAEoCBIuCgV0aWxlcxgEIAMoCzIfLnN0YXJkZXdfdmFsbGV5Lm1j",
+            "cC52MS5UaWxlRmFjdBI4CghlbnRpdGllcxgFIAMoCzImLnN0YXJkZXdfdmFs",
+            "bGV5Lm1jcC52MS5Xb3JsZEVudGl0eUZhY3QSOAoKY2hhcmFjdGVycxgGIAMo",
+            "CzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5DaGFyYWN0ZXJGYWN0EhoKEmVu",
+            "dGl0aWVzX3RydW5jYXRlZBgHIAEoCBIcChRjaGFyYWN0ZXJzX3RydW5jYXRl",
+            "ZBgIIAEoCCKdAQoIVGlsZUZhY3QSNgoIcG9zaXRpb24YASABKAsyJC5zdGFy",
+            "ZGV3X3ZhbGxleS5tY3AudjEuV29ybGRQb3NpdGlvbhIQCghwYXNzYWJsZRgC",
+            "IAEoCBIQCghvY2N1cGllZBgDIAEoCBIQCghkaWdnYWJsZRgEIAEoCBINCgV3",
+            "YXRlchgFIAEoCBIUCgx0ZXJyYWluX2tpbmQYBiABKAkihggKD1dvcmxkRW50",
+            "aXR5RmFjdBInCgNyZWYYASABKAsyGi5zdGFyZGV3X3ZhbGxleS5tY3AudjEu",
+            "UmVmEi8KBGtpbmQYAiABKA4yIS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuRW50",
+            "aXR5S2luZBI2Cghwb3NpdGlvbhgDIAEoCzIkLnN0YXJkZXdfdmFsbGV5Lm1j",
+            "cC52MS5Xb3JsZFBvc2l0aW9uEhQKDGRpc3BsYXlfbmFtZRgEIAEoCRIXCgph",
+            "Y3Rpb25hYmxlGAUgASgISAGIAQESLwoEdHJlZRgUIAEoCzIfLnN0YXJkZXdf",
+            "dmFsbGV5Lm1jcC52MS5UcmVlRmFjdEgAEjoKCmZydWl0X3RyZWUYFSABKAsy",
+            "JC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuRnJ1aXRUcmVlRmFjdEgAEi8KBGNy",
+            "b3AYFiABKAsyHy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQ3JvcEZhY3RIABJA",
+            "Cg1yZXNvdXJjZV9ub2RlGBcgASgLMicuc3RhcmRld192YWxsZXkubWNwLnYx",
+            "LlJlc291cmNlTm9kZUZhY3RIABJCCg5yZXNvdXJjZV9jbHVtcBgYIAEoCzIo",
+            "LnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SZXNvdXJjZUNsdW1wRmFjdEgAEjUK",
+            "B21hY2hpbmUYGSABKAsyIi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuTWFjaGlu",
+            "ZUZhY3RIABI5Cgljb250YWluZXIYGiABKAsyJC5zdGFyZGV3X3ZhbGxleS5t",
+            "Y3AudjEuQ29udGFpbmVyRmFjdEgAEi0KA2JlZBgbIAEoCzIeLnN0YXJkZXdf",
+            "dmFsbGV5Lm1jcC52MS5CZWRGYWN0SAASOQoJZnVybml0dXJlGBwgASgLMiQu",
+            "c3RhcmRld192YWxsZXkubWNwLnYxLkZ1cm5pdHVyZUZhY3RIABI6Cgpsb29z",
+            "ZV9pdGVtGB0gASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYxLkxvb3NlSXRl",
+            "bUZhY3RIABIvCgRkb29yGB4gASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYx",
+            "LkRvb3JGYWN0SAASLwoEd2FycBgfIAEoCzIfLnN0YXJkZXdfdmFsbGV5Lm1j",
+            "cC52MS5XYXJwRmFjdEgAEkIKDmdlbmVyaWNfb2JqZWN0GCAgASgLMiguc3Rh",
+            "cmRld192YWxsZXkubWNwLnYxLkdlbmVyaWNPYmplY3RGYWN0SAASNgoIaG9l",
+            "X2RpcnQYISABKAsyIi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuSG9lRGlydEZh",
+            "Y3RIAEIJCgdkZXRhaWxzQg0KC19hY3Rpb25hYmxlIl4KCFRyZWVGYWN0EhQK",
+            "DGdyb3d0aF9zdGFnZRgBIAEoDRINCgVzdHVtcBgCIAEoCBIOCgZ0YXBwZWQY",
+            "AyABKAgSDQoFbW9zc3kYBCABKAgSDgoGaGVhbHRoGAUgASgBInsKDUZydWl0",
+            "VHJlZUZhY3QSFQoNZnJ1aXRfaXRlbV9pZBgBIAEoCRIUCgxncm93dGhfc3Rh",
+            "Z2UYAiABKA0SGQoRZGF5c191bnRpbF9tYXR1cmUYAyABKA0SEwoLZnJ1aXRf",
+            "Y291bnQYBCABKA0SDQoFc3R1bXAYBSABKAgi1wEKCENyb3BGYWN0Eg8KB2Ny",
+            "b3BfaWQYASABKAkSFwoPaGFydmVzdF9pdGVtX2lkGAIgASgJEhQKDGdyb3d0",
+            "aF9waGFzZRgDIAEoDRIZChFyZWFkeV9mb3JfaGFydmVzdBgEIAEoCBIPCgd3",
+            "YXRlcmVkGAUgASgIEgwKBGRlYWQYBiABKAgSDwoHcmVncm93cxgHIAEoCBJA",
+            "Cg5oYXJ2ZXN0X2FjdGlvbhgIIAEoDjIoLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
+            "MS5Dcm9wSGFydmVzdEFjdGlvbiIeCgtIb2VEaXJ0RmFjdBIPCgd3YXRlcmVk",
+            "GAEgASgIIlUKEFJlc291cmNlTm9kZUZhY3QSEQoJbm9kZV9raW5kGAEgASgJ",
+            "EhcKD2hpdHNfdG9fZGVzdHJveRgCIAEoDRIVCg1yZXF1aXJlZF90b29sGAMg",
+            "ASgJIooBChFSZXNvdXJjZUNsdW1wRmFjdBISCgpjbHVtcF9raW5kGAEgASgJ",
+            "Eg0KBXdpZHRoGAIgASgNEg4KBmhlaWdodBgDIAEoDRIOCgZoZWFsdGgYBCAB",
+            "KA0SFQoNcmVxdWlyZWRfdG9vbBgFIAEoCRIbChNyZXF1aXJlZF90b29sX2xl",
+            "dmVsGAYgASgNIs8CCghJdGVtRmFjdBIsCgNyZWYYASABKAsyGi5zdGFyZGV3",
+            "X3ZhbGxleS5tY3AudjEuUmVmSACIAQESGQoRcXVhbGlmaWVkX2l0ZW1faWQY",
+            "AiABKAkSFAoMZGlzcGxheV9uYW1lGAMgASgJEg0KBXN0YWNrGAQgASgNEg8K",
+            "B3F1YWxpdHkYBSABKA0SEAoIY2F0ZWdvcnkYBiABKAkSDAoEdG9vbBgHIAEo",
+            "CBISCgp0b29sX2xldmVsGAggASgNEhwKD3dhdGVyX3JlbWFpbmluZxgJIAEo",
+            "DUgBiAEBEhsKDndhdGVyX2NhcGFjaXR5GAogASgNSAKIAQESFwoKYm90dG9t",
+            "bGVzcxgLIAEoCEgDiAEBQgYKBF9yZWZCEgoQX3dhdGVyX3JlbWFpbmluZ0IR",
+            "Cg9fd2F0ZXJfY2FwYWNpdHlCDQoLX2JvdHRvbWxlc3MipwEKC01hY2hpbmVG",
+            "YWN0EhkKEXF1YWxpZmllZF9pdGVtX2lkGAEgASgJEhkKEXJlYWR5X2Zvcl9o",
+            "YXJ2ZXN0GAIgASgIEhsKE21pbnV0ZXNfdW50aWxfcmVhZHkYAyABKAUSNwoJ",
+            "aGVsZF9pdGVtGAQgASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkl0ZW1G",
+            "YWN0SACIAQFCDAoKX2hlbGRfaXRlbSJNCg1Db250YWluZXJGYWN0EhYKDmNv",
+            "bnRhaW5lcl9raW5kGAEgASgJEhAKCGNhcGFjaXR5GAIgASgNEhIKCml0ZW1f",
+            "Y291bnQYAyABKA0imAEKB0JlZEZhY3QSEQoJY2FuX3NsZWVwGAEgASgIEjwK",
+            "Dm9jY3VwaWVkX3RpbGVzGAIgAygLMiQuc3RhcmRld192YWxsZXkubWNwLnYx",
+            "LldvcmxkUG9zaXRpb24SPAoOc2xlZXBfcG9zaXRpb24YAyABKAsyJC5zdGFy",
+            "ZGV3X3ZhbGxleS5tY3AudjEuV29ybGRQb3NpdGlvbiJ3Cg1GdXJuaXR1cmVG",
+            "YWN0EhYKDmZ1cm5pdHVyZV9raW5kGAEgASgJEhAKCHJvdGF0aW9uGAIgASgN",
+            "EjwKDm9jY3VwaWVkX3RpbGVzGAMgAygLMiQuc3RhcmRld192YWxsZXkubWNw",
+            "LnYxLldvcmxkUG9zaXRpb24iUwoNTG9vc2VJdGVtRmFjdBItCgRpdGVtGAEg",
+            "ASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkl0ZW1GYWN0EhMKC2Nhbl9w",
+            "aWNrX3VwGAIgASgIIpIBCghEb29yRmFjdBITCgZsb2NrZWQYASABKAhIAIgB",
+            "ARIaChJ0YXJnZXRfbG9jYXRpb25faWQYAiABKAkSOgoLdGFyZ2V0X3RpbGUY",
+            "AyABKAsyIC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVGlsZVBvaW50SAGIAQFC",
+            "CQoHX2xvY2tlZEIOCgxfdGFyZ2V0X3RpbGUiVwoIV2FycEZhY3QSOQoLZGVz",
+            "dGluYXRpb24YASABKAsyJC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuV29ybGRQ",
+            "b3NpdGlvbhIQCghucGNfb25seRgCIAEoCCJEChFHZW5lcmljT2JqZWN0RmFj",
+            "dBIUCgxydW50aW1lX3R5cGUYASABKAkSGQoRcXVhbGlmaWVkX2l0ZW1faWQY",
+            "AiABKAkiiwQKDUNoYXJhY3RlckZhY3QSJwoDcmVmGAEgASgLMhouc3RhcmRl",
+            "d192YWxsZXkubWNwLnYxLlJlZhIyCgRraW5kGAIgASgOMiQuc3RhcmRld192",
+            "YWxsZXkubWNwLnYxLkNoYXJhY3RlcktpbmQSDAoEbmFtZRgDIAEoCRIUCgxk",
+            "aXNwbGF5X25hbWUYBCABKAkSNgoIcG9zaXRpb24YBSABKAsyJC5zdGFyZGV3",
+            "X3ZhbGxleS5tY3AudjEuV29ybGRQb3NpdGlvbhIwCgZmYWNpbmcYBiABKA4y",
+            "IC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuRGlyZWN0aW9uEi0KA25wYxgUIAEo",
+            "CzIeLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5OcGNGYWN0SAASNQoHbW9uc3Rl",
+            "chgVIAEoCzIiLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5Nb25zdGVyRmFjdEgA",
+            "EjwKC2Zhcm1fYW5pbWFsGBYgASgLMiUuc3RhcmRld192YWxsZXkubWNwLnYx",
+            "LkZhcm1BbmltYWxGYWN0SAASLQoDcGV0GBcgASgLMh4uc3RhcmRld192YWxs",
+            "ZXkubWNwLnYxLlBldEZhY3RIABIxCgVob3JzZRgYIAEoCzIgLnN0YXJkZXdf",
+            "dmFsbGV5Lm1jcC52MS5Ib3JzZUZhY3RIAEIJCgdkZXRhaWxzIlEKB05wY0Zh",
+            "Y3QSFQoNY2FuX3NvY2lhbGl6ZRgBIAEoCBIZChFmcmllbmRzaGlwX3BvaW50",
+            "cxgCIAEoBRIUCgxoYXNfZGlhbG9ndWUYAyABKAgiSQoLTW9uc3RlckZhY3QS",
+            "DgoGaGVhbHRoGAEgASgFEhIKCm1heF9oZWFsdGgYAiABKAUSFgoOY29udGFj",
+            "dF9kYW1hZ2UYAyABKAUieQoORmFybUFuaW1hbEZhY3QSEwoLYW5pbWFsX3R5",
+            "cGUYASABKAkSFQoNcHJvZHVjZV9yZWFkeRgCIAEoCBIUCgxwZXR0ZWRfdG9k",
+            "YXkYAyABKAgSEgoKZnJpZW5kc2hpcBgEIAEoBRIRCgloYXBwaW5lc3MYBSAB",
+            "KAUiRQoHUGV0RmFjdBIQCghwZXRfdHlwZRgBIAEoCRIUCgxwZXR0ZWRfdG9k",
+            "YXkYAiABKAgSEgoKZnJpZW5kc2hpcBgDIAEoBSIeCglIb3JzZUZhY3QSEQoJ",
+            "aGFzX3JpZGVyGAEgASgIItoBChFJbnZlbnRvcnlTbmFwc2hvdBIaChJpbnZl",
+            "bnRvcnlfcmV2aXNpb24YASABKAkSFgoOY29udGFpbmVyX2tpbmQYAiABKAkS",
+            "NgoNY29udGFpbmVyX3JlZhgDIAEoCzIaLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
+            "MS5SZWZIAIgBARISCgpzbG90X2NvdW50GAQgASgNEjMKBXNsb3RzGAUgAygL",
+            "MiQuc3RhcmRld192YWxsZXkubWNwLnYxLkludmVudG9yeVNsb3RCEAoOX2Nv",
+            "bnRhaW5lcl9yZWYiWwoNSW52ZW50b3J5U2xvdBINCgVpbmRleBgBIAEoDRIy",
+            "CgRpdGVtGAIgASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkl0ZW1GYWN0",
+            "SACIAQFCBwoFX2l0ZW0iggEKG0NyYWZ0aW5nTWF0ZXJpYWxSZXF1aXJlbWVu",
+            "dBIWCg5pbmdyZWRpZW50X2tleRgBIAEoCRIUCgxkaXNwbGF5X25hbWUYAiAB",
+            "KAkSGQoRcmVxdWlyZWRfcXVhbnRpdHkYAyABKA0SGgoSYXZhaWxhYmxlX3F1",
+            "YW50aXR5GAQgASgNIlcKEkNyYWZ0aW5nT3V0cHV0RmFjdBIZChFxdWFsaWZp",
+            "ZWRfaXRlbV9pZBgBIAEoCRIUCgxkaXNwbGF5X25hbWUYAiABKAkSEAoIcXVh",
+            "bnRpdHkYAyABKA0i7AEKEkNyYWZ0aW5nUmVjaXBlRmFjdBISCgpyZWNpcGVf",
+            "a2V5GAEgASgJEhQKDGRpc3BsYXlfbmFtZRgCIAEoCRINCgVrbm93bhgDIAEo",
+            "CBIRCgljcmFmdGFibGUYBCABKAgSRQoJbWF0ZXJpYWxzGAUgAygLMjIuc3Rh",
+            "cmRld192YWxsZXkubWNwLnYxLkNyYWZ0aW5nTWF0ZXJpYWxSZXF1aXJlbWVu",
+            "dBJDChBwb3NzaWJsZV9vdXRwdXRzGAYgAygLMikuc3RhcmRld192YWxsZXku",
+            "bWNwLnYxLkNyYWZ0aW5nT3V0cHV0RmFjdCLBAQoPVWlJbnZlbnRvcnlMaW5r",
+            "EjQKBHNpZGUYASABKA4yJi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVWlJbnZl",
+            "bnRvcnlTaWRlEhoKEmludmVudG9yeV9yZXZpc2lvbhgCIAEoCRISCgpzbG90",
+            "X2NvdW50GAMgASgNEjYKDWNvbnRhaW5lcl9yZWYYBCABKAsyGi5zdGFyZGV3",
+            "X3ZhbGxleS5tY3AudjEuUmVmSACIAQFCEAoOX2NvbnRhaW5lcl9yZWYi6AEK",
+            "ClVpU25hcHNob3QSEwoLdWlfcmV2aXNpb24YASABKAkSEQoJbWVudV9vcGVu",
+            "GAIgASgIEjQKBG1lbnUYAyABKAsyIS5zdGFyZGV3X3ZhbGxleS5tY3AudjEu",
+            "VWlNZW51RmFjdEgAiAEBEjYKCGVsZW1lbnRzGAQgAygLMiQuc3RhcmRld192",
+            "YWxsZXkubWNwLnYxLlVpRWxlbWVudEZhY3QSOwoLaW52ZW50b3JpZXMYBSAD",
+            "KAsyJi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVWlJbnZlbnRvcnlMaW5rQgcK",
+            "BV9tZW51IpsBCgpVaU1lbnVGYWN0EhEKCW1lbnVfdHlwZRgBIAEoCRI3Cglt",
+            "ZW51X2tpbmQYAiABKA4yHy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuTWVudUtp",
+            "bmRIAIgBARINCgV0aXRsZRgDIAEoCRINCgVtb2RhbBgEIAEoCBIVCg1kaWFs",
+            "b2d1ZV90ZXh0GAUgASgJQgwKCl9tZW51X2tpbmQiswUKDVVpRWxlbWVudEZh",
+            "Y3QSJwoDcmVmGAEgASgLMhouc3RhcmRld192YWxsZXkubWNwLnYxLlJlZhIy",
+            "CgRraW5kGAIgASgOMiQuc3RhcmRld192YWxsZXkubWNwLnYxLlVpRWxlbWVu",
+            "dEtpbmQSDQoFbGFiZWwYAyABKAkSDwoHdmlzaWJsZRgEIAEoCBIPCgdlbmFi",
+            "bGVkGAUgASgIEjEKBmNlbnRlchgGIAEoCzIhLnN0YXJkZXdfdmFsbGV5Lm1j",
+            "cC52MS5QaXhlbFBvaW50Eg0KBWluZGV4GAcgASgNEjIKBGl0ZW0YCCABKAsy",
+            "Hy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuSXRlbUZhY3RIAIgBARISCgVwcmlj",
+            "ZRgJIAEoA0gBiAEBEhIKBXN0b2NrGAogASgNSAKIAQESQwoOaW52ZW50b3J5",
+            "X3NpZGUYCyABKA4yJi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVWlJbnZlbnRv",
+            "cnlTaWRlSAOIAQESMQoIaXRlbV9yZWYYDCABKAsyGi5zdGFyZGV3X3ZhbGxl",
+            "eS5tY3AudjEuUmVmSASIAQESTAoTZXF1aXBtZW50X3Nsb3Rfa2luZBgNIAEo",
+            "DjIqLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5VaUVxdWlwbWVudFNsb3RLaW5k",
+            "SAWIAQESRwoPY3JhZnRpbmdfcmVjaXBlGA4gASgLMikuc3RhcmRld192YWxs",
+            "ZXkubWNwLnYxLkNyYWZ0aW5nUmVjaXBlRmFjdEgGiAEBQgcKBV9pdGVtQggK",
+            "Bl9wcmljZUIICgZfc3RvY2tCEQoPX2ludmVudG9yeV9zaWRlQgsKCV9pdGVt",
+            "X3JlZkIWChRfZXF1aXBtZW50X3Nsb3Rfa2luZEISChBfY3JhZnRpbmdfcmVj",
+            "aXBlKpYDCgpFbnRpdHlLaW5kEhsKF0VOVElUWV9LSU5EX1VOU1BFQ0lGSUVE",
+            "EAASFAoQRU5USVRZX0tJTkRfVFJFRRABEhoKFkVOVElUWV9LSU5EX0ZSVUlU",
+            "X1RSRUUQAhIUChBFTlRJVFlfS0lORF9DUk9QEAMSHQoZRU5USVRZX0tJTkRf",
+            "UkVTT1VSQ0VfTk9ERRAEEh4KGkVOVElUWV9LSU5EX1JFU09VUkNFX0NMVU1Q",
+            "EAUSFwoTRU5USVRZX0tJTkRfTUFDSElORRAGEhkKFUVOVElUWV9LSU5EX0NP",
+            "TlRBSU5FUhAHEhMKD0VOVElUWV9LSU5EX0JFRBAIEhkKFUVOVElUWV9LSU5E",
+            "X0ZVUk5JVFVSRRAJEhoKFkVOVElUWV9LSU5EX0xPT1NFX0lURU0QChIUChBF",
+            "TlRJVFlfS0lORF9ET09SEAsSFAoQRU5USVRZX0tJTkRfV0FSUBAMEh4KGkVO",
+            "VElUWV9LSU5EX0dFTkVSSUNfT0JKRUNUEA0SGAoURU5USVRZX0tJTkRfSE9F",
+            "X0RJUlQQDip6ChFDcm9wSGFydmVzdEFjdGlvbhIjCh9DUk9QX0hBUlZFU1Rf",
+            "QUNUSU9OX1VOU1BFQ0lGSUVEEAASIAocQ1JPUF9IQVJWRVNUX0FDVElPTl9J",
+            "TlRFUkFDVBABEh4KGkNST1BfSEFSVkVTVF9BQ1RJT05fU0NZVEhFEAIqtQEK",
+            "DUNoYXJhY3RlcktpbmQSHgoaQ0hBUkFDVEVSX0tJTkRfVU5TUEVDSUZJRUQQ",
+            "ABIWChJDSEFSQUNURVJfS0lORF9OUEMQARIaChZDSEFSQUNURVJfS0lORF9N",
+            "T05TVEVSEAISHgoaQ0hBUkFDVEVSX0tJTkRfRkFSTV9BTklNQUwQAxIWChJD",
+            "SEFSQUNURVJfS0lORF9QRVQQBBIYChRDSEFSQUNURVJfS0lORF9IT1JTRRAF",
+            "KrYCCg1VaUVsZW1lbnRLaW5kEh8KG1VJX0VMRU1FTlRfS0lORF9VTlNQRUNJ",
+            "RklFRBAAEhoKFlVJX0VMRU1FTlRfS0lORF9CVVRUT04QARIXChNVSV9FTEVN",
+            "RU5UX0tJTkRfVEFCEAISGgoWVUlfRUxFTUVOVF9LSU5EX09QVElPThADEh0K",
+            "GVVJX0VMRU1FTlRfS0lORF9JVEVNX1NMT1QQBBIlCiFVSV9FTEVNRU5UX0tJ",
+            "TkRfRElBTE9HVUVfUkVTUE9OU0UQBRIkCiBVSV9FTEVNRU5UX0tJTkRfRElB",
+            "TE9HVUVfQURWQU5DRRAGEiIKHlVJX0VMRU1FTlRfS0lORF9FUVVJUE1FTlRf",
+            "U0xPVBAHEiMKH1VJX0VMRU1FTlRfS0lORF9DUkFGVElOR19SRUNJUEUQCCpz",
+            "Cg9VaUludmVudG9yeVNpZGUSIQodVUlfSU5WRU5UT1JZX1NJREVfVU5TUEVD",
+            "SUZJRUQQABIcChhVSV9JTlZFTlRPUllfU0lERV9QTEFZRVIQARIfChtVSV9J",
+            "TlZFTlRPUllfU0lERV9DT05UQUlORVIQAiq0AgoTVWlFcXVpcG1lbnRTbG90",
+            "S2luZBImCiJVSV9FUVVJUE1FTlRfU0xPVF9LSU5EX1VOU1BFQ0lGSUVEEAAS",
+            "HgoaVUlfRVFVSVBNRU5UX1NMT1RfS0lORF9IQVQQARIkCiBVSV9FUVVJUE1F",
+            "TlRfU0xPVF9LSU5EX0xFRlRfUklORxACEiUKIVVJX0VRVUlQTUVOVF9TTE9U",
+            "X0tJTkRfUklHSFRfUklORxADEiAKHFVJX0VRVUlQTUVOVF9TTE9UX0tJTkRf",
+            "Qk9PVFMQBBIgChxVSV9FUVVJUE1FTlRfU0xPVF9LSU5EX1NISVJUEAUSIAoc",
+            "VUlfRVFVSVBNRU5UX1NMT1RfS0lORF9QQU5UUxAGEiIKHlVJX0VRVUlQTUVO",
+            "VF9TTE9UX0tJTkRfVFJJTktFVBAHQh+qAhxTdGFyZGV3VmFsbGV5TWNwLlBy",
+            "b3RvY29sLlYxYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::StardewValleyMcp.Protocol.V1.CommonReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.RefsReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.EntityKind), typeof(global::StardewValleyMcp.Protocol.V1.CharacterKind), typeof(global::StardewValleyMcp.Protocol.V1.UiElementKind), typeof(global::StardewValleyMcp.Protocol.V1.UiInventorySide), typeof(global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.EntityKind), typeof(global::StardewValleyMcp.Protocol.V1.CropHarvestAction), typeof(global::StardewValleyMcp.Protocol.V1.CharacterKind), typeof(global::StardewValleyMcp.Protocol.V1.UiElementKind), typeof(global::StardewValleyMcp.Protocol.V1.UiInventorySide), typeof(global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.RuntimeSnapshot), global::StardewValleyMcp.Protocol.V1.RuntimeSnapshot.Parser, new[]{ "Date", "TimeOfDay", "Player", "Weather", "Ui" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.PlayerFact), global::StardewValleyMcp.Protocol.V1.PlayerFact.Parser, new[]{ "Position", "Facing", "Money", "Energy", "MaxEnergy", "Health", "MaxHealth", "CanMove" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.PlayerFact), global::StardewValleyMcp.Protocol.V1.PlayerFact.Parser, new[]{ "Position", "Facing", "Money", "Energy", "MaxEnergy", "Health", "MaxHealth", "CanMove", "HomeLocationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.WeatherFact), global::StardewValleyMcp.Protocol.V1.WeatherFact.Parser, new[]{ "Raining", "Lightning", "Snowing", "GreenRain", "FestivalDay" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.UiSummary), global::StardewValleyMcp.Protocol.V1.UiSummary.Parser, new[]{ "MenuOpen", "MenuType" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.WorldSnapshot), global::StardewValleyMcp.Protocol.V1.WorldSnapshot.Parser, new[]{ "WorldRevision", "Area", "Outdoors", "Tiles", "Entities", "Characters", "EntitiesTruncated", "CharactersTruncated" }, null, null, null, null),
@@ -220,14 +229,14 @@ namespace StardewValleyMcp.Protocol.V1 {
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.WorldEntityFact), global::StardewValleyMcp.Protocol.V1.WorldEntityFact.Parser, new[]{ "Ref", "Kind", "Position", "DisplayName", "Actionable", "Tree", "FruitTree", "Crop", "ResourceNode", "ResourceClump", "Machine", "Container", "Bed", "Furniture", "LooseItem", "Door", "Warp", "GenericObject", "HoeDirt" }, new[]{ "Details", "Actionable" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.TreeFact), global::StardewValleyMcp.Protocol.V1.TreeFact.Parser, new[]{ "GrowthStage", "Stump", "Tapped", "Mossy", "Health" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.FruitTreeFact), global::StardewValleyMcp.Protocol.V1.FruitTreeFact.Parser, new[]{ "FruitItemId", "GrowthStage", "DaysUntilMature", "FruitCount", "Stump" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CropFact), global::StardewValleyMcp.Protocol.V1.CropFact.Parser, new[]{ "CropId", "HarvestItemId", "GrowthPhase", "ReadyForHarvest", "Watered", "Dead", "Regrows" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CropFact), global::StardewValleyMcp.Protocol.V1.CropFact.Parser, new[]{ "CropId", "HarvestItemId", "GrowthPhase", "ReadyForHarvest", "Watered", "Dead", "Regrows", "HarvestAction" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.HoeDirtFact), global::StardewValleyMcp.Protocol.V1.HoeDirtFact.Parser, new[]{ "Watered" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.ResourceNodeFact), global::StardewValleyMcp.Protocol.V1.ResourceNodeFact.Parser, new[]{ "NodeKind", "HitsToDestroy", "RequiredTool" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.ResourceClumpFact), global::StardewValleyMcp.Protocol.V1.ResourceClumpFact.Parser, new[]{ "ClumpKind", "Width", "Height", "Health", "RequiredTool", "RequiredToolLevel" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.ItemFact), global::StardewValleyMcp.Protocol.V1.ItemFact.Parser, new[]{ "Ref", "QualifiedItemId", "DisplayName", "Stack", "Quality", "Category", "Tool", "ToolLevel" }, new[]{ "Ref" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.ItemFact), global::StardewValleyMcp.Protocol.V1.ItemFact.Parser, new[]{ "Ref", "QualifiedItemId", "DisplayName", "Stack", "Quality", "Category", "Tool", "ToolLevel", "WaterRemaining", "WaterCapacity", "Bottomless" }, new[]{ "Ref", "WaterRemaining", "WaterCapacity", "Bottomless" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.MachineFact), global::StardewValleyMcp.Protocol.V1.MachineFact.Parser, new[]{ "QualifiedItemId", "ReadyForHarvest", "MinutesUntilReady", "HeldItem" }, new[]{ "HeldItem" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.ContainerFact), global::StardewValleyMcp.Protocol.V1.ContainerFact.Parser, new[]{ "ContainerKind", "Capacity", "ItemCount" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.BedFact), global::StardewValleyMcp.Protocol.V1.BedFact.Parser, new[]{ "CanSleep", "OccupiedTiles" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.BedFact), global::StardewValleyMcp.Protocol.V1.BedFact.Parser, new[]{ "CanSleep", "OccupiedTiles", "SleepPosition" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.FurnitureFact), global::StardewValleyMcp.Protocol.V1.FurnitureFact.Parser, new[]{ "FurnitureKind", "Rotation", "OccupiedTiles" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.LooseItemFact), global::StardewValleyMcp.Protocol.V1.LooseItemFact.Parser, new[]{ "Item", "CanPickUp" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.DoorFact), global::StardewValleyMcp.Protocol.V1.DoorFact.Parser, new[]{ "Locked", "TargetLocationId", "TargetTile" }, new[]{ "Locked", "TargetTile" }, null, null, null),
@@ -270,6 +279,12 @@ namespace StardewValleyMcp.Protocol.V1 {
     [pbr::OriginalName("ENTITY_KIND_WARP")] Warp = 12,
     [pbr::OriginalName("ENTITY_KIND_GENERIC_OBJECT")] GenericObject = 13,
     [pbr::OriginalName("ENTITY_KIND_HOE_DIRT")] HoeDirt = 14,
+  }
+
+  public enum CropHarvestAction {
+    [pbr::OriginalName("CROP_HARVEST_ACTION_UNSPECIFIED")] Unspecified = 0,
+    [pbr::OriginalName("CROP_HARVEST_ACTION_INTERACT")] Interact = 1,
+    [pbr::OriginalName("CROP_HARVEST_ACTION_SCYTHE")] Scythe = 2,
   }
 
   public enum CharacterKind {
@@ -738,6 +753,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       health_ = other.health_;
       maxHealth_ = other.maxHealth_;
       canMove_ = other.canMove_;
+      homeLocationId_ = other.homeLocationId_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -843,6 +859,21 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "home_location_id" field.</summary>
+    public const int HomeLocationIdFieldNumber = 9;
+    private string homeLocationId_ = "";
+    /// <summary>
+    /// 当前玩家住宅的精确地图标识；多人小屋使用 NameOrUniqueName，避免同名室内冲突。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string HomeLocationId {
+      get { return homeLocationId_; }
+      set {
+        homeLocationId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -866,6 +897,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (Health != other.Health) return false;
       if (MaxHealth != other.MaxHealth) return false;
       if (CanMove != other.CanMove) return false;
+      if (HomeLocationId != other.HomeLocationId) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -881,6 +913,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (Health != 0) hash ^= Health.GetHashCode();
       if (MaxHealth != 0) hash ^= MaxHealth.GetHashCode();
       if (CanMove != false) hash ^= CanMove.GetHashCode();
+      if (HomeLocationId.Length != 0) hash ^= HomeLocationId.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -931,6 +964,10 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(64);
         output.WriteBool(CanMove);
       }
+      if (HomeLocationId.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(HomeLocationId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -973,6 +1010,10 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(64);
         output.WriteBool(CanMove);
       }
+      if (HomeLocationId.Length != 0) {
+        output.WriteRawTag(74);
+        output.WriteString(HomeLocationId);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1006,6 +1047,9 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (CanMove != false) {
         size += 1 + 1;
+      }
+      if (HomeLocationId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(HomeLocationId);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1045,6 +1089,9 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (other.CanMove != false) {
         CanMove = other.CanMove;
+      }
+      if (other.HomeLocationId.Length != 0) {
+        HomeLocationId = other.HomeLocationId;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1100,6 +1147,10 @@ namespace StardewValleyMcp.Protocol.V1 {
             CanMove = input.ReadBool();
             break;
           }
+          case 74: {
+            HomeLocationId = input.ReadString();
+            break;
+          }
         }
       }
     #endif
@@ -1152,6 +1203,10 @@ namespace StardewValleyMcp.Protocol.V1 {
           }
           case 64: {
             CanMove = input.ReadBool();
+            break;
+          }
+          case 74: {
+            HomeLocationId = input.ReadString();
             break;
           }
         }
@@ -4454,6 +4509,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       watered_ = other.watered_;
       dead_ = other.dead_;
       regrows_ = other.regrows_;
+      harvestAction_ = other.harvestAction_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -4547,6 +4603,18 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "harvest_action" field.</summary>
+    public const int HarvestActionFieldNumber = 8;
+    private global::StardewValleyMcp.Protocol.V1.CropHarvestAction harvestAction_ = global::StardewValleyMcp.Protocol.V1.CropHarvestAction.Unspecified;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.CropHarvestAction HarvestAction {
+      get { return harvestAction_; }
+      set {
+        harvestAction_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -4569,6 +4637,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (Watered != other.Watered) return false;
       if (Dead != other.Dead) return false;
       if (Regrows != other.Regrows) return false;
+      if (HarvestAction != other.HarvestAction) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -4583,6 +4652,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (Watered != false) hash ^= Watered.GetHashCode();
       if (Dead != false) hash ^= Dead.GetHashCode();
       if (Regrows != false) hash ^= Regrows.GetHashCode();
+      if (HarvestAction != global::StardewValleyMcp.Protocol.V1.CropHarvestAction.Unspecified) hash ^= HarvestAction.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -4629,6 +4699,10 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(56);
         output.WriteBool(Regrows);
       }
+      if (HarvestAction != global::StardewValleyMcp.Protocol.V1.CropHarvestAction.Unspecified) {
+        output.WriteRawTag(64);
+        output.WriteEnum((int) HarvestAction);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -4667,6 +4741,10 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(56);
         output.WriteBool(Regrows);
       }
+      if (HarvestAction != global::StardewValleyMcp.Protocol.V1.CropHarvestAction.Unspecified) {
+        output.WriteRawTag(64);
+        output.WriteEnum((int) HarvestAction);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -4697,6 +4775,9 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (Regrows != false) {
         size += 1 + 1;
+      }
+      if (HarvestAction != global::StardewValleyMcp.Protocol.V1.CropHarvestAction.Unspecified) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) HarvestAction);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -4730,6 +4811,9 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (other.Regrows != false) {
         Regrows = other.Regrows;
+      }
+      if (other.HarvestAction != global::StardewValleyMcp.Protocol.V1.CropHarvestAction.Unspecified) {
+        HarvestAction = other.HarvestAction;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -4778,6 +4862,10 @@ namespace StardewValleyMcp.Protocol.V1 {
             Regrows = input.ReadBool();
             break;
           }
+          case 64: {
+            HarvestAction = (global::StardewValleyMcp.Protocol.V1.CropHarvestAction) input.ReadEnum();
+            break;
+          }
         }
       }
     #endif
@@ -4823,6 +4911,10 @@ namespace StardewValleyMcp.Protocol.V1 {
           }
           case 56: {
             Regrows = input.ReadBool();
+            break;
+          }
+          case 64: {
+            HarvestAction = (global::StardewValleyMcp.Protocol.V1.CropHarvestAction) input.ReadEnum();
             break;
           }
         }
@@ -5696,6 +5788,7 @@ namespace StardewValleyMcp.Protocol.V1 {
   {
     private static readonly pb::MessageParser<ItemFact> _parser = new pb::MessageParser<ItemFact>(() => new ItemFact());
     private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<ItemFact> Parser { get { return _parser; } }
@@ -5723,6 +5816,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public ItemFact(ItemFact other) : this() {
+      _hasBits0 = other._hasBits0;
       ref_ = other.ref_ != null ? other.ref_.Clone() : null;
       qualifiedItemId_ = other.qualifiedItemId_;
       displayName_ = other.displayName_;
@@ -5731,6 +5825,9 @@ namespace StardewValleyMcp.Protocol.V1 {
       category_ = other.category_;
       tool_ = other.tool_;
       toolLevel_ = other.toolLevel_;
+      waterRemaining_ = other.waterRemaining_;
+      waterCapacity_ = other.waterCapacity_;
+      bottomless_ = other.bottomless_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -5843,6 +5940,90 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "water_remaining" field.</summary>
+    public const int WaterRemainingFieldNumber = 9;
+    private readonly static uint WaterRemainingDefaultValue = 0;
+
+    private uint waterRemaining_;
+    /// <summary>
+    /// 仅喷壶携带下列字段；其他物品保持缺省，避免把 0 误解为“空喷壶”。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint WaterRemaining {
+      get { if ((_hasBits0 & 1) != 0) { return waterRemaining_; } else { return WaterRemainingDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        waterRemaining_ = value;
+      }
+    }
+    /// <summary>Gets whether the "water_remaining" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasWaterRemaining {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "water_remaining" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearWaterRemaining() {
+      _hasBits0 &= ~1;
+    }
+
+    /// <summary>Field number for the "water_capacity" field.</summary>
+    public const int WaterCapacityFieldNumber = 10;
+    private readonly static uint WaterCapacityDefaultValue = 0;
+
+    private uint waterCapacity_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint WaterCapacity {
+      get { if ((_hasBits0 & 2) != 0) { return waterCapacity_; } else { return WaterCapacityDefaultValue; } }
+      set {
+        _hasBits0 |= 2;
+        waterCapacity_ = value;
+      }
+    }
+    /// <summary>Gets whether the "water_capacity" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasWaterCapacity {
+      get { return (_hasBits0 & 2) != 0; }
+    }
+    /// <summary>Clears the value of the "water_capacity" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearWaterCapacity() {
+      _hasBits0 &= ~2;
+    }
+
+    /// <summary>Field number for the "bottomless" field.</summary>
+    public const int BottomlessFieldNumber = 11;
+    private readonly static bool BottomlessDefaultValue = false;
+
+    private bool bottomless_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Bottomless {
+      get { if ((_hasBits0 & 4) != 0) { return bottomless_; } else { return BottomlessDefaultValue; } }
+      set {
+        _hasBits0 |= 4;
+        bottomless_ = value;
+      }
+    }
+    /// <summary>Gets whether the "bottomless" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasBottomless {
+      get { return (_hasBits0 & 4) != 0; }
+    }
+    /// <summary>Clears the value of the "bottomless" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearBottomless() {
+      _hasBits0 &= ~4;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -5866,6 +6047,9 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (Category != other.Category) return false;
       if (Tool != other.Tool) return false;
       if (ToolLevel != other.ToolLevel) return false;
+      if (WaterRemaining != other.WaterRemaining) return false;
+      if (WaterCapacity != other.WaterCapacity) return false;
+      if (Bottomless != other.Bottomless) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -5881,6 +6065,9 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (Category.Length != 0) hash ^= Category.GetHashCode();
       if (Tool != false) hash ^= Tool.GetHashCode();
       if (ToolLevel != 0) hash ^= ToolLevel.GetHashCode();
+      if (HasWaterRemaining) hash ^= WaterRemaining.GetHashCode();
+      if (HasWaterCapacity) hash ^= WaterCapacity.GetHashCode();
+      if (HasBottomless) hash ^= Bottomless.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -5931,6 +6118,18 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(64);
         output.WriteUInt32(ToolLevel);
       }
+      if (HasWaterRemaining) {
+        output.WriteRawTag(72);
+        output.WriteUInt32(WaterRemaining);
+      }
+      if (HasWaterCapacity) {
+        output.WriteRawTag(80);
+        output.WriteUInt32(WaterCapacity);
+      }
+      if (HasBottomless) {
+        output.WriteRawTag(88);
+        output.WriteBool(Bottomless);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -5973,6 +6172,18 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(64);
         output.WriteUInt32(ToolLevel);
       }
+      if (HasWaterRemaining) {
+        output.WriteRawTag(72);
+        output.WriteUInt32(WaterRemaining);
+      }
+      if (HasWaterCapacity) {
+        output.WriteRawTag(80);
+        output.WriteUInt32(WaterCapacity);
+      }
+      if (HasBottomless) {
+        output.WriteRawTag(88);
+        output.WriteBool(Bottomless);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -6006,6 +6217,15 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (ToolLevel != 0) {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ToolLevel);
+      }
+      if (HasWaterRemaining) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(WaterRemaining);
+      }
+      if (HasWaterCapacity) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(WaterCapacity);
+      }
+      if (HasBottomless) {
+        size += 1 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -6045,6 +6265,15 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (other.ToolLevel != 0) {
         ToolLevel = other.ToolLevel;
+      }
+      if (other.HasWaterRemaining) {
+        WaterRemaining = other.WaterRemaining;
+      }
+      if (other.HasWaterCapacity) {
+        WaterCapacity = other.WaterCapacity;
+      }
+      if (other.HasBottomless) {
+        Bottomless = other.Bottomless;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -6100,6 +6329,18 @@ namespace StardewValleyMcp.Protocol.V1 {
             ToolLevel = input.ReadUInt32();
             break;
           }
+          case 72: {
+            WaterRemaining = input.ReadUInt32();
+            break;
+          }
+          case 80: {
+            WaterCapacity = input.ReadUInt32();
+            break;
+          }
+          case 88: {
+            Bottomless = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -6152,6 +6393,18 @@ namespace StardewValleyMcp.Protocol.V1 {
           }
           case 64: {
             ToolLevel = input.ReadUInt32();
+            break;
+          }
+          case 72: {
+            WaterRemaining = input.ReadUInt32();
+            break;
+          }
+          case 80: {
+            WaterCapacity = input.ReadUInt32();
+            break;
+          }
+          case 88: {
+            Bottomless = input.ReadBool();
             break;
           }
         }
@@ -6788,6 +7041,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     public BedFact(BedFact other) : this() {
       canSleep_ = other.canSleep_;
       occupiedTiles_ = other.occupiedTiles_.Clone();
+      sleepPosition_ = other.sleepPosition_ != null ? other.sleepPosition_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -6820,6 +7074,21 @@ namespace StardewValleyMcp.Protocol.V1 {
       get { return occupiedTiles_; }
     }
 
+    /// <summary>Field number for the "sleep_position" field.</summary>
+    public const int SleepPositionFieldNumber = 3;
+    private global::StardewValleyMcp.Protocol.V1.WorldPosition sleepPosition_;
+    /// <summary>
+    /// 玩家应到达的睡眠触发格，不等同于家具占用格集合。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.WorldPosition SleepPosition {
+      get { return sleepPosition_; }
+      set {
+        sleepPosition_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -6837,6 +7106,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (CanSleep != other.CanSleep) return false;
       if(!occupiedTiles_.Equals(other.occupiedTiles_)) return false;
+      if (!object.Equals(SleepPosition, other.SleepPosition)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -6846,6 +7116,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       int hash = 1;
       if (CanSleep != false) hash ^= CanSleep.GetHashCode();
       hash ^= occupiedTiles_.GetHashCode();
+      if (sleepPosition_ != null) hash ^= SleepPosition.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -6869,6 +7140,10 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteBool(CanSleep);
       }
       occupiedTiles_.WriteTo(output, _repeated_occupiedTiles_codec);
+      if (sleepPosition_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(SleepPosition);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -6884,6 +7159,10 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteBool(CanSleep);
       }
       occupiedTiles_.WriteTo(ref output, _repeated_occupiedTiles_codec);
+      if (sleepPosition_ != null) {
+        output.WriteRawTag(26);
+        output.WriteMessage(SleepPosition);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -6898,6 +7177,9 @@ namespace StardewValleyMcp.Protocol.V1 {
         size += 1 + 1;
       }
       size += occupiedTiles_.CalculateSize(_repeated_occupiedTiles_codec);
+      if (sleepPosition_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(SleepPosition);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -6914,6 +7196,12 @@ namespace StardewValleyMcp.Protocol.V1 {
         CanSleep = other.CanSleep;
       }
       occupiedTiles_.Add(other.occupiedTiles_);
+      if (other.sleepPosition_ != null) {
+        if (sleepPosition_ == null) {
+          SleepPosition = new global::StardewValleyMcp.Protocol.V1.WorldPosition();
+        }
+        SleepPosition.MergeFrom(other.SleepPosition);
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -6941,6 +7229,13 @@ namespace StardewValleyMcp.Protocol.V1 {
             occupiedTiles_.AddEntriesFrom(input, _repeated_occupiedTiles_codec);
             break;
           }
+          case 26: {
+            if (sleepPosition_ == null) {
+              SleepPosition = new global::StardewValleyMcp.Protocol.V1.WorldPosition();
+            }
+            input.ReadMessage(SleepPosition);
+            break;
+          }
         }
       }
     #endif
@@ -6966,6 +7261,13 @@ namespace StardewValleyMcp.Protocol.V1 {
           }
           case 18: {
             occupiedTiles_.AddEntriesFrom(ref input, _repeated_occupiedTiles_codec);
+            break;
+          }
+          case 26: {
+            if (sleepPosition_ == null) {
+              SleepPosition = new global::StardewValleyMcp.Protocol.V1.WorldPosition();
+            }
+            input.ReadMessage(SleepPosition);
             break;
           }
         }

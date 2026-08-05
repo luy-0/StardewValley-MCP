@@ -24,6 +24,8 @@ message PlayerFact {
   int32 health = 6;
   int32 max_health = 7;
   bool can_move = 8;
+  // 当前玩家住宅的精确地图标识；多人小屋使用 NameOrUniqueName，避免同名室内冲突。
+  string home_location_id = 9;
 }
 
 message WeatherFact {
@@ -119,6 +121,12 @@ message FruitTreeFact {
   bool stump = 5;
 }
 
+enum CropHarvestAction {
+  CROP_HARVEST_ACTION_UNSPECIFIED = 0;
+  CROP_HARVEST_ACTION_INTERACT = 1;
+  CROP_HARVEST_ACTION_SCYTHE = 2;
+}
+
 message CropFact {
   string crop_id = 1;
   string harvest_item_id = 2;
@@ -127,6 +135,7 @@ message CropFact {
   bool watered = 5;
   bool dead = 6;
   bool regrows = 7;
+  CropHarvestAction harvest_action = 8;
 }
 
 // 不含作物的已耕地事实。带作物的 HoeDirt 继续使用 CropFact。
@@ -161,6 +170,10 @@ message ItemFact {
   string category = 6;
   bool tool = 7;
   uint32 tool_level = 8;
+  // 仅喷壶携带下列字段；其他物品保持缺省，避免把 0 误解为“空喷壶”。
+  optional uint32 water_remaining = 9;
+  optional uint32 water_capacity = 10;
+  optional bool bottomless = 11;
 }
 
 message MachineFact {
@@ -179,6 +192,8 @@ message ContainerFact {
 message BedFact {
   bool can_sleep = 1;
   repeated WorldPosition occupied_tiles = 2;
+  // 玩家应到达的睡眠触发格，不等同于家具占用格集合。
+  WorldPosition sleep_position = 3;
 }
 
 message FurnitureFact {

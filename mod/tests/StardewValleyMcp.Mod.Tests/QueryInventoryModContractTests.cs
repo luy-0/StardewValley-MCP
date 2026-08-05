@@ -6,6 +6,27 @@ namespace StardewValleyMcp.Mod.Tests;
 public sealed class QueryInventoryModContractTests
 {
     [Test]
+    public void WateringCanProjectionExposesWaterWithoutAffectingOtherItems()
+    {
+        var fact = new ItemFact();
+        var ordinary = new ItemFact();
+        ItemFactProjector.ApplyWateringCanFacts(fact, 17, 40, bottomless: false);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(fact.HasWaterRemaining, Is.True);
+            Assert.That(fact.WaterRemaining, Is.EqualTo(17));
+            Assert.That(fact.HasWaterCapacity, Is.True);
+            Assert.That(fact.WaterCapacity, Is.EqualTo(40));
+            Assert.That(fact.HasBottomless, Is.True);
+            Assert.That(fact.Bottomless, Is.False);
+            Assert.That(ordinary.HasWaterRemaining, Is.False);
+            Assert.That(ordinary.HasWaterCapacity, Is.False);
+            Assert.That(ordinary.HasBottomless, Is.False);
+        });
+    }
+
+    [Test]
     public void ValidatorAcceptsDefaultPlayerAndValidContainerSelectors()
     {
         Assert.Multiple(() =>
@@ -62,6 +83,10 @@ public sealed class QueryInventoryModContractTests
         var changedFact = InventorySnapshotContract.ComputeRevision(snapshot, 0);
         snapshot.Slots[0].Item.Stack--;
         var changedSelection = InventorySnapshotContract.ComputeRevision(snapshot, 1);
+        snapshot.Slots[0].Item.WaterRemaining = 17;
+        var wateringCanState = InventorySnapshotContract.ComputeRevision(snapshot, 0);
+        snapshot.Slots[0].Item.WaterRemaining = 16;
+        var changedWater = InventorySnapshotContract.ComputeRevision(snapshot, 0);
 
         Assert.Multiple(() =>
         {
@@ -69,6 +94,7 @@ public sealed class QueryInventoryModContractTests
             Assert.That(repeated, Is.EqualTo(first));
             Assert.That(changedFact, Is.Not.EqualTo(first));
             Assert.That(changedSelection, Is.Not.EqualTo(first));
+            Assert.That(changedWater, Is.Not.EqualTo(wateringCanState));
         });
     }
 

@@ -6,6 +6,34 @@ namespace StardewValleyMcp.Mod.Tests;
 public sealed class QueryWorldModContractTests
 {
     [Test]
+    public void FarmingAndBedProjectionPoliciesExposeSkillControlFacts()
+    {
+        var interact = WorldProjectionPolicy.HarvestActionFor(usesScythe: false);
+        var scythe = WorldProjectionPolicy.HarvestActionFor(usesScythe: true);
+        var sleep = WorldProjectionPolicy.SleepPosition("Cabin_123", 7, 9);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(interact, Is.EqualTo(CropHarvestAction.Interact));
+            Assert.That(scythe, Is.EqualTo(CropHarvestAction.Scythe));
+            Assert.That(sleep.LocationId, Is.EqualTo("Cabin_123"));
+            Assert.That(sleep.X, Is.EqualTo(7));
+            Assert.That(sleep.Y, Is.EqualTo(9));
+        });
+    }
+
+    [Test]
+    public void RuntimeHomePolicyPreservesSavedUniqueIdentityWithoutScanningLocations()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(RuntimeProjectionPolicy.HomeLocationId("FarmHouse"), Is.EqualTo("FarmHouse"));
+            Assert.That(RuntimeProjectionPolicy.HomeLocationId("Cabin_123"), Is.EqualTo("Cabin_123"));
+            Assert.That(RuntimeProjectionPolicy.HomeLocationId(""), Is.Empty);
+        });
+    }
+
+    [Test]
     public void ValidatorRejectsInvalidRegionLimitsBeforeExecution()
     {
         var invalidArea = Request(new QueryWorldRequest

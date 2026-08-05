@@ -7,6 +7,20 @@ namespace StardewValleyMcp.Protocol.Tests;
 public sealed class WorldEntityFactContractTests
 {
     [Test]
+    public void FarmingAndSleepFactsKeepStableFieldNumbers()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(PlayerFact.HomeLocationIdFieldNumber, Is.EqualTo(9));
+            Assert.That(CropFact.HarvestActionFieldNumber, Is.EqualTo(8));
+            Assert.That(ItemFact.WaterRemainingFieldNumber, Is.EqualTo(9));
+            Assert.That(ItemFact.WaterCapacityFieldNumber, Is.EqualTo(10));
+            Assert.That(ItemFact.BottomlessFieldNumber, Is.EqualTo(11));
+            Assert.That(BedFact.SleepPositionFieldNumber, Is.EqualTo(3));
+        });
+    }
+
+    [Test]
     public void ActionableKeepsFieldFiveAndTracksPresence()
     {
         Assert.That(WorldEntityFact.ActionableFieldNumber, Is.EqualTo(5));

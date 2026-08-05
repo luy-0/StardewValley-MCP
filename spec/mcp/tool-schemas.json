@@ -64,6 +64,18 @@
         "CRAFT_ITEM_STOP_REASON_UNSPECIFIED": "unspecified"
       }
     },
+    "stardew_valley.mcp.v1.CropHarvestAction": {
+      "jsonToProto": {
+        "interact": "CROP_HARVEST_ACTION_INTERACT",
+        "scythe": "CROP_HARVEST_ACTION_SCYTHE",
+        "unspecified": "CROP_HARVEST_ACTION_UNSPECIFIED"
+      },
+      "protoToJson": {
+        "CROP_HARVEST_ACTION_INTERACT": "interact",
+        "CROP_HARVEST_ACTION_SCYTHE": "scythe",
+        "CROP_HARVEST_ACTION_UNSPECIFIED": "unspecified"
+      }
+    },
     "stardew_valley.mcp.v1.Direction": {
       "jsonToProto": {
         "down": "DIRECTION_DOWN",
@@ -7807,6 +7819,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -7839,6 +7854,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -10945,6 +10970,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -10977,6 +11005,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -14160,6 +14198,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -14192,6 +14233,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -17326,6 +17377,12 @@
                 "minimum": -2147483648,
                 "type": "integer"
               },
+              "homeLocationId": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
               "maxEnergy": {
                 "type": "number"
               },
@@ -17347,6 +17404,7 @@
               "energy",
               "facing",
               "health",
+              "homeLocationId",
               "maxEnergy",
               "maxHealth",
               "money",
@@ -18243,11 +18301,15 @@
                   "$ref": "#/$defs/WorldPosition"
                 },
                 "type": "array"
+              },
+              "sleepPosition": {
+                "$ref": "#/$defs/WorldPosition"
               }
             },
             "required": [
               "canSleep",
-              "occupiedTiles"
+              "occupiedTiles",
+              "sleepPosition"
             ],
             "type": "object"
           },
@@ -18427,6 +18489,14 @@
                 "minimum": 0,
                 "type": "integer"
               },
+              "harvestAction": {
+                "enum": [
+                  "unspecified",
+                  "interact",
+                  "scythe"
+                ],
+                "type": "string"
+              },
               "harvestItemId": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -18446,6 +18516,7 @@
               "cropId",
               "dead",
               "growthPhase",
+              "harvestAction",
               "harvestItemId",
               "readyForHarvest",
               "regrows",
@@ -19026,6 +19097,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -19058,6 +19132,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -21231,6 +21315,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -21263,6 +21350,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -22392,6 +22489,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -22424,6 +22524,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -23303,11 +23413,15 @@
                   "$ref": "#/$defs/WorldPosition"
                 },
                 "type": "array"
+              },
+              "sleepPosition": {
+                "$ref": "#/$defs/WorldPosition"
               }
             },
             "required": [
               "canSleep",
-              "occupiedTiles"
+              "occupiedTiles",
+              "sleepPosition"
             ],
             "type": "object"
           },
@@ -23587,6 +23701,14 @@
                 "minimum": 0,
                 "type": "integer"
               },
+              "harvestAction": {
+                "enum": [
+                  "unspecified",
+                  "interact",
+                  "scythe"
+                ],
+                "type": "string"
+              },
               "harvestItemId": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -23606,6 +23728,7 @@
               "cropId",
               "dead",
               "growthPhase",
+              "harvestAction",
               "harvestItemId",
               "readyForHarvest",
               "regrows",
@@ -24780,6 +24903,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -24812,6 +24938,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
