@@ -13,6 +13,8 @@ message RuntimeSnapshot {
   PlayerFact player = 3;
   WeatherFact weather = 4;
   UiSummary ui = 5;
+  DailyLuckFact daily_luck = 6;
+  TvCookingRecipeFact queen_of_sauce = 7;
 }
 
 message PlayerFact {
@@ -34,11 +36,48 @@ message WeatherFact {
   bool snowing = 3;
   bool green_rain = 4;
   bool festival_day = 5;
+  WeatherKind kind = 6;
+  WeatherKind tomorrow = 7;
 }
 
 message UiSummary {
   bool menu_open = 1;
   string menu_type = 2;
+}
+
+message DailyLuckFact {
+  double value = 1;
+  DailyLuckTier tier = 2;
+}
+
+message TvCookingRecipeFact {
+  bool available = 1;
+  bool rerun = 2;
+  string recipe_key = 3;
+  string display_name = 4;
+  bool already_known = 5;
+  bool learnable = 6;
+}
+
+enum WeatherKind {
+  WEATHER_KIND_UNSPECIFIED = 0;
+  WEATHER_KIND_SUN = 1;
+  WEATHER_KIND_RAIN = 2;
+  WEATHER_KIND_STORM = 3;
+  WEATHER_KIND_SNOW = 4;
+  WEATHER_KIND_WIND = 5;
+  WEATHER_KIND_GREEN_RAIN = 6;
+  WEATHER_KIND_FESTIVAL = 7;
+  WEATHER_KIND_WEDDING = 8;
+}
+
+enum DailyLuckTier {
+  DAILY_LUCK_TIER_UNSPECIFIED = 0;
+  DAILY_LUCK_TIER_VERY_UNLUCKY = 1;
+  DAILY_LUCK_TIER_UNLUCKY = 2;
+  DAILY_LUCK_TIER_NEUTRAL = 3;
+  DAILY_LUCK_TIER_LUCKY = 4;
+  DAILY_LUCK_TIER_VERY_LUCKY = 5;
 }
 
 enum EntityKind {

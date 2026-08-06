@@ -25,205 +25,227 @@ namespace StardewValleyMcp.Protocol.V1 {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CgtmYWN0cy5wcm90bxIVc3RhcmRld192YWxsZXkubWNwLnYxGgxjb21tb24u",
-            "cHJvdG8aCnJlZnMucHJvdG8i6wEKD1J1bnRpbWVTbmFwc2hvdBItCgRkYXRl",
+            "cHJvdG8aCnJlZnMucHJvdG8i6QIKD1J1bnRpbWVTbmFwc2hvdBItCgRkYXRl",
             "GAEgASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkdhbWVEYXRlEhMKC3Rp",
             "bWVfb2ZfZGF5GAIgASgNEjEKBnBsYXllchgDIAEoCzIhLnN0YXJkZXdfdmFs",
             "bGV5Lm1jcC52MS5QbGF5ZXJGYWN0EjMKB3dlYXRoZXIYBCABKAsyIi5zdGFy",
             "ZGV3X3ZhbGxleS5tY3AudjEuV2VhdGhlckZhY3QSLAoCdWkYBSABKAsyIC5z",
-            "dGFyZGV3X3ZhbGxleS5tY3AudjEuVWlTdW1tYXJ5IvkBCgpQbGF5ZXJGYWN0",
-            "EjYKCHBvc2l0aW9uGAEgASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYxLldv",
-            "cmxkUG9zaXRpb24SMAoGZmFjaW5nGAIgASgOMiAuc3RhcmRld192YWxsZXku",
-            "bWNwLnYxLkRpcmVjdGlvbhINCgVtb25leRgDIAEoAxIOCgZlbmVyZ3kYBCAB",
-            "KAESEgoKbWF4X2VuZXJneRgFIAEoARIOCgZoZWFsdGgYBiABKAUSEgoKbWF4",
-            "X2hlYWx0aBgHIAEoBRIQCghjYW5fbW92ZRgIIAEoCBIYChBob21lX2xvY2F0",
-            "aW9uX2lkGAkgASgJImwKC1dlYXRoZXJGYWN0Eg8KB3JhaW5pbmcYASABKAgS",
-            "EQoJbGlnaHRuaW5nGAIgASgIEg8KB3Nub3dpbmcYAyABKAgSEgoKZ3JlZW5f",
-            "cmFpbhgEIAEoCBIUCgxmZXN0aXZhbF9kYXkYBSABKAgiMQoJVWlTdW1tYXJ5",
-            "EhEKCW1lbnVfb3BlbhgBIAEoCBIRCgltZW51X3R5cGUYAiABKAkixgIKDVdv",
-            "cmxkU25hcHNob3QSFgoOd29ybGRfcmV2aXNpb24YASABKAkSLQoEYXJlYRgC",
-            "IAEoCzIfLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5UaWxlQXJlYRIQCghvdXRk",
-            "b29ycxgDIAEoCBIuCgV0aWxlcxgEIAMoCzIfLnN0YXJkZXdfdmFsbGV5Lm1j",
-            "cC52MS5UaWxlRmFjdBI4CghlbnRpdGllcxgFIAMoCzImLnN0YXJkZXdfdmFs",
-            "bGV5Lm1jcC52MS5Xb3JsZEVudGl0eUZhY3QSOAoKY2hhcmFjdGVycxgGIAMo",
-            "CzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5DaGFyYWN0ZXJGYWN0EhoKEmVu",
-            "dGl0aWVzX3RydW5jYXRlZBgHIAEoCBIcChRjaGFyYWN0ZXJzX3RydW5jYXRl",
-            "ZBgIIAEoCCKdAQoIVGlsZUZhY3QSNgoIcG9zaXRpb24YASABKAsyJC5zdGFy",
-            "ZGV3X3ZhbGxleS5tY3AudjEuV29ybGRQb3NpdGlvbhIQCghwYXNzYWJsZRgC",
-            "IAEoCBIQCghvY2N1cGllZBgDIAEoCBIQCghkaWdnYWJsZRgEIAEoCBINCgV3",
-            "YXRlchgFIAEoCBIUCgx0ZXJyYWluX2tpbmQYBiABKAkihggKD1dvcmxkRW50",
-            "aXR5RmFjdBInCgNyZWYYASABKAsyGi5zdGFyZGV3X3ZhbGxleS5tY3AudjEu",
-            "UmVmEi8KBGtpbmQYAiABKA4yIS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuRW50",
-            "aXR5S2luZBI2Cghwb3NpdGlvbhgDIAEoCzIkLnN0YXJkZXdfdmFsbGV5Lm1j",
-            "cC52MS5Xb3JsZFBvc2l0aW9uEhQKDGRpc3BsYXlfbmFtZRgEIAEoCRIXCgph",
-            "Y3Rpb25hYmxlGAUgASgISAGIAQESLwoEdHJlZRgUIAEoCzIfLnN0YXJkZXdf",
-            "dmFsbGV5Lm1jcC52MS5UcmVlRmFjdEgAEjoKCmZydWl0X3RyZWUYFSABKAsy",
-            "JC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuRnJ1aXRUcmVlRmFjdEgAEi8KBGNy",
-            "b3AYFiABKAsyHy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQ3JvcEZhY3RIABJA",
-            "Cg1yZXNvdXJjZV9ub2RlGBcgASgLMicuc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LlJlc291cmNlTm9kZUZhY3RIABJCCg5yZXNvdXJjZV9jbHVtcBgYIAEoCzIo",
-            "LnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SZXNvdXJjZUNsdW1wRmFjdEgAEjUK",
-            "B21hY2hpbmUYGSABKAsyIi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuTWFjaGlu",
-            "ZUZhY3RIABI5Cgljb250YWluZXIYGiABKAsyJC5zdGFyZGV3X3ZhbGxleS5t",
-            "Y3AudjEuQ29udGFpbmVyRmFjdEgAEi0KA2JlZBgbIAEoCzIeLnN0YXJkZXdf",
-            "dmFsbGV5Lm1jcC52MS5CZWRGYWN0SAASOQoJZnVybml0dXJlGBwgASgLMiQu",
-            "c3RhcmRld192YWxsZXkubWNwLnYxLkZ1cm5pdHVyZUZhY3RIABI6Cgpsb29z",
-            "ZV9pdGVtGB0gASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYxLkxvb3NlSXRl",
-            "bUZhY3RIABIvCgRkb29yGB4gASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LkRvb3JGYWN0SAASLwoEd2FycBgfIAEoCzIfLnN0YXJkZXdfdmFsbGV5Lm1j",
-            "cC52MS5XYXJwRmFjdEgAEkIKDmdlbmVyaWNfb2JqZWN0GCAgASgLMiguc3Rh",
-            "cmRld192YWxsZXkubWNwLnYxLkdlbmVyaWNPYmplY3RGYWN0SAASNgoIaG9l",
-            "X2RpcnQYISABKAsyIi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuSG9lRGlydEZh",
-            "Y3RIAEIJCgdkZXRhaWxzQg0KC19hY3Rpb25hYmxlIl4KCFRyZWVGYWN0EhQK",
-            "DGdyb3d0aF9zdGFnZRgBIAEoDRINCgVzdHVtcBgCIAEoCBIOCgZ0YXBwZWQY",
-            "AyABKAgSDQoFbW9zc3kYBCABKAgSDgoGaGVhbHRoGAUgASgBInsKDUZydWl0",
-            "VHJlZUZhY3QSFQoNZnJ1aXRfaXRlbV9pZBgBIAEoCRIUCgxncm93dGhfc3Rh",
-            "Z2UYAiABKA0SGQoRZGF5c191bnRpbF9tYXR1cmUYAyABKA0SEwoLZnJ1aXRf",
-            "Y291bnQYBCABKA0SDQoFc3R1bXAYBSABKAgi1wEKCENyb3BGYWN0Eg8KB2Ny",
-            "b3BfaWQYASABKAkSFwoPaGFydmVzdF9pdGVtX2lkGAIgASgJEhQKDGdyb3d0",
-            "aF9waGFzZRgDIAEoDRIZChFyZWFkeV9mb3JfaGFydmVzdBgEIAEoCBIPCgd3",
-            "YXRlcmVkGAUgASgIEgwKBGRlYWQYBiABKAgSDwoHcmVncm93cxgHIAEoCBJA",
-            "Cg5oYXJ2ZXN0X2FjdGlvbhgIIAEoDjIoLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
-            "MS5Dcm9wSGFydmVzdEFjdGlvbiIeCgtIb2VEaXJ0RmFjdBIPCgd3YXRlcmVk",
-            "GAEgASgIIlUKEFJlc291cmNlTm9kZUZhY3QSEQoJbm9kZV9raW5kGAEgASgJ",
-            "EhcKD2hpdHNfdG9fZGVzdHJveRgCIAEoDRIVCg1yZXF1aXJlZF90b29sGAMg",
-            "ASgJIooBChFSZXNvdXJjZUNsdW1wRmFjdBISCgpjbHVtcF9raW5kGAEgASgJ",
-            "Eg0KBXdpZHRoGAIgASgNEg4KBmhlaWdodBgDIAEoDRIOCgZoZWFsdGgYBCAB",
-            "KA0SFQoNcmVxdWlyZWRfdG9vbBgFIAEoCRIbChNyZXF1aXJlZF90b29sX2xl",
-            "dmVsGAYgASgNIs8CCghJdGVtRmFjdBIsCgNyZWYYASABKAsyGi5zdGFyZGV3",
-            "X3ZhbGxleS5tY3AudjEuUmVmSACIAQESGQoRcXVhbGlmaWVkX2l0ZW1faWQY",
-            "AiABKAkSFAoMZGlzcGxheV9uYW1lGAMgASgJEg0KBXN0YWNrGAQgASgNEg8K",
-            "B3F1YWxpdHkYBSABKA0SEAoIY2F0ZWdvcnkYBiABKAkSDAoEdG9vbBgHIAEo",
-            "CBISCgp0b29sX2xldmVsGAggASgNEhwKD3dhdGVyX3JlbWFpbmluZxgJIAEo",
-            "DUgBiAEBEhsKDndhdGVyX2NhcGFjaXR5GAogASgNSAKIAQESFwoKYm90dG9t",
-            "bGVzcxgLIAEoCEgDiAEBQgYKBF9yZWZCEgoQX3dhdGVyX3JlbWFpbmluZ0IR",
-            "Cg9fd2F0ZXJfY2FwYWNpdHlCDQoLX2JvdHRvbWxlc3MipwEKC01hY2hpbmVG",
-            "YWN0EhkKEXF1YWxpZmllZF9pdGVtX2lkGAEgASgJEhkKEXJlYWR5X2Zvcl9o",
-            "YXJ2ZXN0GAIgASgIEhsKE21pbnV0ZXNfdW50aWxfcmVhZHkYAyABKAUSNwoJ",
-            "aGVsZF9pdGVtGAQgASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkl0ZW1G",
-            "YWN0SACIAQFCDAoKX2hlbGRfaXRlbSJNCg1Db250YWluZXJGYWN0EhYKDmNv",
-            "bnRhaW5lcl9raW5kGAEgASgJEhAKCGNhcGFjaXR5GAIgASgNEhIKCml0ZW1f",
-            "Y291bnQYAyABKA0imAEKB0JlZEZhY3QSEQoJY2FuX3NsZWVwGAEgASgIEjwK",
-            "Dm9jY3VwaWVkX3RpbGVzGAIgAygLMiQuc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LldvcmxkUG9zaXRpb24SPAoOc2xlZXBfcG9zaXRpb24YAyABKAsyJC5zdGFy",
-            "ZGV3X3ZhbGxleS5tY3AudjEuV29ybGRQb3NpdGlvbiJ3Cg1GdXJuaXR1cmVG",
-            "YWN0EhYKDmZ1cm5pdHVyZV9raW5kGAEgASgJEhAKCHJvdGF0aW9uGAIgASgN",
-            "EjwKDm9jY3VwaWVkX3RpbGVzGAMgAygLMiQuc3RhcmRld192YWxsZXkubWNw",
-            "LnYxLldvcmxkUG9zaXRpb24iUwoNTG9vc2VJdGVtRmFjdBItCgRpdGVtGAEg",
-            "ASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkl0ZW1GYWN0EhMKC2Nhbl9w",
-            "aWNrX3VwGAIgASgIIpIBCghEb29yRmFjdBITCgZsb2NrZWQYASABKAhIAIgB",
-            "ARIaChJ0YXJnZXRfbG9jYXRpb25faWQYAiABKAkSOgoLdGFyZ2V0X3RpbGUY",
-            "AyABKAsyIC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVGlsZVBvaW50SAGIAQFC",
-            "CQoHX2xvY2tlZEIOCgxfdGFyZ2V0X3RpbGUiVwoIV2FycEZhY3QSOQoLZGVz",
-            "dGluYXRpb24YASABKAsyJC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuV29ybGRQ",
-            "b3NpdGlvbhIQCghucGNfb25seRgCIAEoCCJEChFHZW5lcmljT2JqZWN0RmFj",
-            "dBIUCgxydW50aW1lX3R5cGUYASABKAkSGQoRcXVhbGlmaWVkX2l0ZW1faWQY",
-            "AiABKAkiiwQKDUNoYXJhY3RlckZhY3QSJwoDcmVmGAEgASgLMhouc3RhcmRl",
-            "d192YWxsZXkubWNwLnYxLlJlZhIyCgRraW5kGAIgASgOMiQuc3RhcmRld192",
-            "YWxsZXkubWNwLnYxLkNoYXJhY3RlcktpbmQSDAoEbmFtZRgDIAEoCRIUCgxk",
-            "aXNwbGF5X25hbWUYBCABKAkSNgoIcG9zaXRpb24YBSABKAsyJC5zdGFyZGV3",
-            "X3ZhbGxleS5tY3AudjEuV29ybGRQb3NpdGlvbhIwCgZmYWNpbmcYBiABKA4y",
-            "IC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuRGlyZWN0aW9uEi0KA25wYxgUIAEo",
-            "CzIeLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5OcGNGYWN0SAASNQoHbW9uc3Rl",
-            "chgVIAEoCzIiLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5Nb25zdGVyRmFjdEgA",
-            "EjwKC2Zhcm1fYW5pbWFsGBYgASgLMiUuc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LkZhcm1BbmltYWxGYWN0SAASLQoDcGV0GBcgASgLMh4uc3RhcmRld192YWxs",
-            "ZXkubWNwLnYxLlBldEZhY3RIABIxCgVob3JzZRgYIAEoCzIgLnN0YXJkZXdf",
-            "dmFsbGV5Lm1jcC52MS5Ib3JzZUZhY3RIAEIJCgdkZXRhaWxzIlEKB05wY0Zh",
-            "Y3QSFQoNY2FuX3NvY2lhbGl6ZRgBIAEoCBIZChFmcmllbmRzaGlwX3BvaW50",
-            "cxgCIAEoBRIUCgxoYXNfZGlhbG9ndWUYAyABKAgiSQoLTW9uc3RlckZhY3QS",
-            "DgoGaGVhbHRoGAEgASgFEhIKCm1heF9oZWFsdGgYAiABKAUSFgoOY29udGFj",
-            "dF9kYW1hZ2UYAyABKAUieQoORmFybUFuaW1hbEZhY3QSEwoLYW5pbWFsX3R5",
-            "cGUYASABKAkSFQoNcHJvZHVjZV9yZWFkeRgCIAEoCBIUCgxwZXR0ZWRfdG9k",
-            "YXkYAyABKAgSEgoKZnJpZW5kc2hpcBgEIAEoBRIRCgloYXBwaW5lc3MYBSAB",
-            "KAUiRQoHUGV0RmFjdBIQCghwZXRfdHlwZRgBIAEoCRIUCgxwZXR0ZWRfdG9k",
-            "YXkYAiABKAgSEgoKZnJpZW5kc2hpcBgDIAEoBSIeCglIb3JzZUZhY3QSEQoJ",
-            "aGFzX3JpZGVyGAEgASgIItoBChFJbnZlbnRvcnlTbmFwc2hvdBIaChJpbnZl",
-            "bnRvcnlfcmV2aXNpb24YASABKAkSFgoOY29udGFpbmVyX2tpbmQYAiABKAkS",
-            "NgoNY29udGFpbmVyX3JlZhgDIAEoCzIaLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
-            "MS5SZWZIAIgBARISCgpzbG90X2NvdW50GAQgASgNEjMKBXNsb3RzGAUgAygL",
-            "MiQuc3RhcmRld192YWxsZXkubWNwLnYxLkludmVudG9yeVNsb3RCEAoOX2Nv",
-            "bnRhaW5lcl9yZWYiWwoNSW52ZW50b3J5U2xvdBINCgVpbmRleBgBIAEoDRIy",
-            "CgRpdGVtGAIgASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkl0ZW1GYWN0",
-            "SACIAQFCBwoFX2l0ZW0iggEKG0NyYWZ0aW5nTWF0ZXJpYWxSZXF1aXJlbWVu",
-            "dBIWCg5pbmdyZWRpZW50X2tleRgBIAEoCRIUCgxkaXNwbGF5X25hbWUYAiAB",
-            "KAkSGQoRcmVxdWlyZWRfcXVhbnRpdHkYAyABKA0SGgoSYXZhaWxhYmxlX3F1",
-            "YW50aXR5GAQgASgNIlcKEkNyYWZ0aW5nT3V0cHV0RmFjdBIZChFxdWFsaWZp",
-            "ZWRfaXRlbV9pZBgBIAEoCRIUCgxkaXNwbGF5X25hbWUYAiABKAkSEAoIcXVh",
-            "bnRpdHkYAyABKA0i7AEKEkNyYWZ0aW5nUmVjaXBlRmFjdBISCgpyZWNpcGVf",
-            "a2V5GAEgASgJEhQKDGRpc3BsYXlfbmFtZRgCIAEoCRINCgVrbm93bhgDIAEo",
-            "CBIRCgljcmFmdGFibGUYBCABKAgSRQoJbWF0ZXJpYWxzGAUgAygLMjIuc3Rh",
-            "cmRld192YWxsZXkubWNwLnYxLkNyYWZ0aW5nTWF0ZXJpYWxSZXF1aXJlbWVu",
-            "dBJDChBwb3NzaWJsZV9vdXRwdXRzGAYgAygLMikuc3RhcmRld192YWxsZXku",
-            "bWNwLnYxLkNyYWZ0aW5nT3V0cHV0RmFjdCLBAQoPVWlJbnZlbnRvcnlMaW5r",
-            "EjQKBHNpZGUYASABKA4yJi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVWlJbnZl",
-            "bnRvcnlTaWRlEhoKEmludmVudG9yeV9yZXZpc2lvbhgCIAEoCRISCgpzbG90",
-            "X2NvdW50GAMgASgNEjYKDWNvbnRhaW5lcl9yZWYYBCABKAsyGi5zdGFyZGV3",
-            "X3ZhbGxleS5tY3AudjEuUmVmSACIAQFCEAoOX2NvbnRhaW5lcl9yZWYi6AEK",
-            "ClVpU25hcHNob3QSEwoLdWlfcmV2aXNpb24YASABKAkSEQoJbWVudV9vcGVu",
-            "GAIgASgIEjQKBG1lbnUYAyABKAsyIS5zdGFyZGV3X3ZhbGxleS5tY3AudjEu",
-            "VWlNZW51RmFjdEgAiAEBEjYKCGVsZW1lbnRzGAQgAygLMiQuc3RhcmRld192",
-            "YWxsZXkubWNwLnYxLlVpRWxlbWVudEZhY3QSOwoLaW52ZW50b3JpZXMYBSAD",
-            "KAsyJi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVWlJbnZlbnRvcnlMaW5rQgcK",
-            "BV9tZW51IpsBCgpVaU1lbnVGYWN0EhEKCW1lbnVfdHlwZRgBIAEoCRI3Cglt",
-            "ZW51X2tpbmQYAiABKA4yHy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuTWVudUtp",
-            "bmRIAIgBARINCgV0aXRsZRgDIAEoCRINCgVtb2RhbBgEIAEoCBIVCg1kaWFs",
-            "b2d1ZV90ZXh0GAUgASgJQgwKCl9tZW51X2tpbmQiswUKDVVpRWxlbWVudEZh",
-            "Y3QSJwoDcmVmGAEgASgLMhouc3RhcmRld192YWxsZXkubWNwLnYxLlJlZhIy",
-            "CgRraW5kGAIgASgOMiQuc3RhcmRld192YWxsZXkubWNwLnYxLlVpRWxlbWVu",
-            "dEtpbmQSDQoFbGFiZWwYAyABKAkSDwoHdmlzaWJsZRgEIAEoCBIPCgdlbmFi",
-            "bGVkGAUgASgIEjEKBmNlbnRlchgGIAEoCzIhLnN0YXJkZXdfdmFsbGV5Lm1j",
-            "cC52MS5QaXhlbFBvaW50Eg0KBWluZGV4GAcgASgNEjIKBGl0ZW0YCCABKAsy",
-            "Hy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuSXRlbUZhY3RIAIgBARISCgVwcmlj",
-            "ZRgJIAEoA0gBiAEBEhIKBXN0b2NrGAogASgNSAKIAQESQwoOaW52ZW50b3J5",
-            "X3NpZGUYCyABKA4yJi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVWlJbnZlbnRv",
-            "cnlTaWRlSAOIAQESMQoIaXRlbV9yZWYYDCABKAsyGi5zdGFyZGV3X3ZhbGxl",
-            "eS5tY3AudjEuUmVmSASIAQESTAoTZXF1aXBtZW50X3Nsb3Rfa2luZBgNIAEo",
-            "DjIqLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5VaUVxdWlwbWVudFNsb3RLaW5k",
-            "SAWIAQESRwoPY3JhZnRpbmdfcmVjaXBlGA4gASgLMikuc3RhcmRld192YWxs",
-            "ZXkubWNwLnYxLkNyYWZ0aW5nUmVjaXBlRmFjdEgGiAEBQgcKBV9pdGVtQggK",
-            "Bl9wcmljZUIICgZfc3RvY2tCEQoPX2ludmVudG9yeV9zaWRlQgsKCV9pdGVt",
-            "X3JlZkIWChRfZXF1aXBtZW50X3Nsb3Rfa2luZEISChBfY3JhZnRpbmdfcmVj",
-            "aXBlKpYDCgpFbnRpdHlLaW5kEhsKF0VOVElUWV9LSU5EX1VOU1BFQ0lGSUVE",
-            "EAASFAoQRU5USVRZX0tJTkRfVFJFRRABEhoKFkVOVElUWV9LSU5EX0ZSVUlU",
-            "X1RSRUUQAhIUChBFTlRJVFlfS0lORF9DUk9QEAMSHQoZRU5USVRZX0tJTkRf",
-            "UkVTT1VSQ0VfTk9ERRAEEh4KGkVOVElUWV9LSU5EX1JFU09VUkNFX0NMVU1Q",
-            "EAUSFwoTRU5USVRZX0tJTkRfTUFDSElORRAGEhkKFUVOVElUWV9LSU5EX0NP",
-            "TlRBSU5FUhAHEhMKD0VOVElUWV9LSU5EX0JFRBAIEhkKFUVOVElUWV9LSU5E",
-            "X0ZVUk5JVFVSRRAJEhoKFkVOVElUWV9LSU5EX0xPT1NFX0lURU0QChIUChBF",
-            "TlRJVFlfS0lORF9ET09SEAsSFAoQRU5USVRZX0tJTkRfV0FSUBAMEh4KGkVO",
-            "VElUWV9LSU5EX0dFTkVSSUNfT0JKRUNUEA0SGAoURU5USVRZX0tJTkRfSE9F",
-            "X0RJUlQQDip6ChFDcm9wSGFydmVzdEFjdGlvbhIjCh9DUk9QX0hBUlZFU1Rf",
-            "QUNUSU9OX1VOU1BFQ0lGSUVEEAASIAocQ1JPUF9IQVJWRVNUX0FDVElPTl9J",
-            "TlRFUkFDVBABEh4KGkNST1BfSEFSVkVTVF9BQ1RJT05fU0NZVEhFEAIqtQEK",
-            "DUNoYXJhY3RlcktpbmQSHgoaQ0hBUkFDVEVSX0tJTkRfVU5TUEVDSUZJRUQQ",
-            "ABIWChJDSEFSQUNURVJfS0lORF9OUEMQARIaChZDSEFSQUNURVJfS0lORF9N",
-            "T05TVEVSEAISHgoaQ0hBUkFDVEVSX0tJTkRfRkFSTV9BTklNQUwQAxIWChJD",
-            "SEFSQUNURVJfS0lORF9QRVQQBBIYChRDSEFSQUNURVJfS0lORF9IT1JTRRAF",
-            "KrYCCg1VaUVsZW1lbnRLaW5kEh8KG1VJX0VMRU1FTlRfS0lORF9VTlNQRUNJ",
-            "RklFRBAAEhoKFlVJX0VMRU1FTlRfS0lORF9CVVRUT04QARIXChNVSV9FTEVN",
-            "RU5UX0tJTkRfVEFCEAISGgoWVUlfRUxFTUVOVF9LSU5EX09QVElPThADEh0K",
-            "GVVJX0VMRU1FTlRfS0lORF9JVEVNX1NMT1QQBBIlCiFVSV9FTEVNRU5UX0tJ",
-            "TkRfRElBTE9HVUVfUkVTUE9OU0UQBRIkCiBVSV9FTEVNRU5UX0tJTkRfRElB",
-            "TE9HVUVfQURWQU5DRRAGEiIKHlVJX0VMRU1FTlRfS0lORF9FUVVJUE1FTlRf",
-            "U0xPVBAHEiMKH1VJX0VMRU1FTlRfS0lORF9DUkFGVElOR19SRUNJUEUQCCpz",
-            "Cg9VaUludmVudG9yeVNpZGUSIQodVUlfSU5WRU5UT1JZX1NJREVfVU5TUEVD",
-            "SUZJRUQQABIcChhVSV9JTlZFTlRPUllfU0lERV9QTEFZRVIQARIfChtVSV9J",
-            "TlZFTlRPUllfU0lERV9DT05UQUlORVIQAiq0AgoTVWlFcXVpcG1lbnRTbG90",
-            "S2luZBImCiJVSV9FUVVJUE1FTlRfU0xPVF9LSU5EX1VOU1BFQ0lGSUVEEAAS",
-            "HgoaVUlfRVFVSVBNRU5UX1NMT1RfS0lORF9IQVQQARIkCiBVSV9FUVVJUE1F",
-            "TlRfU0xPVF9LSU5EX0xFRlRfUklORxACEiUKIVVJX0VRVUlQTUVOVF9TTE9U",
-            "X0tJTkRfUklHSFRfUklORxADEiAKHFVJX0VRVUlQTUVOVF9TTE9UX0tJTkRf",
-            "Qk9PVFMQBBIgChxVSV9FUVVJUE1FTlRfU0xPVF9LSU5EX1NISVJUEAUSIAoc",
-            "VUlfRVFVSVBNRU5UX1NMT1RfS0lORF9QQU5UUxAGEiIKHlVJX0VRVUlQTUVO",
-            "VF9TTE9UX0tJTkRfVFJJTktFVBAHQh+qAhxTdGFyZGV3VmFsbGV5TWNwLlBy",
-            "b3RvY29sLlYxYgZwcm90bzM="));
+            "dGFyZGV3X3ZhbGxleS5tY3AudjEuVWlTdW1tYXJ5EjgKCmRhaWx5X2x1Y2sY",
+            "BiABKAsyJC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuRGFpbHlMdWNrRmFjdBJC",
+            "Cg5xdWVlbl9vZl9zYXVjZRgHIAEoCzIqLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
+            "MS5UdkNvb2tpbmdSZWNpcGVGYWN0IvkBCgpQbGF5ZXJGYWN0EjYKCHBvc2l0",
+            "aW9uGAEgASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYxLldvcmxkUG9zaXRp",
+            "b24SMAoGZmFjaW5nGAIgASgOMiAuc3RhcmRld192YWxsZXkubWNwLnYxLkRp",
+            "cmVjdGlvbhINCgVtb25leRgDIAEoAxIOCgZlbmVyZ3kYBCABKAESEgoKbWF4",
+            "X2VuZXJneRgFIAEoARIOCgZoZWFsdGgYBiABKAUSEgoKbWF4X2hlYWx0aBgH",
+            "IAEoBRIQCghjYW5fbW92ZRgIIAEoCBIYChBob21lX2xvY2F0aW9uX2lkGAkg",
+            "ASgJItQBCgtXZWF0aGVyRmFjdBIPCgdyYWluaW5nGAEgASgIEhEKCWxpZ2h0",
+            "bmluZxgCIAEoCBIPCgdzbm93aW5nGAMgASgIEhIKCmdyZWVuX3JhaW4YBCAB",
+            "KAgSFAoMZmVzdGl2YWxfZGF5GAUgASgIEjAKBGtpbmQYBiABKA4yIi5zdGFy",
+            "ZGV3X3ZhbGxleS5tY3AudjEuV2VhdGhlcktpbmQSNAoIdG9tb3Jyb3cYByAB",
+            "KA4yIi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuV2VhdGhlcktpbmQiMQoJVWlT",
+            "dW1tYXJ5EhEKCW1lbnVfb3BlbhgBIAEoCBIRCgltZW51X3R5cGUYAiABKAki",
+            "UgoNRGFpbHlMdWNrRmFjdBINCgV2YWx1ZRgBIAEoARIyCgR0aWVyGAIgASgO",
+            "MiQuc3RhcmRld192YWxsZXkubWNwLnYxLkRhaWx5THVja1RpZXIiiwEKE1R2",
+            "Q29va2luZ1JlY2lwZUZhY3QSEQoJYXZhaWxhYmxlGAEgASgIEg0KBXJlcnVu",
+            "GAIgASgIEhIKCnJlY2lwZV9rZXkYAyABKAkSFAoMZGlzcGxheV9uYW1lGAQg",
+            "ASgJEhUKDWFscmVhZHlfa25vd24YBSABKAgSEQoJbGVhcm5hYmxlGAYgASgI",
+            "IsYCCg1Xb3JsZFNuYXBzaG90EhYKDndvcmxkX3JldmlzaW9uGAEgASgJEi0K",
+            "BGFyZWEYAiABKAsyHy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVGlsZUFyZWES",
+            "EAoIb3V0ZG9vcnMYAyABKAgSLgoFdGlsZXMYBCADKAsyHy5zdGFyZGV3X3Zh",
+            "bGxleS5tY3AudjEuVGlsZUZhY3QSOAoIZW50aXRpZXMYBSADKAsyJi5zdGFy",
+            "ZGV3X3ZhbGxleS5tY3AudjEuV29ybGRFbnRpdHlGYWN0EjgKCmNoYXJhY3Rl",
+            "cnMYBiADKAsyJC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQ2hhcmFjdGVyRmFj",
+            "dBIaChJlbnRpdGllc190cnVuY2F0ZWQYByABKAgSHAoUY2hhcmFjdGVyc190",
+            "cnVuY2F0ZWQYCCABKAginQEKCFRpbGVGYWN0EjYKCHBvc2l0aW9uGAEgASgL",
+            "MiQuc3RhcmRld192YWxsZXkubWNwLnYxLldvcmxkUG9zaXRpb24SEAoIcGFz",
+            "c2FibGUYAiABKAgSEAoIb2NjdXBpZWQYAyABKAgSEAoIZGlnZ2FibGUYBCAB",
+            "KAgSDQoFd2F0ZXIYBSABKAgSFAoMdGVycmFpbl9raW5kGAYgASgJIoYICg9X",
+            "b3JsZEVudGl0eUZhY3QSJwoDcmVmGAEgASgLMhouc3RhcmRld192YWxsZXku",
+            "bWNwLnYxLlJlZhIvCgRraW5kGAIgASgOMiEuc3RhcmRld192YWxsZXkubWNw",
+            "LnYxLkVudGl0eUtpbmQSNgoIcG9zaXRpb24YAyABKAsyJC5zdGFyZGV3X3Zh",
+            "bGxleS5tY3AudjEuV29ybGRQb3NpdGlvbhIUCgxkaXNwbGF5X25hbWUYBCAB",
+            "KAkSFwoKYWN0aW9uYWJsZRgFIAEoCEgBiAEBEi8KBHRyZWUYFCABKAsyHy5z",
+            "dGFyZGV3X3ZhbGxleS5tY3AudjEuVHJlZUZhY3RIABI6CgpmcnVpdF90cmVl",
+            "GBUgASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYxLkZydWl0VHJlZUZhY3RI",
+            "ABIvCgRjcm9wGBYgASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkNyb3BG",
+            "YWN0SAASQAoNcmVzb3VyY2Vfbm9kZRgXIAEoCzInLnN0YXJkZXdfdmFsbGV5",
+            "Lm1jcC52MS5SZXNvdXJjZU5vZGVGYWN0SAASQgoOcmVzb3VyY2VfY2x1bXAY",
+            "GCABKAsyKC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUmVzb3VyY2VDbHVtcEZh",
+            "Y3RIABI1CgdtYWNoaW5lGBkgASgLMiIuc3RhcmRld192YWxsZXkubWNwLnYx",
+            "Lk1hY2hpbmVGYWN0SAASOQoJY29udGFpbmVyGBogASgLMiQuc3RhcmRld192",
+            "YWxsZXkubWNwLnYxLkNvbnRhaW5lckZhY3RIABItCgNiZWQYGyABKAsyHi5z",
+            "dGFyZGV3X3ZhbGxleS5tY3AudjEuQmVkRmFjdEgAEjkKCWZ1cm5pdHVyZRgc",
+            "IAEoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5GdXJuaXR1cmVGYWN0SAAS",
+            "OgoKbG9vc2VfaXRlbRgdIAEoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5M",
+            "b29zZUl0ZW1GYWN0SAASLwoEZG9vchgeIAEoCzIfLnN0YXJkZXdfdmFsbGV5",
+            "Lm1jcC52MS5Eb29yRmFjdEgAEi8KBHdhcnAYHyABKAsyHy5zdGFyZGV3X3Zh",
+            "bGxleS5tY3AudjEuV2FycEZhY3RIABJCCg5nZW5lcmljX29iamVjdBggIAEo",
+            "CzIoLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5HZW5lcmljT2JqZWN0RmFjdEgA",
+            "EjYKCGhvZV9kaXJ0GCEgASgLMiIuc3RhcmRld192YWxsZXkubWNwLnYxLkhv",
+            "ZURpcnRGYWN0SABCCQoHZGV0YWlsc0INCgtfYWN0aW9uYWJsZSJeCghUcmVl",
+            "RmFjdBIUCgxncm93dGhfc3RhZ2UYASABKA0SDQoFc3R1bXAYAiABKAgSDgoG",
+            "dGFwcGVkGAMgASgIEg0KBW1vc3N5GAQgASgIEg4KBmhlYWx0aBgFIAEoASJ7",
+            "Cg1GcnVpdFRyZWVGYWN0EhUKDWZydWl0X2l0ZW1faWQYASABKAkSFAoMZ3Jv",
+            "d3RoX3N0YWdlGAIgASgNEhkKEWRheXNfdW50aWxfbWF0dXJlGAMgASgNEhMK",
+            "C2ZydWl0X2NvdW50GAQgASgNEg0KBXN0dW1wGAUgASgIItcBCghDcm9wRmFj",
+            "dBIPCgdjcm9wX2lkGAEgASgJEhcKD2hhcnZlc3RfaXRlbV9pZBgCIAEoCRIU",
+            "Cgxncm93dGhfcGhhc2UYAyABKA0SGQoRcmVhZHlfZm9yX2hhcnZlc3QYBCAB",
+            "KAgSDwoHd2F0ZXJlZBgFIAEoCBIMCgRkZWFkGAYgASgIEg8KB3JlZ3Jvd3MY",
+            "ByABKAgSQAoOaGFydmVzdF9hY3Rpb24YCCABKA4yKC5zdGFyZGV3X3ZhbGxl",
+            "eS5tY3AudjEuQ3JvcEhhcnZlc3RBY3Rpb24iHgoLSG9lRGlydEZhY3QSDwoH",
+            "d2F0ZXJlZBgBIAEoCCJVChBSZXNvdXJjZU5vZGVGYWN0EhEKCW5vZGVfa2lu",
+            "ZBgBIAEoCRIXCg9oaXRzX3RvX2Rlc3Ryb3kYAiABKA0SFQoNcmVxdWlyZWRf",
+            "dG9vbBgDIAEoCSKKAQoRUmVzb3VyY2VDbHVtcEZhY3QSEgoKY2x1bXBfa2lu",
+            "ZBgBIAEoCRINCgV3aWR0aBgCIAEoDRIOCgZoZWlnaHQYAyABKA0SDgoGaGVh",
+            "bHRoGAQgASgNEhUKDXJlcXVpcmVkX3Rvb2wYBSABKAkSGwoTcmVxdWlyZWRf",
+            "dG9vbF9sZXZlbBgGIAEoDSLPAgoISXRlbUZhY3QSLAoDcmVmGAEgASgLMhou",
+            "c3RhcmRld192YWxsZXkubWNwLnYxLlJlZkgAiAEBEhkKEXF1YWxpZmllZF9p",
+            "dGVtX2lkGAIgASgJEhQKDGRpc3BsYXlfbmFtZRgDIAEoCRINCgVzdGFjaxgE",
+            "IAEoDRIPCgdxdWFsaXR5GAUgASgNEhAKCGNhdGVnb3J5GAYgASgJEgwKBHRv",
+            "b2wYByABKAgSEgoKdG9vbF9sZXZlbBgIIAEoDRIcCg93YXRlcl9yZW1haW5p",
+            "bmcYCSABKA1IAYgBARIbCg53YXRlcl9jYXBhY2l0eRgKIAEoDUgCiAEBEhcK",
+            "CmJvdHRvbWxlc3MYCyABKAhIA4gBAUIGCgRfcmVmQhIKEF93YXRlcl9yZW1h",
+            "aW5pbmdCEQoPX3dhdGVyX2NhcGFjaXR5Qg0KC19ib3R0b21sZXNzIqcBCgtN",
+            "YWNoaW5lRmFjdBIZChFxdWFsaWZpZWRfaXRlbV9pZBgBIAEoCRIZChFyZWFk",
+            "eV9mb3JfaGFydmVzdBgCIAEoCBIbChNtaW51dGVzX3VudGlsX3JlYWR5GAMg",
+            "ASgFEjcKCWhlbGRfaXRlbRgEIAEoCzIfLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
+            "MS5JdGVtRmFjdEgAiAEBQgwKCl9oZWxkX2l0ZW0iTQoNQ29udGFpbmVyRmFj",
+            "dBIWCg5jb250YWluZXJfa2luZBgBIAEoCRIQCghjYXBhY2l0eRgCIAEoDRIS",
+            "CgppdGVtX2NvdW50GAMgASgNIpgBCgdCZWRGYWN0EhEKCWNhbl9zbGVlcBgB",
+            "IAEoCBI8Cg5vY2N1cGllZF90aWxlcxgCIAMoCzIkLnN0YXJkZXdfdmFsbGV5",
+            "Lm1jcC52MS5Xb3JsZFBvc2l0aW9uEjwKDnNsZWVwX3Bvc2l0aW9uGAMgASgL",
+            "MiQuc3RhcmRld192YWxsZXkubWNwLnYxLldvcmxkUG9zaXRpb24idwoNRnVy",
+            "bml0dXJlRmFjdBIWCg5mdXJuaXR1cmVfa2luZBgBIAEoCRIQCghyb3RhdGlv",
+            "bhgCIAEoDRI8Cg5vY2N1cGllZF90aWxlcxgDIAMoCzIkLnN0YXJkZXdfdmFs",
+            "bGV5Lm1jcC52MS5Xb3JsZFBvc2l0aW9uIlMKDUxvb3NlSXRlbUZhY3QSLQoE",
+            "aXRlbRgBIAEoCzIfLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5JdGVtRmFjdBIT",
+            "CgtjYW5fcGlja191cBgCIAEoCCKSAQoIRG9vckZhY3QSEwoGbG9ja2VkGAEg",
+            "ASgISACIAQESGgoSdGFyZ2V0X2xvY2F0aW9uX2lkGAIgASgJEjoKC3Rhcmdl",
+            "dF90aWxlGAMgASgLMiAuc3RhcmRld192YWxsZXkubWNwLnYxLlRpbGVQb2lu",
+            "dEgBiAEBQgkKB19sb2NrZWRCDgoMX3RhcmdldF90aWxlIlcKCFdhcnBGYWN0",
+            "EjkKC2Rlc3RpbmF0aW9uGAEgASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYx",
+            "LldvcmxkUG9zaXRpb24SEAoIbnBjX29ubHkYAiABKAgiRAoRR2VuZXJpY09i",
+            "amVjdEZhY3QSFAoMcnVudGltZV90eXBlGAEgASgJEhkKEXF1YWxpZmllZF9p",
+            "dGVtX2lkGAIgASgJIosECg1DaGFyYWN0ZXJGYWN0EicKA3JlZhgBIAEoCzIa",
+            "LnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWYSMgoEa2luZBgCIAEoDjIkLnN0",
+            "YXJkZXdfdmFsbGV5Lm1jcC52MS5DaGFyYWN0ZXJLaW5kEgwKBG5hbWUYAyAB",
+            "KAkSFAoMZGlzcGxheV9uYW1lGAQgASgJEjYKCHBvc2l0aW9uGAUgASgLMiQu",
+            "c3RhcmRld192YWxsZXkubWNwLnYxLldvcmxkUG9zaXRpb24SMAoGZmFjaW5n",
+            "GAYgASgOMiAuc3RhcmRld192YWxsZXkubWNwLnYxLkRpcmVjdGlvbhItCgNu",
+            "cGMYFCABKAsyHi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuTnBjRmFjdEgAEjUK",
+            "B21vbnN0ZXIYFSABKAsyIi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuTW9uc3Rl",
+            "ckZhY3RIABI8CgtmYXJtX2FuaW1hbBgWIAEoCzIlLnN0YXJkZXdfdmFsbGV5",
+            "Lm1jcC52MS5GYXJtQW5pbWFsRmFjdEgAEi0KA3BldBgXIAEoCzIeLnN0YXJk",
+            "ZXdfdmFsbGV5Lm1jcC52MS5QZXRGYWN0SAASMQoFaG9yc2UYGCABKAsyIC5z",
+            "dGFyZGV3X3ZhbGxleS5tY3AudjEuSG9yc2VGYWN0SABCCQoHZGV0YWlscyJR",
+            "CgdOcGNGYWN0EhUKDWNhbl9zb2NpYWxpemUYASABKAgSGQoRZnJpZW5kc2hp",
+            "cF9wb2ludHMYAiABKAUSFAoMaGFzX2RpYWxvZ3VlGAMgASgIIkkKC01vbnN0",
+            "ZXJGYWN0Eg4KBmhlYWx0aBgBIAEoBRISCgptYXhfaGVhbHRoGAIgASgFEhYK",
+            "DmNvbnRhY3RfZGFtYWdlGAMgASgFInkKDkZhcm1BbmltYWxGYWN0EhMKC2Fu",
+            "aW1hbF90eXBlGAEgASgJEhUKDXByb2R1Y2VfcmVhZHkYAiABKAgSFAoMcGV0",
+            "dGVkX3RvZGF5GAMgASgIEhIKCmZyaWVuZHNoaXAYBCABKAUSEQoJaGFwcGlu",
+            "ZXNzGAUgASgFIkUKB1BldEZhY3QSEAoIcGV0X3R5cGUYASABKAkSFAoMcGV0",
+            "dGVkX3RvZGF5GAIgASgIEhIKCmZyaWVuZHNoaXAYAyABKAUiHgoJSG9yc2VG",
+            "YWN0EhEKCWhhc19yaWRlchgBIAEoCCLaAQoRSW52ZW50b3J5U25hcHNob3QS",
+            "GgoSaW52ZW50b3J5X3JldmlzaW9uGAEgASgJEhYKDmNvbnRhaW5lcl9raW5k",
+            "GAIgASgJEjYKDWNvbnRhaW5lcl9yZWYYAyABKAsyGi5zdGFyZGV3X3ZhbGxl",
+            "eS5tY3AudjEuUmVmSACIAQESEgoKc2xvdF9jb3VudBgEIAEoDRIzCgVzbG90",
+            "cxgFIAMoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5JbnZlbnRvcnlTbG90",
+            "QhAKDl9jb250YWluZXJfcmVmIlsKDUludmVudG9yeVNsb3QSDQoFaW5kZXgY",
+            "ASABKA0SMgoEaXRlbRgCIAEoCzIfLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5J",
+            "dGVtRmFjdEgAiAEBQgcKBV9pdGVtIoIBChtDcmFmdGluZ01hdGVyaWFsUmVx",
+            "dWlyZW1lbnQSFgoOaW5ncmVkaWVudF9rZXkYASABKAkSFAoMZGlzcGxheV9u",
+            "YW1lGAIgASgJEhkKEXJlcXVpcmVkX3F1YW50aXR5GAMgASgNEhoKEmF2YWls",
+            "YWJsZV9xdWFudGl0eRgEIAEoDSJXChJDcmFmdGluZ091dHB1dEZhY3QSGQoR",
+            "cXVhbGlmaWVkX2l0ZW1faWQYASABKAkSFAoMZGlzcGxheV9uYW1lGAIgASgJ",
+            "EhAKCHF1YW50aXR5GAMgASgNIuwBChJDcmFmdGluZ1JlY2lwZUZhY3QSEgoK",
+            "cmVjaXBlX2tleRgBIAEoCRIUCgxkaXNwbGF5X25hbWUYAiABKAkSDQoFa25v",
+            "d24YAyABKAgSEQoJY3JhZnRhYmxlGAQgASgIEkUKCW1hdGVyaWFscxgFIAMo",
+            "CzIyLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5DcmFmdGluZ01hdGVyaWFsUmVx",
+            "dWlyZW1lbnQSQwoQcG9zc2libGVfb3V0cHV0cxgGIAMoCzIpLnN0YXJkZXdf",
+            "dmFsbGV5Lm1jcC52MS5DcmFmdGluZ091dHB1dEZhY3QiwQEKD1VpSW52ZW50",
+            "b3J5TGluaxI0CgRzaWRlGAEgASgOMiYuc3RhcmRld192YWxsZXkubWNwLnYx",
+            "LlVpSW52ZW50b3J5U2lkZRIaChJpbnZlbnRvcnlfcmV2aXNpb24YAiABKAkS",
+            "EgoKc2xvdF9jb3VudBgDIAEoDRI2Cg1jb250YWluZXJfcmVmGAQgASgLMhou",
+            "c3RhcmRld192YWxsZXkubWNwLnYxLlJlZkgAiAEBQhAKDl9jb250YWluZXJf",
+            "cmVmIugBCgpVaVNuYXBzaG90EhMKC3VpX3JldmlzaW9uGAEgASgJEhEKCW1l",
+            "bnVfb3BlbhgCIAEoCBI0CgRtZW51GAMgASgLMiEuc3RhcmRld192YWxsZXku",
+            "bWNwLnYxLlVpTWVudUZhY3RIAIgBARI2CghlbGVtZW50cxgEIAMoCzIkLnN0",
+            "YXJkZXdfdmFsbGV5Lm1jcC52MS5VaUVsZW1lbnRGYWN0EjsKC2ludmVudG9y",
+            "aWVzGAUgAygLMiYuc3RhcmRld192YWxsZXkubWNwLnYxLlVpSW52ZW50b3J5",
+            "TGlua0IHCgVfbWVudSKbAQoKVWlNZW51RmFjdBIRCgltZW51X3R5cGUYASAB",
+            "KAkSNwoJbWVudV9raW5kGAIgASgOMh8uc3RhcmRld192YWxsZXkubWNwLnYx",
+            "Lk1lbnVLaW5kSACIAQESDQoFdGl0bGUYAyABKAkSDQoFbW9kYWwYBCABKAgS",
+            "FQoNZGlhbG9ndWVfdGV4dBgFIAEoCUIMCgpfbWVudV9raW5kIrMFCg1VaUVs",
+            "ZW1lbnRGYWN0EicKA3JlZhgBIAEoCzIaLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
+            "MS5SZWYSMgoEa2luZBgCIAEoDjIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5V",
+            "aUVsZW1lbnRLaW5kEg0KBWxhYmVsGAMgASgJEg8KB3Zpc2libGUYBCABKAgS",
+            "DwoHZW5hYmxlZBgFIAEoCBIxCgZjZW50ZXIYBiABKAsyIS5zdGFyZGV3X3Zh",
+            "bGxleS5tY3AudjEuUGl4ZWxQb2ludBINCgVpbmRleBgHIAEoDRIyCgRpdGVt",
+            "GAggASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkl0ZW1GYWN0SACIAQES",
+            "EgoFcHJpY2UYCSABKANIAYgBARISCgVzdG9jaxgKIAEoDUgCiAEBEkMKDmlu",
+            "dmVudG9yeV9zaWRlGAsgASgOMiYuc3RhcmRld192YWxsZXkubWNwLnYxLlVp",
+            "SW52ZW50b3J5U2lkZUgDiAEBEjEKCGl0ZW1fcmVmGAwgASgLMhouc3RhcmRl",
+            "d192YWxsZXkubWNwLnYxLlJlZkgEiAEBEkwKE2VxdWlwbWVudF9zbG90X2tp",
+            "bmQYDSABKA4yKi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVWlFcXVpcG1lbnRT",
+            "bG90S2luZEgFiAEBEkcKD2NyYWZ0aW5nX3JlY2lwZRgOIAEoCzIpLnN0YXJk",
+            "ZXdfdmFsbGV5Lm1jcC52MS5DcmFmdGluZ1JlY2lwZUZhY3RIBogBAUIHCgVf",
+            "aXRlbUIICgZfcHJpY2VCCAoGX3N0b2NrQhEKD19pbnZlbnRvcnlfc2lkZUIL",
+            "CglfaXRlbV9yZWZCFgoUX2VxdWlwbWVudF9zbG90X2tpbmRCEgoQX2NyYWZ0",
+            "aW5nX3JlY2lwZSrwAQoLV2VhdGhlcktpbmQSHAoYV0VBVEhFUl9LSU5EX1VO",
+            "U1BFQ0lGSUVEEAASFAoQV0VBVEhFUl9LSU5EX1NVThABEhUKEVdFQVRIRVJf",
+            "S0lORF9SQUlOEAISFgoSV0VBVEhFUl9LSU5EX1NUT1JNEAMSFQoRV0VBVEhF",
+            "Ul9LSU5EX1NOT1cQBBIVChFXRUFUSEVSX0tJTkRfV0lORBAFEhsKF1dFQVRI",
+            "RVJfS0lORF9HUkVFTl9SQUlOEAYSGQoVV0VBVEhFUl9LSU5EX0ZFU1RJVkFM",
+            "EAcSGAoUV0VBVEhFUl9LSU5EX1dFRERJTkcQCCrHAQoNRGFpbHlMdWNrVGll",
+            "chIfChtEQUlMWV9MVUNLX1RJRVJfVU5TUEVDSUZJRUQQABIgChxEQUlMWV9M",
+            "VUNLX1RJRVJfVkVSWV9VTkxVQ0tZEAESGwoXREFJTFlfTFVDS19USUVSX1VO",
+            "TFVDS1kQAhIbChdEQUlMWV9MVUNLX1RJRVJfTkVVVFJBTBADEhkKFURBSUxZ",
+            "X0xVQ0tfVElFUl9MVUNLWRAEEh4KGkRBSUxZX0xVQ0tfVElFUl9WRVJZX0xV",
+            "Q0tZEAUqlgMKCkVudGl0eUtpbmQSGwoXRU5USVRZX0tJTkRfVU5TUEVDSUZJ",
+            "RUQQABIUChBFTlRJVFlfS0lORF9UUkVFEAESGgoWRU5USVRZX0tJTkRfRlJV",
+            "SVRfVFJFRRACEhQKEEVOVElUWV9LSU5EX0NST1AQAxIdChlFTlRJVFlfS0lO",
+            "RF9SRVNPVVJDRV9OT0RFEAQSHgoaRU5USVRZX0tJTkRfUkVTT1VSQ0VfQ0xV",
+            "TVAQBRIXChNFTlRJVFlfS0lORF9NQUNISU5FEAYSGQoVRU5USVRZX0tJTkRf",
+            "Q09OVEFJTkVSEAcSEwoPRU5USVRZX0tJTkRfQkVEEAgSGQoVRU5USVRZX0tJ",
+            "TkRfRlVSTklUVVJFEAkSGgoWRU5USVRZX0tJTkRfTE9PU0VfSVRFTRAKEhQK",
+            "EEVOVElUWV9LSU5EX0RPT1IQCxIUChBFTlRJVFlfS0lORF9XQVJQEAwSHgoa",
+            "RU5USVRZX0tJTkRfR0VORVJJQ19PQkpFQ1QQDRIYChRFTlRJVFlfS0lORF9I",
+            "T0VfRElSVBAOKnoKEUNyb3BIYXJ2ZXN0QWN0aW9uEiMKH0NST1BfSEFSVkVT",
+            "VF9BQ1RJT05fVU5TUEVDSUZJRUQQABIgChxDUk9QX0hBUlZFU1RfQUNUSU9O",
+            "X0lOVEVSQUNUEAESHgoaQ1JPUF9IQVJWRVNUX0FDVElPTl9TQ1lUSEUQAiq1",
+            "AQoNQ2hhcmFjdGVyS2luZBIeChpDSEFSQUNURVJfS0lORF9VTlNQRUNJRklF",
+            "RBAAEhYKEkNIQVJBQ1RFUl9LSU5EX05QQxABEhoKFkNIQVJBQ1RFUl9LSU5E",
+            "X01PTlNURVIQAhIeChpDSEFSQUNURVJfS0lORF9GQVJNX0FOSU1BTBADEhYK",
+            "EkNIQVJBQ1RFUl9LSU5EX1BFVBAEEhgKFENIQVJBQ1RFUl9LSU5EX0hPUlNF",
+            "EAUqtgIKDVVpRWxlbWVudEtpbmQSHwobVUlfRUxFTUVOVF9LSU5EX1VOU1BF",
+            "Q0lGSUVEEAASGgoWVUlfRUxFTUVOVF9LSU5EX0JVVFRPThABEhcKE1VJX0VM",
+            "RU1FTlRfS0lORF9UQUIQAhIaChZVSV9FTEVNRU5UX0tJTkRfT1BUSU9OEAMS",
+            "HQoZVUlfRUxFTUVOVF9LSU5EX0lURU1fU0xPVBAEEiUKIVVJX0VMRU1FTlRf",
+            "S0lORF9ESUFMT0dVRV9SRVNQT05TRRAFEiQKIFVJX0VMRU1FTlRfS0lORF9E",
+            "SUFMT0dVRV9BRFZBTkNFEAYSIgoeVUlfRUxFTUVOVF9LSU5EX0VRVUlQTUVO",
+            "VF9TTE9UEAcSIwofVUlfRUxFTUVOVF9LSU5EX0NSQUZUSU5HX1JFQ0lQRRAI",
+            "KnMKD1VpSW52ZW50b3J5U2lkZRIhCh1VSV9JTlZFTlRPUllfU0lERV9VTlNQ",
+            "RUNJRklFRBAAEhwKGFVJX0lOVkVOVE9SWV9TSURFX1BMQVlFUhABEh8KG1VJ",
+            "X0lOVkVOVE9SWV9TSURFX0NPTlRBSU5FUhACKrQCChNVaUVxdWlwbWVudFNs",
+            "b3RLaW5kEiYKIlVJX0VRVUlQTUVOVF9TTE9UX0tJTkRfVU5TUEVDSUZJRUQQ",
+            "ABIeChpVSV9FUVVJUE1FTlRfU0xPVF9LSU5EX0hBVBABEiQKIFVJX0VRVUlQ",
+            "TUVOVF9TTE9UX0tJTkRfTEVGVF9SSU5HEAISJQohVUlfRVFVSVBNRU5UX1NM",
+            "T1RfS0lORF9SSUdIVF9SSU5HEAMSIAocVUlfRVFVSVBNRU5UX1NMT1RfS0lO",
+            "RF9CT09UUxAEEiAKHFVJX0VRVUlQTUVOVF9TTE9UX0tJTkRfU0hJUlQQBRIg",
+            "ChxVSV9FUVVJUE1FTlRfU0xPVF9LSU5EX1BBTlRTEAYSIgoeVUlfRVFVSVBN",
+            "RU5UX1NMT1RfS0lORF9UUklOS0VUEAdCH6oCHFN0YXJkZXdWYWxsZXlNY3Au",
+            "UHJvdG9jb2wuVjFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::StardewValleyMcp.Protocol.V1.CommonReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.RefsReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.EntityKind), typeof(global::StardewValleyMcp.Protocol.V1.CropHarvestAction), typeof(global::StardewValleyMcp.Protocol.V1.CharacterKind), typeof(global::StardewValleyMcp.Protocol.V1.UiElementKind), typeof(global::StardewValleyMcp.Protocol.V1.UiInventorySide), typeof(global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.RuntimeSnapshot), global::StardewValleyMcp.Protocol.V1.RuntimeSnapshot.Parser, new[]{ "Date", "TimeOfDay", "Player", "Weather", "Ui" }, null, null, null, null),
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.WeatherKind), typeof(global::StardewValleyMcp.Protocol.V1.DailyLuckTier), typeof(global::StardewValleyMcp.Protocol.V1.EntityKind), typeof(global::StardewValleyMcp.Protocol.V1.CropHarvestAction), typeof(global::StardewValleyMcp.Protocol.V1.CharacterKind), typeof(global::StardewValleyMcp.Protocol.V1.UiElementKind), typeof(global::StardewValleyMcp.Protocol.V1.UiInventorySide), typeof(global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind), }, null, new pbr::GeneratedClrTypeInfo[] {
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.RuntimeSnapshot), global::StardewValleyMcp.Protocol.V1.RuntimeSnapshot.Parser, new[]{ "Date", "TimeOfDay", "Player", "Weather", "Ui", "DailyLuck", "QueenOfSauce" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.PlayerFact), global::StardewValleyMcp.Protocol.V1.PlayerFact.Parser, new[]{ "Position", "Facing", "Money", "Energy", "MaxEnergy", "Health", "MaxHealth", "CanMove", "HomeLocationId" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.WeatherFact), global::StardewValleyMcp.Protocol.V1.WeatherFact.Parser, new[]{ "Raining", "Lightning", "Snowing", "GreenRain", "FestivalDay" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.WeatherFact), global::StardewValleyMcp.Protocol.V1.WeatherFact.Parser, new[]{ "Raining", "Lightning", "Snowing", "GreenRain", "FestivalDay", "Kind", "Tomorrow" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.UiSummary), global::StardewValleyMcp.Protocol.V1.UiSummary.Parser, new[]{ "MenuOpen", "MenuType" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.DailyLuckFact), global::StardewValleyMcp.Protocol.V1.DailyLuckFact.Parser, new[]{ "Value", "Tier" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.TvCookingRecipeFact), global::StardewValleyMcp.Protocol.V1.TvCookingRecipeFact.Parser, new[]{ "Available", "Rerun", "RecipeKey", "DisplayName", "AlreadyKnown", "Learnable" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.WorldSnapshot), global::StardewValleyMcp.Protocol.V1.WorldSnapshot.Parser, new[]{ "WorldRevision", "Area", "Outdoors", "Tiles", "Entities", "Characters", "EntitiesTruncated", "CharactersTruncated" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.TileFact), global::StardewValleyMcp.Protocol.V1.TileFact.Parser, new[]{ "Position", "Passable", "Occupied", "Diggable", "Water", "TerrainKind" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.WorldEntityFact), global::StardewValleyMcp.Protocol.V1.WorldEntityFact.Parser, new[]{ "Ref", "Kind", "Position", "DisplayName", "Actionable", "Tree", "FruitTree", "Crop", "ResourceNode", "ResourceClump", "Machine", "Container", "Bed", "Furniture", "LooseItem", "Door", "Warp", "GenericObject", "HoeDirt" }, new[]{ "Details", "Actionable" }, null, null, null),
@@ -263,6 +285,27 @@ namespace StardewValleyMcp.Protocol.V1 {
 
   }
   #region Enums
+  public enum WeatherKind {
+    [pbr::OriginalName("WEATHER_KIND_UNSPECIFIED")] Unspecified = 0,
+    [pbr::OriginalName("WEATHER_KIND_SUN")] Sun = 1,
+    [pbr::OriginalName("WEATHER_KIND_RAIN")] Rain = 2,
+    [pbr::OriginalName("WEATHER_KIND_STORM")] Storm = 3,
+    [pbr::OriginalName("WEATHER_KIND_SNOW")] Snow = 4,
+    [pbr::OriginalName("WEATHER_KIND_WIND")] Wind = 5,
+    [pbr::OriginalName("WEATHER_KIND_GREEN_RAIN")] GreenRain = 6,
+    [pbr::OriginalName("WEATHER_KIND_FESTIVAL")] Festival = 7,
+    [pbr::OriginalName("WEATHER_KIND_WEDDING")] Wedding = 8,
+  }
+
+  public enum DailyLuckTier {
+    [pbr::OriginalName("DAILY_LUCK_TIER_UNSPECIFIED")] Unspecified = 0,
+    [pbr::OriginalName("DAILY_LUCK_TIER_VERY_UNLUCKY")] VeryUnlucky = 1,
+    [pbr::OriginalName("DAILY_LUCK_TIER_UNLUCKY")] Unlucky = 2,
+    [pbr::OriginalName("DAILY_LUCK_TIER_NEUTRAL")] Neutral = 3,
+    [pbr::OriginalName("DAILY_LUCK_TIER_LUCKY")] Lucky = 4,
+    [pbr::OriginalName("DAILY_LUCK_TIER_VERY_LUCKY")] VeryLucky = 5,
+  }
+
   public enum EntityKind {
     [pbr::OriginalName("ENTITY_KIND_UNSPECIFIED")] Unspecified = 0,
     [pbr::OriginalName("ENTITY_KIND_TREE")] Tree = 1,
@@ -368,6 +411,8 @@ namespace StardewValleyMcp.Protocol.V1 {
       player_ = other.player_ != null ? other.player_.Clone() : null;
       weather_ = other.weather_ != null ? other.weather_.Clone() : null;
       ui_ = other.ui_ != null ? other.ui_.Clone() : null;
+      dailyLuck_ = other.dailyLuck_ != null ? other.dailyLuck_.Clone() : null;
+      queenOfSauce_ = other.queenOfSauce_ != null ? other.queenOfSauce_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -437,6 +482,30 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "daily_luck" field.</summary>
+    public const int DailyLuckFieldNumber = 6;
+    private global::StardewValleyMcp.Protocol.V1.DailyLuckFact dailyLuck_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.DailyLuckFact DailyLuck {
+      get { return dailyLuck_; }
+      set {
+        dailyLuck_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "queen_of_sauce" field.</summary>
+    public const int QueenOfSauceFieldNumber = 7;
+    private global::StardewValleyMcp.Protocol.V1.TvCookingRecipeFact queenOfSauce_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.TvCookingRecipeFact QueenOfSauce {
+      get { return queenOfSauce_; }
+      set {
+        queenOfSauce_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -457,6 +526,8 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (!object.Equals(Player, other.Player)) return false;
       if (!object.Equals(Weather, other.Weather)) return false;
       if (!object.Equals(Ui, other.Ui)) return false;
+      if (!object.Equals(DailyLuck, other.DailyLuck)) return false;
+      if (!object.Equals(QueenOfSauce, other.QueenOfSauce)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -469,6 +540,8 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (player_ != null) hash ^= Player.GetHashCode();
       if (weather_ != null) hash ^= Weather.GetHashCode();
       if (ui_ != null) hash ^= Ui.GetHashCode();
+      if (dailyLuck_ != null) hash ^= DailyLuck.GetHashCode();
+      if (queenOfSauce_ != null) hash ^= QueenOfSauce.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -507,6 +580,14 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(42);
         output.WriteMessage(Ui);
       }
+      if (dailyLuck_ != null) {
+        output.WriteRawTag(50);
+        output.WriteMessage(DailyLuck);
+      }
+      if (queenOfSauce_ != null) {
+        output.WriteRawTag(58);
+        output.WriteMessage(QueenOfSauce);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -537,6 +618,14 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(42);
         output.WriteMessage(Ui);
       }
+      if (dailyLuck_ != null) {
+        output.WriteRawTag(50);
+        output.WriteMessage(DailyLuck);
+      }
+      if (queenOfSauce_ != null) {
+        output.WriteRawTag(58);
+        output.WriteMessage(QueenOfSauce);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -561,6 +650,12 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (ui_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(Ui);
+      }
+      if (dailyLuck_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(DailyLuck);
+      }
+      if (queenOfSauce_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(QueenOfSauce);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -600,6 +695,18 @@ namespace StardewValleyMcp.Protocol.V1 {
           Ui = new global::StardewValleyMcp.Protocol.V1.UiSummary();
         }
         Ui.MergeFrom(other.Ui);
+      }
+      if (other.dailyLuck_ != null) {
+        if (dailyLuck_ == null) {
+          DailyLuck = new global::StardewValleyMcp.Protocol.V1.DailyLuckFact();
+        }
+        DailyLuck.MergeFrom(other.DailyLuck);
+      }
+      if (other.queenOfSauce_ != null) {
+        if (queenOfSauce_ == null) {
+          QueenOfSauce = new global::StardewValleyMcp.Protocol.V1.TvCookingRecipeFact();
+        }
+        QueenOfSauce.MergeFrom(other.QueenOfSauce);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -652,6 +759,20 @@ namespace StardewValleyMcp.Protocol.V1 {
             input.ReadMessage(Ui);
             break;
           }
+          case 50: {
+            if (dailyLuck_ == null) {
+              DailyLuck = new global::StardewValleyMcp.Protocol.V1.DailyLuckFact();
+            }
+            input.ReadMessage(DailyLuck);
+            break;
+          }
+          case 58: {
+            if (queenOfSauce_ == null) {
+              QueenOfSauce = new global::StardewValleyMcp.Protocol.V1.TvCookingRecipeFact();
+            }
+            input.ReadMessage(QueenOfSauce);
+            break;
+          }
         }
       }
     #endif
@@ -701,6 +822,20 @@ namespace StardewValleyMcp.Protocol.V1 {
               Ui = new global::StardewValleyMcp.Protocol.V1.UiSummary();
             }
             input.ReadMessage(Ui);
+            break;
+          }
+          case 50: {
+            if (dailyLuck_ == null) {
+              DailyLuck = new global::StardewValleyMcp.Protocol.V1.DailyLuckFact();
+            }
+            input.ReadMessage(DailyLuck);
+            break;
+          }
+          case 58: {
+            if (queenOfSauce_ == null) {
+              QueenOfSauce = new global::StardewValleyMcp.Protocol.V1.TvCookingRecipeFact();
+            }
+            input.ReadMessage(QueenOfSauce);
             break;
           }
         }
@@ -1256,6 +1391,8 @@ namespace StardewValleyMcp.Protocol.V1 {
       snowing_ = other.snowing_;
       greenRain_ = other.greenRain_;
       festivalDay_ = other.festivalDay_;
+      kind_ = other.kind_;
+      tomorrow_ = other.tomorrow_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -1325,6 +1462,30 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "kind" field.</summary>
+    public const int KindFieldNumber = 6;
+    private global::StardewValleyMcp.Protocol.V1.WeatherKind kind_ = global::StardewValleyMcp.Protocol.V1.WeatherKind.Unspecified;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.WeatherKind Kind {
+      get { return kind_; }
+      set {
+        kind_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "tomorrow" field.</summary>
+    public const int TomorrowFieldNumber = 7;
+    private global::StardewValleyMcp.Protocol.V1.WeatherKind tomorrow_ = global::StardewValleyMcp.Protocol.V1.WeatherKind.Unspecified;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.WeatherKind Tomorrow {
+      get { return tomorrow_; }
+      set {
+        tomorrow_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -1345,6 +1506,8 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (Snowing != other.Snowing) return false;
       if (GreenRain != other.GreenRain) return false;
       if (FestivalDay != other.FestivalDay) return false;
+      if (Kind != other.Kind) return false;
+      if (Tomorrow != other.Tomorrow) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -1357,6 +1520,8 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (Snowing != false) hash ^= Snowing.GetHashCode();
       if (GreenRain != false) hash ^= GreenRain.GetHashCode();
       if (FestivalDay != false) hash ^= FestivalDay.GetHashCode();
+      if (Kind != global::StardewValleyMcp.Protocol.V1.WeatherKind.Unspecified) hash ^= Kind.GetHashCode();
+      if (Tomorrow != global::StardewValleyMcp.Protocol.V1.WeatherKind.Unspecified) hash ^= Tomorrow.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -1395,6 +1560,14 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(40);
         output.WriteBool(FestivalDay);
       }
+      if (Kind != global::StardewValleyMcp.Protocol.V1.WeatherKind.Unspecified) {
+        output.WriteRawTag(48);
+        output.WriteEnum((int) Kind);
+      }
+      if (Tomorrow != global::StardewValleyMcp.Protocol.V1.WeatherKind.Unspecified) {
+        output.WriteRawTag(56);
+        output.WriteEnum((int) Tomorrow);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -1425,6 +1598,14 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(40);
         output.WriteBool(FestivalDay);
       }
+      if (Kind != global::StardewValleyMcp.Protocol.V1.WeatherKind.Unspecified) {
+        output.WriteRawTag(48);
+        output.WriteEnum((int) Kind);
+      }
+      if (Tomorrow != global::StardewValleyMcp.Protocol.V1.WeatherKind.Unspecified) {
+        output.WriteRawTag(56);
+        output.WriteEnum((int) Tomorrow);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -1449,6 +1630,12 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (FestivalDay != false) {
         size += 1 + 1;
+      }
+      if (Kind != global::StardewValleyMcp.Protocol.V1.WeatherKind.Unspecified) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Kind);
+      }
+      if (Tomorrow != global::StardewValleyMcp.Protocol.V1.WeatherKind.Unspecified) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Tomorrow);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -1476,6 +1663,12 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (other.FestivalDay != false) {
         FestivalDay = other.FestivalDay;
+      }
+      if (other.Kind != global::StardewValleyMcp.Protocol.V1.WeatherKind.Unspecified) {
+        Kind = other.Kind;
+      }
+      if (other.Tomorrow != global::StardewValleyMcp.Protocol.V1.WeatherKind.Unspecified) {
+        Tomorrow = other.Tomorrow;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -1516,6 +1709,14 @@ namespace StardewValleyMcp.Protocol.V1 {
             FestivalDay = input.ReadBool();
             break;
           }
+          case 48: {
+            Kind = (global::StardewValleyMcp.Protocol.V1.WeatherKind) input.ReadEnum();
+            break;
+          }
+          case 56: {
+            Tomorrow = (global::StardewValleyMcp.Protocol.V1.WeatherKind) input.ReadEnum();
+            break;
+          }
         }
       }
     #endif
@@ -1553,6 +1754,14 @@ namespace StardewValleyMcp.Protocol.V1 {
           }
           case 40: {
             FestivalDay = input.ReadBool();
+            break;
+          }
+          case 48: {
+            Kind = (global::StardewValleyMcp.Protocol.V1.WeatherKind) input.ReadEnum();
+            break;
+          }
+          case 56: {
+            Tomorrow = (global::StardewValleyMcp.Protocol.V1.WeatherKind) input.ReadEnum();
             break;
           }
         }
@@ -1798,6 +2007,624 @@ namespace StardewValleyMcp.Protocol.V1 {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class DailyLuckFact : pb::IMessage<DailyLuckFact>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<DailyLuckFact> _parser = new pb::MessageParser<DailyLuckFact>(() => new DailyLuckFact());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<DailyLuckFact> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public DailyLuckFact() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public DailyLuckFact(DailyLuckFact other) : this() {
+      value_ = other.value_;
+      tier_ = other.tier_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public DailyLuckFact Clone() {
+      return new DailyLuckFact(this);
+    }
+
+    /// <summary>Field number for the "value" field.</summary>
+    public const int ValueFieldNumber = 1;
+    private double value_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public double Value {
+      get { return value_; }
+      set {
+        value_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "tier" field.</summary>
+    public const int TierFieldNumber = 2;
+    private global::StardewValleyMcp.Protocol.V1.DailyLuckTier tier_ = global::StardewValleyMcp.Protocol.V1.DailyLuckTier.Unspecified;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.DailyLuckTier Tier {
+      get { return tier_; }
+      set {
+        tier_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as DailyLuckFact);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(DailyLuckFact other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.Equals(Value, other.Value)) return false;
+      if (Tier != other.Tier) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Value != 0D) hash ^= pbc::ProtobufEqualityComparers.BitwiseDoubleEqualityComparer.GetHashCode(Value);
+      if (Tier != global::StardewValleyMcp.Protocol.V1.DailyLuckTier.Unspecified) hash ^= Tier.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Value != 0D) {
+        output.WriteRawTag(9);
+        output.WriteDouble(Value);
+      }
+      if (Tier != global::StardewValleyMcp.Protocol.V1.DailyLuckTier.Unspecified) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Tier);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Value != 0D) {
+        output.WriteRawTag(9);
+        output.WriteDouble(Value);
+      }
+      if (Tier != global::StardewValleyMcp.Protocol.V1.DailyLuckTier.Unspecified) {
+        output.WriteRawTag(16);
+        output.WriteEnum((int) Tier);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Value != 0D) {
+        size += 1 + 8;
+      }
+      if (Tier != global::StardewValleyMcp.Protocol.V1.DailyLuckTier.Unspecified) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) Tier);
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(DailyLuckFact other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Value != 0D) {
+        Value = other.Value;
+      }
+      if (other.Tier != global::StardewValleyMcp.Protocol.V1.DailyLuckTier.Unspecified) {
+        Tier = other.Tier;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 9: {
+            Value = input.ReadDouble();
+            break;
+          }
+          case 16: {
+            Tier = (global::StardewValleyMcp.Protocol.V1.DailyLuckTier) input.ReadEnum();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 9: {
+            Value = input.ReadDouble();
+            break;
+          }
+          case 16: {
+            Tier = (global::StardewValleyMcp.Protocol.V1.DailyLuckTier) input.ReadEnum();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class TvCookingRecipeFact : pb::IMessage<TvCookingRecipeFact>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<TvCookingRecipeFact> _parser = new pb::MessageParser<TvCookingRecipeFact>(() => new TvCookingRecipeFact());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<TvCookingRecipeFact> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[5]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TvCookingRecipeFact() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TvCookingRecipeFact(TvCookingRecipeFact other) : this() {
+      available_ = other.available_;
+      rerun_ = other.rerun_;
+      recipeKey_ = other.recipeKey_;
+      displayName_ = other.displayName_;
+      alreadyKnown_ = other.alreadyKnown_;
+      learnable_ = other.learnable_;
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public TvCookingRecipeFact Clone() {
+      return new TvCookingRecipeFact(this);
+    }
+
+    /// <summary>Field number for the "available" field.</summary>
+    public const int AvailableFieldNumber = 1;
+    private bool available_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Available {
+      get { return available_; }
+      set {
+        available_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "rerun" field.</summary>
+    public const int RerunFieldNumber = 2;
+    private bool rerun_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Rerun {
+      get { return rerun_; }
+      set {
+        rerun_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "recipe_key" field.</summary>
+    public const int RecipeKeyFieldNumber = 3;
+    private string recipeKey_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string RecipeKey {
+      get { return recipeKey_; }
+      set {
+        recipeKey_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "display_name" field.</summary>
+    public const int DisplayNameFieldNumber = 4;
+    private string displayName_ = "";
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string DisplayName {
+      get { return displayName_; }
+      set {
+        displayName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "already_known" field.</summary>
+    public const int AlreadyKnownFieldNumber = 5;
+    private bool alreadyKnown_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool AlreadyKnown {
+      get { return alreadyKnown_; }
+      set {
+        alreadyKnown_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "learnable" field.</summary>
+    public const int LearnableFieldNumber = 6;
+    private bool learnable_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Learnable {
+      get { return learnable_; }
+      set {
+        learnable_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as TvCookingRecipeFact);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(TvCookingRecipeFact other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Available != other.Available) return false;
+      if (Rerun != other.Rerun) return false;
+      if (RecipeKey != other.RecipeKey) return false;
+      if (DisplayName != other.DisplayName) return false;
+      if (AlreadyKnown != other.AlreadyKnown) return false;
+      if (Learnable != other.Learnable) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Available != false) hash ^= Available.GetHashCode();
+      if (Rerun != false) hash ^= Rerun.GetHashCode();
+      if (RecipeKey.Length != 0) hash ^= RecipeKey.GetHashCode();
+      if (DisplayName.Length != 0) hash ^= DisplayName.GetHashCode();
+      if (AlreadyKnown != false) hash ^= AlreadyKnown.GetHashCode();
+      if (Learnable != false) hash ^= Learnable.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (Available != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Available);
+      }
+      if (Rerun != false) {
+        output.WriteRawTag(16);
+        output.WriteBool(Rerun);
+      }
+      if (RecipeKey.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(RecipeKey);
+      }
+      if (DisplayName.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(DisplayName);
+      }
+      if (AlreadyKnown != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(AlreadyKnown);
+      }
+      if (Learnable != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(Learnable);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (Available != false) {
+        output.WriteRawTag(8);
+        output.WriteBool(Available);
+      }
+      if (Rerun != false) {
+        output.WriteRawTag(16);
+        output.WriteBool(Rerun);
+      }
+      if (RecipeKey.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(RecipeKey);
+      }
+      if (DisplayName.Length != 0) {
+        output.WriteRawTag(34);
+        output.WriteString(DisplayName);
+      }
+      if (AlreadyKnown != false) {
+        output.WriteRawTag(40);
+        output.WriteBool(AlreadyKnown);
+      }
+      if (Learnable != false) {
+        output.WriteRawTag(48);
+        output.WriteBool(Learnable);
+      }
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (Available != false) {
+        size += 1 + 1;
+      }
+      if (Rerun != false) {
+        size += 1 + 1;
+      }
+      if (RecipeKey.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(RecipeKey);
+      }
+      if (DisplayName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(DisplayName);
+      }
+      if (AlreadyKnown != false) {
+        size += 1 + 1;
+      }
+      if (Learnable != false) {
+        size += 1 + 1;
+      }
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(TvCookingRecipeFact other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Available != false) {
+        Available = other.Available;
+      }
+      if (other.Rerun != false) {
+        Rerun = other.Rerun;
+      }
+      if (other.RecipeKey.Length != 0) {
+        RecipeKey = other.RecipeKey;
+      }
+      if (other.DisplayName.Length != 0) {
+        DisplayName = other.DisplayName;
+      }
+      if (other.AlreadyKnown != false) {
+        AlreadyKnown = other.AlreadyKnown;
+      }
+      if (other.Learnable != false) {
+        Learnable = other.Learnable;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 8: {
+            Available = input.ReadBool();
+            break;
+          }
+          case 16: {
+            Rerun = input.ReadBool();
+            break;
+          }
+          case 26: {
+            RecipeKey = input.ReadString();
+            break;
+          }
+          case 34: {
+            DisplayName = input.ReadString();
+            break;
+          }
+          case 40: {
+            AlreadyKnown = input.ReadBool();
+            break;
+          }
+          case 48: {
+            Learnable = input.ReadBool();
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 8: {
+            Available = input.ReadBool();
+            break;
+          }
+          case 16: {
+            Rerun = input.ReadBool();
+            break;
+          }
+          case 26: {
+            RecipeKey = input.ReadString();
+            break;
+          }
+          case 34: {
+            DisplayName = input.ReadString();
+            break;
+          }
+          case 40: {
+            AlreadyKnown = input.ReadBool();
+            break;
+          }
+          case 48: {
+            Learnable = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class WorldSnapshot : pb::IMessage<WorldSnapshot>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -1812,7 +2639,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[4]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2245,7 +3072,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[5]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2638,7 +3465,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[6]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3790,7 +4617,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[7]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4136,7 +4963,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[8]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4482,7 +5309,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[9]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -4942,7 +5769,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[10]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5140,7 +5967,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[11]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5412,7 +6239,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[12]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -5796,7 +6623,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[13]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[15]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6429,7 +7256,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[14]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[16]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -6747,7 +7574,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[15]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[17]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7019,7 +7846,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[16]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[18]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7292,7 +8119,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[17]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[19]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7553,7 +8380,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[18]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[20]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -7798,7 +8625,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[19]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[21]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8095,7 +8922,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[20]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[22]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8339,7 +9166,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[21]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[23]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -8574,7 +9401,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[22]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[24]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9267,7 +10094,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[23]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[25]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9539,7 +10366,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[24]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[26]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -9811,7 +10638,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[25]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[27]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -10157,7 +10984,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[26]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[28]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -10429,7 +11256,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[27]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[29]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -10627,7 +11454,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[28]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[30]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -10971,7 +11798,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[29]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[31]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -11218,7 +12045,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[30]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[32]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -11533,7 +12360,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[31]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[33]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -11805,7 +12632,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[32]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[34]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -12172,7 +12999,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[33]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[35]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -12499,7 +13326,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[34]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[36]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -12833,7 +13660,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[35]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[37]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -13196,7 +14023,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[36]; }
+      get { return global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor.MessageTypes[38]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

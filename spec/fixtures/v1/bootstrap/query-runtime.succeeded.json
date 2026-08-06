@@ -27,8 +27,25 @@
             "canMove": true,
             "homeLocationId": "FarmHouse"
           },
-          "weather": {"raining": false, "lightning": false, "snowing": false, "greenRain": false, "festivalDay": false},
-          "ui": {"menuOpen": false, "menuType": ""}
+          "weather": {
+            "raining": false,
+            "lightning": false,
+            "snowing": false,
+            "greenRain": false,
+            "festivalDay": false,
+            "kind": "WEATHER_KIND_SUN",
+            "tomorrow": "WEATHER_KIND_RAIN"
+          },
+          "ui": {"menuOpen": false, "menuType": ""},
+          "dailyLuck": {"value": 0.08, "tier": "DAILY_LUCK_TIER_VERY_LUCKY"},
+          "queenOfSauce": {
+            "available": true,
+            "rerun": false,
+            "recipeKey": "Stir Fry",
+            "displayName": "Stir Fry",
+            "alreadyKnown": false,
+            "learnable": true
+          }
         }
       }
     }

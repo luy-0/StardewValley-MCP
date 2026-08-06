@@ -192,7 +192,13 @@ async def run_query(terminal_fixture: str) -> dict[str, object]:
 def test_query_runtime_success_matches_generated_output_schema() -> None:
     result = asyncio.run(run_query("query-runtime.succeeded.json"))
     assert result["status"] == "succeeded"
-    assert result["output"]["snapshot"]["player"]["position"]["locationId"] == "Farm"
+    snapshot = result["output"]["snapshot"]
+    assert snapshot["player"]["position"]["locationId"] == "Farm"
+    assert snapshot["weather"]["kind"] == "sun"
+    assert snapshot["weather"]["tomorrow"] == "rain"
+    assert snapshot["dailyLuck"] == {"value": 0.08, "tier": "very_lucky"}
+    assert snapshot["queenOfSauce"]["learnable"] is True
+    assert snapshot["queenOfSauce"]["recipeKey"] == "Stir Fry"
     Draft202012Validator(Catalog.load().tool("query_runtime").outputSchema).validate(result)
 
 

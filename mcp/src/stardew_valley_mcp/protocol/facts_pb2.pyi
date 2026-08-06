@@ -9,6 +9,27 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class WeatherKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    WEATHER_KIND_UNSPECIFIED: _ClassVar[WeatherKind]
+    WEATHER_KIND_SUN: _ClassVar[WeatherKind]
+    WEATHER_KIND_RAIN: _ClassVar[WeatherKind]
+    WEATHER_KIND_STORM: _ClassVar[WeatherKind]
+    WEATHER_KIND_SNOW: _ClassVar[WeatherKind]
+    WEATHER_KIND_WIND: _ClassVar[WeatherKind]
+    WEATHER_KIND_GREEN_RAIN: _ClassVar[WeatherKind]
+    WEATHER_KIND_FESTIVAL: _ClassVar[WeatherKind]
+    WEATHER_KIND_WEDDING: _ClassVar[WeatherKind]
+
+class DailyLuckTier(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    DAILY_LUCK_TIER_UNSPECIFIED: _ClassVar[DailyLuckTier]
+    DAILY_LUCK_TIER_VERY_UNLUCKY: _ClassVar[DailyLuckTier]
+    DAILY_LUCK_TIER_UNLUCKY: _ClassVar[DailyLuckTier]
+    DAILY_LUCK_TIER_NEUTRAL: _ClassVar[DailyLuckTier]
+    DAILY_LUCK_TIER_LUCKY: _ClassVar[DailyLuckTier]
+    DAILY_LUCK_TIER_VERY_LUCKY: _ClassVar[DailyLuckTier]
+
 class EntityKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     ENTITY_KIND_UNSPECIFIED: _ClassVar[EntityKind]
@@ -70,6 +91,21 @@ class UiEquipmentSlotKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     UI_EQUIPMENT_SLOT_KIND_SHIRT: _ClassVar[UiEquipmentSlotKind]
     UI_EQUIPMENT_SLOT_KIND_PANTS: _ClassVar[UiEquipmentSlotKind]
     UI_EQUIPMENT_SLOT_KIND_TRINKET: _ClassVar[UiEquipmentSlotKind]
+WEATHER_KIND_UNSPECIFIED: WeatherKind
+WEATHER_KIND_SUN: WeatherKind
+WEATHER_KIND_RAIN: WeatherKind
+WEATHER_KIND_STORM: WeatherKind
+WEATHER_KIND_SNOW: WeatherKind
+WEATHER_KIND_WIND: WeatherKind
+WEATHER_KIND_GREEN_RAIN: WeatherKind
+WEATHER_KIND_FESTIVAL: WeatherKind
+WEATHER_KIND_WEDDING: WeatherKind
+DAILY_LUCK_TIER_UNSPECIFIED: DailyLuckTier
+DAILY_LUCK_TIER_VERY_UNLUCKY: DailyLuckTier
+DAILY_LUCK_TIER_UNLUCKY: DailyLuckTier
+DAILY_LUCK_TIER_NEUTRAL: DailyLuckTier
+DAILY_LUCK_TIER_LUCKY: DailyLuckTier
+DAILY_LUCK_TIER_VERY_LUCKY: DailyLuckTier
 ENTITY_KIND_UNSPECIFIED: EntityKind
 ENTITY_KIND_TREE: EntityKind
 ENTITY_KIND_FRUIT_TREE: EntityKind
@@ -116,18 +152,22 @@ UI_EQUIPMENT_SLOT_KIND_PANTS: UiEquipmentSlotKind
 UI_EQUIPMENT_SLOT_KIND_TRINKET: UiEquipmentSlotKind
 
 class RuntimeSnapshot(_message.Message):
-    __slots__ = ("date", "time_of_day", "player", "weather", "ui")
+    __slots__ = ("date", "time_of_day", "player", "weather", "ui", "daily_luck", "queen_of_sauce")
     DATE_FIELD_NUMBER: _ClassVar[int]
     TIME_OF_DAY_FIELD_NUMBER: _ClassVar[int]
     PLAYER_FIELD_NUMBER: _ClassVar[int]
     WEATHER_FIELD_NUMBER: _ClassVar[int]
     UI_FIELD_NUMBER: _ClassVar[int]
+    DAILY_LUCK_FIELD_NUMBER: _ClassVar[int]
+    QUEEN_OF_SAUCE_FIELD_NUMBER: _ClassVar[int]
     date: _common_pb2.GameDate
     time_of_day: int
     player: PlayerFact
     weather: WeatherFact
     ui: UiSummary
-    def __init__(self, date: _Optional[_Union[_common_pb2.GameDate, _Mapping]] = ..., time_of_day: _Optional[int] = ..., player: _Optional[_Union[PlayerFact, _Mapping]] = ..., weather: _Optional[_Union[WeatherFact, _Mapping]] = ..., ui: _Optional[_Union[UiSummary, _Mapping]] = ...) -> None: ...
+    daily_luck: DailyLuckFact
+    queen_of_sauce: TvCookingRecipeFact
+    def __init__(self, date: _Optional[_Union[_common_pb2.GameDate, _Mapping]] = ..., time_of_day: _Optional[int] = ..., player: _Optional[_Union[PlayerFact, _Mapping]] = ..., weather: _Optional[_Union[WeatherFact, _Mapping]] = ..., ui: _Optional[_Union[UiSummary, _Mapping]] = ..., daily_luck: _Optional[_Union[DailyLuckFact, _Mapping]] = ..., queen_of_sauce: _Optional[_Union[TvCookingRecipeFact, _Mapping]] = ...) -> None: ...
 
 class PlayerFact(_message.Message):
     __slots__ = ("position", "facing", "money", "energy", "max_energy", "health", "max_health", "can_move", "home_location_id")
@@ -152,18 +192,22 @@ class PlayerFact(_message.Message):
     def __init__(self, position: _Optional[_Union[_common_pb2.WorldPosition, _Mapping]] = ..., facing: _Optional[_Union[_common_pb2.Direction, str]] = ..., money: _Optional[int] = ..., energy: _Optional[float] = ..., max_energy: _Optional[float] = ..., health: _Optional[int] = ..., max_health: _Optional[int] = ..., can_move: _Optional[bool] = ..., home_location_id: _Optional[str] = ...) -> None: ...
 
 class WeatherFact(_message.Message):
-    __slots__ = ("raining", "lightning", "snowing", "green_rain", "festival_day")
+    __slots__ = ("raining", "lightning", "snowing", "green_rain", "festival_day", "kind", "tomorrow")
     RAINING_FIELD_NUMBER: _ClassVar[int]
     LIGHTNING_FIELD_NUMBER: _ClassVar[int]
     SNOWING_FIELD_NUMBER: _ClassVar[int]
     GREEN_RAIN_FIELD_NUMBER: _ClassVar[int]
     FESTIVAL_DAY_FIELD_NUMBER: _ClassVar[int]
+    KIND_FIELD_NUMBER: _ClassVar[int]
+    TOMORROW_FIELD_NUMBER: _ClassVar[int]
     raining: bool
     lightning: bool
     snowing: bool
     green_rain: bool
     festival_day: bool
-    def __init__(self, raining: _Optional[bool] = ..., lightning: _Optional[bool] = ..., snowing: _Optional[bool] = ..., green_rain: _Optional[bool] = ..., festival_day: _Optional[bool] = ...) -> None: ...
+    kind: WeatherKind
+    tomorrow: WeatherKind
+    def __init__(self, raining: _Optional[bool] = ..., lightning: _Optional[bool] = ..., snowing: _Optional[bool] = ..., green_rain: _Optional[bool] = ..., festival_day: _Optional[bool] = ..., kind: _Optional[_Union[WeatherKind, str]] = ..., tomorrow: _Optional[_Union[WeatherKind, str]] = ...) -> None: ...
 
 class UiSummary(_message.Message):
     __slots__ = ("menu_open", "menu_type")
@@ -172,6 +216,30 @@ class UiSummary(_message.Message):
     menu_open: bool
     menu_type: str
     def __init__(self, menu_open: _Optional[bool] = ..., menu_type: _Optional[str] = ...) -> None: ...
+
+class DailyLuckFact(_message.Message):
+    __slots__ = ("value", "tier")
+    VALUE_FIELD_NUMBER: _ClassVar[int]
+    TIER_FIELD_NUMBER: _ClassVar[int]
+    value: float
+    tier: DailyLuckTier
+    def __init__(self, value: _Optional[float] = ..., tier: _Optional[_Union[DailyLuckTier, str]] = ...) -> None: ...
+
+class TvCookingRecipeFact(_message.Message):
+    __slots__ = ("available", "rerun", "recipe_key", "display_name", "already_known", "learnable")
+    AVAILABLE_FIELD_NUMBER: _ClassVar[int]
+    RERUN_FIELD_NUMBER: _ClassVar[int]
+    RECIPE_KEY_FIELD_NUMBER: _ClassVar[int]
+    DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
+    ALREADY_KNOWN_FIELD_NUMBER: _ClassVar[int]
+    LEARNABLE_FIELD_NUMBER: _ClassVar[int]
+    available: bool
+    rerun: bool
+    recipe_key: str
+    display_name: str
+    already_known: bool
+    learnable: bool
+    def __init__(self, available: _Optional[bool] = ..., rerun: _Optional[bool] = ..., recipe_key: _Optional[str] = ..., display_name: _Optional[str] = ..., already_known: _Optional[bool] = ..., learnable: _Optional[bool] = ...) -> None: ...
 
 class WorldSnapshot(_message.Message):
     __slots__ = ("world_revision", "area", "outdoors", "tiles", "entities", "characters", "entities_truncated", "characters_truncated")

@@ -76,6 +76,24 @@
         "CROP_HARVEST_ACTION_UNSPECIFIED": "unspecified"
       }
     },
+    "stardew_valley.mcp.v1.DailyLuckTier": {
+      "jsonToProto": {
+        "lucky": "DAILY_LUCK_TIER_LUCKY",
+        "neutral": "DAILY_LUCK_TIER_NEUTRAL",
+        "unlucky": "DAILY_LUCK_TIER_UNLUCKY",
+        "unspecified": "DAILY_LUCK_TIER_UNSPECIFIED",
+        "very_lucky": "DAILY_LUCK_TIER_VERY_LUCKY",
+        "very_unlucky": "DAILY_LUCK_TIER_VERY_UNLUCKY"
+      },
+      "protoToJson": {
+        "DAILY_LUCK_TIER_LUCKY": "lucky",
+        "DAILY_LUCK_TIER_NEUTRAL": "neutral",
+        "DAILY_LUCK_TIER_UNLUCKY": "unlucky",
+        "DAILY_LUCK_TIER_UNSPECIFIED": "unspecified",
+        "DAILY_LUCK_TIER_VERY_LUCKY": "very_lucky",
+        "DAILY_LUCK_TIER_VERY_UNLUCKY": "very_unlucky"
+      }
+    },
     "stardew_valley.mcp.v1.Direction": {
       "jsonToProto": {
         "down": "DIRECTION_DOWN",
@@ -348,6 +366,30 @@
         "UI_INVENTORY_SIDE_CONTAINER": "container",
         "UI_INVENTORY_SIDE_PLAYER": "player",
         "UI_INVENTORY_SIDE_UNSPECIFIED": "unspecified"
+      }
+    },
+    "stardew_valley.mcp.v1.WeatherKind": {
+      "jsonToProto": {
+        "festival": "WEATHER_KIND_FESTIVAL",
+        "green_rain": "WEATHER_KIND_GREEN_RAIN",
+        "rain": "WEATHER_KIND_RAIN",
+        "snow": "WEATHER_KIND_SNOW",
+        "storm": "WEATHER_KIND_STORM",
+        "sun": "WEATHER_KIND_SUN",
+        "unspecified": "WEATHER_KIND_UNSPECIFIED",
+        "wedding": "WEATHER_KIND_WEDDING",
+        "wind": "WEATHER_KIND_WIND"
+      },
+      "protoToJson": {
+        "WEATHER_KIND_FESTIVAL": "festival",
+        "WEATHER_KIND_GREEN_RAIN": "green_rain",
+        "WEATHER_KIND_RAIN": "rain",
+        "WEATHER_KIND_SNOW": "snow",
+        "WEATHER_KIND_STORM": "storm",
+        "WEATHER_KIND_SUN": "sun",
+        "WEATHER_KIND_UNSPECIFIED": "unspecified",
+        "WEATHER_KIND_WEDDING": "wedding",
+        "WEATHER_KIND_WIND": "wind"
       }
     }
   },
@@ -16919,6 +16961,30 @@
       "name": "stardew_query_runtime",
       "outputSchema": {
         "$defs": {
+          "DailyLuckFact": {
+            "additionalProperties": false,
+            "properties": {
+              "tier": {
+                "enum": [
+                  "unspecified",
+                  "very_unlucky",
+                  "unlucky",
+                  "neutral",
+                  "lucky",
+                  "very_lucky"
+                ],
+                "type": "string"
+              },
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "tier",
+              "value"
+            ],
+            "type": "object"
+          },
           "FailedToolError": {
             "oneOf": [
               {
@@ -17472,11 +17538,17 @@
           "RuntimeSnapshot": {
             "additionalProperties": false,
             "properties": {
+              "dailyLuck": {
+                "$ref": "#/$defs/DailyLuckFact"
+              },
               "date": {
                 "$ref": "#/$defs/GameDate"
               },
               "player": {
                 "$ref": "#/$defs/PlayerFact"
+              },
+              "queenOfSauce": {
+                "$ref": "#/$defs/TvCookingRecipeFact"
               },
               "timeOfDay": {
                 "maximum": 4294967295,
@@ -17491,8 +17563,10 @@
               }
             },
             "required": [
+              "dailyLuck",
               "date",
               "player",
+              "queenOfSauce",
               "timeOfDay",
               "ui",
               "weather"
@@ -17929,6 +18003,42 @@
               }
             ]
           },
+          "TvCookingRecipeFact": {
+            "additionalProperties": false,
+            "properties": {
+              "alreadyKnown": {
+                "type": "boolean"
+              },
+              "available": {
+                "type": "boolean"
+              },
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "learnable": {
+                "type": "boolean"
+              },
+              "recipeKey": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "rerun": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "alreadyKnown",
+              "available",
+              "displayName",
+              "learnable",
+              "recipeKey",
+              "rerun"
+            ],
+            "type": "object"
+          },
           "UiSummary": {
             "additionalProperties": false,
             "properties": {
@@ -17982,6 +18092,20 @@
               "greenRain": {
                 "type": "boolean"
               },
+              "kind": {
+                "enum": [
+                  "unspecified",
+                  "sun",
+                  "rain",
+                  "storm",
+                  "snow",
+                  "wind",
+                  "green_rain",
+                  "festival",
+                  "wedding"
+                ],
+                "type": "string"
+              },
               "lightning": {
                 "type": "boolean"
               },
@@ -17990,14 +18114,30 @@
               },
               "snowing": {
                 "type": "boolean"
+              },
+              "tomorrow": {
+                "enum": [
+                  "unspecified",
+                  "sun",
+                  "rain",
+                  "storm",
+                  "snow",
+                  "wind",
+                  "green_rain",
+                  "festival",
+                  "wedding"
+                ],
+                "type": "string"
               }
             },
             "required": [
               "festivalDay",
               "greenRain",
+              "kind",
               "lightning",
               "raining",
-              "snowing"
+              "snowing",
+              "tomorrow"
             ],
             "type": "object"
           },

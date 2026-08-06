@@ -201,7 +201,7 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 
 ### `query_runtime`
 
-返回日期、时间、天气、玩家位置、资源、UI 摘要及当前玩家保存的 `home_location_id`。该字段沿用游戏自身的住宅 Location 标识；多人小屋必须保持其唯一室内 ID，不得退化为可能重名的短建筑名。游戏尚未加载 Save 时返回 `NOT_READY`，不能返回由零值拼成的假 Snapshot。
+返回日期、时间、天气、明日天气预报、今日运势、今日美食节目可学习菜谱、玩家位置、资源、UI 摘要及当前玩家保存的 `home_location_id`。天气必须同时保留兼容布尔字段和明确 `WeatherKind` 枚举；调用方需要判断整体天气时应优先读取 `weather.kind`，需要判断次日计划时读取 `weather.tomorrow`，且该预报必须与当前 Location 的天气上下文一致。今日运势必须返回原始 `daily_luck.value` 与按电视运势阈值归类的 `daily_luck.tier`。今日美食节目必须是只读投影：可计算 Sunday 首播与 Wednesday 重播对应菜谱，但不得因为查询而写入玩家已学菜谱或队伍重播周状态。`home_location_id` 沿用游戏自身的住宅 Location 标识；多人小屋必须保持其唯一室内 ID，不得退化为可能重名的短建筑名。游戏尚未加载 Save 时返回 `NOT_READY`，不能返回由零值拼成的假 Snapshot。
 
 ### `query_world`
 
