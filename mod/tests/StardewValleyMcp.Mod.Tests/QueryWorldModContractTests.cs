@@ -23,13 +23,30 @@ public sealed class QueryWorldModContractTests
     }
 
     [Test]
+    public void CropReadinessUsesNativeHoeDirtResultAndRejectsDeadCrop()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(WorldProjectionPolicy.CropReady(dead: false, gameReady: true), Is.True);
+            Assert.That(WorldProjectionPolicy.CropReady(dead: false, gameReady: false), Is.False);
+            Assert.That(WorldProjectionPolicy.CropReady(dead: true, gameReady: true), Is.False);
+        });
+    }
+
+    [Test]
     public void RuntimeHomePolicyPreservesSavedUniqueIdentityWithoutScanningLocations()
     {
         Assert.Multiple(() =>
         {
-            Assert.That(RuntimeProjectionPolicy.HomeLocationId("FarmHouse"), Is.EqualTo("FarmHouse"));
-            Assert.That(RuntimeProjectionPolicy.HomeLocationId("Cabin_123"), Is.EqualTo("Cabin_123"));
-            Assert.That(RuntimeProjectionPolicy.HomeLocationId(""), Is.Empty);
+            Assert.That(
+                RuntimeProjectionPolicy.HomeLocationId("FarmHouse", "FarmHouse_123"),
+                Is.EqualTo("FarmHouse_123")
+            );
+            Assert.That(
+                RuntimeProjectionPolicy.HomeLocationId("Cabin_123", ""),
+                Is.EqualTo("Cabin_123")
+            );
+            Assert.That(RuntimeProjectionPolicy.HomeLocationId("", ""), Is.Empty);
         });
     }
 

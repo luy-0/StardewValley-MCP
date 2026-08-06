@@ -28,6 +28,7 @@ internal sealed class QueryRuntimeHandler : IImmediateCapabilityHandler
             var location = player.currentLocation;
             var weather = location.GetWeather();
             var savedHomeLocationId = player.homeLocation.Value ?? "";
+            var resolvedHomeLocationId = ResolveHomeLocationId(player);
             var result = new QueryRuntimeResult
             {
                 Snapshot = new RuntimeSnapshot
@@ -61,7 +62,10 @@ internal sealed class QueryRuntimeHandler : IImmediateCapabilityHandler
                         Health = player.health,
                         MaxHealth = player.maxHealth,
                         CanMove = player.CanMove,
-                        HomeLocationId = RuntimeProjectionPolicy.HomeLocationId(savedHomeLocationId),
+                        HomeLocationId = RuntimeProjectionPolicy.HomeLocationId(
+                            savedHomeLocationId,
+                            resolvedHomeLocationId
+                        ),
                     },
                     Weather = new WeatherFact
                     {
@@ -90,6 +94,18 @@ internal sealed class QueryRuntimeHandler : IImmediateCapabilityHandler
         catch
         {
             return Failed(commandId, ErrorCode.Internal, "读取运行时状态失败", "failed");
+        }
+    }
+
+    private static string ResolveHomeLocationId(Farmer player)
+    {
+        try
+        {
+            return Utility.getHomeOfFarmer(player)?.NameOrUniqueName ?? "";
+        }
+        catch
+        {
+            return "";
         }
     }
 

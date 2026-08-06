@@ -14,7 +14,6 @@ public sealed class ModEntry : StardewModdingAPI.Mod
     public override void Entry(IModHelper helper)
     {
         var config = helper.ReadConfig<ModConfig>();
-        _saveAutoLoader = new SaveAutoLoader(helper, Monitor, config);
         if (string.IsNullOrWhiteSpace(config.SharedSecretBase64))
         {
             config.SharedSecretBase64 = Convert.ToBase64String(RandomNumberGenerator.GetBytes(32));
@@ -55,6 +54,7 @@ public sealed class ModEntry : StardewModdingAPI.Mod
         CryptographicOperations.ZeroMemory(secret);
         _server.Start();
         _gameAdvancePolicy = new GameAdvancePolicy(helper);
+        _saveAutoLoader = new SaveAutoLoader(helper, Monitor, config, _gameAdvancePolicy);
         helper.Events.GameLoop.UpdateTicked += OnUpdateTicked;
         Monitor.Log(
             $"Stardew Valley MCP 已注册能力：{string.Join(", ", registry.Snapshot.Capabilities.Select(item => item.Id))}",

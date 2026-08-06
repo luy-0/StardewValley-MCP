@@ -19,7 +19,7 @@ description: 在 Stardew Valley 一格空的已耕土地上种下一颗指定种
 
 1. 仅在用户明确要求改变存档且 MCP 已启用写权限时继续。调用 `stardew_query_runtime`；世界未就绪、存在阻塞菜单或玩家不可控制时停止。
 2. 调用 `stardew_query_inventory` 查询玩家背包。按用户给出的名称或 Qualified Item ID 选择唯一种子堆；存在多个含义不同的候选时请求用户选择。记录 Item Ref、Stack、槽位和 Inventory Revision。
-3. 使用用户提供的地块 Ref；没有 Ref 时，以用户给定位置或玩家附近调用 `stardew_query_world`，只接受 `kind=hoe_dirt`、没有 Crop 且可操作性不是明确 false 的地块。候选不唯一时停止并请求选择。
+3. 使用用户提供的地块 Ref；没有 Ref 时，以用户给定位置或玩家附近调用 `stardew_query_world`，只接受 `kind=hoe_dirt` 且没有 Crop 的地块。空手时 HoeDirt 的 `actionable=false` 不代表手持种子后不能种植，不得据此排除。候选不唯一时停止并请求选择。
 4. 以该 Ref 调用 `stardew_inspect`，确认仍是空 HoeDirt。随后调用 `stardew_navigate`，以目标 Ref、`arrival=adjacent` 抵达并面向目标。
 5. 调用 `stardew_equip`，传入种子 Item Ref 和本轮 Inventory Revision；成功后只调用一次 `stardew_interact`，目标为 HoeDirt Ref。`unknown` 终态不得重放。
 6. 重新调用 `stardew_query_world` 查询目标位置，并调用 `stardew_query_inventory`。只有目标格出现 Crop，且种子堆减少一颗或原堆因用尽而消失，才判定成功。

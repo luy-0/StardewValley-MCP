@@ -590,7 +590,10 @@ internal static class WorldProjector
                 CropId = cropId,
                 HarvestItemId = string.IsNullOrEmpty(harvestId) ? "" : $"(O){harvestId}",
                 GrowthPhase = UInt(phase),
-                ReadyForHarvest = !dead && (crop.fullyGrown.Value || phase >= crop.phaseDays.Count - 1),
+                ReadyForHarvest = WorldProjectionPolicy.CropReady(
+                    dead,
+                    dirt.readyForHarvest()
+                ),
                 Watered = dirt.state.Value == 1,
                 Dead = dead,
                 Regrows = crop.RegrowsAfterHarvest(),
@@ -1461,6 +1464,8 @@ internal static class HoeDirtProjectionPolicy
 internal static class WorldProjectionPolicy
 {
     public static bool HasResolvedDestination(string locationId) => LocationIdPolicy.IsValid(locationId);
+
+    public static bool CropReady(bool dead, bool gameReady) => !dead && gameReady;
 
     public static CropHarvestAction HarvestActionFor(bool usesScythe) =>
         usesScythe ? Protocol.V1.CropHarvestAction.Scythe : Protocol.V1.CropHarvestAction.Interact;

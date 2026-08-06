@@ -190,6 +190,17 @@ def test_shop_rows_are_query_only_and_not_generic_activate_targets() -> None:
     assert "menu.receiveLeftClick(center.X, center.Y)" in activate
 
 
+def test_dialogue_response_activation_selects_native_response_before_click() -> None:
+    actions = (MOD / "Capabilities" / "Actions" / "MenuActionHandlers.cs").read_text()
+    response = actions.split(
+        "if (resolved.Target.Extractor == UiExtractorKind.DialogueResponse", 1
+    )[1].split("var activated =", 1)[0]
+
+    assert "dialogue.performHoverAction(dialogueCenter.X, dialogueCenter.Y);" in response
+    assert "dialogue.receiveLeftClick(dialogueCenter.X, dialogueCenter.Y);" in response
+    assert response.index("performHoverAction") < response.index("receiveLeftClick")
+
+
 def test_purchase_shop_item_is_isolated_ref_driven_and_uses_no_coordinate_click() -> None:
     composition = (MOD / "Bootstrap" / "DefaultCapabilitySet.cs").read_text()
     handler = (MOD / "Capabilities" / "Actions" / "PurchaseShopItemHandler.cs").read_text()
@@ -501,3 +512,21 @@ def test_default_capability_set_is_the_unique_concrete_handler_composition_root(
             assert constructions == handlers
         else:
             assert not constructions, source_path.relative_to(MOD)
+
+
+def test_game_advance_policy_is_the_only_pause_when_unfocused_owner() -> None:
+    policy_path = MOD / "Game" / "Runtime" / "GameAdvancePolicy.cs"
+    save_loader = (MOD / "Bootstrap" / "SaveAutoLoader.cs").read_text()
+    entry = (MOD / "Bootstrap" / "ModEntry.cs").read_text()
+    owners = [
+        source_path.relative_to(MOD)
+        for source_path in MOD.rglob("*.cs")
+        if "pauseWhenOutOfFocus" in source_path.read_text()
+    ]
+
+    assert owners == [policy_path.relative_to(MOD)]
+    assert "_gameAdvancePolicy.EnsureGameCanAdvance();" in save_loader
+    assert "_gameAdvancePolicy.RestoreIfWorldNotReady();" in save_loader
+    policy_construction = entry.index("new GameAdvancePolicy(helper)")
+    loader_construction = entry.index("new SaveAutoLoader(")
+    assert policy_construction < loader_construction
