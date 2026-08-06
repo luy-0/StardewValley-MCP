@@ -11,21 +11,29 @@ from mcp.server.lowlevel import NotificationOptions, Server
 from mcp.server.stdio import stdio_server
 
 from . import __version__
+from .builtin_skills import create_builtin_skill_host
 from .catalog import Catalog, CatalogPolicy
 from .client import StardewClient
+from .skill_host import SkillHost
 from .transport import ConfigurationError, ConnectionConfig
 
 
-def create_server(client: Any) -> Server:
+def create_server(client: Any, *, skill_host: SkillHost | None = None) -> Server:
     server = Server("stardew-valley-mcp", version=__version__)
 
     @server.list_tools()
     async def list_tools() -> list[types.Tool]:
-        return await client.available_tools()
+        atomic_tools = await client.available_tools()
+        if skill_host is None:
+            return atomic_tools
+        return [*atomic_tools, *skill_host.available_tools(atomic_tools)]
 
     @server.call_tool()
     async def call_tool(name: str, arguments: dict[str, Any]) -> dict[str, Any] | types.CallToolResult:
-        result = await client.call_tool(name, arguments)
+        if skill_host is not None and skill_host.handles(name):
+            result = await skill_host.invoke(name, arguments)
+        else:
+            result = await client.call_tool(name, arguments)
         if result["status"] == "succeeded":
             return result
         return types.CallToolResult(
@@ -46,7 +54,7 @@ def catalog_for(*, allow_write: bool) -> Catalog:
 
 async def run_stdio(config: ConnectionConfig, *, allow_write: bool = False) -> None:
     client = StardewClient(config, catalog_for(allow_write=allow_write))
-    server = create_server(client)
+    server = create_server(client, skill_host=create_builtin_skill_host(client))
     try:
         async with stdio_server() as (read_stream, write_stream):
             await server.run(

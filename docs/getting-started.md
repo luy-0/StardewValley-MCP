@@ -136,6 +136,16 @@ stardew_face {"direction":"left"}
 
 `query_world`、`query_inventory` 与 `query_ui` 返回的 Ref 是不透明值。调用方只能原样交给明确接受 Ref 的 Tool，不应解析或自行构造。
 
+### 可执行睡眠 Skill
+
+以 `--allow-write` 启动且依赖的原子 Tool 均可用时，Tool 清单还会出现：
+
+```text
+stardew_skill_sleep_until_next_day {"timeoutSeconds":180}
+```
+
+该调用会在同一个 Mod Owner Session 内连续完成住宅与床位查询、导航、睡眠确认、换日等待和安全日结 UI 收敛。只有日期已经推进、菜单关闭且玩家恢复可操作时才返回完成；它是 MCP 本地编排的 Skill，不属于 Mod 公共 Manifest 中的复合能力。
+
 ## 七、本地开发门禁
 
 不部署 Mod 的完整静态与自动化门禁：

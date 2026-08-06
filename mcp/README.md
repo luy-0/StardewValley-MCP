@@ -17,7 +17,7 @@ MCP 服务端不拥有游戏状态，也不定义游戏内事实；游戏状态�
 
 ## 当前实现状态
 
-当前已建立独立 Python 包、CLI 和由 `../spec/proto/` 生成的协议类型。`serve` 会启动真正的 MCP stdio Server；它连接本地 Mod、验证 HMAC 与能力摘要，并按公共 Manifest、MCP 支持集、Mod 公告集和权限策略的交集暴露 Tool。默认只允许 `game:read`；需要操作游戏时必须显式增加 `--allow-write`。
+当前已建立独立 Python 包、CLI 和由 `../spec/proto/` 生成的协议类型。`serve` 会启动真正的 MCP stdio Server；它连接本地 Mod、验证 HMAC 与能力摘要，并按公共 Manifest、MCP 支持集、Mod 公告集和权限策略的交集暴露原子 Tool。默认只允许 `game:read`；需要操作游戏时必须显式增加 `--allow-write`。写权限和全部依赖原子 Tool 同时可用时，服务端还会通过受限 `SkillContext` 暴露随包发布的可执行睡眠 Skill；该脚本复用当前连接，不取得共享秘密，也不是 Mod 复合能力。
 
 以下命令均从仓库根目录执行。推荐使用 `uv` 按锁文件安装、测试并构建：
 

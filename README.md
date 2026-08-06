@@ -13,7 +13,7 @@ StardewValley MCP 是一个开源集成项目，让兼容 MCP 的智能体通过
 StardewValley-MCP/
 ├── mod/       SMAPI Mod 实现
 ├── mcp/       MCP 服务端实现
-├── skill/     Agent 指引、模板、最小示例和测试工具
+├── skill/     Agent 指引、模板、最小示例、脚本和测试工具
 ├── spec/      Mod、MCP 与 Skill 共享的公共契约
 └── docs/      安装、使用和开发教程
 ```
@@ -28,7 +28,7 @@ StardewValley-MCP/
 
 ### `skill/`
 
-Skill 开发入口，只包含接口定义、编写模板、最小示例和一致性测试工具，不提供完整的官方玩法 Skill 集合。
+Skill 开发入口，只包含接口定义、编写模板、最小示例、必要的确定性脚本和一致性测试工具，不提供完整的官方玩法 Skill 集合。可执行脚本只通过受限 `SkillContext` 调用公共 MCP Tool，不直接连接 Mod。
 
 ### `spec/`
 
@@ -51,7 +51,7 @@ Skill 开发入口，只包含接口定义、编写模板、最小示例和一�
 
 ## 项目状态
 
-当前预览版已经具备独立的 Mod、MCP Python 包，以及公共 V1 契约定义的十八项原语能力：五项只读能力和十三项需要明确授权的变更能力。`transfer_inventory_item` 使用当前箱子 UI 与双方 Inventory Revision，按明确 Item Ref 原子转移指定数量；`set_equipment_slot` 使用当前原版背包页签发的装备槽 Ref 与玩家物品 Ref，执行穿戴、替换或取下；`move_inventory_item` 使用当前玩家 Item Ref 与目标背包 Slot Ref，执行整件移动或交换。MCP 默认仍只读，只有显式启用写权限，并且公共 Manifest、MCP 支持集与 Mod 握手公告同时包含对应能力时，才会暴露操作 Tool。仓库同时提供 Agent `SKILL.md` 模板、两个最小示例、静态校验工具和源码安装指南。
+当前预览版已经具备独立的 Mod、MCP Python 包，以及公共 V1 契约定义的二十一项原语能力：六项只读能力和十五项需要明确授权的变更能力。MCP 默认仍只读，只有显式启用写权限，并且公共 Manifest、MCP 支持集与 Mod 握手公告同时包含对应能力时，才会暴露操作 Tool。仓库同时提供 Agent `SKILL.md` 模板、七个最小示例和静态校验工具；其中睡眠示例已经提供可执行脚本，在一次调用中复用当前 Owner Session 完成换日闭环。
 
 普通用户的源码安装与调用方法见[快速开始](docs/getting-started.md)；需要自动完成安装的 Agent 使用 [AGENT-GUIDE.md](AGENT-GUIDE.md)。本地完整回归入口为：
 
