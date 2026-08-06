@@ -23,6 +23,7 @@ internal static class DefaultCapabilitySet
             new ActivateUiHandler(refs),
             new CloseMenuHandler(refs),
             new QueryRuntimeHandler(),
+            new QueryPlayersHandler(new StardewPlayerRosterReader()),
             new QueryWorldHandler(refs),
             new QueryInventoryHandler(refs),
             new QueryUiHandler(refs),

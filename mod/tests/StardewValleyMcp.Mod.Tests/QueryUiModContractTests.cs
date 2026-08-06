@@ -642,7 +642,7 @@ public sealed class QueryUiModContractTests
             Is.EqualTo(new[]
             {
                 "activate_ui", "close_menu", "craft_item", "emote", "equip", "face", "inspect", "interact",
-                "move_inventory_item", "navigate", "open_menu", "purchase_shop_item", "query_inventory", "query_runtime", "query_ui", "query_world", "say",
+                "move_inventory_item", "navigate", "open_menu", "purchase_shop_item", "query_inventory", "query_players", "query_runtime", "query_ui", "query_world", "say",
                 "set_equipment_slot", "transfer_inventory_item", "use_tool",
             })
         );

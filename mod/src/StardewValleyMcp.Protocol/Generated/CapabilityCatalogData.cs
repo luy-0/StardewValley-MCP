@@ -202,6 +202,21 @@ internal static class CapabilityCatalogData
                 Destructive = false,
                 Risks = { },
             },
+            ["query_players"] = new CapabilityDescriptor
+            {
+                Id = "query_players",
+                ContractVersion = "1.0.0",
+                SideEffect = SideEffect.ReadOnly,
+                Execution = ExecutionMode.Immediate,
+                Cancellable = false,
+                DefaultTimeoutMs = 5000,
+                MaxTimeoutMs = 15000,
+                RequestType = nameof(QueryPlayersRequest),
+                ResultType = nameof(QueryPlayersResult),
+                RequiredScope = "game:read",
+                Destructive = false,
+                Risks = { },
+            },
             ["query_runtime"] = new CapabilityDescriptor
             {
                 Id = "query_runtime",

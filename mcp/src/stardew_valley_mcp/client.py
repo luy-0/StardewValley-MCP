@@ -26,6 +26,9 @@ class StardewClient:
     async def query_runtime(self) -> dict[str, object]:
         return await self.call_tool("stardew_query_runtime", {})
 
+    async def query_players(self) -> dict[str, object]:
+        return await self.call_tool("stardew_query_players", {})
+
     async def aclose(self) -> None:
         await self._runtime.aclose()
 

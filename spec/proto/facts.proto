@@ -30,6 +30,36 @@ message PlayerFact {
   string home_location_id = 9;
 }
 
+message PlayersSnapshot {
+  repeated PlayerPresenceFact players = 1;
+}
+
+enum PlayerRelation {
+  PLAYER_RELATION_UNSPECIFIED = 0;
+  PLAYER_RELATION_MYSELF = 1;
+  PLAYER_RELATION_OTHER = 2;
+}
+
+message PlayerPresenceFact {
+  // Farmer.UniqueMultiplayerID 的有符号十进制表示；调用方必须视为不透明身份。
+  string player_id = 1;
+  // 存档内角色名，不是 Steam 等平台账号名。
+  string display_name = 2;
+  PlayerRelation relation = 3;
+  bool online = 4;
+  bool is_host = 5;
+
+  // 以下实时字段只对在线玩家出现；离线玩家不得返回断线前的陈旧值。
+  optional WorldPosition position = 6;
+  optional Direction facing = 7;
+  optional double energy = 8;
+  optional double max_energy = 9;
+  optional bool is_in_bed = 10;
+
+  // 能确认时返回住宅的 NameOrUniqueName；多人 Cabin 不得退化为短名。
+  optional string home_location_id = 11;
+}
+
 message WeatherFact {
   bool raining = 1;
   bool lightning = 2;

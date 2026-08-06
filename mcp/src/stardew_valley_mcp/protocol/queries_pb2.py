@@ -27,7 +27,7 @@ from . import facts_pb2 as facts__pb2
 from . import refs_pb2 as refs__pb2
 
 
-DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rqueries.proto\x12\x15stardew_valley.mcp.v1\x1a\x0c\x63ommon.proto\x1a\x0b\x66\x61\x63ts.proto\x1a\nrefs.proto\"c\n\x0cQueryWarning\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0f\n\x07message\x18\x02 \x01(\t\x12,\n\x03ref\x18\x03 \x01(\x0b\x32\x1a.stardew_valley.mcp.v1.RefH\x00\x88\x01\x01\x42\x06\n\x04_ref\"\x15\n\x13QueryRuntimeRequest\"\x85\x01\n\x12QueryRuntimeResult\x12\x38\n\x08snapshot\x18\x01 \x01(\x0b\x32&.stardew_valley.mcp.v1.RuntimeSnapshot\x12\x35\n\x08warnings\x18\x02 \x03(\x0b\x32#.stardew_valley.mcp.v1.QueryWarning\"\x84\x03\n\x11QueryWorldRequest\x12/\n\x04\x61rea\x18\x01 \x01(\x0b\x32\x1f.stardew_valley.mcp.v1.TileAreaH\x00\x12\x33\n\x06\x61round\x18\x02 \x01(\x0b\x32!.stardew_valley.mcp.v1.RadiusAreaH\x00\x12\x37\n\x0c\x65ntity_kinds\x18\x03 \x03(\x0e\x32!.stardew_valley.mcp.v1.EntityKind\x12\x1a\n\rinclude_tiles\x18\x04 \x01(\x08H\x01\x88\x01\x01\x12\x1d\n\x10include_entities\x18\x05 \x01(\x08H\x02\x88\x01\x01\x12\x1f\n\x12include_characters\x18\x06 \x01(\x08H\x03\x88\x01\x01\x12\x14\n\x0cmax_entities\x18\x07 \x01(\r\x12\x16\n\x0emax_characters\x18\x08 \x01(\rB\x08\n\x06regionB\x10\n\x0e_include_tilesB\x13\n\x11_include_entitiesB\x15\n\x13_include_characters\"\x81\x01\n\x10QueryWorldResult\x12\x36\n\x08snapshot\x18\x01 \x01(\x0b\x32$.stardew_valley.mcp.v1.WorldSnapshot\x12\x35\n\x08warnings\x18\x02 \x03(\x0b\x32#.stardew_valley.mcp.v1.QueryWarning\"\xc2\x01\n\x15QueryInventoryRequest\x12J\n\x10player_inventory\x18\x01 \x01(\x0b\x32..stardew_valley.mcp.v1.PlayerInventorySelectorH\x00\x12\x33\n\rcontainer_ref\x18\x02 \x01(\x0b\x32\x1a.stardew_valley.mcp.v1.RefH\x00\x12\x1b\n\x13include_empty_slots\x18\x03 \x01(\x08\x42\x0b\n\tcontainer\"\x19\n\x17PlayerInventorySelector\"\x89\x01\n\x14QueryInventoryResult\x12:\n\x08snapshot\x18\x01 \x01(\x0b\x32(.stardew_valley.mcp.v1.InventorySnapshot\x12\x35\n\x08warnings\x18\x02 \x03(\x0b\x32#.stardew_valley.mcp.v1.QueryWarning\"\x10\n\x0eQueryUiRequest\"{\n\rQueryUiResult\x12\x33\n\x08snapshot\x18\x01 \x01(\x0b\x32!.stardew_valley.mcp.v1.UiSnapshot\x12\x35\n\x08warnings\x18\x02 \x03(\x0b\x32#.stardew_valley.mcp.v1.QueryWarning\":\n\x0eInspectRequest\x12(\n\x04refs\x18\x01 \x03(\x0b\x32\x1a.stardew_valley.mcp.v1.Ref\"z\n\rInspectResult\x12\x32\n\x05items\x18\x01 \x03(\x0b\x32#.stardew_valley.mcp.v1.InspectedRef\x12\x35\n\x08warnings\x18\x02 \x03(\x0b\x32#.stardew_valley.mcp.v1.QueryWarning\"\x81\x03\n\x0cInspectedRef\x12\x38\n\nresolution\x18\x01 \x01(\x0b\x32$.stardew_valley.mcp.v1.RefResolution\x12>\n\x0cworld_entity\x18\n \x01(\x0b\x32&.stardew_valley.mcp.v1.WorldEntityFactH\x00\x12\x39\n\tcharacter\x18\x0b \x01(\x0b\x32$.stardew_valley.mcp.v1.CharacterFactH\x00\x12\x39\n\x0einventory_item\x18\x0c \x01(\x0b\x32\x1f.stardew_valley.mcp.v1.ItemFactH\x00\x12=\n\tinventory\x18\r \x01(\x0b\x32(.stardew_valley.mcp.v1.InventorySnapshotH\x00\x12:\n\nui_element\x18\x0e \x01(\x0b\x32$.stardew_valley.mcp.v1.UiElementFactH\x00\x42\x06\n\x04\x66\x61\x63tB\x1f\xaa\x02\x1cStardewValleyMcp.Protocol.V1b\x06proto3')
+DESCRIPTOR = _descriptor_pool.Default().AddSerializedFile(b'\n\rqueries.proto\x12\x15stardew_valley.mcp.v1\x1a\x0c\x63ommon.proto\x1a\x0b\x66\x61\x63ts.proto\x1a\nrefs.proto\"c\n\x0cQueryWarning\x12\x0c\n\x04\x63ode\x18\x01 \x01(\t\x12\x0f\n\x07message\x18\x02 \x01(\t\x12,\n\x03ref\x18\x03 \x01(\x0b\x32\x1a.stardew_valley.mcp.v1.RefH\x00\x88\x01\x01\x42\x06\n\x04_ref\"\x15\n\x13QueryRuntimeRequest\"\x85\x01\n\x12QueryRuntimeResult\x12\x38\n\x08snapshot\x18\x01 \x01(\x0b\x32&.stardew_valley.mcp.v1.RuntimeSnapshot\x12\x35\n\x08warnings\x18\x02 \x03(\x0b\x32#.stardew_valley.mcp.v1.QueryWarning\"\x15\n\x13QueryPlayersRequest\"\x85\x01\n\x12QueryPlayersResult\x12\x38\n\x08snapshot\x18\x01 \x01(\x0b\x32&.stardew_valley.mcp.v1.PlayersSnapshot\x12\x35\n\x08warnings\x18\x02 \x03(\x0b\x32#.stardew_valley.mcp.v1.QueryWarning\"\x84\x03\n\x11QueryWorldRequest\x12/\n\x04\x61rea\x18\x01 \x01(\x0b\x32\x1f.stardew_valley.mcp.v1.TileAreaH\x00\x12\x33\n\x06\x61round\x18\x02 \x01(\x0b\x32!.stardew_valley.mcp.v1.RadiusAreaH\x00\x12\x37\n\x0c\x65ntity_kinds\x18\x03 \x03(\x0e\x32!.stardew_valley.mcp.v1.EntityKind\x12\x1a\n\rinclude_tiles\x18\x04 \x01(\x08H\x01\x88\x01\x01\x12\x1d\n\x10include_entities\x18\x05 \x01(\x08H\x02\x88\x01\x01\x12\x1f\n\x12include_characters\x18\x06 \x01(\x08H\x03\x88\x01\x01\x12\x14\n\x0cmax_entities\x18\x07 \x01(\r\x12\x16\n\x0emax_characters\x18\x08 \x01(\rB\x08\n\x06regionB\x10\n\x0e_include_tilesB\x13\n\x11_include_entitiesB\x15\n\x13_include_characters\"\x81\x01\n\x10QueryWorldResult\x12\x36\n\x08snapshot\x18\x01 \x01(\x0b\x32$.stardew_valley.mcp.v1.WorldSnapshot\x12\x35\n\x08warnings\x18\x02 \x03(\x0b\x32#.stardew_valley.mcp.v1.QueryWarning\"\xc2\x01\n\x15QueryInventoryRequest\x12J\n\x10player_inventory\x18\x01 \x01(\x0b\x32..stardew_valley.mcp.v1.PlayerInventorySelectorH\x00\x12\x33\n\rcontainer_ref\x18\x02 \x01(\x0b\x32\x1a.stardew_valley.mcp.v1.RefH\x00\x12\x1b\n\x13include_empty_slots\x18\x03 \x01(\x08\x42\x0b\n\tcontainer\"\x19\n\x17PlayerInventorySelector\"\x89\x01\n\x14QueryInventoryResult\x12:\n\x08snapshot\x18\x01 \x01(\x0b\x32(.stardew_valley.mcp.v1.InventorySnapshot\x12\x35\n\x08warnings\x18\x02 \x03(\x0b\x32#.stardew_valley.mcp.v1.QueryWarning\"\x10\n\x0eQueryUiRequest\"{\n\rQueryUiResult\x12\x33\n\x08snapshot\x18\x01 \x01(\x0b\x32!.stardew_valley.mcp.v1.UiSnapshot\x12\x35\n\x08warnings\x18\x02 \x03(\x0b\x32#.stardew_valley.mcp.v1.QueryWarning\":\n\x0eInspectRequest\x12(\n\x04refs\x18\x01 \x03(\x0b\x32\x1a.stardew_valley.mcp.v1.Ref\"z\n\rInspectResult\x12\x32\n\x05items\x18\x01 \x03(\x0b\x32#.stardew_valley.mcp.v1.InspectedRef\x12\x35\n\x08warnings\x18\x02 \x03(\x0b\x32#.stardew_valley.mcp.v1.QueryWarning\"\x81\x03\n\x0cInspectedRef\x12\x38\n\nresolution\x18\x01 \x01(\x0b\x32$.stardew_valley.mcp.v1.RefResolution\x12>\n\x0cworld_entity\x18\n \x01(\x0b\x32&.stardew_valley.mcp.v1.WorldEntityFactH\x00\x12\x39\n\tcharacter\x18\x0b \x01(\x0b\x32$.stardew_valley.mcp.v1.CharacterFactH\x00\x12\x39\n\x0einventory_item\x18\x0c \x01(\x0b\x32\x1f.stardew_valley.mcp.v1.ItemFactH\x00\x12=\n\tinventory\x18\r \x01(\x0b\x32(.stardew_valley.mcp.v1.InventorySnapshotH\x00\x12:\n\nui_element\x18\x0e \x01(\x0b\x32$.stardew_valley.mcp.v1.UiElementFactH\x00\x42\x06\n\x04\x66\x61\x63tB\x1f\xaa\x02\x1cStardewValleyMcp.Protocol.V1b\x06proto3')
 
 _globals = globals()
 _builder.BuildMessageAndEnumDescriptors(DESCRIPTOR, _globals)
@@ -41,24 +41,28 @@ if not _descriptor._USE_C_DESCRIPTORS:
   _globals['_QUERYRUNTIMEREQUEST']._serialized_end=201
   _globals['_QUERYRUNTIMERESULT']._serialized_start=204
   _globals['_QUERYRUNTIMERESULT']._serialized_end=337
-  _globals['_QUERYWORLDREQUEST']._serialized_start=340
-  _globals['_QUERYWORLDREQUEST']._serialized_end=728
-  _globals['_QUERYWORLDRESULT']._serialized_start=731
-  _globals['_QUERYWORLDRESULT']._serialized_end=860
-  _globals['_QUERYINVENTORYREQUEST']._serialized_start=863
-  _globals['_QUERYINVENTORYREQUEST']._serialized_end=1057
-  _globals['_PLAYERINVENTORYSELECTOR']._serialized_start=1059
-  _globals['_PLAYERINVENTORYSELECTOR']._serialized_end=1084
-  _globals['_QUERYINVENTORYRESULT']._serialized_start=1087
-  _globals['_QUERYINVENTORYRESULT']._serialized_end=1224
-  _globals['_QUERYUIREQUEST']._serialized_start=1226
-  _globals['_QUERYUIREQUEST']._serialized_end=1242
-  _globals['_QUERYUIRESULT']._serialized_start=1244
-  _globals['_QUERYUIRESULT']._serialized_end=1367
-  _globals['_INSPECTREQUEST']._serialized_start=1369
-  _globals['_INSPECTREQUEST']._serialized_end=1427
-  _globals['_INSPECTRESULT']._serialized_start=1429
-  _globals['_INSPECTRESULT']._serialized_end=1551
-  _globals['_INSPECTEDREF']._serialized_start=1554
-  _globals['_INSPECTEDREF']._serialized_end=1939
+  _globals['_QUERYPLAYERSREQUEST']._serialized_start=339
+  _globals['_QUERYPLAYERSREQUEST']._serialized_end=360
+  _globals['_QUERYPLAYERSRESULT']._serialized_start=363
+  _globals['_QUERYPLAYERSRESULT']._serialized_end=496
+  _globals['_QUERYWORLDREQUEST']._serialized_start=499
+  _globals['_QUERYWORLDREQUEST']._serialized_end=887
+  _globals['_QUERYWORLDRESULT']._serialized_start=890
+  _globals['_QUERYWORLDRESULT']._serialized_end=1019
+  _globals['_QUERYINVENTORYREQUEST']._serialized_start=1022
+  _globals['_QUERYINVENTORYREQUEST']._serialized_end=1216
+  _globals['_PLAYERINVENTORYSELECTOR']._serialized_start=1218
+  _globals['_PLAYERINVENTORYSELECTOR']._serialized_end=1243
+  _globals['_QUERYINVENTORYRESULT']._serialized_start=1246
+  _globals['_QUERYINVENTORYRESULT']._serialized_end=1383
+  _globals['_QUERYUIREQUEST']._serialized_start=1385
+  _globals['_QUERYUIREQUEST']._serialized_end=1401
+  _globals['_QUERYUIRESULT']._serialized_start=1403
+  _globals['_QUERYUIRESULT']._serialized_end=1526
+  _globals['_INSPECTREQUEST']._serialized_start=1528
+  _globals['_INSPECTREQUEST']._serialized_end=1586
+  _globals['_INSPECTRESULT']._serialized_start=1588
+  _globals['_INSPECTRESULT']._serialized_end=1710
+  _globals['_INSPECTEDREF']._serialized_start=1713
+  _globals['_INSPECTEDREF']._serialized_end=2098
 # @@protoc_insertion_point(module_scope)

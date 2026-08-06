@@ -9,6 +9,12 @@ from typing import ClassVar as _ClassVar, Optional as _Optional, Union as _Union
 
 DESCRIPTOR: _descriptor.FileDescriptor
 
+class PlayerRelation(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    PLAYER_RELATION_UNSPECIFIED: _ClassVar[PlayerRelation]
+    PLAYER_RELATION_MYSELF: _ClassVar[PlayerRelation]
+    PLAYER_RELATION_OTHER: _ClassVar[PlayerRelation]
+
 class WeatherKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     WEATHER_KIND_UNSPECIFIED: _ClassVar[WeatherKind]
@@ -91,6 +97,9 @@ class UiEquipmentSlotKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     UI_EQUIPMENT_SLOT_KIND_SHIRT: _ClassVar[UiEquipmentSlotKind]
     UI_EQUIPMENT_SLOT_KIND_PANTS: _ClassVar[UiEquipmentSlotKind]
     UI_EQUIPMENT_SLOT_KIND_TRINKET: _ClassVar[UiEquipmentSlotKind]
+PLAYER_RELATION_UNSPECIFIED: PlayerRelation
+PLAYER_RELATION_MYSELF: PlayerRelation
+PLAYER_RELATION_OTHER: PlayerRelation
 WEATHER_KIND_UNSPECIFIED: WeatherKind
 WEATHER_KIND_SUN: WeatherKind
 WEATHER_KIND_RAIN: WeatherKind
@@ -190,6 +199,38 @@ class PlayerFact(_message.Message):
     can_move: bool
     home_location_id: str
     def __init__(self, position: _Optional[_Union[_common_pb2.WorldPosition, _Mapping]] = ..., facing: _Optional[_Union[_common_pb2.Direction, str]] = ..., money: _Optional[int] = ..., energy: _Optional[float] = ..., max_energy: _Optional[float] = ..., health: _Optional[int] = ..., max_health: _Optional[int] = ..., can_move: _Optional[bool] = ..., home_location_id: _Optional[str] = ...) -> None: ...
+
+class PlayersSnapshot(_message.Message):
+    __slots__ = ("players",)
+    PLAYERS_FIELD_NUMBER: _ClassVar[int]
+    players: _containers.RepeatedCompositeFieldContainer[PlayerPresenceFact]
+    def __init__(self, players: _Optional[_Iterable[_Union[PlayerPresenceFact, _Mapping]]] = ...) -> None: ...
+
+class PlayerPresenceFact(_message.Message):
+    __slots__ = ("player_id", "display_name", "relation", "online", "is_host", "position", "facing", "energy", "max_energy", "is_in_bed", "home_location_id")
+    PLAYER_ID_FIELD_NUMBER: _ClassVar[int]
+    DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
+    RELATION_FIELD_NUMBER: _ClassVar[int]
+    ONLINE_FIELD_NUMBER: _ClassVar[int]
+    IS_HOST_FIELD_NUMBER: _ClassVar[int]
+    POSITION_FIELD_NUMBER: _ClassVar[int]
+    FACING_FIELD_NUMBER: _ClassVar[int]
+    ENERGY_FIELD_NUMBER: _ClassVar[int]
+    MAX_ENERGY_FIELD_NUMBER: _ClassVar[int]
+    IS_IN_BED_FIELD_NUMBER: _ClassVar[int]
+    HOME_LOCATION_ID_FIELD_NUMBER: _ClassVar[int]
+    player_id: str
+    display_name: str
+    relation: PlayerRelation
+    online: bool
+    is_host: bool
+    position: _common_pb2.WorldPosition
+    facing: _common_pb2.Direction
+    energy: float
+    max_energy: float
+    is_in_bed: bool
+    home_location_id: str
+    def __init__(self, player_id: _Optional[str] = ..., display_name: _Optional[str] = ..., relation: _Optional[_Union[PlayerRelation, str]] = ..., online: _Optional[bool] = ..., is_host: _Optional[bool] = ..., position: _Optional[_Union[_common_pb2.WorldPosition, _Mapping]] = ..., facing: _Optional[_Union[_common_pb2.Direction, str]] = ..., energy: _Optional[float] = ..., max_energy: _Optional[float] = ..., is_in_bed: _Optional[bool] = ..., home_location_id: _Optional[str] = ...) -> None: ...
 
 class WeatherFact(_message.Message):
     __slots__ = ("raining", "lightning", "snowing", "green_rain", "festival_day", "kind", "tomorrow")

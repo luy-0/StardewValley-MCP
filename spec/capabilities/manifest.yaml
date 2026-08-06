@@ -226,6 +226,20 @@ capabilities:
     required_scope: game:read
     risk: []
     destructive: false
+  - id: query_players
+    title: 查询存档玩家
+    description: 获取本存档中自己、在线队友与离线农场工的身份及可用状态。
+    contract_version: 1.0.0
+    request: QueryPlayersRequest
+    result: QueryPlayersResult
+    side_effect: read_only
+    execution: immediate
+    cancellable: false
+    default_timeout_ms: 5000
+    max_timeout_ms: 15000
+    required_scope: game:read
+    risk: []
+    destructive: false
   - id: query_world
     title: 查询世界区域
     description: 获取一个有界地图区域中的地块、对象和角色事实。

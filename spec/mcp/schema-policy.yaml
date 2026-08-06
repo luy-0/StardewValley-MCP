@@ -135,6 +135,36 @@ output_messages:
     fields:
       value: {minLength: 1, maxLength: 512}
 
+  PlayersSnapshot:
+    fields:
+      players: {minItems: 1}
+
+  PlayerPresenceFact:
+    fields:
+      playerId:
+        minLength: 1
+        maxLength: 20
+        pattern: "^-?(0|[1-9][0-9]*)$"
+      relation:
+        enum: [myself, other]
+    allOf:
+      - if:
+          required: [online]
+          properties:
+            online: {const: false}
+        then:
+          not:
+            anyOf:
+              - {required: [position]}
+              - {required: [facing]}
+              - {required: [energy]}
+              - {required: [maxEnergy]}
+              - {required: [isInBed]}
+      - if: {required: [energy]}
+        then: {required: [maxEnergy]}
+      - if: {required: [maxEnergy]}
+        then: {required: [energy]}
+
   SayResult:
     fields:
       contentLength: {minimum: 1, maximum: 500}

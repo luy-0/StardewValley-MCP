@@ -5,7 +5,7 @@ namespace StardewValleyMcp.Protocol.Tests;
 
 public sealed class ObservationContractTests
 {
-    private const string Digest = "14664e95bbeb39b4c0ab235a5a7b3bf9df8fa2f702e66e1157b23dd4082f2994";
+    private const string Digest = "e3176d2a00bc1e2937f4dbc46f50e3cbe084398f6fa3523bcd11755c75bf288c";
 
     [Test]
     public void GeneratedCatalogContainsAllPublicDescriptors()
@@ -13,12 +13,13 @@ public sealed class ObservationContractTests
         var snapshot = CapabilityCatalog.CreateSnapshotFor(new[]
         {
             "say", "emote", "face", "navigate", "interact", "use_tool", "equip", "transfer_inventory_item", "set_equipment_slot", "move_inventory_item", "craft_item", "purchase_shop_item", "open_menu", "activate_ui", "close_menu",
-            "query_runtime", "query_world", "query_inventory", "query_ui", "inspect",
+            "query_runtime", "query_world", "query_inventory", "query_players", "query_ui", "inspect",
         });
-        Assert.That(snapshot.Capabilities, Has.Count.EqualTo(20));
+        Assert.That(snapshot.Capabilities, Has.Count.EqualTo(21));
         Assert.That(snapshot.Capabilities.Single(item => item.Id == "say").Execution, Is.EqualTo(ExecutionMode.Immediate));
         Assert.That(snapshot.Capabilities.Single(item => item.Id == "face").Execution, Is.EqualTo(ExecutionMode.LongRunning));
         Assert.That(snapshot.Capabilities.Single(item => item.Id == "query_runtime").RequiredScope, Is.EqualTo("game:read"));
+        Assert.That(snapshot.Capabilities.Single(item => item.Id == "query_players").Execution, Is.EqualTo(ExecutionMode.Immediate));
     }
 
     [Test]

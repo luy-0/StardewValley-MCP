@@ -203,6 +203,15 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 
 返回日期、时间、天气、明日天气预报、今日运势、今日美食节目可学习菜谱、玩家位置、资源、UI 摘要及当前玩家保存的 `home_location_id`。天气必须同时保留兼容布尔字段和明确 `WeatherKind` 枚举；调用方需要判断整体天气时应优先读取 `weather.kind`，需要判断次日计划时读取 `weather.tomorrow`，且该预报必须与当前 Location 的天气上下文一致。今日运势必须返回原始 `daily_luck.value` 与按电视运势阈值归类的 `daily_luck.tier`。今日美食节目必须是只读投影：可计算 Sunday 首播与 Wednesday 重播对应菜谱，但不得因为查询而写入玩家已学菜谱或队伍重播周状态。`home_location_id` 沿用游戏自身的住宅 Location 标识；多人小屋必须保持其唯一室内 ID，不得退化为可能重名的短建筑名。游戏尚未加载 Save 时返回 `NOT_READY`，不能返回由零值拼成的假 Snapshot。
 
+### `query_players`
+
+- 返回当前存档的主机、在线农场工与离线农场工；单人存档必须返回唯一的当前玩家。请求不提供在线过滤或分页，结果把 `relation=MYSELF` 的当前玩家放在第一位，其余玩家按有符号 `player_id` 升序排列，且 `player_id` 不得重复。
+- `player_id` 是 `Farmer.UniqueMultiplayerID` 的 invariant-culture 有符号十进制字符串，调用方必须把它视为不透明身份；它不是整个 Save 的 ID。`display_name` 使用存档内角色名，不得改用平台账号名、`userID`、`platformID` 或本地化的“自己”。
+- `relation` 只能通过玩家 ID 是否等于当前 `Game1.player` 的 ID 判定，不得使用事件期间可能指向其他 Farmer 实例的宽松 Local Player 语义。`is_host` 独立表示存档主机身份，因此客户端自己的结果可以同时为 `relation=MYSELF`、`is_host=false`。
+- `online=false` 时不得返回 `position`、`facing`、`energy`、`max_energy` 或 `is_in_bed`，也不得把 `disconnectLocation`、`disconnectPosition` 或保存对象中的旧资源值冒充实时事实。在线字段临时不可确认时保持缺省；`energy` 与 `max_energy` 必须同时出现或同时缺省。
+- `position.location_id` 与 `home_location_id` 必须使用 `NameOrUniqueName`；多人 Cabin 必须保留唯一室内 ID。住宅无法安全解析时缺省 `home_location_id`，不得退化为显示名称或扫描猜测。
+- V1 不返回其他玩家的生命值、`can_move`、金钱、背包、技能、装备或平台身份；这些字段不属于玩家发现能力，或无法作为可靠的跨客户端实时事实。游戏尚未加载 Save 时返回 `NOT_READY`。
+
 ### `query_world`
 
 - 未提供 Region 时使用玩家位置为中心、半径 8。
@@ -278,6 +287,6 @@ V1 为常见树木、作物、空的已耕地、资源、机器、容器、床�
 
 - 任一成功 `CommandEvent` 序列化后必须小于 `786432` 字节，为线路的 1 MiB 帧上限保留至少 25% 余量；实现不得先生成超大结果再依赖 Transport 拒绝。
 - 真实存档中的默认 `query_world`（玩家半径 8）单次 Handler 目标为不超过 16 ms；最大合法 1024 Tile 区域单次不超过 50 ms。
-- `query_inventory`、`query_ui` 与最多 64 个 Ref 的 `inspect` 单次 Handler 目标为不超过 16 ms。
+- `query_players`、`query_inventory`、`query_ui` 与最多 64 个 Ref 的 `inspect` 单次 Handler 目标为不超过 16 ms。
 - 实机门禁必须记录纯 Handler 耗时和序列化字节数；MCP 往返时间包含排队到下一 Tick、线路和客户端投影，不得冒充主线程耗时。
 - 超过预算时必须缩小扫描、减少重复投影或优化查找；不得把游戏对象读取移动到后台线程，也不得通过遗漏 Generic Object、关闭默认集合或降低契约上限来伪造通过。

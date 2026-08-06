@@ -213,10 +213,11 @@ def test_catalog_intersection_and_descriptor_projection_cover_observation_fixtur
     ready = transport_pb2.TransportFrame()
     json_format.Parse((OBSERVATION_FIXTURES / "server-ready.json").read_text(), ready)
     catalog = Catalog.load()
-    assert len(catalog.capability_ids) == 20
+    assert len(catalog.capability_ids) == 21
     assert [tool.name for tool in catalog.tools_for(ready.server_ready.capability_snapshot)] == [
         "stardew_inspect",
         "stardew_query_inventory",
+        "stardew_query_players",
         "stardew_query_runtime",
         "stardew_query_ui",
         "stardew_query_world",

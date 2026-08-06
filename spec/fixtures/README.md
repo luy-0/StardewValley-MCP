@@ -45,7 +45,7 @@ fixtures/v1/
 
 `v1/index.json` 的 `profiles.bootstrap` 是只包含 `query_runtime` 的最小能力子集，而不是把完整 V1 Manifest 摘要伪装成已实现能力。该 profile 用两个独立场景固定同一请求的成功终态与 `ERROR_CODE_NOT_READY` 失败终态；场景彼此独立，因此不会把一个 Command ID 串成两个终态。Bootstrap 复用完整 V1 的 ServerHello/ClientHello 身份和 Nonce，但使用自己的 singleton CapabilitySnapshot digest、ServerReady HMAC 与 Fence。
 
-`profiles.observation` 固定五项观察能力集合（`query_runtime`、`query_world`、`query_inventory`、`query_ui`、`inspect`）及其独立 digest/HMAC/Fence。每项都有独立成功与失败生命周期；world、inventory、inspect 分别保留最小和完整成功投影，UI 同时覆盖无菜单、顶层菜单、Inventory 页、Crafting 页、对话与箱子菜单 Snapshot。它是协议 Contract Fixture；实际 ServerReady 必须仅由已注册 Handler ID 从静态 Catalog 生成。
+`profiles.observation` 固定六项观察能力集合（`query_runtime`、`query_players`、`query_world`、`query_inventory`、`query_ui`、`inspect`）及其独立 digest/HMAC/Fence。每项都有独立成功与失败生命周期；players 固定自己、在线队友与离线农场工的字段边界，world、inventory、inspect 分别保留最小和完整成功投影，UI 同时覆盖无菜单、顶层菜单、Inventory 页、Crafting 页、对话与箱子菜单 Snapshot。它是协议 Contract Fixture；实际 ServerReady 必须仅由已注册 Handler ID 从静态 Catalog 生成。
 
 `actionFixtures` 为 V1 的十三项变更能力各保留一个聚合文件。每个文件固定最小输入、完整输入、非法输入、`ACCEPTED` 检查点、成功 Tool 结果和失败 Tool 结果；这样可以覆盖能力契约，又不会演变成每项能力六个平铺文件。`navigate`、`interact`、`use_tool`、`transfer_inventory_item`、`set_equipment_slot` 与 `move_inventory_item` 的文件还固定各自的长时执行门禁与失败语义。
 

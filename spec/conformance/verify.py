@@ -133,7 +133,7 @@ def verify_manifest_against_proto(manifest: dict[str, Any], messages: dict[str, 
     capabilities = manifest["capabilities"]
     ids = [item["id"] for item in capabilities]
     require(len(ids) == len(set(ids)), "Manifest capability ID 重复")
-    require(len(ids) == 20, f"V1 候选能力数量应为 20，实际为 {len(ids)}")
+    require(len(ids) == 21, f"V1 候选能力数量应为 21，实际为 {len(ids)}")
     requests = oneof_fields(messages["CommandRequest"], "operation")
     results = oneof_fields(messages["CapabilityResult"], "result")
     require(set(ids) == set(requests) == set(results), "Manifest、Request、Result 能力集合不一致")
@@ -218,6 +218,7 @@ def verify_tool_schema_catalog(manifest: dict[str, Any]) -> None:
         "stardew_query_runtime": {},
         "stardew_query_world": {},
         "stardew_query_inventory": {},
+        "stardew_query_players": {},
         "stardew_query_ui": {},
         "stardew_inspect": {"refs": [{"value": "ref-1"}]},
     }
@@ -866,18 +867,19 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
     index = load_json(FIXTURE_ROOT / "index.json")
     profile = index.get("profiles", {}).get("observation")
     require(isinstance(profile, dict), "Fixture index 缺少 observation profile")
-    observation_ids = ["inspect", "query_inventory", "query_runtime", "query_ui", "query_world"]
+    observation_ids = ["inspect", "query_inventory", "query_players", "query_runtime", "query_ui", "query_world"]
     capabilities = [item for item in manifest["capabilities"] if item["id"] in observation_ids]
     require([item["id"] for item in sorted(capabilities, key=lambda item: item["id"].encode())] == observation_ids, "observation capability 集合错误")
     digest = capability_digest(capabilities)
     vectors = profile.get("authVectors")
     require(vectors == [{"path": "observation/hmac-sha256.json", "algorithm": "v1_hmac_sha256"}], "observation HMAC 向量声明错误")
     scenarios = profile.get("scenarios")
-    require(isinstance(scenarios, list) and len(scenarios) == 10, "observation 必须有五项成功和失败场景")
+    require(isinstance(scenarios, list) and len(scenarios) == 12, "observation 必须有六项成功和失败场景")
     seen: set[str] = set()
     all_paths: list[Path] = []
     success_frames: list[Any] | None = None
     inspect_success_frames: list[Any] | None = None
+    players_success_frames: list[Any] | None = None
     for scenario in scenarios:
         scenario_id = scenario.get("id")
         require(isinstance(scenario_id, str) and scenario_id not in seen, "observation scenario ID 重复或非法")
@@ -892,8 +894,11 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
             success_frames = frames
         elif scenario_id == "inspect-succeeded":
             inspect_success_frames = frames
+        elif scenario_id == "query-players-succeeded":
+            players_success_frames = frames
     require(success_frames is not None, "observation 缺少 query-world 成功场景")
     require(inspect_success_frames is not None, "observation 缺少 inspect 成功场景")
+    require(players_success_frames is not None, "observation 缺少 query-players 成功场景")
     world_result = next(
         frame.command_event.result.query_world
         for frame in success_frames
@@ -908,6 +913,27 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         frame.command_event.result.inspect
         for frame in inspect_success_frames
         if frame.WhichOneof("body") == "command_event" and frame.command_event.state == 3
+    )
+    players_result = next(
+        frame.command_event.result.query_players
+        for frame in players_success_frames
+        if frame.WhichOneof("body") == "command_event" and frame.command_event.state == 3
+    )
+    require(len(players_result.snapshot.players) == 3, "query_players Fixture 玩家数量无效")
+    require(players_result.snapshot.players[0].relation == 1, "query_players Fixture 必须将自己排在首位")
+    require(
+        len({player.player_id for player in players_result.snapshot.players}) == 3,
+        "query_players Fixture 玩家 ID 必须唯一",
+    )
+    offline = players_result.snapshot.players[1]
+    require(
+        not offline.online
+        and not offline.HasField("position")
+        and not offline.HasField("facing")
+        and not offline.HasField("energy")
+        and not offline.HasField("max_energy")
+        and not offline.HasField("is_in_bed"),
+        "query_players Fixture 的离线玩家不得携带实时事实",
     )
     world_hoe_dirt = next(
         (entity for entity in world_result.snapshot.entities if entity.ref.value == "entity-a"),
@@ -1038,8 +1064,8 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
             )
         verify_event_shape(frame.command_event)
     invalid = load_json(FIXTURE_ROOT / "observation" / "invalid-inputs.json")
-    require(invalid.get("schemaVersion") == 1 and len(invalid.get("cases", [])) >= 5, "observation invalid-inputs 覆盖不足")
-    require({item["capability"] for item in invalid["cases"]} == {"query_world", "query_inventory", "query_ui", "inspect"}, "observation invalid-inputs 能力覆盖错误")
+    require(invalid.get("schemaVersion") == 1 and len(invalid.get("cases", [])) >= 6, "observation invalid-inputs 覆盖不足")
+    require({item["capability"] for item in invalid["cases"]} == {"query_world", "query_inventory", "query_players", "query_ui", "inspect"}, "observation invalid-inputs 能力覆盖错误")
     return all_paths, vector, digest
 
 

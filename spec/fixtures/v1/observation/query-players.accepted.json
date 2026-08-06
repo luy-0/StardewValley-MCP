@@ -1,0 +1,1 @@
+{"messageId":"players-accepted","replyTo":"players-req","fence":{"sessionId":"f2d85b2e-4d60-4e32-bf42-fedcba654321","leaseEpoch":"7","capabilityDigest":"e3176d2a00bc1e2937f4dbc46f50e3cbe084398f6fa3523bcd11755c75bf288c"},"commandEvent":{"commandId":"56565656-5656-4565-8565-565656565656","state":"COMMAND_STATE_ACCEPTED","phase":"accepted"}}

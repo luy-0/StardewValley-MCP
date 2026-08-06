@@ -499,6 +499,7 @@ def test_default_capability_set_is_the_unique_concrete_handler_composition_root(
         "QueryRuntimeHandler",
         "QueryWorldHandler",
         "QueryInventoryHandler",
+        "QueryPlayersHandler",
         "QueryUiHandler",
         "InspectHandler",
     }

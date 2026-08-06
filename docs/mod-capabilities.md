@@ -1,6 +1,6 @@
 # Mod 能力清单
 
-当前公开 V1 已实现 **20 项能力**：5 项只读观察能力、15 项游戏操作能力。
+当前公开 V1 已实现 **21 项能力**：6 项只读观察能力、15 项游戏操作能力。
 
 本页只展示实现状态，不重复定义协议。详细行为见 [`spec/capabilities/behavior.md`](../spec/capabilities/behavior.md)，权威能力集合见 [`spec/capabilities/manifest.yaml`](../spec/capabilities/manifest.yaml)。
 
@@ -11,6 +11,7 @@
 | 类型 | 能力 | 状态 | 功能 |
 |---|---|---:|---|
 | 观察 | `query_runtime` | ✅ | 查询日期、时间、天气、玩家位置、唯一住宅、资源与 UI 摘要 |
+| 观察 | `query_players` | ✅ | 查询本存档中的自己、在线队友、离线农场工及可用实时状态 |
 | 观察 | `query_world` | ✅ | 查询区域内地块、作物收获方式、床位、对象、门、Warp、角色与动物 |
 | 观察 | `query_inventory` | ✅ | 查询玩家背包或已解析容器的槽位、物品与喷壶余水 |
 | 观察 | `query_ui` | ✅ | 查询菜单、对话、商店、箱子、背包、装备槽与制作配方 |
