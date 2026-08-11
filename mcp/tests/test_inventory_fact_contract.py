@@ -20,6 +20,7 @@ def test_container_inventory_fixture_uses_opaque_inventory_item_refs() -> None:
     assert snapshot.HasField("container_ref")
     assert [slot.index for slot in snapshot.slots] == [0, 1, 2]
     assert [slot.item.ref.value for slot in snapshot.slots if slot.HasField("item")] == ["item-a", "item-b"]
+    assert snapshot.slots[2].item.tool_kind == facts_pb2.ITEM_TOOL_KIND_SCYTHE
 
 
 def test_item_fact_keeps_wire_shape_and_public_permission_boundary() -> None:

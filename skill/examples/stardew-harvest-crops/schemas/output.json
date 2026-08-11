@@ -1,0 +1,124 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "date": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["season", "dayOfMonth", "year"],
+      "properties": {
+        "season": { "type": "string" },
+        "dayOfMonth": { "type": "integer" },
+        "year": { "type": "integer" }
+      }
+    },
+    "position": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locationId", "x", "y"],
+      "properties": {
+        "locationId": { "type": "string", "minLength": 1 },
+        "x": { "type": "integer" },
+        "y": { "type": "integer" }
+      }
+    },
+    "area": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locationId", "x", "y", "width", "height"],
+      "properties": {
+        "locationId": { "type": "string", "minLength": 1 },
+        "x": { "type": "integer" },
+        "y": { "type": "integer" },
+        "width": { "type": "integer", "minimum": 1 },
+        "height": { "type": "integer", "minimum": 1 }
+      }
+    },
+    "inventoryChange": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["qualifiedItemId", "quality", "before", "after", "delta"],
+      "properties": {
+        "qualifiedItemId": { "type": "string" },
+        "quality": { "type": "integer", "minimum": 0 },
+        "before": { "type": "integer", "minimum": 0 },
+        "after": { "type": "integer", "minimum": 0 },
+        "delta": { "type": "integer" }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["code", "message", "retryable"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "retryable": { "type": "boolean" }
+      }
+    },
+    "progress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finalStatus", "area", "dateBefore", "dateAfter", "targetTotal", "plannedTargetCount",
+        "succeededCount", "interactCount", "scytheCount", "skippedCount",
+        "failedCount", "actionsUsed", "energyBefore", "energyAfter",
+        "lastPosition", "lastTarget", "stopReason", "resumable",
+        "resumeHint", "remainingCount", "remainingTargets", "remainingTargetsTruncated", "inventoryChanges"
+      ],
+      "properties": {
+        "finalStatus": { "enum": ["completed", "partial", "stopped", "unknown"] },
+        "area": { "$ref": "#/$defs/area" },
+        "dateBefore": { "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
+        "dateAfter": { "oneOf": [{ "$ref": "#/$defs/date" }, { "type": "null" }] },
+        "targetTotal": { "type": "integer", "minimum": 0 },
+        "plannedTargetCount": { "type": "integer", "minimum": 0 },
+        "succeededCount": { "type": "integer", "minimum": 0 },
+        "interactCount": { "type": "integer", "minimum": 0 },
+        "scytheCount": { "type": "integer", "minimum": 0 },
+        "skippedCount": { "type": "integer", "minimum": 0 },
+        "failedCount": { "type": "integer", "minimum": 0 },
+        "actionsUsed": { "type": "integer", "minimum": 0 },
+        "energyBefore": { "type": "number" },
+        "energyAfter": { "type": "number" },
+        "lastPosition": { "oneOf": [{ "$ref": "#/$defs/position" }, { "type": "null" }] },
+        "lastTarget": { "oneOf": [{ "$ref": "#/$defs/position" }, { "type": "null" }] },
+        "stopReason": { "type": "string", "minLength": 1 },
+        "resumable": { "type": "boolean" },
+        "resumeHint": { "type": "string" },
+        "remainingCount": { "type": "integer", "minimum": 0 },
+        "remainingTargets": {
+          "type": "array",
+          "maxItems": 256,
+          "items": { "$ref": "#/$defs/position" }
+        },
+        "remainingTargetsTruncated": { "type": "boolean" },
+        "inventoryChanges": {
+          "type": "array",
+          "maxItems": 128,
+          "items": { "$ref": "#/$defs/inventoryChange" }
+        }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "output"],
+      "properties": {
+        "status": { "const": "succeeded" },
+        "output": { "$ref": "#/$defs/progress" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "error", "output"],
+      "properties": {
+        "status": { "enum": ["failed", "unknown"] },
+        "error": { "$ref": "#/$defs/error" },
+        "output": { "$ref": "#/$defs/progress" }
+      }
+    }
+  ]
+}

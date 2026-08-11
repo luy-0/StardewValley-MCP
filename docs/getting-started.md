@@ -146,6 +146,17 @@ stardew_skill_sleep_until_next_day {"timeoutSeconds":180}
 
 该调用会在同一个 Mod Owner Session 内连续完成住宅与床位查询、导航、睡眠确认、换日等待和安全日结 UI 收敛。只有日期已经推进、菜单关闭且玩家恢复可操作时才返回完成；它是 MCP 本地编排的 Skill，不属于 Mod 公共 Manifest 中的复合能力。
 
+### 可执行浇水与收获 Skill
+
+Agent 先通过只读查询确定当前地图中的显式矩形范围，再分别调用一次：
+
+```text
+stardew_skill_water_crops {"area":{"locationId":"Farm","x":20,"y":10,"width":8,"height":6}}
+stardew_skill_harvest_crops {"area":{"locationId":"Farm","x":20,"y":10,"width":8,"height":6}}
+```
+
+两个调用都在同一个 Owner Session 内完成原子 Tool 编排，并返回目标总数、确认完成数、最后位置、停止原因、剩余坐标与续跑提示。范围最大 32×32；`unknown` 表示最后变更无法确认，调用方必须先重新查询事实，不能自动重放。
+
 要加载自行安装的可信可执行 Skill，可以重复指定目录：
 
 ```json

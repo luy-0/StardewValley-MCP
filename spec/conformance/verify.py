@@ -1004,6 +1004,19 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         frame = transport_pb2.TransportFrame()
         json_format.ParseDict(load_json(FIXTURE_ROOT / "observation" / name), frame, ignore_unknown_fields=False)
         require(frame.command_event.state == 3, f"observation 最小/完整 Fixture 非成功: {name}")
+        if name == "query-inventory.success-complete.json":
+            items = [
+                slot.item
+                for slot in frame.command_event.result.query_inventory.snapshot.slots
+                if slot.HasField("item")
+            ]
+            require(
+                len(items) == 2
+                and items[1].tool
+                and items[1].HasField("tool_kind")
+                and items[1].tool_kind == 5,
+                "完整背包 Fixture 未覆盖语言无关的 Scythe tool_kind",
+            )
         if name == "query-ui.success-dialogue.json":
             elements = frame.command_event.result.query_ui.snapshot.elements
             require(

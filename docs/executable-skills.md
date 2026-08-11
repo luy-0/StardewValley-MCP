@@ -11,7 +11,11 @@
 3. `schemas/`：定义 Agent 输入和整个 Skill 的结构化结果；
 4. `scripts/run.py`：通过受限 `SkillContext` 串行编排原子 Tool。
 
-权威字段与执行规则见 [`../spec/skill/README.md`](../spec/skill/README.md)。示例实现见 [`../skill/examples/stardew-sleep-until-next-day/`](../skill/examples/stardew-sleep-until-next-day/)。
+权威字段与执行规则见 [`../spec/skill/README.md`](../spec/skill/README.md)。当前发行包内置三个示例：
+
+- [`stardew-water-crops`](../skill/examples/stardew-water-crops/)：有界浇灌显式矩形范围，支持安全蓄力与结构化部分进度；
+- [`stardew-harvest-crops`](../skill/examples/stardew-harvest-crops/)：按公开收获语义执行手摘或镰刀收获，并汇总背包变化；
+- [`stardew-sleep-until-next-day`](../skill/examples/stardew-sleep-until-next-day/)：完成回家、上床、确认睡眠和换日收敛。
 
 ## 最小维护原则
 
@@ -21,6 +25,8 @@
 - 变更结果 `unknown`、变更提交期间的异常、变更后的宿主超时或输出 Schema 失配都禁止自动重放。
 - Skill 脚本不得创建新的 Mod/MCP 连接，也不得读取共享秘密或直接发送 Proto。
 - 新增 Skill 只新增目录与测试，不修改 MCP 中央注册代码。
+- 批量任务必须接受显式范围、目标数、动作数和期限；正常边界停止返回部分进度，不能伪装成异常失败。
+- 日期变化、取消和后置观察失败不得混入下一天事实；最后变更无法确认时返回 `unknown`。
 
 ## 加载与验证
 

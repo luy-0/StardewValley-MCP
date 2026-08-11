@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["area"],
+  "properties": {
+    "area": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locationId", "x", "y", "width", "height"],
+      "properties": {
+        "locationId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "x": { "type": "integer" },
+        "y": { "type": "integer" },
+        "width": { "type": "integer", "minimum": 1, "maximum": 32 },
+        "height": { "type": "integer", "minimum": 1, "maximum": 32 }
+      }
+    },
+    "maxTargets": { "type": "integer", "minimum": 1, "maximum": 128, "default": 64 },
+    "maxActions": { "type": "integer", "minimum": 1, "maximum": 384, "default": 192 },
+    "timeoutSeconds": { "type": "integer", "minimum": 5, "maximum": 900, "default": 300 },
+    "minEnergy": { "type": "number", "minimum": 0, "default": 10 },
+    "stopTime": { "type": "integer", "minimum": 600, "maximum": 2600, "default": 2500 },
+    "maxChargeLevel": { "type": "integer", "minimum": 0, "maximum": 5, "default": 0 }
+  }
+}

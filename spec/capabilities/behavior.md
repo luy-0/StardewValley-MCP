@@ -229,7 +229,8 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 ### `query_inventory`
 
 - 未提供 Container 时默认玩家背包；`player_inventory` 空消息与缺省语义相同。
-- Watering Can 的 `ItemFact` 必须存在 `water_remaining`、`water_capacity` 与 `bottomless`；其他物品必须缺省这三个可选字段，不能用零值冒充喷壶事实。
+- 受支持工具的 `ItemFact.tool_kind` 必须按真实运行时类型投影为 Axe、Pickaxe、Hoe、Watering Can 或 Scythe；普通武器、其他工具与非工具物品必须缺省。该字段是语言无关的动作选择事实，调用方不得从本地化名称、Qualified Item ID 或物品类别猜测工具种类。
+- Watering Can 的 `ItemFact` 必须存在 `tool_kind=WATERING_CAN`、`water_remaining`、`water_capacity` 与 `bottomless`；其他物品必须缺省这三个喷壶专属可选字段，不能用零值冒充喷壶事实。Scythe 只在真实 `MeleeWeapon.isScythe()` 为真时投影，普通武器不得冒充镰刀。
 - `container_ref` 必须解析为带 `ContainerFact` 的 `WORLD_ENTITY` 或当前可读取的 `CONTAINER` 库存视图，否则返回 `STALE_REF`、`NOT_FOUND` 或 `INVALID_ARGUMENT`。
 - V1 的可读取世界容器是当前已加载 Location 中由 `query_world` 返回的 Chest/Fridge 类实体；不通过显示名、坐标字符串或短地图名旁路 Ref 校验。
 - `container_kind` 的稳定值固定为 `player`、`fridge`、`junimo_chest`、`mini_shipping_bin`、`auto_loader`、`big_chest`、`chest` 或 `container`；`query_world` 与 `query_inventory` 必须使用同一分类规则。
