@@ -1,0 +1,41 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "error": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["code", "message", "retryable"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "retryable": { "type": "boolean" }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "output"],
+      "properties": {
+        "status": { "const": "succeeded" },
+        "output": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["observed"],
+          "properties": { "observed": { "const": true } }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "error"],
+      "properties": {
+        "status": { "enum": ["failed", "unknown"] },
+        "error": { "$ref": "#/$defs/error" },
+        "output": { "type": "object" }
+      }
+    }
+  ]
+}

@@ -20,6 +20,21 @@ def test_package_has_one_generated_catalog_and_no_single_tool_json() -> None:
     assert not list(PACKAGE.glob("*_tool.json"))
 
 
+def test_skill_runtime_has_no_builtin_skill_specific_registration() -> None:
+    central_sources = (
+        PACKAGE / "server.py",
+        PACKAGE / "skill_host.py",
+        PACKAGE / "skill_loader.py",
+        ROOT / "mcp" / "hatch_build.py",
+        ROOT / "mcp" / "scripts" / "check_distribution.py",
+    )
+    forbidden = ("sleep_until_next_day", "stardew-sleep-until-next-day")
+
+    for path in central_sources:
+        source = path.read_text(encoding="utf-8")
+        assert not [token for token in forbidden if token in source], path
+
+
 def test_command_runtime_is_the_only_authenticated_frame_reader() -> None:
     runtime = (PACKAGE / "command_runtime.py").read_text()
     client = (PACKAGE / "client.py").read_text()

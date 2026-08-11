@@ -10,6 +10,7 @@ description: 让 Stardew Valley 当前玩家回到自己的唯一住宅，找到
 ## 可用工具
 
 - `stardew_query_runtime`：读取当前日期、住宅唯一地图 ID、玩家位置与 UI 状态。
+- `stardew_query_players`：确认当前玩家确实位于目标床位且游戏已标记为在床上，避免误选其他二选一对话。
 - `stardew_query_world`：在住宅地图内寻找可睡 Bed 与睡眠触发格。
 - `stardew_navigate`：跨地图回家并走到床的睡眠触发格。
 - `stardew_interact`：自动触发未出现时，从床旁执行一次原生交互。
@@ -23,7 +24,7 @@ description: 让 Stardew Valley 当前玩家回到自己的唯一住宅，找到
 2. 使用 `homeLocationId` 调用 `stardew_query_world`，先查询 `area=(0,0,32,32)` 且只包含 Bed；未找到时依次查询 `(32,0,32,32)`、`(0,32,32,32)`、`(32,32,32,32)`。接受 `bed.canSleep=true` 且带 `sleepPosition` 的床；若玩家开始时正站在该床占用格内，允许选择因当前玩家自身占用而暂时返回 `canSleep=false` 的床。多个候选时优先可睡且距离玩家最近者。
 3. 调用 `stardew_navigate`，目标为 Bed 的 `sleepPosition`，`arrival=exact`。抵达后调用 `stardew_query_ui`；允许最多三次只读复查，等待床的 TouchAction 产生问题对话。
 4. 若仍无对话，调用 `stardew_navigate` 到 Bed Ref 的相邻位置并面向床，再只调用一次 `stardew_interact`，随后调用 `stardew_query_ui`。除此之外不重复交互。
-5. 只有本轮上床动作后新出现精确原版 `DialogueBox`，且存在至少两个启用的 `dialogue_response` 时才继续。睡眠问题的肯定响应是 index 0；把该元素 Ref 和当前 UI Revision 交给 `stardew_activate_ui`。若对话结构不同、没有 index 0 或出现其他选择题，停止并要求用户决定。
+5. 只有本轮上床动作后新出现精确原版 `DialogueBox`、恰好存在 index 0/1 两个启用的 `dialogue_response`，并且 `stardew_query_players` 同时确认当前玩家位于所选 Bed 的 `sleepPosition` 且 `isInBed=true` 时才继续。睡眠问题的肯定响应是 index 0；把该元素 Ref 和当前 UI Revision 交给 `stardew_activate_ui`。若对话结构或床位事实不符，停止且不选择任何响应。
 6. 确认后在总期限内持续调用 `stardew_query_runtime`，并穿插 `stardew_query_ui` 观察换日。`SaveGameMenu` 只等待；`ShippingMenu`、无选择的普通升级页与普通信息对话只在公共 Tool 判定可安全推进时处理。未知菜单、升级选择、节日决定或其他需要选择的页面必须停止为“需要决定”。
 7. 日期变化后继续复查，只有菜单已清空且玩家恢复 `canMove=true` 时才报告新日期和完成。日期未变化不得把“已点击 Yes”视为完成；未确认睡眠问题却发生跨日必须报告为昏倒换日。
 

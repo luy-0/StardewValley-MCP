@@ -13,6 +13,7 @@ Agent 自动安装入口是 [`../AGENT-GUIDE.md`](../AGENT-GUIDE.md)。
 - [.NET 构建工具与游戏宿主兼容性](runtime-compatibility.md)；
 - [Agent 自动安装指南](../AGENT-GUIDE.md)；
 - [Agent Skill 开发面](../skill/README.md)；
+- [可执行 Skill 开发与维护](executable-skills.md)；
 - [公共契约索引](../spec/README.md)；
 - [贡献指南](../CONTRIBUTING.md)。
 

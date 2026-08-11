@@ -6,6 +6,7 @@
 |---|---:|---|
 | Mod–MCP 线路协议 | `1.0` | `ProtocolVersion` 与 Proto package |
 | 公开能力契约 | `1.0.0` | `capabilities/manifest.yaml` |
+| 可执行 Skill 包契约 | `1` | `skill/runtime-manifest.schema.json` 的 `schemaVersion` |
 
 仓库产品版本独立于上述契约版本。实现完成前产品使用 `0.x` 预览版本；这不改变已经冻结的候选契约编号。
 
@@ -40,9 +41,11 @@
 - `UI_ELEMENT_KIND_EQUIPMENT_SLOT`、`UiEquipmentSlotKind` 与 `UiElementFact.equipment_slot_kind` 是 Inventory 页只读投影的 V1 Minor 兼容增补。旧调用方可以忽略新增元素；装备槽始终 `enabled=false`，装备物品不携带 `INVENTORY_ITEM` Ref，也不得据此推断已经提供穿戴或取下动作。
 - `UI_ELEMENT_KIND_CRAFTING_RECIPE`、`CraftingRecipeFact`、材料／产出事实与 `UiElementFact.crafting_recipe` 是 Crafting 页只读投影的 V1 Minor 兼容增补。旧调用方可忽略新增元素；配方元素始终 `enabled=false`，`craftable` 仅表示材料足够，不表示已经提供制作动作。
 
-## Agent Skill 指引兼容规则
+## Agent Skill 与可执行 Skill 兼容规则
 
-当前 Agent Skill 是开发指引，不参与 Mod–MCP 线路协商，也没有独立运行时版本。模板或正文约定发生变化时随仓库产品版本发布；Skill 引用的 MCP Tool 行为仍以对应公开能力契约版本为准。
+Prompt 型 Agent Skill 是开发指引，不参与 Mod–MCP 线路协商；模板或正文变化随仓库产品版本发布。可执行 Skill 的包结构、入口、Schema、授权、超时和结果语义由 `schemaVersion` 管理，但同样不参与 Mod 线路协商。
+
+增加可选 Manifest 字段、可忽略结果字段或新的独立 Skill 通常属于兼容增补。删除必需字段、改变入口调用形式、扩大默认信任目录、弱化未知终态保护、改变副作用 Annotation 或允许绕过声明 Tool 集合属于破坏性变更。Skill 引用的原子 Tool 行为仍以对应公开能力契约版本为准。
 
 ## 变更流程
 

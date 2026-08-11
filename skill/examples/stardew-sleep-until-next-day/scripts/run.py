@@ -47,7 +47,7 @@ async def run(ctx, arguments: dict[str, Any]) -> dict[str, Any]:
         )
         progress.append("navigate_submitted")
 
-        prompt = await _wait_for_sleep_prompt(ctx, deadline, attempts=10)
+        prompt = await _wait_for_sleep_prompt(ctx, bed, deadline, attempts=10)
         if prompt is None:
             if navigation.get("status") == "unknown":
                 raise SkillAbort(
@@ -57,7 +57,7 @@ async def run(ctx, arguments: dict[str, Any]) -> dict[str, Any]:
                     details={"navigation": navigation},
                 )
             await _fallback_interact(ctx, bed, deadline)
-            prompt = await _wait_for_sleep_prompt(ctx, deadline, attempts=10)
+            prompt = await _wait_for_sleep_prompt(ctx, bed, deadline, attempts=10)
 
         if prompt is None:
             current = await _runtime(ctx, "wait_sleep_prompt")
@@ -183,7 +183,13 @@ async def _find_bed(ctx, home_location_id: str, player_position: dict[str, Any])
     return min(candidates, key=lambda entity: (not entity["bed"].get("canSleep", False), distance(entity)))
 
 
-async def _wait_for_sleep_prompt(ctx, deadline: float, *, attempts: int) -> dict[str, Any] | None:
+async def _wait_for_sleep_prompt(
+    ctx,
+    bed: dict[str, Any],
+    deadline: float,
+    *,
+    attempts: int,
+) -> dict[str, Any] | None:
     dialogue_seen = False
     for _ in range(attempts):
         _ensure_time(deadline, "wait_sleep_prompt")
@@ -192,7 +198,7 @@ async def _wait_for_sleep_prompt(ctx, deadline: float, *, attempts: int) -> dict
             raise SkillAbort("ui_query_unknown", "睡眠问题查询结果未知", "wait_sleep_prompt", details={"result": result})
         if result.get("status") == "succeeded":
             snapshot = result["output"]["snapshot"]
-            prompt = _sleep_prompt(snapshot)
+            prompt = await _sleep_prompt(ctx, snapshot, bed)
             if prompt is not None:
                 return prompt
             if snapshot.get("menuOpen"):
@@ -212,7 +218,7 @@ async def _wait_for_sleep_prompt(ctx, deadline: float, *, attempts: int) -> dict
     return None
 
 
-def _sleep_prompt(snapshot: dict[str, Any]) -> dict[str, Any] | None:
+async def _sleep_prompt(ctx, snapshot: dict[str, Any], bed: dict[str, Any]) -> dict[str, Any] | None:
     menu = snapshot.get("menu") or {}
     if not snapshot.get("menuOpen") or menu.get("menuType") != "DialogueBox":
         return None
@@ -224,7 +230,33 @@ def _sleep_prompt(snapshot: dict[str, Any]) -> dict[str, Any] | None:
         ),
         key=lambda item: item.get("index", 0),
     )
-    if len(responses) < 2 or responses[0].get("index", 0) != 0:
+    if len(responses) != 2 or [response.get("index") for response in responses] != [0, 1]:
+        return None
+    players_result = await ctx.call_tool("stardew_query_players", {})
+    if players_result.get("status") == "unknown":
+        raise SkillAbort(
+            "player_query_unknown",
+            "睡眠问题出现时无法确认当前玩家状态，禁止选择对话响应",
+            "wait_sleep_prompt",
+            details={"result": players_result},
+        )
+    if players_result.get("status") != "succeeded":
+        raise SkillAbort(
+            "player_query_failed",
+            "睡眠问题出现时无法确认当前玩家状态",
+            "wait_sleep_prompt",
+            players_result.get("status") == "failed",
+            {"result": players_result},
+        )
+    players = players_result.get("output", {}).get("snapshot", {}).get("players", [])
+    myself = next((player for player in players if player.get("relation") == "myself"), None)
+    sleep_position = bed.get("bed", {}).get("sleepPosition", {})
+    if (
+        myself is None
+        or not myself.get("online")
+        or not myself.get("isInBed")
+        or not _same_position(myself.get("position", {}), sleep_position)
+    ):
         return None
     return {"uiRevision": snapshot["uiRevision"], "response": responses[0]}
 
@@ -242,6 +274,14 @@ async def _fallback_interact(ctx, bed: dict[str, Any], deadline: float) -> None:
             "fallback_interact",
             details={"navigation": navigation},
         )
+    if navigation.get("status") != "succeeded":
+        raise SkillAbort(
+            "fallback_navigation_failed",
+            "无法到达床旁交互位置",
+            "fallback_interact",
+            navigation.get("error", {}).get("retryable", False),
+            {"navigation": navigation},
+        )
     interaction = await ctx.call_tool("stardew_interact", {"targetRef": bed["ref"]})
     if interaction.get("status") == "unknown":
         raise SkillAbort(
@@ -249,6 +289,14 @@ async def _fallback_interact(ctx, bed: dict[str, Any], deadline: float) -> None:
             "床交互结果未知，禁止重放",
             "fallback_interact",
             details={"interaction": interaction},
+        )
+    if interaction.get("status") != "succeeded":
+        raise SkillAbort(
+            "fallback_interaction_failed",
+            "床位交互没有成功",
+            "fallback_interact",
+            interaction.get("error", {}).get("retryable", False),
+            {"interaction": interaction},
         )
 
 

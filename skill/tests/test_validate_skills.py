@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import shutil
 import sys
 import tempfile
 import unittest
@@ -58,7 +59,8 @@ class SkillValidationTests(unittest.TestCase):
         names = {path.name for path in skill_dirs}
         self.assertTrue(
             {
-                "stardew-skill-template",
+                "stardew-prompt-skill-template",
+                "stardew-executable-skill-template",
                 "stardew-nearby-overview",
                 "stardew-remove-tree",
                 "stardew-plant-seed",
@@ -97,6 +99,20 @@ class SkillValidationTests(unittest.TestCase):
             content = VALID_BODY.format(name="different-name")
             issues = validate_skill(self._write_skill(Path(directory), "actual-name", content), self.catalog)
         self.assertTrue(any("目录名一致" in issue.message for issue in issues))
+
+    def test_executable_skill_runtime_dependencies_must_match_guide(self) -> None:
+        source = ROOT / "skill" / "examples" / "stardew-sleep-until-next-day"
+        with tempfile.TemporaryDirectory() as directory:
+            skill = Path(directory) / source.name
+            shutil.copytree(source, skill)
+            guide = (skill / "SKILL.md").read_text(encoding="utf-8")
+            (skill / "SKILL.md").write_text(
+                guide.replace("- `stardew_query_players`：", "- `stardew_query_runtime`："),
+                encoding="utf-8",
+            )
+            issues = validate_skill(skill, self.catalog)
+
+        self.assertTrue(any("运行依赖与可用工具不一致" in issue.message for issue in issues))
 
 
 if __name__ == "__main__":

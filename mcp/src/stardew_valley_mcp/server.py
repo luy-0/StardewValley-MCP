@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import asyncio
 import sys
+from collections.abc import Sequence
+from pathlib import Path
 from typing import Any
 
 from mcp import types
@@ -11,9 +13,9 @@ from mcp.server.lowlevel import NotificationOptions, Server
 from mcp.server.stdio import stdio_server
 
 from . import __version__
-from .builtin_skills import create_builtin_skill_host
 from .catalog import Catalog, CatalogPolicy
 from .client import StardewClient
+from .skill_loader import SkillLoadError, load_skill_host
 from .skill_host import SkillHost
 from .transport import ConfigurationError, ConnectionConfig
 
@@ -52,10 +54,15 @@ def catalog_for(*, allow_write: bool) -> Catalog:
     return Catalog.load(CatalogPolicy(None, frozenset(scopes)))
 
 
-async def run_stdio(config: ConnectionConfig, *, allow_write: bool = False) -> None:
+async def run_stdio(
+    config: ConnectionConfig,
+    *,
+    allow_write: bool = False,
+    skill_roots: Sequence[Path] = (),
+) -> None:
     client = StardewClient(config, catalog_for(allow_write=allow_write))
-    server = create_server(client, skill_host=create_builtin_skill_host(client))
     try:
+        server = create_server(client, skill_host=load_skill_host(client, skill_roots))
         async with stdio_server() as (read_stream, write_stream):
             await server.run(
                 read_stream,
@@ -66,11 +73,15 @@ async def run_stdio(config: ConnectionConfig, *, allow_write: bool = False) -> N
         await client.aclose()
 
 
-def main(*, allow_write: bool = False) -> int:
+def main(*, allow_write: bool = False, skill_roots: Sequence[Path] = ()) -> int:
     try:
         config = ConnectionConfig.from_env()
     except ConfigurationError as error:
         print(str(error), file=sys.stderr)
         return 2
-    asyncio.run(run_stdio(config, allow_write=allow_write))
+    try:
+        asyncio.run(run_stdio(config, allow_write=allow_write, skill_roots=skill_roots))
+    except SkillLoadError as error:
+        print(str(error), file=sys.stderr)
+        return 2
     return 0

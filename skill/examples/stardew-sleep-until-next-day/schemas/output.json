@@ -1,0 +1,113 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "date": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["season", "dayOfMonth", "year"],
+      "properties": {
+        "season": { "type": "string" },
+        "dayOfMonth": { "type": "integer" },
+        "year": { "type": "integer" }
+      }
+    },
+    "position": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locationId", "x", "y"],
+      "properties": {
+        "locationId": { "type": "string", "minLength": 1 },
+        "x": { "type": "integer" },
+        "y": { "type": "integer" }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["code", "message", "retryable"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "retryable": { "type": "boolean" }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "output"],
+      "properties": {
+        "status": { "const": "succeeded" },
+        "output": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "finalStatus",
+            "dateBefore",
+            "dateAfter",
+            "timeBefore",
+            "timeAfter",
+            "locationBefore",
+            "locationAfter",
+            "homeLocationId",
+            "bedRef",
+            "sleepPosition",
+            "sleepPromptSeen",
+            "sleepConfirmed",
+            "dayAdvanced",
+            "postSleepUiSteps",
+            "playerCanMoveAfter",
+            "progress"
+          ],
+          "properties": {
+            "finalStatus": { "const": "completed" },
+            "dateBefore": { "$ref": "#/$defs/date" },
+            "dateAfter": { "$ref": "#/$defs/date" },
+            "timeBefore": { "type": "integer" },
+            "timeAfter": { "type": "integer" },
+            "locationBefore": { "$ref": "#/$defs/position" },
+            "locationAfter": { "$ref": "#/$defs/position" },
+            "homeLocationId": { "type": "string", "minLength": 1 },
+            "bedRef": {
+              "type": "object",
+              "additionalProperties": false,
+              "required": ["value"],
+              "properties": { "value": { "type": "string", "minLength": 1 } }
+            },
+            "sleepPosition": { "$ref": "#/$defs/position" },
+            "sleepPromptSeen": { "const": true },
+            "sleepConfirmed": { "const": true },
+            "dayAdvanced": { "const": true },
+            "postSleepUiSteps": { "type": "integer", "minimum": 0 },
+            "playerCanMoveAfter": { "const": true },
+            "progress": {
+              "type": "array",
+              "items": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "error"],
+      "properties": {
+        "status": { "const": "failed" },
+        "error": { "$ref": "#/$defs/error" },
+        "output": { "type": "object" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "error"],
+      "properties": {
+        "status": { "const": "unknown" },
+        "error": { "$ref": "#/$defs/error" },
+        "output": { "type": "object" }
+      }
+    }
+  ]
+}

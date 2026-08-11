@@ -1,0 +1,29 @@
+schemaVersion: "1"
+entrypoint: scripts/run.py:run
+
+tool:
+  name: stardew_skill_sleep_until_next_day
+  title: 回家睡觉并进入下一天
+  description: 连续完成回家、上床、确认睡眠、换日与安全日结 UI 收敛。
+  inputSchema: schemas/input.json
+  outputSchema: schemas/output.json
+  annotations:
+    readOnlyHint: false
+    destructiveHint: true
+    idempotentHint: false
+    openWorldHint: false
+
+requires:
+  tools:
+    - stardew_query_runtime
+    - stardew_query_players
+    - stardew_query_world
+    - stardew_navigate
+    - stardew_interact
+    - stardew_query_ui
+    - stardew_activate_ui
+    - stardew_close_menu
+
+execution:
+  timeoutSeconds: 305
+  concurrency: exclusive

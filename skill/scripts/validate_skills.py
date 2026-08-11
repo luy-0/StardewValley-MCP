@@ -12,6 +12,12 @@ from pathlib import Path
 
 import yaml
 
+MCP_SRC = Path(__file__).resolve().parents[2] / "mcp" / "src"
+if str(MCP_SRC) not in sys.path:
+    sys.path.insert(0, str(MCP_SRC))
+
+from stardew_valley_mcp.skill_loader import SkillLoadError, load_executable_skills  # noqa: E402
+
 
 ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_CATALOG = ROOT / "mcp" / "src" / "stardew_valley_mcp" / "generated" / "tool_catalog.json"
@@ -120,6 +126,35 @@ def validate_skill(
     undeclared = sorted(used_tools - declared_tools)
     if undeclared:
         issues.append(ValidationIssue(skill_file, f"正文使用了未在 ## 可用工具 声明的 Tool: {', '.join(undeclared)}"))
+    if (skill_dir / "runtime.yaml").is_file():
+        try:
+            executable = load_executable_skills([skill_dir])
+        except SkillLoadError as error:
+            issues.append(ValidationIssue(skill_dir / "runtime.yaml", str(error)))
+        else:
+            runtime_tools = executable[0].allowed_tools
+            if runtime_tools != declared_tools:
+                missing_from_guide = sorted(runtime_tools - declared_tools)
+                missing_from_runtime = sorted(declared_tools - runtime_tools)
+                details = []
+                if missing_from_guide:
+                    details.append(f"SKILL.md 缺少 {', '.join(missing_from_guide)}")
+                if missing_from_runtime:
+                    details.append(f"runtime.yaml 缺少 {', '.join(missing_from_runtime)}")
+                issues.append(
+                    ValidationIssue(
+                        skill_dir / "runtime.yaml",
+                        f"运行依赖与可用工具不一致: {'; '.join(details)}",
+                    )
+                )
+            unknown_runtime = sorted(runtime_tools - catalog_tools)
+            if unknown_runtime:
+                issues.append(
+                    ValidationIssue(
+                        skill_dir / "runtime.yaml",
+                        f"运行依赖包含不存在的 MCP Tool: {', '.join(unknown_runtime)}",
+                    )
+                )
     return issues
 
 

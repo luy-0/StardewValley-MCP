@@ -146,6 +146,14 @@ stardew_skill_sleep_until_next_day {"timeoutSeconds":180}
 
 该调用会在同一个 Mod Owner Session 内连续完成住宅与床位查询、导航、睡眠确认、换日等待和安全日结 UI 收敛。只有日期已经推进、菜单关闭且玩家恢复可操作时才返回完成；它是 MCP 本地编排的 Skill，不属于 Mod 公共 Manifest 中的复合能力。
 
+要加载自行安装的可信可执行 Skill，可以重复指定目录：
+
+```json
+["serve", "--allow-write", "--skill-dir", "./my-stardew-skills"]
+```
+
+更新 Skill 后只需重启 MCP 客户端，不需要重启游戏。目录中的 Python 会在 MCP 进程内执行，因此只应加载明确可信的来源；开发与维护方法见 [可执行 Skill 开发与维护](executable-skills.md)。
+
 ## 七、本地开发门禁
 
 不部署 Mod 的完整静态与自动化门禁：

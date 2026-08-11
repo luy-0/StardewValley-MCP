@@ -3,6 +3,7 @@ from __future__ import annotations
 import asyncio
 
 import anyio
+import pytest
 from mcp import ClientSession, types
 
 from stardew_valley_mcp.server import create_server
@@ -13,6 +14,14 @@ QUERY_TOOL = types.Tool(
     name="stardew_query_runtime",
     description="查询运行状态",
     inputSchema={"type": "object", "additionalProperties": False},
+    annotations=types.ToolAnnotations(readOnlyHint=True),
+)
+
+MUTATING_TOOL = types.Tool(
+    name="stardew_navigate",
+    description="移动玩家",
+    inputSchema={"type": "object", "additionalProperties": False},
+    annotations=types.ToolAnnotations(readOnlyHint=False),
 )
 
 
@@ -37,20 +46,30 @@ async def _run_probe(ctx, arguments):
 def _skill(run=None, *, allowed_tools=frozenset({"stardew_query_runtime"}), timeout_seconds=1.0):
     return ExecutableSkill(
         name="stardew_skill_runtime_probe",
+        title="运行状态探针",
         description="验证可执行 Skill 复用当前 MCP 会话",
         input_schema={"type": "object", "additionalProperties": False},
+        output_schema={"type": "object", "required": ["status"]},
+        annotations=types.ToolAnnotations(
+            readOnlyHint=True,
+            destructiveHint=False,
+            idempotentHint=True,
+            openWorldHint=False,
+        ),
         allowed_tools=allowed_tools,
         timeout_seconds=timeout_seconds,
+        concurrency="exclusive",
         run=run or _run_probe,
     )
 
 
 class _Client:
-    def __init__(self):
+    def __init__(self, tools=None):
         self.calls: list[tuple[str, dict[str, object]]] = []
+        self.tools = tools or [QUERY_TOOL]
 
     async def available_tools(self):
-        return [QUERY_TOOL]
+        return self.tools
 
     async def call_tool(self, name, arguments):
         self.calls.append((name, arguments))
@@ -126,6 +145,144 @@ def test_host_cancels_skill_at_the_invocation_deadline() -> None:
     result = asyncio.run(host.invoke("stardew_skill_runtime_probe", {}))
     assert result["error"]["code"] == "skill_timeout"
     assert result["error"]["retryable"] is True
+
+
+@pytest.mark.parametrize("tool_status", ["succeeded", "unknown"])
+def test_host_marks_timeout_after_mutating_tool_as_unknown_and_not_retryable(
+    tool_status: str,
+) -> None:
+    async def mutate_then_wait(ctx, arguments):
+        del arguments
+        await ctx.call_tool("stardew_navigate", {})
+        await asyncio.sleep(60)
+        return {"status": "succeeded"}
+
+    class Client(_Client):
+        async def call_tool(self, name, arguments):
+            self.calls.append((name, arguments))
+            return {"status": tool_status, "output": {}}
+
+    client = Client([MUTATING_TOOL])
+    host = SkillHost(
+        client,
+        [
+            _skill(
+                mutate_then_wait,
+                allowed_tools=frozenset({"stardew_navigate"}),
+                timeout_seconds=0.01,
+            )
+        ],
+    )
+
+    result = asyncio.run(host.invoke("stardew_skill_runtime_probe", {}))
+
+    assert result["status"] == "unknown"
+    assert result["error"] == {
+        "code": "skill_timeout_unknown_outcome",
+        "message": "Skill 超时，已提交的变更结果无法确认；禁止自动重放",
+        "retryable": False,
+    }
+    assert result["output"] == {
+        "finalStatus": "unknown",
+        "phase": "after_tool",
+        "lastTool": "stardew_navigate",
+        "mutatingTool": "stardew_navigate",
+        "callsCompleted": 1,
+    }
+
+
+def test_host_keeps_read_only_timeout_retryable_after_query() -> None:
+    async def query_then_wait(ctx, arguments):
+        del arguments
+        result = await ctx.call_tool("stardew_query_runtime", {})
+        assert result["status"] == "succeeded"
+        await asyncio.sleep(60)
+        return {"status": "succeeded"}
+
+    client = _Client()
+    host = SkillHost(client, [_skill(query_then_wait, timeout_seconds=0.01)])
+
+    result = asyncio.run(host.invoke("stardew_skill_runtime_probe", {}))
+
+    assert result["status"] == "failed"
+    assert result["error"]["code"] == "skill_timeout"
+    assert result["error"]["retryable"] is True
+    assert result["output"] == {
+        "finalStatus": "failed",
+        "phase": "after_tool",
+        "lastTool": "stardew_query_runtime",
+        "mutatingTool": None,
+        "callsCompleted": 1,
+    }
+
+
+def test_host_marks_timeout_during_mutating_tool_as_unknown() -> None:
+    async def mutate(ctx, arguments):
+        del arguments
+        return await ctx.call_tool("stardew_navigate", {})
+
+    class Client(_Client):
+        async def call_tool(self, name, arguments):
+            self.calls.append((name, arguments))
+            await asyncio.sleep(60)
+            return {"status": "succeeded", "output": {}}
+
+    client = Client([MUTATING_TOOL])
+    host = SkillHost(
+        client,
+        [
+            _skill(
+                mutate,
+                allowed_tools=frozenset({"stardew_navigate"}),
+                timeout_seconds=0.01,
+            )
+        ],
+    )
+
+    result = asyncio.run(host.invoke("stardew_skill_runtime_probe", {}))
+
+    assert result["status"] == "unknown"
+    assert result["error"]["retryable"] is False
+    assert result["output"] == {
+        "finalStatus": "unknown",
+        "phase": "call_tool",
+        "lastTool": "stardew_navigate",
+        "mutatingTool": "stardew_navigate",
+        "callsCompleted": 0,
+    }
+
+
+def test_host_marks_exception_during_mutating_tool_as_unknown() -> None:
+    async def mutate(ctx, arguments):
+        del arguments
+        return await ctx.call_tool("stardew_navigate", {})
+
+    class Client(_Client):
+        async def call_tool(self, name, arguments):
+            self.calls.append((name, arguments))
+            raise RuntimeError("connection lost after submit")
+
+    client = Client([MUTATING_TOOL])
+    host = SkillHost(
+        client,
+        [_skill(mutate, allowed_tools=frozenset({"stardew_navigate"}))],
+    )
+
+    result = asyncio.run(host.invoke("stardew_skill_runtime_probe", {}))
+
+    assert result["status"] == "unknown"
+    assert result["error"] == {
+        "code": "skill_execution_unknown_outcome",
+        "message": "Skill 执行异常，已提交的变更结果无法确认；禁止自动重放",
+        "retryable": False,
+    }
+    assert result["output"] == {
+        "finalStatus": "unknown",
+        "phase": "call_tool",
+        "lastTool": "stardew_navigate",
+        "mutatingTool": "stardew_navigate",
+        "callsCompleted": 0,
+    }
 
 
 def test_standard_mcp_call_can_invoke_skill_without_a_second_mod_client() -> None:

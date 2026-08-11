@@ -1,0 +1,22 @@
+schemaVersion: "1"
+entrypoint: scripts/run.py:run
+
+tool:
+  name: stardew_skill_executable_skill_template
+  title: 可执行 Skill 模板
+  description: 复用当前 Owner Session 调用一次只读运行状态查询的可执行 Skill 模板。
+  inputSchema: schemas/input.json
+  outputSchema: schemas/output.json
+  annotations:
+    readOnlyHint: true
+    destructiveHint: false
+    idempotentHint: true
+    openWorldHint: false
+
+requires:
+  tools:
+    - stardew_query_runtime
+
+execution:
+  timeoutSeconds: 30
+  concurrency: exclusive
