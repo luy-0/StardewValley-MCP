@@ -6,7 +6,7 @@
     "sessionId": "f2d85b2e-4d60-4e32-bf42-fedcba654321",
     "leaseEpoch": "7",
     "capabilitySnapshot": {
-      "digest": "8c0c486fd9e32c9c729eb9ab4a1e62eb9382898ab5ef37dd1420dafcc1be393e",
+      "digest": "0a0c28bab664e1cd49fceabf3de6396b75ad9a53e554bad6d7b24488da225b40",
       "capabilities": [
         {"id":"activate_ui","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"ActivateUiRequest","resultType":"ActivateUiResult","requiredScope":"game:write","risks":["advances_time","changes_relationship","changes_save","consumes_item","spends_money"],"destructive":true},
         {"id":"close_menu","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"CloseMenuRequest","resultType":"CloseMenuResult","requiredScope":"game:write","destructive":false},
@@ -15,12 +15,13 @@
         {"id":"equip","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"EquipRequest","resultType":"EquipResult","requiredScope":"game:write","destructive":false},
         {"id":"face","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":5000,"maxTimeoutMs":15000,"requestType":"FaceRequest","resultType":"FaceResult","requiredScope":"game:write","destructive":false},
         {"id":"inspect","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_READ_ONLY","execution":"EXECUTION_MODE_IMMEDIATE","cancellable":false,"defaultTimeoutMs":5000,"maxTimeoutMs":15000,"requestType":"InspectRequest","resultType":"InspectResult","requiredScope":"game:read","destructive":false},
-        {"id":"interact","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"InteractRequest","resultType":"InteractResult","requiredScope":"game:write","risks":["changes_relationship","changes_save"],"destructive":true},
+        {"id":"interact","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"InteractRequest","resultType":"InteractResult","requiredScope":"game:write","risks":["changes_relationship","changes_save","consumes_item"],"destructive":true},
         {"id":"move_inventory_item","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"MoveInventoryItemRequest","resultType":"MoveInventoryItemResult","requiredScope":"game:write","risks":["changes_save"],"destructive":true},
         {"id":"navigate","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":60000,"maxTimeoutMs":180000,"requestType":"NavigateRequest","resultType":"NavigateResult","requiredScope":"game:write","risks":["changes_position"],"destructive":false},
         {"id":"open_menu","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"OpenMenuRequest","resultType":"OpenMenuResult","requiredScope":"game:write","destructive":false},
         {"id":"purchase_shop_item","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"PurchaseShopItemRequest","resultType":"PurchaseShopItemResult","requiredScope":"game:write","risks":["changes_save","spends_money"],"destructive":true},
         {"id":"query_inventory","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_READ_ONLY","execution":"EXECUTION_MODE_IMMEDIATE","cancellable":false,"defaultTimeoutMs":5000,"maxTimeoutMs":15000,"requestType":"QueryInventoryRequest","resultType":"QueryInventoryResult","requiredScope":"game:read","destructive":false},
+        {"id":"query_players","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_READ_ONLY","execution":"EXECUTION_MODE_IMMEDIATE","cancellable":false,"defaultTimeoutMs":5000,"maxTimeoutMs":15000,"requestType":"QueryPlayersRequest","resultType":"QueryPlayersResult","requiredScope":"game:read","destructive":false},
         {"id":"query_runtime","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_READ_ONLY","execution":"EXECUTION_MODE_IMMEDIATE","cancellable":false,"defaultTimeoutMs":5000,"maxTimeoutMs":15000,"requestType":"QueryRuntimeRequest","resultType":"QueryRuntimeResult","requiredScope":"game:read","destructive":false},
         {"id":"query_ui","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_READ_ONLY","execution":"EXECUTION_MODE_IMMEDIATE","cancellable":false,"defaultTimeoutMs":5000,"maxTimeoutMs":15000,"requestType":"QueryUiRequest","resultType":"QueryUiResult","requiredScope":"game:read","destructive":false},
         {"id":"query_world","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_READ_ONLY","execution":"EXECUTION_MODE_IMMEDIATE","cancellable":false,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"QueryWorldRequest","resultType":"QueryWorldResult","requiredScope":"game:read","destructive":false},
@@ -32,6 +33,6 @@
     },
     "resultRetentionMs": 300000,
     "reconnectGraceMs": 10000,
-    "authTag": "FBDyX11VTKZAgFyA0o1v2+tbaNQZIsKCVcuBD3krKoY="
+    "authTag": "FVkVqvTxAah8DPfn8ix3w/rVm0o23HtLJ9FBTMTaoMM="
   }
 }

@@ -192,7 +192,13 @@ async def run_query(terminal_fixture: str) -> dict[str, object]:
 def test_query_runtime_success_matches_generated_output_schema() -> None:
     result = asyncio.run(run_query("query-runtime.succeeded.json"))
     assert result["status"] == "succeeded"
-    assert result["output"]["snapshot"]["player"]["position"]["locationId"] == "Farm"
+    snapshot = result["output"]["snapshot"]
+    assert snapshot["player"]["position"]["locationId"] == "Farm"
+    assert snapshot["weather"]["kind"] == "sun"
+    assert snapshot["weather"]["tomorrow"] == "rain"
+    assert snapshot["dailyLuck"] == {"value": 0.08, "tier": "very_lucky"}
+    assert snapshot["queenOfSauce"]["learnable"] is True
+    assert snapshot["queenOfSauce"]["recipeKey"] == "Stir Fry"
     Draft202012Validator(Catalog.load().tool("query_runtime").outputSchema).validate(result)
 
 
@@ -207,10 +213,11 @@ def test_catalog_intersection_and_descriptor_projection_cover_observation_fixtur
     ready = transport_pb2.TransportFrame()
     json_format.Parse((OBSERVATION_FIXTURES / "server-ready.json").read_text(), ready)
     catalog = Catalog.load()
-    assert len(catalog.capability_ids) == 20
+    assert len(catalog.capability_ids) == 21
     assert [tool.name for tool in catalog.tools_for(ready.server_ready.capability_snapshot)] == [
         "stardew_inspect",
         "stardew_query_inventory",
+        "stardew_query_players",
         "stardew_query_runtime",
         "stardew_query_ui",
         "stardew_query_world",

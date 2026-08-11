@@ -21,6 +21,13 @@ message QueryRuntimeResult {
   repeated QueryWarning warnings = 2;
 }
 
+message QueryPlayersRequest {}
+
+message QueryPlayersResult {
+  PlayersSnapshot snapshot = 1;
+  repeated QueryWarning warnings = 2;
+}
+
 message QueryWorldRequest {
   // 未提供 region 时，以玩家为中心使用半径 8。
   oneof region {

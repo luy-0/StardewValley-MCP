@@ -447,6 +447,11 @@ public sealed class QueryUiModContractTests
             Assert.That(UiProjectionPolicy.DialogueEnabled(true, false, true, true, 3, 5), Is.False);
             Assert.That(UiProjectionPolicy.DialogueExtractor(true), Is.EqualTo(UiExtractorKind.DialogueResponse));
             Assert.That(UiProjectionPolicy.DialogueExtractor(false), Is.EqualTo(UiExtractorKind.DialogueAdvance));
+            Assert.That(UiProjectionPolicy.DialogueKind("Sleep", false), Is.EqualTo(UiDialogueKind.SleepConfirmation));
+            Assert.That(UiProjectionPolicy.DialogueKind("Sleep", true), Is.Null);
+            Assert.That(UiProjectionPolicy.DialogueKind("SleepTent", false), Is.Null);
+            Assert.That(UiProjectionPolicy.DialogueKind("Donate", false), Is.Null);
+            Assert.That(UiProjectionPolicy.DialogueKind(null, false), Is.Null);
             Assert.That(UiProjectionPolicy.DialogueHasNextPage(false, false, 0, 2), Is.True);
             Assert.That(UiProjectionPolicy.DialogueHasNextPage(false, false, 0, 1), Is.False);
             Assert.That(UiProjectionPolicy.DialogueHasNextPage(true, true, 1, 0), Is.True);
@@ -642,7 +647,7 @@ public sealed class QueryUiModContractTests
             Is.EqualTo(new[]
             {
                 "activate_ui", "close_menu", "craft_item", "emote", "equip", "face", "inspect", "interact",
-                "move_inventory_item", "navigate", "open_menu", "purchase_shop_item", "query_inventory", "query_runtime", "query_ui", "query_world", "say",
+                "move_inventory_item", "navigate", "open_menu", "purchase_shop_item", "query_inventory", "query_players", "query_runtime", "query_ui", "query_world", "say",
                 "set_equipment_slot", "transfer_inventory_item", "use_tool",
             })
         );

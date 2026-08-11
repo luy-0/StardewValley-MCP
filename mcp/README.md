@@ -17,7 +17,7 @@ MCP 服务端不拥有游戏状态，也不定义游戏内事实；游戏状态�
 
 ## 当前实现状态
 
-当前已建立独立 Python 包、CLI 和由 `../spec/proto/` 生成的协议类型。`serve` 会启动真正的 MCP stdio Server；它连接本地 Mod、验证 HMAC 与能力摘要，并按公共 Manifest、MCP 支持集、Mod 公告集和权限策略的交集暴露 Tool。默认只允许 `game:read`；需要操作游戏时必须显式增加 `--allow-write`。
+当前已建立独立 Python 包、CLI 和由 `../spec/proto/` 生成的协议类型。`serve` 会启动真正的 MCP stdio Server；它连接本地 Mod、验证 HMAC 与能力摘要，并按公共 Manifest、MCP 支持集、Mod 公告集和权限策略的交集暴露原子 Tool。默认只允许 `game:read`；需要操作游戏时必须显式增加 `--allow-write`。Skill Host 会从发行包和显式 `--skill-dir` 发现可执行 Skill；只有全部依赖原子 Tool 可用时才暴露对应派生 Tool。脚本复用当前连接，不取得共享秘密，也不是 Mod 复合能力。
 
 以下命令均从仓库根目录执行。推荐使用 `uv` 按锁文件安装、测试并构建：
 
@@ -27,6 +27,8 @@ uv run --project mcp stardew-valley-mcp doctor
 uv run --project mcp stardew-valley-mcp serve
 # 显式允许操作游戏
 uv run --project mcp stardew-valley-mcp serve --allow-write
+# 加载额外的可信可执行 Skill 目录
+uv run --project mcp stardew-valley-mcp serve --allow-write --skill-dir ./my-stardew-skills
 ```
 
 只重新生成或检查协议代码：

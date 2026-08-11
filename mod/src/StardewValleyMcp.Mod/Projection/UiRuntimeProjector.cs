@@ -203,6 +203,8 @@ internal static class UiRuntimeProjector
                 {
                     shell.Title = dialogueCapture!.Title;
                     shell.DialogueText = dialogueCapture.Text;
+                    if (dialogueCapture.DialogueKind is { } dialogueKind)
+                        shell.DialogueKind = dialogueKind;
                     break;
                 }
                 case UiMenuClassification.ShopMenu:
@@ -242,6 +244,7 @@ internal static class UiRuntimeProjector
         var text = "";
         var titleReadable = true;
         var textReadable = true;
+        UiDialogueKind? dialogueKind = null;
         try
         {
             title = menu.characterDialogue?.speaker?.getName() ?? "";
@@ -258,6 +261,18 @@ internal static class UiRuntimeProjector
         {
             textReadable = false;
         }
+        try
+        {
+            if (menu.isQuestion)
+                dialogueKind = UiProjectionPolicy.DialogueKind(
+                    Game1.currentLocation?.lastQuestionKey,
+                    Game1.eventUp
+                );
+        }
+        catch
+        {
+            dialogueKind = null;
+        }
         var titleValid = PublicStringPolicy.IsValid(title);
         var textValid = PublicStringPolicy.IsValid(text);
         if (!titleReadable || !textReadable || !titleValid || !textValid)
@@ -271,7 +286,7 @@ internal static class UiRuntimeProjector
                 "当前菜单的非关键公开事实不可读"
             ));
         }
-        return new CapturedDialogueMenu(title, text, textReadable && textValid);
+        return new CapturedDialogueMenu(title, text, textReadable && textValid, dialogueKind);
     }
 
     private static UiElementSetCompleteness ExtractGameMenu(
@@ -757,7 +772,8 @@ internal static class UiRuntimeProjector
 internal sealed record CapturedDialogueMenu(
     string Title,
     string Text,
-    bool TextReadable
+    bool TextReadable,
+    UiDialogueKind? DialogueKind
 );
 
 internal sealed class RuntimeUiElementRefOwner : IUiElementRefOwner

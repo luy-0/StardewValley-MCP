@@ -384,6 +384,15 @@ internal sealed class RuntimeMenuActionAdapter : IMenuActionRuntime
 
         if (resolved.Target.Component is not ClickableComponent component)
             return new MenuActionAttempt(before, Failed(ErrorCode.Internal, "当前 UI 组件不可用"));
+        if (resolved.Target.Extractor == UiExtractorKind.DialogueResponse
+            && menu.GetType() == typeof(DialogueBox))
+        {
+            var dialogueCenter = component.bounds.Center;
+            var dialogue = (DialogueBox)menu;
+            dialogue.performHoverAction(dialogueCenter.X, dialogueCenter.Y);
+            dialogue.receiveLeftClick(dialogueCenter.X, dialogueCenter.Y);
+            return new MenuActionAttempt(before, Submitted: true);
+        }
         var activated = resolved.Target.Extractor switch
         {
             UiExtractorKind.GameMenu when UiProjectionPolicy.CanActivateGameMenuElement(
@@ -393,7 +402,6 @@ internal sealed class RuntimeMenuActionAdapter : IMenuActionRuntime
                 menu.GetType(),
                 typeof(GameMenu)
             ) => true,
-            UiExtractorKind.DialogueResponse when menu.GetType() == typeof(DialogueBox) => true,
             _ => false,
         };
         if (!activated)

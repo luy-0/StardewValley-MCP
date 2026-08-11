@@ -32,13 +32,19 @@ internal sealed class GameAdvancePolicy
         EnsureGameCanAdvance();
     }
 
-    private void EnsureGameCanAdvance()
+    internal void EnsureGameCanAdvance()
     {
         if (Game1.options is null)
             return;
 
         _originalPauseWhenOutOfFocus ??= Game1.options.pauseWhenOutOfFocus;
         Game1.options.pauseWhenOutOfFocus = false;
+    }
+
+    internal void RestoreIfWorldNotReady()
+    {
+        if (!Context.IsWorldReady)
+            Restore();
     }
 
     private void OnReturnedToTitle(object? sender, ReturnedToTitleEventArgs eventArgs)

@@ -19,7 +19,7 @@
 | Mod–MCP 传输、认证与命令生命周期 | `mod-mcp-protocol.md` |
 | Mod 公开运行边界 | `mod.md` |
 | MCP 投影与稳定错误 | `mcp/README.md` |
-| Agent Skill 依赖边界 | `skill/README.md` |
+| Agent Skill 与可执行 Host 契约 | `skill/README.md` 及其 Manifest Schema |
 | 兼容性与版本变更 | `VERSIONING.md` |
 | 可观测的一致性要求 | `conformance/` 与 `fixtures/` |
 
@@ -58,7 +58,7 @@ Fixture 只展示有效或无效交互。如果示例与机器可读契约或规
 ## V1 设计结论
 
 - 协议 package 为 `stardew_valley.mcp.v1`。
-- 公共能力由 Manifest 定义为 20 项正交能力。
+- 公共能力由 Manifest 定义为 21 项正交能力。
 - 本地链路使用 Mod Listener、MCP Client 和长度前缀二进制 Proto。
 - 认证使用本地连接所需的 Session、Lease 与 Capability Digest。
 
@@ -74,7 +74,7 @@ Fixture 只展示有效或无效交互。如果示例与机器可读契约或规
 - [公开能力模型](capabilities/README.md)
 - [能力行为契约](capabilities/behavior.md)
 - [MCP 投影](mcp/README.md)
-- [Agent Skill 依赖边界](skill/README.md)
+- [Agent Skill 与可执行 Host 契约](skill/README.md)
 - [契约 Fixture](fixtures/README.md)
 - [一致性要求](conformance/README.md)
 

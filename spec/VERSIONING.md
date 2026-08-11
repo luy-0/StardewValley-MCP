@@ -6,6 +6,7 @@
 |---|---:|---|
 | Mod–MCP 线路协议 | `1.0` | `ProtocolVersion` 与 Proto package |
 | 公开能力契约 | `1.0.0` | `capabilities/manifest.yaml` |
+| 可执行 Skill 包契约 | `1` | `skill/runtime-manifest.schema.json` 的 `schemaVersion` |
 
 仓库产品版本独立于上述契约版本。实现完成前产品使用 `0.x` 预览版本；这不改变已经冻结的候选契约编号。
 
@@ -27,6 +28,11 @@
 
 ### 当前 V1 的兼容性增补
 
+- `query_players=35` 及其 Request／Result、`PlayersSnapshot`、`PlayerPresenceFact` 与 `PlayerRelation` 是新增的独立只读能力分支，属于 V1 Minor 兼容增补。旧 Mod 不会公告该能力，旧 MCP 也不会暴露对应 Tool；新调用方必须把 `player_id` 视为当前存档内的不透明身份，并允许离线玩家缺少全部实时字段。
+- `RuntimeSnapshot.daily_luck/queen_of_sauce`、`PlayerFact.home_location_id`、`WeatherFact.kind/tomorrow` 以及相关追加枚举／消息是 `query_runtime` 的 V1 Minor 结果增补。旧接收方可以忽略这些字段；新接收方面对未升级发送方的字段零值时不得伪造运势、菜谱、住宅或天气事实，应依赖握手后的同版本能力目录。
+- `CropFact.harvest_action`、喷壶专属的 `ItemFact.water_remaining/water_capacity/bottomless` 与 `BedFact.sleep_position` 是追加结果字段，属于 V1 Minor 兼容增补。旧接收方可以忽略；使用新字段的 Skill 必须只在字段存在且枚举可识别时执行，不得把缺省零值推断为交互收获、空喷壶或床位坐标。
+- `UiDialogueKind` 与可选的 `UiMenuFact.dialogue_kind` 是 V1 Minor 结果增补。旧接收方可以忽略；新调用方只能使用实现明确提供的语义值，字段缺省时必须停止需要特定问题身份的自动选择，不能回退到文案或按钮顺序猜测。
+- `interact` 在首个稳定公开版本前补全为游戏原生动作键语义，并把风险声明从单一 `changes_save` 扩大为 `changes_save, changes_relationship, consumes_item`。这是 V1 候选契约的发布前风险纠错：调用方升级后必须重新展示并确认写授权，且必须在调用前显式装备预期物品、调用后复查任务级后置条件；稳定版本发布后再扩大既有能力副作用必须按 Major 变更处理。
 - `Error.navigation` 是可选的 `NavigationFailureContext`，用于失败导航的最后确认位置，以及正常超时时的路线段进度和续跑提示。它是旧接收方可安全忽略的附加线路字段，也是 MCP `error.details.navigation` 的可选附加字段，因此属于 V1 Minor 兼容增补；调用方不得要求所有错误或所有导航失败都存在该字段。
 - `ENTITY_KIND_HOE_DIRT=14`、`WorldEntityFact.hoe_dirt=33` 与 `HoeDirtFact` 是 V1 的追加线路定义，旧接收方可以按 Proto 未知字段规则忽略，因此线路层属于 Minor 兼容增补。空 `HoeDirt` 不再作为 `ENTITY_KIND_GENERIC_OBJECT` 返回；曾只按 `generic_object` 过滤已耕地的调用方需要改为请求 `hoe_dirt`，而带作物的土地仍使用既有 `CropFact.watered`。
 - `UI_ELEMENT_KIND_DIALOGUE_ADVANCE=6` 以及普通 `DialogueBox` 新增的语义推进元素，是追加枚举值与结果元素的 V1 Minor 兼容增补。旧调用方必须忽略无法识别的 UI Kind，不能尝试激活未知元素；依赖 MCP Tool Schema 的调用方需要更新 Tool Catalog 后才能识别并使用 `dialogue_advance`。
@@ -40,9 +46,11 @@
 - `UI_ELEMENT_KIND_EQUIPMENT_SLOT`、`UiEquipmentSlotKind` 与 `UiElementFact.equipment_slot_kind` 是 Inventory 页只读投影的 V1 Minor 兼容增补。旧调用方可以忽略新增元素；装备槽始终 `enabled=false`，装备物品不携带 `INVENTORY_ITEM` Ref，也不得据此推断已经提供穿戴或取下动作。
 - `UI_ELEMENT_KIND_CRAFTING_RECIPE`、`CraftingRecipeFact`、材料／产出事实与 `UiElementFact.crafting_recipe` 是 Crafting 页只读投影的 V1 Minor 兼容增补。旧调用方可忽略新增元素；配方元素始终 `enabled=false`，`craftable` 仅表示材料足够，不表示已经提供制作动作。
 
-## Agent Skill 指引兼容规则
+## Agent Skill 与可执行 Skill 兼容规则
 
-当前 Agent Skill 是开发指引，不参与 Mod–MCP 线路协商，也没有独立运行时版本。模板或正文约定发生变化时随仓库产品版本发布；Skill 引用的 MCP Tool 行为仍以对应公开能力契约版本为准。
+Prompt 型 Agent Skill 是开发指引，不参与 Mod–MCP 线路协商；模板或正文变化随仓库产品版本发布。可执行 Skill 的包结构、入口、Schema、授权、超时和结果语义由 `schemaVersion` 管理，但同样不参与 Mod 线路协商。
+
+增加可选 Manifest 字段、可忽略结果字段或新的独立 Skill 通常属于兼容增补。删除必需字段、改变入口调用形式、扩大默认信任目录、弱化未知终态保护、改变副作用 Annotation 或允许绕过声明 Tool 集合属于破坏性变更。Skill 引用的原子 Tool 行为仍以对应公开能力契约版本为准。
 
 ## 变更流程
 

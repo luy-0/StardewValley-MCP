@@ -11,17 +11,23 @@ internal sealed class SaveAutoLoader
 {
     private readonly IModHelper _helper;
     private readonly IMonitor _monitor;
+    private readonly GameAdvancePolicy _gameAdvancePolicy;
     private readonly string _saveFolderName = "";
     private readonly TimeSpan _timeout;
     private readonly Stopwatch _stopwatch = Stopwatch.StartNew();
     private LoadGameMenu? _loadMenu;
     private State _state;
-    private bool? _originalPauseWhenOutOfFocus;
 
-    public SaveAutoLoader(IModHelper helper, IMonitor monitor, ModConfig config)
+    public SaveAutoLoader(
+        IModHelper helper,
+        IMonitor monitor,
+        ModConfig config,
+        GameAdvancePolicy gameAdvancePolicy
+    )
     {
         _helper = helper;
         _monitor = monitor;
+        _gameAdvancePolicy = gameAdvancePolicy;
 
         if (!config.AutoLoadSave)
         {
@@ -105,30 +111,19 @@ internal sealed class SaveAutoLoader
         }
 
         _state = State.Completed;
-        RestorePausePreference();
         Unsubscribe();
         _monitor.Log($"[AutoLoad] 自动加载完成：'{Constants.SaveFolderName}'，玩家 '{Game1.player.Name}'，位置 '{Game1.currentLocation?.NameOrUniqueName}'。", LogLevel.Info);
     }
 
     private void EnsureGameCanAdvanceWhileUnfocused()
     {
-        if (Game1.options is null)
-            return;
-
-        _originalPauseWhenOutOfFocus ??= Game1.options.pauseWhenOutOfFocus;
-        Game1.options.pauseWhenOutOfFocus = false;
-    }
-
-    private void RestorePausePreference()
-    {
-        if (_originalPauseWhenOutOfFocus.HasValue && Game1.options is not null)
-            Game1.options.pauseWhenOutOfFocus = _originalPauseWhenOutOfFocus.Value;
+        _gameAdvancePolicy.EnsureGameCanAdvance();
     }
 
     private void Fail(string message)
     {
         _state = State.Failed;
-        RestorePausePreference();
+        _gameAdvancePolicy.RestoreIfWorldNotReady();
         Unsubscribe();
         _monitor.Log($"[AutoLoad] {message}", LogLevel.Error);
     }

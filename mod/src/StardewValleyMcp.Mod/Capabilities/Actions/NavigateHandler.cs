@@ -540,6 +540,16 @@ internal sealed class NavigateHandler : ILongRunningCapabilityHandler
                 return StopAndFail(ErrorCode.NotReady, "游戏世界尚未就绪");
             if (_target is null || !SameLocation(current.LocationId, _target.LocationId))
                 return StopAndFail(ErrorCode.ExecutionFailed, "最终导航期间进入了其他 Location");
+            if (_destination is not null
+                && current.X == _destination.X
+                && current.Y == _destination.Y)
+            {
+                var arrivalError = _targets.Revalidate(_target);
+                if (arrivalError is not null)
+                    return StopAndFail(arrivalError.Code, arrivalError.Message);
+                _navigation.Stop();
+                return CompleteFacingAndSucceed(current);
+            }
             if (current.OwnedPathActive)
                 return new ContinuationStep.Pending();
 

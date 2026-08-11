@@ -3,7 +3,6 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using StardewModdingAPI;
 using StardewValley;
-using StardewValley.Tools;
 
 namespace StardewValleyMcp.Mod;
 
@@ -14,7 +13,9 @@ namespace StardewValleyMcp.Mod;
 internal sealed record InteractionObservation(
     bool IsReady,
     bool CanAct,
-    bool HeldItemAllowed,
+    object? HeldItemIdentity,
+    string HeldItemQualifiedId,
+    int HeldItemSlot,
     string LocationId,
     int PlayerX,
     int PlayerY,
@@ -70,7 +71,9 @@ internal sealed class StardewInteractionDriver : IInteractionDriver
                 && !Game1.eventUp
                 && player.CanMove
                 && !player.UsingTool,
-            player.CurrentItem is null or Tool,
+            player.CurrentItem,
+            player.CurrentItem?.QualifiedItemId ?? "",
+            player.CurrentToolIndex,
             location.NameOrUniqueName,
             (int)player.Tile.X,
             (int)player.Tile.Y,
@@ -137,9 +140,22 @@ internal sealed class StardewInteractionDriver : IInteractionDriver
             || Game1.player is not { } player
             || Game1.currentLocation is null)
             throw new InvalidOperationException("游戏世界尚未就绪");
-        _actionButton.Submit(() =>
-            Game1.tryToCheckAt(new Vector2(targetX, targetY), player)
-        );
+        var mouseWasVisible = Game1.wasMouseVisibleThisFrame;
+        try
+        {
+            // 完整动作键语义会处理检查、放置、种植、食用与赠礼。临时关闭鼠标定向，
+            // 让游戏使用已经校准到目标的 GetGrabTile()，随后恢复本帧原状态。
+            Game1.wasMouseVisibleThisFrame = false;
+            _actionButton.Submit(() => Game1.pressActionButton(
+                Game1.GetKeyboardState(),
+                Game1.input.GetMouseState(),
+                Game1.input.GetGamePadState()
+            ));
+        }
+        finally
+        {
+            Game1.wasMouseVisibleThisFrame = mouseWasVisible;
+        }
     }
 
     private static bool CanControlPlayer(int direction, out Farmer player)
@@ -158,7 +174,9 @@ internal sealed class StardewInteractionDriver : IInteractionDriver
     private static InteractionObservation Unavailable() => new(
         false,
         false,
-        false,
+        null,
+        "",
+        -1,
         "",
         0,
         0,

@@ -15,7 +15,7 @@
   "leaseEpoch": 7,
   "resultRetentionMs": 300000,
   "reconnectGraceMs": 10000,
-  "capabilityDigest": "8c0c486fd9e32c9c729eb9ab4a1e62eb9382898ab5ef37dd1420dafcc1be393e",
+  "capabilityDigest": "0a0c28bab664e1cd49fceabf3de6396b75ad9a53e554bad6d7b24488da225b40",
   "clientAuthTagBase64": "REdqMUuTMEsKLv/QqQi5XXjx8wGSQrfxr2tWmEcJa2Q=",
-  "serverAuthTagBase64": "FBDyX11VTKZAgFyA0o1v2+tbaNQZIsKCVcuBD3krKoY="
+  "serverAuthTagBase64": "FVkVqvTxAah8DPfn8ix3w/rVm0o23HtLJ9FBTMTaoMM="
 }

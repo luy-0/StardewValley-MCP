@@ -1,9 +1,9 @@
 ---
-name: stardew-skill-template
-description: 创建或改写一个只通过公开 Stardew Valley MCP Tool 工作的 Agent Skill。需要为新的查询、动作或有界编排编写标准 SKILL.md 时使用。
+name: stardew-prompt-skill-template
+description: 创建或改写一个只通过公开 Stardew Valley MCP Tool 工作的 Prompt 型 Agent Skill。需要为新的查询、动作或有界编排编写标准 SKILL.md 时使用。
 ---
 
-# 创建 Stardew Valley MCP Skill
+# 创建 Prompt 型 Stardew Valley MCP Skill
 
 复制本目录后，把目录名、Frontmatter 和正文替换成具体任务，并更新或删除可选的 `agents/openai.yaml`。保持 Skill 聚焦于一种可复用工作流，不要把多个无关玩法堆入同一文件。
 

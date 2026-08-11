@@ -114,6 +114,39 @@ public sealed class NavigateHandlerTests
     }
 
     [Test]
+    public void ExactCompletesWhenArrivalTouchActionOpensAMenu()
+    {
+        var handler = NewHandler(out var resolver, out var navigation);
+        resolver.Target = Target("FarmHouse", 30, 28);
+        navigation.State = Player("FarmHouse", 29, 28);
+        navigation.StartResults.Enqueue(LocalNavigationStart.Started);
+        var continuation = handler.Start(
+            CommandId,
+            PositionRequest("FarmHouse", 30, 28, ArrivalMode.Exact)
+        );
+
+        continuation.Tick(ContinuationStopSignal.None);
+        navigation.State = new NavigationPlayerState(
+            true,
+            false,
+            "FarmHouse",
+            30,
+            28,
+            1,
+            true
+        );
+        var step = (ContinuationStep.Succeeded)continuation.Tick(ContinuationStopSignal.None);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(step.Result.Navigate.Final, Is.EqualTo(Position("FarmHouse", 30, 28)));
+            Assert.That(step.Result.Navigate.Execution.CompletionReason, Is.EqualTo("arrived"));
+            Assert.That(resolver.RevalidateCalls, Is.EqualTo(1));
+            Assert.That(navigation.StopCalls, Is.EqualTo(1));
+        });
+    }
+
+    [Test]
     public void WorldBecomingUnavailableCleansTheOwnedPathBeforeFailure()
     {
         var handler = NewHandler(out var resolver, out var navigation);

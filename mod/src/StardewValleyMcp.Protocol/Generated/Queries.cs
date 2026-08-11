@@ -31,49 +31,55 @@ namespace StardewValleyMcp.Protocol.V1 {
             "ChNRdWVyeVJ1bnRpbWVSZXF1ZXN0IoUBChJRdWVyeVJ1bnRpbWVSZXN1bHQS",
             "OAoIc25hcHNob3QYASABKAsyJi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUnVu",
             "dGltZVNuYXBzaG90EjUKCHdhcm5pbmdzGAIgAygLMiMuc3RhcmRld192YWxs",
-            "ZXkubWNwLnYxLlF1ZXJ5V2FybmluZyKEAwoRUXVlcnlXb3JsZFJlcXVlc3QS",
-            "LwoEYXJlYRgBIAEoCzIfLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5UaWxlQXJl",
-            "YUgAEjMKBmFyb3VuZBgCIAEoCzIhLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5S",
-            "YWRpdXNBcmVhSAASNwoMZW50aXR5X2tpbmRzGAMgAygOMiEuc3RhcmRld192",
-            "YWxsZXkubWNwLnYxLkVudGl0eUtpbmQSGgoNaW5jbHVkZV90aWxlcxgEIAEo",
-            "CEgBiAEBEh0KEGluY2x1ZGVfZW50aXRpZXMYBSABKAhIAogBARIfChJpbmNs",
-            "dWRlX2NoYXJhY3RlcnMYBiABKAhIA4gBARIUCgxtYXhfZW50aXRpZXMYByAB",
-            "KA0SFgoObWF4X2NoYXJhY3RlcnMYCCABKA1CCAoGcmVnaW9uQhAKDl9pbmNs",
-            "dWRlX3RpbGVzQhMKEV9pbmNsdWRlX2VudGl0aWVzQhUKE19pbmNsdWRlX2No",
-            "YXJhY3RlcnMigQEKEFF1ZXJ5V29ybGRSZXN1bHQSNgoIc25hcHNob3QYASAB",
-            "KAsyJC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuV29ybGRTbmFwc2hvdBI1Cgh3",
-            "YXJuaW5ncxgCIAMoCzIjLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5RdWVyeVdh",
-            "cm5pbmciwgEKFVF1ZXJ5SW52ZW50b3J5UmVxdWVzdBJKChBwbGF5ZXJfaW52",
-            "ZW50b3J5GAEgASgLMi4uc3RhcmRld192YWxsZXkubWNwLnYxLlBsYXllcklu",
-            "dmVudG9yeVNlbGVjdG9ySAASMwoNY29udGFpbmVyX3JlZhgCIAEoCzIaLnN0",
-            "YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWZIABIbChNpbmNsdWRlX2VtcHR5X3Ns",
-            "b3RzGAMgASgIQgsKCWNvbnRhaW5lciIZChdQbGF5ZXJJbnZlbnRvcnlTZWxl",
-            "Y3RvciKJAQoUUXVlcnlJbnZlbnRvcnlSZXN1bHQSOgoIc25hcHNob3QYASAB",
-            "KAsyKC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuSW52ZW50b3J5U25hcHNob3QS",
-            "NQoId2FybmluZ3MYAiADKAsyIy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUXVl",
-            "cnlXYXJuaW5nIhAKDlF1ZXJ5VWlSZXF1ZXN0InsKDVF1ZXJ5VWlSZXN1bHQS",
-            "MwoIc25hcHNob3QYASABKAsyIS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVWlT",
-            "bmFwc2hvdBI1Cgh3YXJuaW5ncxgCIAMoCzIjLnN0YXJkZXdfdmFsbGV5Lm1j",
-            "cC52MS5RdWVyeVdhcm5pbmciOgoOSW5zcGVjdFJlcXVlc3QSKAoEcmVmcxgB",
-            "IAMoCzIaLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWYiegoNSW5zcGVjdFJl",
-            "c3VsdBIyCgVpdGVtcxgBIAMoCzIjLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5J",
-            "bnNwZWN0ZWRSZWYSNQoId2FybmluZ3MYAiADKAsyIy5zdGFyZGV3X3ZhbGxl",
-            "eS5tY3AudjEuUXVlcnlXYXJuaW5nIoEDCgxJbnNwZWN0ZWRSZWYSOAoKcmVz",
-            "b2x1dGlvbhgBIAEoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWZSZXNv",
-            "bHV0aW9uEj4KDHdvcmxkX2VudGl0eRgKIAEoCzImLnN0YXJkZXdfdmFsbGV5",
-            "Lm1jcC52MS5Xb3JsZEVudGl0eUZhY3RIABI5CgljaGFyYWN0ZXIYCyABKAsy",
-            "JC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQ2hhcmFjdGVyRmFjdEgAEjkKDmlu",
-            "dmVudG9yeV9pdGVtGAwgASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkl0",
-            "ZW1GYWN0SAASPQoJaW52ZW50b3J5GA0gASgLMiguc3RhcmRld192YWxsZXku",
-            "bWNwLnYxLkludmVudG9yeVNuYXBzaG90SAASOgoKdWlfZWxlbWVudBgOIAEo",
-            "CzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5VaUVsZW1lbnRGYWN0SABCBgoE",
-            "ZmFjdEIfqgIcU3RhcmRld1ZhbGxleU1jcC5Qcm90b2NvbC5WMWIGcHJvdG8z"));
+            "ZXkubWNwLnYxLlF1ZXJ5V2FybmluZyIVChNRdWVyeVBsYXllcnNSZXF1ZXN0",
+            "IoUBChJRdWVyeVBsYXllcnNSZXN1bHQSOAoIc25hcHNob3QYASABKAsyJi5z",
+            "dGFyZGV3X3ZhbGxleS5tY3AudjEuUGxheWVyc1NuYXBzaG90EjUKCHdhcm5p",
+            "bmdzGAIgAygLMiMuc3RhcmRld192YWxsZXkubWNwLnYxLlF1ZXJ5V2Fybmlu",
+            "ZyKEAwoRUXVlcnlXb3JsZFJlcXVlc3QSLwoEYXJlYRgBIAEoCzIfLnN0YXJk",
+            "ZXdfdmFsbGV5Lm1jcC52MS5UaWxlQXJlYUgAEjMKBmFyb3VuZBgCIAEoCzIh",
+            "LnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SYWRpdXNBcmVhSAASNwoMZW50aXR5",
+            "X2tpbmRzGAMgAygOMiEuc3RhcmRld192YWxsZXkubWNwLnYxLkVudGl0eUtp",
+            "bmQSGgoNaW5jbHVkZV90aWxlcxgEIAEoCEgBiAEBEh0KEGluY2x1ZGVfZW50",
+            "aXRpZXMYBSABKAhIAogBARIfChJpbmNsdWRlX2NoYXJhY3RlcnMYBiABKAhI",
+            "A4gBARIUCgxtYXhfZW50aXRpZXMYByABKA0SFgoObWF4X2NoYXJhY3RlcnMY",
+            "CCABKA1CCAoGcmVnaW9uQhAKDl9pbmNsdWRlX3RpbGVzQhMKEV9pbmNsdWRl",
+            "X2VudGl0aWVzQhUKE19pbmNsdWRlX2NoYXJhY3RlcnMigQEKEFF1ZXJ5V29y",
+            "bGRSZXN1bHQSNgoIc25hcHNob3QYASABKAsyJC5zdGFyZGV3X3ZhbGxleS5t",
+            "Y3AudjEuV29ybGRTbmFwc2hvdBI1Cgh3YXJuaW5ncxgCIAMoCzIjLnN0YXJk",
+            "ZXdfdmFsbGV5Lm1jcC52MS5RdWVyeVdhcm5pbmciwgEKFVF1ZXJ5SW52ZW50",
+            "b3J5UmVxdWVzdBJKChBwbGF5ZXJfaW52ZW50b3J5GAEgASgLMi4uc3RhcmRl",
+            "d192YWxsZXkubWNwLnYxLlBsYXllckludmVudG9yeVNlbGVjdG9ySAASMwoN",
+            "Y29udGFpbmVyX3JlZhgCIAEoCzIaLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5S",
+            "ZWZIABIbChNpbmNsdWRlX2VtcHR5X3Nsb3RzGAMgASgIQgsKCWNvbnRhaW5l",
+            "ciIZChdQbGF5ZXJJbnZlbnRvcnlTZWxlY3RvciKJAQoUUXVlcnlJbnZlbnRv",
+            "cnlSZXN1bHQSOgoIc25hcHNob3QYASABKAsyKC5zdGFyZGV3X3ZhbGxleS5t",
+            "Y3AudjEuSW52ZW50b3J5U25hcHNob3QSNQoId2FybmluZ3MYAiADKAsyIy5z",
+            "dGFyZGV3X3ZhbGxleS5tY3AudjEuUXVlcnlXYXJuaW5nIhAKDlF1ZXJ5VWlS",
+            "ZXF1ZXN0InsKDVF1ZXJ5VWlSZXN1bHQSMwoIc25hcHNob3QYASABKAsyIS5z",
+            "dGFyZGV3X3ZhbGxleS5tY3AudjEuVWlTbmFwc2hvdBI1Cgh3YXJuaW5ncxgC",
+            "IAMoCzIjLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5RdWVyeVdhcm5pbmciOgoO",
+            "SW5zcGVjdFJlcXVlc3QSKAoEcmVmcxgBIAMoCzIaLnN0YXJkZXdfdmFsbGV5",
+            "Lm1jcC52MS5SZWYiegoNSW5zcGVjdFJlc3VsdBIyCgVpdGVtcxgBIAMoCzIj",
+            "LnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5JbnNwZWN0ZWRSZWYSNQoId2Fybmlu",
+            "Z3MYAiADKAsyIy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUXVlcnlXYXJuaW5n",
+            "IoEDCgxJbnNwZWN0ZWRSZWYSOAoKcmVzb2x1dGlvbhgBIAEoCzIkLnN0YXJk",
+            "ZXdfdmFsbGV5Lm1jcC52MS5SZWZSZXNvbHV0aW9uEj4KDHdvcmxkX2VudGl0",
+            "eRgKIAEoCzImLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5Xb3JsZEVudGl0eUZh",
+            "Y3RIABI5CgljaGFyYWN0ZXIYCyABKAsyJC5zdGFyZGV3X3ZhbGxleS5tY3Au",
+            "djEuQ2hhcmFjdGVyRmFjdEgAEjkKDmludmVudG9yeV9pdGVtGAwgASgLMh8u",
+            "c3RhcmRld192YWxsZXkubWNwLnYxLkl0ZW1GYWN0SAASPQoJaW52ZW50b3J5",
+            "GA0gASgLMiguc3RhcmRld192YWxsZXkubWNwLnYxLkludmVudG9yeVNuYXBz",
+            "aG90SAASOgoKdWlfZWxlbWVudBgOIAEoCzIkLnN0YXJkZXdfdmFsbGV5Lm1j",
+            "cC52MS5VaUVsZW1lbnRGYWN0SABCBgoEZmFjdEIfqgIcU3RhcmRld1ZhbGxl",
+            "eU1jcC5Qcm90b2NvbC5WMWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::StardewValleyMcp.Protocol.V1.CommonReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.FactsReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.RefsReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.QueryWarning), global::StardewValleyMcp.Protocol.V1.QueryWarning.Parser, new[]{ "Code", "Message", "Ref" }, new[]{ "Ref" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.QueryRuntimeRequest), global::StardewValleyMcp.Protocol.V1.QueryRuntimeRequest.Parser, null, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.QueryRuntimeResult), global::StardewValleyMcp.Protocol.V1.QueryRuntimeResult.Parser, new[]{ "Snapshot", "Warnings" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.QueryPlayersRequest), global::StardewValleyMcp.Protocol.V1.QueryPlayersRequest.Parser, null, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.QueryPlayersResult), global::StardewValleyMcp.Protocol.V1.QueryPlayersResult.Parser, new[]{ "Snapshot", "Warnings" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.QueryWorldRequest), global::StardewValleyMcp.Protocol.V1.QueryWorldRequest.Parser, new[]{ "Area", "Around", "EntityKinds", "IncludeTiles", "IncludeEntities", "IncludeCharacters", "MaxEntities", "MaxCharacters" }, new[]{ "Region", "IncludeTiles", "IncludeEntities", "IncludeCharacters" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.QueryWorldResult), global::StardewValleyMcp.Protocol.V1.QueryWorldResult.Parser, new[]{ "Snapshot", "Warnings" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.QueryInventoryRequest), global::StardewValleyMcp.Protocol.V1.QueryInventoryRequest.Parser, new[]{ "PlayerInventory", "ContainerRef", "IncludeEmptySlots" }, new[]{ "Container" }, null, null, null),
@@ -766,6 +772,400 @@ namespace StardewValleyMcp.Protocol.V1 {
   }
 
   [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class QueryPlayersRequest : pb::IMessage<QueryPlayersRequest>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<QueryPlayersRequest> _parser = new pb::MessageParser<QueryPlayersRequest>(() => new QueryPlayersRequest());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<QueryPlayersRequest> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[3]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public QueryPlayersRequest() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public QueryPlayersRequest(QueryPlayersRequest other) : this() {
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public QueryPlayersRequest Clone() {
+      return new QueryPlayersRequest(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as QueryPlayersRequest);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(QueryPlayersRequest other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(QueryPlayersRequest other) {
+      if (other == null) {
+        return;
+      }
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
+  public sealed partial class QueryPlayersResult : pb::IMessage<QueryPlayersResult>
+  #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      , pb::IBufferMessage
+  #endif
+  {
+    private static readonly pb::MessageParser<QueryPlayersResult> _parser = new pb::MessageParser<QueryPlayersResult>(() => new QueryPlayersResult());
+    private pb::UnknownFieldSet _unknownFields;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pb::MessageParser<QueryPlayersResult> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[4]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public QueryPlayersResult() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public QueryPlayersResult(QueryPlayersResult other) : this() {
+      snapshot_ = other.snapshot_ != null ? other.snapshot_.Clone() : null;
+      warnings_ = other.warnings_.Clone();
+      _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public QueryPlayersResult Clone() {
+      return new QueryPlayersResult(this);
+    }
+
+    /// <summary>Field number for the "snapshot" field.</summary>
+    public const int SnapshotFieldNumber = 1;
+    private global::StardewValleyMcp.Protocol.V1.PlayersSnapshot snapshot_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.PlayersSnapshot Snapshot {
+      get { return snapshot_; }
+      set {
+        snapshot_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "warnings" field.</summary>
+    public const int WarningsFieldNumber = 2;
+    private static readonly pb::FieldCodec<global::StardewValleyMcp.Protocol.V1.QueryWarning> _repeated_warnings_codec
+        = pb::FieldCodec.ForMessage(18, global::StardewValleyMcp.Protocol.V1.QueryWarning.Parser);
+    private readonly pbc::RepeatedField<global::StardewValleyMcp.Protocol.V1.QueryWarning> warnings_ = new pbc::RepeatedField<global::StardewValleyMcp.Protocol.V1.QueryWarning>();
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::StardewValleyMcp.Protocol.V1.QueryWarning> Warnings {
+      get { return warnings_; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override bool Equals(object other) {
+      return Equals(other as QueryPlayersResult);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Equals(QueryPlayersResult other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (!object.Equals(Snapshot, other.Snapshot)) return false;
+      if(!warnings_.Equals(other.warnings_)) return false;
+      return Equals(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (snapshot_ != null) hash ^= Snapshot.GetHashCode();
+      hash ^= warnings_.GetHashCode();
+      if (_unknownFields != null) {
+        hash ^= _unknownFields.GetHashCode();
+      }
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void WriteTo(pb::CodedOutputStream output) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      output.WriteRawMessage(this);
+    #else
+      if (snapshot_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Snapshot);
+      }
+      warnings_.WriteTo(output, _repeated_warnings_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(output);
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalWriteTo(ref pb::WriteContext output) {
+      if (snapshot_ != null) {
+        output.WriteRawTag(10);
+        output.WriteMessage(Snapshot);
+      }
+      warnings_.WriteTo(ref output, _repeated_warnings_codec);
+      if (_unknownFields != null) {
+        _unknownFields.WriteTo(ref output);
+      }
+    }
+    #endif
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public int CalculateSize() {
+      int size = 0;
+      if (snapshot_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(Snapshot);
+      }
+      size += warnings_.CalculateSize(_repeated_warnings_codec);
+      if (_unknownFields != null) {
+        size += _unknownFields.CalculateSize();
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(QueryPlayersResult other) {
+      if (other == null) {
+        return;
+      }
+      if (other.snapshot_ != null) {
+        if (snapshot_ == null) {
+          Snapshot = new global::StardewValleyMcp.Protocol.V1.PlayersSnapshot();
+        }
+        Snapshot.MergeFrom(other.Snapshot);
+      }
+      warnings_.Add(other.warnings_);
+      _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void MergeFrom(pb::CodedInputStream input) {
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+      input.ReadRawMessage(this);
+    #else
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, input);
+            break;
+          case 10: {
+            if (snapshot_ == null) {
+              Snapshot = new global::StardewValleyMcp.Protocol.V1.PlayersSnapshot();
+            }
+            input.ReadMessage(Snapshot);
+            break;
+          }
+          case 18: {
+            warnings_.AddEntriesFrom(input, _repeated_warnings_codec);
+            break;
+          }
+        }
+      }
+    #endif
+    }
+
+    #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    void pb::IBufferMessage.InternalMergeFrom(ref pb::ParseContext input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+      if ((tag & 7) == 4) {
+        // Abort on any end group tag.
+        return;
+      }
+      switch(tag) {
+          default:
+            _unknownFields = pb::UnknownFieldSet.MergeFieldFrom(_unknownFields, ref input);
+            break;
+          case 10: {
+            if (snapshot_ == null) {
+              Snapshot = new global::StardewValleyMcp.Protocol.V1.PlayersSnapshot();
+            }
+            input.ReadMessage(Snapshot);
+            break;
+          }
+          case 18: {
+            warnings_.AddEntriesFrom(ref input, _repeated_warnings_codec);
+            break;
+          }
+        }
+      }
+    }
+    #endif
+
+  }
+
+  [global::System.Diagnostics.DebuggerDisplayAttribute("{ToString(),nq}")]
   public sealed partial class QueryWorldRequest : pb::IMessage<QueryWorldRequest>
   #if !GOOGLE_PROTOBUF_REFSTRUCT_COMPATIBILITY_MODE
       , pb::IBufferMessage
@@ -781,7 +1181,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[3]; }
+      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[5]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1343,7 +1743,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[4]; }
+      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[6]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1576,7 +1976,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[5]; }
+      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1907,7 +2307,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[6]; }
+      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2068,7 +2468,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[7]; }
+      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2301,7 +2701,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[8]; }
+      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[10]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2462,7 +2862,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[9]; }
+      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[11]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2695,7 +3095,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[10]; }
+      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[12]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -2885,7 +3285,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[11]; }
+      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[13]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -3098,7 +3498,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[12]; }
+      get { return global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor.MessageTypes[14]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

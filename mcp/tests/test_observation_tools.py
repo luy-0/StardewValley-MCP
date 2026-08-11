@@ -21,10 +21,11 @@ from stardew_valley_mcp.transport import ConnectionConfig
 ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = ROOT / "spec" / "fixtures" / "v1" / "observation"
 SECRET = bytes(range(32))
-CAPABILITIES = ("inspect", "query_inventory", "query_runtime", "query_ui", "query_world")
+CAPABILITIES = ("inspect", "query_inventory", "query_players", "query_runtime", "query_ui", "query_world")
 SUCCESS_FIXTURES = {
     "inspect": "inspect.success-complete.json",
     "query_inventory": "query-inventory.success-complete.json",
+    "query_players": "query-players.success.json",
     "query_runtime": "query-runtime.success.json",
     "query_ui": "query-ui.success-menu.json",
     "query_world": "query-world.success-complete.json",
@@ -32,6 +33,7 @@ SUCCESS_FIXTURES = {
 REQUEST_FIXTURES = {
     "inspect": ("inspect.request.json", "inspect"),
     "query_inventory": ("query-inventory.request.json", "queryInventory"),
+    "query_players": ("query-players.request.json", "queryPlayers"),
     "query_runtime": ("query-runtime.request.json", "queryRuntime"),
     "query_ui": ("query-ui.request.json", "queryUi"),
     "query_world": ("query-world.request.json", "queryWorld"),
@@ -83,7 +85,7 @@ class _SnapshotConnection:
         return None
 
 
-def test_observation_profile_lists_exactly_five_tools_and_bootstrap_stays_singleton() -> None:
+def test_observation_profile_lists_exactly_six_tools_and_bootstrap_stays_singleton() -> None:
     catalog = Catalog.load()
     assert [tool.name for tool in catalog.tools_for(_snapshot())] == [f"stardew_{item}" for item in CAPABILITIES]
     bootstrap = transport_pb2.TransportFrame()
@@ -91,7 +93,7 @@ def test_observation_profile_lists_exactly_five_tools_and_bootstrap_stays_single
     assert [tool.name for tool in catalog.tools_for(bootstrap.server_ready.capability_snapshot)] == ["stardew_query_runtime"]
 
 
-def test_client_builds_all_five_requests_with_descriptor_enum_inverse_mapping() -> None:
+def test_client_builds_all_six_requests_with_descriptor_enum_inverse_mapping() -> None:
     client = StardewClient(ConnectionConfig("127.0.0.1", 1, SECRET))
     runtime = _CaptureRuntime()
     client._runtime = runtime
@@ -138,9 +140,10 @@ def test_inspect_fixture_covers_all_facts_and_fact_unavailable_without_stopping(
     Draft202012Validator(Catalog.load().tool("inspect").outputSchema).validate(result)
 
 
-def test_all_five_local_invalid_arguments_are_schema_valid() -> None:
+def test_all_six_local_invalid_arguments_are_schema_valid() -> None:
     invalid = {
         "query_runtime": {"unknown": True},
+        "query_players": {"unknown": True},
         "query_world": {"area": {"locationId": "Farm", "width": 33, "height": 32}},
         "query_inventory": {"playerInventory": {}, "containerRef": {"value": "x"}},
         "query_ui": {"unknown": True},
@@ -154,6 +157,29 @@ def test_all_five_local_invalid_arguments_are_schema_valid() -> None:
         assert result["error"]["code"] == "invalid_arguments"
         Draft202012Validator(Catalog.load().tool(capability_id).outputSchema).validate(result)
     assert runtime.calls == []
+
+
+def test_query_players_projects_saved_roster_and_live_presence_boundary() -> None:
+    result = _success("query_players")
+    players = result["output"]["snapshot"]["players"]
+    assert [player["playerId"] for player in players] == [
+        "-5829123456789012345",
+        "-17",
+        "317829461234567890",
+    ]
+    assert players[0]["relation"] == "myself"
+    assert players[0]["position"] == {"locationId": "Farm", "x": 53, "y": 14}
+    assert players[1] == {
+        "playerId": "-17",
+        "displayName": "Robin",
+        "relation": "other",
+        "online": False,
+        "isHost": False,
+        "homeLocationId": "Cabin-offline",
+    }
+    assert players[2]["relation"] == "other"
+    assert players[2]["online"] is True
+    Draft202012Validator(Catalog.load().tool("query_players").outputSchema).validate(result)
 
 
 def test_query_ui_game_menu_and_unsupported_shell_use_generic_projection() -> None:

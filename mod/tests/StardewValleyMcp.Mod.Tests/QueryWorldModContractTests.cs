@@ -6,6 +6,51 @@ namespace StardewValleyMcp.Mod.Tests;
 public sealed class QueryWorldModContractTests
 {
     [Test]
+    public void FarmingAndBedProjectionPoliciesExposeSkillControlFacts()
+    {
+        var interact = WorldProjectionPolicy.HarvestActionFor(usesScythe: false);
+        var scythe = WorldProjectionPolicy.HarvestActionFor(usesScythe: true);
+        var sleep = WorldProjectionPolicy.SleepPosition("Cabin_123", 7, 9);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(interact, Is.EqualTo(CropHarvestAction.Interact));
+            Assert.That(scythe, Is.EqualTo(CropHarvestAction.Scythe));
+            Assert.That(sleep.LocationId, Is.EqualTo("Cabin_123"));
+            Assert.That(sleep.X, Is.EqualTo(7));
+            Assert.That(sleep.Y, Is.EqualTo(9));
+        });
+    }
+
+    [Test]
+    public void CropReadinessUsesNativeHoeDirtResultAndRejectsDeadCrop()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(WorldProjectionPolicy.CropReady(dead: false, gameReady: true), Is.True);
+            Assert.That(WorldProjectionPolicy.CropReady(dead: false, gameReady: false), Is.False);
+            Assert.That(WorldProjectionPolicy.CropReady(dead: true, gameReady: true), Is.False);
+        });
+    }
+
+    [Test]
+    public void RuntimeHomePolicyPreservesSavedUniqueIdentityWithoutScanningLocations()
+    {
+        Assert.Multiple(() =>
+        {
+            Assert.That(
+                RuntimeProjectionPolicy.HomeLocationId("FarmHouse", "FarmHouse_123"),
+                Is.EqualTo("FarmHouse_123")
+            );
+            Assert.That(
+                RuntimeProjectionPolicy.HomeLocationId("Cabin_123", ""),
+                Is.EqualTo("Cabin_123")
+            );
+            Assert.That(RuntimeProjectionPolicy.HomeLocationId("", ""), Is.Empty);
+        });
+    }
+
+    [Test]
     public void ValidatorRejectsInvalidRegionLimitsBeforeExecution()
     {
         var invalidArea = Request(new QueryWorldRequest

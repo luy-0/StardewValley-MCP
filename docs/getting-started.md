@@ -1,6 +1,6 @@
 # 快速开始
 
-当前预览版提供二十项公共 Tool：五项观察能力和十五项需要明确授权的变更能力，其中 `transfer_inventory_item` 用于当前受支持箱子菜单中的单项原子转移，`set_equipment_slot` 用于当前原版背包页面中的穿戴、替换与取下，`move_inventory_item` 用于玩家背包页内的整件移动或交换，`craft_item` 与 `purchase_shop_item` 分别负责按当前 UI Ref 制作和购买。MCP 默认只暴露只读能力；只有显式加入 `--allow-write`，才会暴露当前 Mod 同时公告的操作能力。
+当前预览版提供二十一项公共 Tool：六项观察能力和十五项需要明确授权的变更能力，其中 `query_players` 返回本存档中自己、在线队友与离线农场工，`transfer_inventory_item` 用于当前受支持箱子菜单中的单项原子转移，`set_equipment_slot` 用于当前原版背包页面中的穿戴、替换与取下，`move_inventory_item` 用于玩家背包页内的整件移动或交换，`craft_item` 与 `purchase_shop_item` 分别负责按当前 UI Ref 制作和购买。MCP 默认只暴露只读能力；只有显式加入 `--allow-write`，才会暴露当前 Mod 同时公告的操作能力。
 
 当前采用源码优先发布方式，不提供预编译 Mod 或安装器。Agent 从源码自动安装时，请使用根目录的 [`AGENT-GUIDE.md`](../AGENT-GUIDE.md)。
 
@@ -135,6 +135,24 @@ stardew_face {"direction":"left"}
 随后再次调用 `stardew_query_runtime`，确认玩家 `facing` 已变为目标方向。不能只凭动作 Tool 没有报错判定成功。
 
 `query_world`、`query_inventory` 与 `query_ui` 返回的 Ref 是不透明值。调用方只能原样交给明确接受 Ref 的 Tool，不应解析或自行构造。
+
+### 可执行睡眠 Skill
+
+以 `--allow-write` 启动且依赖的原子 Tool 均可用时，Tool 清单还会出现：
+
+```text
+stardew_skill_sleep_until_next_day {"timeoutSeconds":180}
+```
+
+该调用会在同一个 Mod Owner Session 内连续完成住宅与床位查询、导航、睡眠确认、换日等待和安全日结 UI 收敛。只有日期已经推进、菜单关闭且玩家恢复可操作时才返回完成；它是 MCP 本地编排的 Skill，不属于 Mod 公共 Manifest 中的复合能力。
+
+要加载自行安装的可信可执行 Skill，可以重复指定目录：
+
+```json
+["serve", "--allow-write", "--skill-dir", "./my-stardew-skills"]
+```
+
+更新 Skill 后只需重启 MCP 客户端，不需要重启游戏。目录中的 Python 会在 MCP 进程内执行，因此只应加载明确可信的来源；开发与维护方法见 [可执行 Skill 开发与维护](executable-skills.md)。
 
 ## 七、本地开发门禁
 

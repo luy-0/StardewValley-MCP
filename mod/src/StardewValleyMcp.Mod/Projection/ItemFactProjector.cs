@@ -28,7 +28,27 @@ internal static class ItemFactProjector
         };
         if (reference is not null)
             fact.Ref = reference.Clone();
+        if (item is WateringCan wateringCan)
+            ApplyWateringCanFacts(
+                fact,
+                wateringCan.WaterLeft,
+                wateringCan.waterCanMax,
+                wateringCan.IsBottomless
+            );
         return fact;
+    }
+
+    internal static void ApplyWateringCanFacts(
+        ItemFact fact,
+        int remaining,
+        int capacity,
+        bool bottomless
+    )
+    {
+        ArgumentNullException.ThrowIfNull(fact);
+        fact.WaterRemaining = UInt(remaining);
+        fact.WaterCapacity = UInt(capacity);
+        fact.Bottomless = bottomless;
     }
 
     private static uint UInt(int value) => checked((uint)Math.Max(0, value));

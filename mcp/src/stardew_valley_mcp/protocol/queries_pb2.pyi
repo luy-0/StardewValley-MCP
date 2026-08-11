@@ -31,6 +31,18 @@ class QueryRuntimeResult(_message.Message):
     warnings: _containers.RepeatedCompositeFieldContainer[QueryWarning]
     def __init__(self, snapshot: _Optional[_Union[_facts_pb2.RuntimeSnapshot, _Mapping]] = ..., warnings: _Optional[_Iterable[_Union[QueryWarning, _Mapping]]] = ...) -> None: ...
 
+class QueryPlayersRequest(_message.Message):
+    __slots__ = ()
+    def __init__(self) -> None: ...
+
+class QueryPlayersResult(_message.Message):
+    __slots__ = ("snapshot", "warnings")
+    SNAPSHOT_FIELD_NUMBER: _ClassVar[int]
+    WARNINGS_FIELD_NUMBER: _ClassVar[int]
+    snapshot: _facts_pb2.PlayersSnapshot
+    warnings: _containers.RepeatedCompositeFieldContainer[QueryWarning]
+    def __init__(self, snapshot: _Optional[_Union[_facts_pb2.PlayersSnapshot, _Mapping]] = ..., warnings: _Optional[_Iterable[_Union[QueryWarning, _Mapping]]] = ...) -> None: ...
+
 class QueryWorldRequest(_message.Message):
     __slots__ = ("area", "around", "entity_kinds", "include_tiles", "include_entities", "include_characters", "max_entities", "max_characters")
     AREA_FIELD_NUMBER: _ClassVar[int]

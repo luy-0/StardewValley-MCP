@@ -137,7 +137,8 @@
       "result": "InteractResult",
       "risk": [
         "changes_save",
-        "changes_relationship"
+        "changes_relationship",
+        "consumes_item"
       ],
       "side_effect": "mutating",
       "title": "与目标交互"
@@ -228,6 +229,22 @@
       "risk": [],
       "side_effect": "read_only",
       "title": "查询库存"
+    },
+    {
+      "cancellable": false,
+      "contract_version": "1.0.0",
+      "default_timeout_ms": 5000,
+      "description": "获取本存档中自己、在线队友与离线农场工的身份及可用状态。",
+      "destructive": false,
+      "execution": "immediate",
+      "id": "query_players",
+      "max_timeout_ms": 15000,
+      "request": "QueryPlayersRequest",
+      "required_scope": "game:read",
+      "result": "QueryPlayersResult",
+      "risk": [],
+      "side_effect": "read_only",
+      "title": "查询存档玩家"
     },
     {
       "cancellable": false,
@@ -4992,6 +5009,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -5024,6 +5044,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -6629,11 +6659,15 @@
                   "$ref": "#/$defs/WorldPosition"
                 },
                 "type": "array"
+              },
+              "sleepPosition": {
+                "$ref": "#/$defs/WorldPosition"
               }
             },
             "required": [
               "canSleep",
-              "occupiedTiles"
+              "occupiedTiles",
+              "sleepPosition"
             ],
             "type": "object"
           },
@@ -6913,6 +6947,14 @@
                 "minimum": 0,
                 "type": "integer"
               },
+              "harvestAction": {
+                "enum": [
+                  "unspecified",
+                  "interact",
+                  "scythe"
+                ],
+                "type": "string"
+              },
               "harvestItemId": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -6932,6 +6974,7 @@
               "cropId",
               "dead",
               "growthPhase",
+              "harvestAction",
               "harvestItemId",
               "readyForHarvest",
               "regrows",
@@ -8106,6 +8149,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -8138,6 +8184,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -15190,6 +15246,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -15222,6 +15281,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -16362,6 +16431,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -16394,6 +16466,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -17001,6 +17083,1193 @@
         "idempotentHint": true,
         "readOnlyHint": true
       },
+      "capabilityId": "query_players",
+      "description": "获取本存档中自己、在线队友与离线农场工的身份及可用状态。",
+      "inputSchema": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false,
+        "properties": {},
+        "type": "object"
+      },
+      "name": "stardew_query_players",
+      "outputSchema": {
+        "$defs": {
+          "FailedToolError": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "busy"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "capability_changed"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "capability_denied"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "command_cancelled"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "command_timeout"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "conflict"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "context_expired"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "execution_failed"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "internal_error"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "not_found"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "not_ready"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "out_of_range"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "route_unavailable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "stale_ref"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "unauthenticated"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "upstream_protocol_error"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "PlayerPresenceFact": {
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "online": {
+                      "const": false
+                    }
+                  },
+                  "required": [
+                    "online"
+                  ]
+                },
+                "then": {
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "position"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "facing"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "energy"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "maxEnergy"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "isInBed"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "energy"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "maxEnergy"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "maxEnergy"
+                  ]
+                },
+                "then": {
+                  "required": [
+                    "energy"
+                  ]
+                }
+              }
+            ],
+            "properties": {
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "energy": {
+                "type": "number"
+              },
+              "facing": {
+                "enum": [
+                  "unspecified",
+                  "up",
+                  "right",
+                  "down",
+                  "left"
+                ],
+                "type": "string"
+              },
+              "homeLocationId": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "isHost": {
+                "type": "boolean"
+              },
+              "isInBed": {
+                "type": "boolean"
+              },
+              "maxEnergy": {
+                "type": "number"
+              },
+              "online": {
+                "type": "boolean"
+              },
+              "playerId": {
+                "maxLength": 20,
+                "minLength": 1,
+                "pattern": "^-?(0|[1-9][0-9]*)$",
+                "type": "string"
+              },
+              "position": {
+                "$ref": "#/$defs/WorldPosition"
+              },
+              "relation": {
+                "enum": [
+                  "myself",
+                  "other"
+                ],
+                "type": "string"
+              }
+            },
+            "required": [
+              "displayName",
+              "isHost",
+              "online",
+              "playerId",
+              "relation"
+            ],
+            "type": "object"
+          },
+          "PlayersSnapshot": {
+            "additionalProperties": false,
+            "properties": {
+              "players": {
+                "items": {
+                  "$ref": "#/$defs/PlayerPresenceFact"
+                },
+                "minItems": 1,
+                "type": "array"
+              }
+            },
+            "required": [
+              "players"
+            ],
+            "type": "object"
+          },
+          "QueryPlayersResult": {
+            "additionalProperties": false,
+            "properties": {
+              "snapshot": {
+                "$ref": "#/$defs/PlayersSnapshot"
+              },
+              "warnings": {
+                "items": {
+                  "$ref": "#/$defs/QueryWarning"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "snapshot",
+              "warnings"
+            ],
+            "type": "object"
+          },
+          "QueryWarning": {
+            "additionalProperties": false,
+            "properties": {
+              "code": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "message": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "ref": {
+                "$ref": "#/$defs/Ref"
+              }
+            },
+            "required": [
+              "code",
+              "message"
+            ],
+            "type": "object"
+          },
+          "Ref": {
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "maxLength": 512,
+                "minLength": 1,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "type": "object"
+          },
+          "StardewToolError": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "busy"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "capability_changed"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "capability_denied"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "command_cancelled"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "command_timeout"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "conflict"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "context_expired"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "execution_failed"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "internal_error"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "not_found"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "not_ready"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "out_of_range"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "route_unavailable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "stale_ref"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "unauthenticated"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "unknown_outcome"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "upstream_protocol_error"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "UnknownToolError": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "unknown_outcome"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "WorldPosition": {
+            "additionalProperties": false,
+            "properties": {
+              "locationId": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "x": {
+                "maximum": 2147483647,
+                "minimum": -2147483648,
+                "type": "integer"
+              },
+              "y": {
+                "maximum": 2147483647,
+                "minimum": -2147483648,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "locationId",
+              "x",
+              "y"
+            ],
+            "type": "object"
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "commandId": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "output": {
+                "$ref": "#/$defs/QueryPlayersResult"
+              },
+              "status": {
+                "const": "succeeded"
+              }
+            },
+            "required": [
+              "status",
+              "commandId",
+              "output"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "commandId": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "error": {
+                "$ref": "#/$defs/FailedToolError"
+              },
+              "status": {
+                "const": "failed"
+              }
+            },
+            "required": [
+              "status",
+              "commandId",
+              "error"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "commandId": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "error": {
+                "$ref": "#/$defs/UnknownToolError"
+              },
+              "status": {
+                "const": "unknown"
+              }
+            },
+            "required": [
+              "status",
+              "commandId",
+              "error"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "requestType": "QueryPlayersRequest",
+      "resultType": "QueryPlayersResult",
+      "title": "查询存档玩家"
+    },
+    {
+      "annotations": {
+        "destructiveHint": false,
+        "idempotentHint": true,
+        "readOnlyHint": true
+      },
       "capabilityId": "query_runtime",
       "description": "获取当前日期、时间、天气、玩家位置和基础资源状态。",
       "inputSchema": {
@@ -17012,6 +18281,30 @@
       "name": "stardew_query_runtime",
       "outputSchema": {
         "$defs": {
+          "DailyLuckFact": {
+            "additionalProperties": false,
+            "properties": {
+              "tier": {
+                "enum": [
+                  "unspecified",
+                  "very_unlucky",
+                  "unlucky",
+                  "neutral",
+                  "lucky",
+                  "very_lucky"
+                ],
+                "type": "string"
+              },
+              "value": {
+                "type": "number"
+              }
+            },
+            "required": [
+              "tier",
+              "value"
+            ],
+            "type": "object"
+          },
           "FailedToolError": {
             "oneOf": [
               {
@@ -17470,6 +18763,12 @@
                 "minimum": -2147483648,
                 "type": "integer"
               },
+              "homeLocationId": {
+                "maxLength": 128,
+                "minLength": 1,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
               "maxEnergy": {
                 "type": "number"
               },
@@ -17491,6 +18790,7 @@
               "energy",
               "facing",
               "health",
+              "homeLocationId",
               "maxEnergy",
               "maxHealth",
               "money",
@@ -17558,11 +18858,17 @@
           "RuntimeSnapshot": {
             "additionalProperties": false,
             "properties": {
+              "dailyLuck": {
+                "$ref": "#/$defs/DailyLuckFact"
+              },
               "date": {
                 "$ref": "#/$defs/GameDate"
               },
               "player": {
                 "$ref": "#/$defs/PlayerFact"
+              },
+              "queenOfSauce": {
+                "$ref": "#/$defs/TvCookingRecipeFact"
               },
               "timeOfDay": {
                 "maximum": 4294967295,
@@ -17577,8 +18883,10 @@
               }
             },
             "required": [
+              "dailyLuck",
               "date",
               "player",
+              "queenOfSauce",
               "timeOfDay",
               "ui",
               "weather"
@@ -18015,6 +19323,42 @@
               }
             ]
           },
+          "TvCookingRecipeFact": {
+            "additionalProperties": false,
+            "properties": {
+              "alreadyKnown": {
+                "type": "boolean"
+              },
+              "available": {
+                "type": "boolean"
+              },
+              "displayName": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "learnable": {
+                "type": "boolean"
+              },
+              "recipeKey": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "rerun": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "alreadyKnown",
+              "available",
+              "displayName",
+              "learnable",
+              "recipeKey",
+              "rerun"
+            ],
+            "type": "object"
+          },
           "UiSummary": {
             "additionalProperties": false,
             "properties": {
@@ -18068,6 +19412,20 @@
               "greenRain": {
                 "type": "boolean"
               },
+              "kind": {
+                "enum": [
+                  "unspecified",
+                  "sun",
+                  "rain",
+                  "storm",
+                  "snow",
+                  "wind",
+                  "green_rain",
+                  "festival",
+                  "wedding"
+                ],
+                "type": "string"
+              },
               "lightning": {
                 "type": "boolean"
               },
@@ -18076,14 +19434,30 @@
               },
               "snowing": {
                 "type": "boolean"
+              },
+              "tomorrow": {
+                "enum": [
+                  "unspecified",
+                  "sun",
+                  "rain",
+                  "storm",
+                  "snow",
+                  "wind",
+                  "green_rain",
+                  "festival",
+                  "wedding"
+                ],
+                "type": "string"
               }
             },
             "required": [
               "festivalDay",
               "greenRain",
+              "kind",
               "lightning",
               "raining",
-              "snowing"
+              "snowing",
+              "tomorrow"
             ],
             "type": "object"
           },
@@ -18714,6 +20088,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -18746,6 +20123,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -19394,6 +20781,13 @@
           "UiMenuFact": {
             "additionalProperties": false,
             "properties": {
+              "dialogueKind": {
+                "enum": [
+                  "unspecified",
+                  "sleep_confirmation"
+                ],
+                "type": "string"
+              },
               "dialogueText": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -19768,11 +21162,15 @@
                   "$ref": "#/$defs/WorldPosition"
                 },
                 "type": "array"
+              },
+              "sleepPosition": {
+                "$ref": "#/$defs/WorldPosition"
               }
             },
             "required": [
               "canSleep",
-              "occupiedTiles"
+              "occupiedTiles",
+              "sleepPosition"
             ],
             "type": "object"
           },
@@ -19952,6 +21350,14 @@
                 "minimum": 0,
                 "type": "integer"
               },
+              "harvestAction": {
+                "enum": [
+                  "unspecified",
+                  "interact",
+                  "scythe"
+                ],
+                "type": "string"
+              },
               "harvestItemId": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -19971,6 +21377,7 @@
               "cropId",
               "dead",
               "growthPhase",
+              "harvestAction",
               "harvestItemId",
               "readyForHarvest",
               "regrows",
@@ -20551,6 +21958,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -20583,6 +21993,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -23692,6 +25112,9 @@
           "ItemFact": {
             "additionalProperties": false,
             "properties": {
+              "bottomless": {
+                "type": "boolean"
+              },
               "category": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
@@ -23724,6 +25147,16 @@
                 "type": "boolean"
               },
               "toolLevel": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "waterRemaining": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"

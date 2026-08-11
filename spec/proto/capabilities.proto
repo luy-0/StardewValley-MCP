@@ -46,6 +46,7 @@ message CommandRequest {
     QueryInventoryRequest query_inventory = 32;
     QueryUiRequest query_ui = 33;
     InspectRequest inspect = 34;
+    QueryPlayersRequest query_players = 35;
   }
 }
 
@@ -72,6 +73,7 @@ message CapabilityResult {
     QueryInventoryResult query_inventory = 32;
     QueryUiResult query_ui = 33;
     InspectResult inspect = 34;
+    QueryPlayersResult query_players = 35;
   }
 }
 

@@ -70,7 +70,7 @@ capabilities:
     default_timeout_ms: 10000
     max_timeout_ms: 30000
     required_scope: game:write
-    risk: [changes_save, changes_relationship]
+    risk: [changes_save, changes_relationship, consumes_item]
     destructive: true
   - id: use_tool
     title: 使用当前工具
@@ -218,6 +218,20 @@ capabilities:
     contract_version: 1.0.0
     request: QueryRuntimeRequest
     result: QueryRuntimeResult
+    side_effect: read_only
+    execution: immediate
+    cancellable: false
+    default_timeout_ms: 5000
+    max_timeout_ms: 15000
+    required_scope: game:read
+    risk: []
+    destructive: false
+  - id: query_players
+    title: 查询存档玩家
+    description: 获取本存档中自己、在线队友与离线农场工的身份及可用状态。
+    contract_version: 1.0.0
+    request: QueryPlayersRequest
+    result: QueryPlayersResult
     side_effect: read_only
     execution: immediate
     cancellable: false

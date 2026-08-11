@@ -2,7 +2,7 @@
 
 状态：**公开 V1 候选契约**
 
-MCP 服务端将已授权的公共能力投影为 MCP Tool。Agent Skill 由 Agent Runtime 读取并调用这些 Tool，不由 MCP 挂载。MCP 是公开能力契约之上的 Adapter，不拥有游戏状态，不重新定义 Proto 语义，也不把 Mod 线路协议版本当成 MCP 自身的协议版本。
+MCP 服务端将已授权的公共能力投影为原子 MCP Tool，并可以通过 Skill Host 加载符合 [`../skill/`](../skill/README.md) 契约的可执行 Skill，将其投影为派生 MCP Tool。Prompt 型 Skill 仍由 Agent Runtime 阅读；可执行 Skill 只编排原子 Tool，不拥有游戏状态、不重新定义 Proto 语义，也不成为 Mod 能力。
 
 MCP 端必须遵循其所声明支持的正式 MCP 版本。Tool 的 `inputSchema`、`outputSchema`、`structuredContent` 和 Annotation 行为以 [MCP 官方 Tool 规范](https://modelcontextprotocol.io/specification/2025-11-25/server/tools)为上位协议；本文件只规定 StardewValley MCP 的确定性投影。
 
@@ -10,7 +10,7 @@ MCP 端必须遵循其所声明支持的正式 MCP 版本。Tool 的 `inputSchem
 
 - 原子能力 Tool 名固定为 `stardew_<capability_id>`，例如 `stardew_query_runtime`。
 - `title` 与 `description` 直接来自公共 Manifest，不得由实现侧元数据覆盖。
-- Tool 列表等于公共 Manifest、Mod 能力快照、MCP Projection、本地 Scope 与风险策略的交集。
+- 原子 Tool 列表等于公共 Manifest、Mod 能力快照、MCP Projection、本地 Scope 与风险策略的交集。派生 Skill Tool 还必须满足：Skill 已受信任加载，且其声明依赖是该原子 Tool 列表的子集。
 - 当前 Session 内能力快照变化时，MCP 必须断开 Mod Session、重新握手并通知 MCP 客户端 Tool List 已变化；不得原地静默增加 Tool。
 
 ## Input Schema
