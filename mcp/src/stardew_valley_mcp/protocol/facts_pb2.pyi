@@ -81,6 +81,11 @@ class UiElementKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     UI_ELEMENT_KIND_EQUIPMENT_SLOT: _ClassVar[UiElementKind]
     UI_ELEMENT_KIND_CRAFTING_RECIPE: _ClassVar[UiElementKind]
 
+class UiDialogueKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    UI_DIALOGUE_KIND_UNSPECIFIED: _ClassVar[UiDialogueKind]
+    UI_DIALOGUE_KIND_SLEEP_CONFIRMATION: _ClassVar[UiDialogueKind]
+
 class UiInventorySide(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     UI_INVENTORY_SIDE_UNSPECIFIED: _ClassVar[UiInventorySide]
@@ -148,6 +153,8 @@ UI_ELEMENT_KIND_DIALOGUE_RESPONSE: UiElementKind
 UI_ELEMENT_KIND_DIALOGUE_ADVANCE: UiElementKind
 UI_ELEMENT_KIND_EQUIPMENT_SLOT: UiElementKind
 UI_ELEMENT_KIND_CRAFTING_RECIPE: UiElementKind
+UI_DIALOGUE_KIND_UNSPECIFIED: UiDialogueKind
+UI_DIALOGUE_KIND_SLEEP_CONFIRMATION: UiDialogueKind
 UI_INVENTORY_SIDE_UNSPECIFIED: UiInventorySide
 UI_INVENTORY_SIDE_PLAYER: UiInventorySide
 UI_INVENTORY_SIDE_CONTAINER: UiInventorySide
@@ -705,18 +712,20 @@ class UiSnapshot(_message.Message):
     def __init__(self, ui_revision: _Optional[str] = ..., menu_open: _Optional[bool] = ..., menu: _Optional[_Union[UiMenuFact, _Mapping]] = ..., elements: _Optional[_Iterable[_Union[UiElementFact, _Mapping]]] = ..., inventories: _Optional[_Iterable[_Union[UiInventoryLink, _Mapping]]] = ...) -> None: ...
 
 class UiMenuFact(_message.Message):
-    __slots__ = ("menu_type", "menu_kind", "title", "modal", "dialogue_text")
+    __slots__ = ("menu_type", "menu_kind", "title", "modal", "dialogue_text", "dialogue_kind")
     MENU_TYPE_FIELD_NUMBER: _ClassVar[int]
     MENU_KIND_FIELD_NUMBER: _ClassVar[int]
     TITLE_FIELD_NUMBER: _ClassVar[int]
     MODAL_FIELD_NUMBER: _ClassVar[int]
     DIALOGUE_TEXT_FIELD_NUMBER: _ClassVar[int]
+    DIALOGUE_KIND_FIELD_NUMBER: _ClassVar[int]
     menu_type: str
     menu_kind: _common_pb2.MenuKind
     title: str
     modal: bool
     dialogue_text: str
-    def __init__(self, menu_type: _Optional[str] = ..., menu_kind: _Optional[_Union[_common_pb2.MenuKind, str]] = ..., title: _Optional[str] = ..., modal: _Optional[bool] = ..., dialogue_text: _Optional[str] = ...) -> None: ...
+    dialogue_kind: UiDialogueKind
+    def __init__(self, menu_type: _Optional[str] = ..., menu_kind: _Optional[_Union[_common_pb2.MenuKind, str]] = ..., title: _Optional[str] = ..., modal: _Optional[bool] = ..., dialogue_text: _Optional[str] = ..., dialogue_kind: _Optional[_Union[UiDialogueKind, str]] = ...) -> None: ...
 
 class UiElementFact(_message.Message):
     __slots__ = ("ref", "kind", "label", "visible", "enabled", "center", "index", "item", "price", "stock", "inventory_side", "item_ref", "equipment_slot_kind", "crafting_recipe")

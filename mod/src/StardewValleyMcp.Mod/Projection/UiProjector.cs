@@ -400,6 +400,9 @@ internal static class UiProjectionPolicy
 
     public static UiExtractorKind DialogueExtractor(bool isQuestion) =>
         isQuestion ? UiExtractorKind.DialogueResponse : UiExtractorKind.DialogueAdvance;
+
+    public static UiDialogueKind? DialogueKind(string? questionKey, bool eventUp) =>
+        !eventUp && questionKey == "Sleep" ? UiDialogueKind.SleepConfirmation : null;
 }
 
 internal readonly record struct UiBounds(int X, int Y, int Width, int Height);

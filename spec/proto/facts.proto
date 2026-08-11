@@ -374,6 +374,11 @@ enum UiElementKind {
   UI_ELEMENT_KIND_CRAFTING_RECIPE = 8;
 }
 
+enum UiDialogueKind {
+  UI_DIALOGUE_KIND_UNSPECIFIED = 0;
+  UI_DIALOGUE_KIND_SLEEP_CONFIRMATION = 1;
+}
+
 enum UiInventorySide {
   UI_INVENTORY_SIDE_UNSPECIFIED = 0;
   UI_INVENTORY_SIDE_PLAYER = 1;
@@ -441,6 +446,8 @@ message UiMenuFact {
   string title = 3;
   bool modal = 4;
   string dialogue_text = 5;
+  // 只对实现能够从游戏稳定语义键确认的问题出现；不得从本地化文案猜测。
+  optional UiDialogueKind dialogue_kind = 6;
 }
 
 message UiElementFact {

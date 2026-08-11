@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import shutil
 import tempfile
 from pathlib import Path
@@ -97,6 +98,34 @@ def test_entrypoint_must_be_a_declared_module_level_async_function() -> None:
         )
 
         with pytest.raises(SkillLoadError, match="模块级异步函数"):
+            load_executable_skills([skill])
+
+
+def test_runtime_dependencies_cannot_reference_another_derived_skill() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        skill = Path(directory) / SLEEP_SKILL.name
+        shutil.copytree(SLEEP_SKILL, skill)
+        manifest = (skill / "runtime.yaml").read_text(encoding="utf-8")
+        (skill / "runtime.yaml").write_text(
+            manifest.replace("stardew_query_runtime", "stardew_skill_other"),
+            encoding="utf-8",
+        )
+
+        with pytest.raises(SkillLoadError, match="runtime.yaml 不符合契约"):
+            load_executable_skills([skill])
+
+
+@pytest.mark.parametrize("reference", ["missing.json", "#/$defs/missing"])
+def test_schema_references_must_resolve_inside_the_same_document(reference: str) -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        skill = Path(directory) / SLEEP_SKILL.name
+        shutil.copytree(SLEEP_SKILL, skill)
+        (skill / "schemas" / "input.json").write_text(
+            json.dumps({"$ref": reference}),
+            encoding="utf-8",
+        )
+
+        with pytest.raises(SkillLoadError, match=r"\$ref"):
             load_executable_skills([skill])
 
 

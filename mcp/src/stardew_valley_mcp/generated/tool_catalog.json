@@ -20781,6 +20781,13 @@
           "UiMenuFact": {
             "additionalProperties": false,
             "properties": {
+              "dialogueKind": {
+                "enum": [
+                  "unspecified",
+                  "sleep_confirmation"
+                ],
+                "type": "string"
+              },
               "dialogueText": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",

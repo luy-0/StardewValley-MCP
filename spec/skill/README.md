@@ -63,6 +63,8 @@ async def run(ctx, arguments):
 
 脚本只能把 `requires.tools` 中声明的 Tool 交给 `ctx.call_tool`。SkillContext 必须在调用结束、取消或超时后撤销；撤销后的调用必须失败。脚本不得读取共享秘密、创建 `StardewClient`、连接 Mod 端口、发送 Proto Frame 或绕过公共 Catalog。
 
+`requires.tools` 只能声明 Mod 公告并由 MCP Catalog 投影的原子 `stardew_*` Tool，不得声明 `stardew_skill_*` 派生 Tool。V1 的输入／输出 Schema 只允许当前 JSON 文档内能够静态解析的本地 `$ref`，不加载网络、文件或相邻包中的 Schema。
+
 原子调用必须串行等待终态后再提交下一项，不能并行占用 Mod 主线程。当前 `execution.concurrency` 只支持 `exclusive`：同一 MCP Session 内一次只运行一个可执行 Skill，避免多个复合流程交错修改游戏。
 
 ## 5. Tool Schema 与风险
@@ -80,7 +82,7 @@ Host 必须在调用前验证输入，并在返回前验证输出。脚本已经
 
 可执行 Skill 使用 `succeeded`、`failed`、`unknown` 三种顶层状态。`failed` 表示可以确认任务没有成功完成；`unknown` 表示已经可能产生存档变化，但当前证据不足以确认任务终态。
 
-- 变更 Tool 返回 `unknown` 后必须立即停止，禁止自动重放。
+- 变更 Tool 返回 `unknown` 后禁止自动重放。只有后续独立只读事实能够唯一证明任务级后置条件已经成立时，受信任脚本才可以把整个 Skill 收敛为 `succeeded`；否则必须停止并保持 `unknown`。
 - 变更 Tool 正在执行或已经成功后发生宿主超时，Host 必须返回 `unknown`、`retryable=false`，并包含最后 Tool、变更 Tool、完成调用数和阶段。
 - 变更 Tool 提交期间连接中断或脚本异常时，只要结果可能已经生效，Host 同样必须返回 `unknown`，不能降级成可重试的内部失败。
 - 纯只读流程在宿主超时时可以返回 `failed`、`retryable=true`。

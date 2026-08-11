@@ -880,6 +880,7 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
     success_frames: list[Any] | None = None
     inspect_success_frames: list[Any] | None = None
     players_success_frames: list[Any] | None = None
+    ui_success_frames: list[Any] | None = None
     for scenario in scenarios:
         scenario_id = scenario.get("id")
         require(isinstance(scenario_id, str) and scenario_id not in seen, "observation scenario ID 重复或非法")
@@ -896,9 +897,12 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
             inspect_success_frames = frames
         elif scenario_id == "query-players-succeeded":
             players_success_frames = frames
+        elif scenario_id == "query-ui-succeeded":
+            ui_success_frames = frames
     require(success_frames is not None, "observation 缺少 query-world 成功场景")
     require(inspect_success_frames is not None, "observation 缺少 inspect 成功场景")
     require(players_success_frames is not None, "observation 缺少 query-players 成功场景")
+    require(ui_success_frames is not None, "observation 缺少 query-ui 成功场景")
     world_result = next(
         frame.command_event.result.query_world
         for frame in success_frames
@@ -918,6 +922,19 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         frame.command_event.result.query_players
         for frame in players_success_frames
         if frame.WhichOneof("body") == "command_event" and frame.command_event.state == 3
+    )
+    ui_result = next(
+        frame.command_event.result.query_ui
+        for frame in ui_success_frames
+        if frame.WhichOneof("body") == "command_event" and frame.command_event.state == 3
+    )
+    require(
+        ui_result.snapshot.menu.dialogue_kind == 1
+        and len(ui_result.snapshot.elements) == 2
+        and [element.kind for element in ui_result.snapshot.elements] == [5, 5]
+        and [element.index for element in ui_result.snapshot.elements] == [0, 1]
+        and all(element.enabled for element in ui_result.snapshot.elements),
+        "query_ui Fixture 未覆盖睡眠确认语义与两个可用响应",
     )
     require(len(players_result.snapshot.players) == 3, "query_players Fixture 玩家数量无效")
     require(players_result.snapshot.players[0].relation == 1, "query_players Fixture 必须将自己排在首位")

@@ -28,6 +28,11 @@
 
 ### 当前 V1 的兼容性增补
 
+- `query_players=35` 及其 Request／Result、`PlayersSnapshot`、`PlayerPresenceFact` 与 `PlayerRelation` 是新增的独立只读能力分支，属于 V1 Minor 兼容增补。旧 Mod 不会公告该能力，旧 MCP 也不会暴露对应 Tool；新调用方必须把 `player_id` 视为当前存档内的不透明身份，并允许离线玩家缺少全部实时字段。
+- `RuntimeSnapshot.daily_luck/queen_of_sauce`、`PlayerFact.home_location_id`、`WeatherFact.kind/tomorrow` 以及相关追加枚举／消息是 `query_runtime` 的 V1 Minor 结果增补。旧接收方可以忽略这些字段；新接收方面对未升级发送方的字段零值时不得伪造运势、菜谱、住宅或天气事实，应依赖握手后的同版本能力目录。
+- `CropFact.harvest_action`、喷壶专属的 `ItemFact.water_remaining/water_capacity/bottomless` 与 `BedFact.sleep_position` 是追加结果字段，属于 V1 Minor 兼容增补。旧接收方可以忽略；使用新字段的 Skill 必须只在字段存在且枚举可识别时执行，不得把缺省零值推断为交互收获、空喷壶或床位坐标。
+- `UiDialogueKind` 与可选的 `UiMenuFact.dialogue_kind` 是 V1 Minor 结果增补。旧接收方可以忽略；新调用方只能使用实现明确提供的语义值，字段缺省时必须停止需要特定问题身份的自动选择，不能回退到文案或按钮顺序猜测。
+- `interact` 在首个稳定公开版本前补全为游戏原生动作键语义，并把风险声明从单一 `changes_save` 扩大为 `changes_save, changes_relationship, consumes_item`。这是 V1 候选契约的发布前风险纠错：调用方升级后必须重新展示并确认写授权，且必须在调用前显式装备预期物品、调用后复查任务级后置条件；稳定版本发布后再扩大既有能力副作用必须按 Major 变更处理。
 - `Error.navigation` 是可选的 `NavigationFailureContext`，用于失败导航的最后确认位置，以及正常超时时的路线段进度和续跑提示。它是旧接收方可安全忽略的附加线路字段，也是 MCP `error.details.navigation` 的可选附加字段，因此属于 V1 Minor 兼容增补；调用方不得要求所有错误或所有导航失败都存在该字段。
 - `ENTITY_KIND_HOE_DIRT=14`、`WorldEntityFact.hoe_dirt=33` 与 `HoeDirtFact` 是 V1 的追加线路定义，旧接收方可以按 Proto 未知字段规则忽略，因此线路层属于 Minor 兼容增补。空 `HoeDirt` 不再作为 `ENTITY_KIND_GENERIC_OBJECT` 返回；曾只按 `generic_object` 过滤已耕地的调用方需要改为请求 `hoe_dirt`，而带作物的土地仍使用既有 `CropFact.watered`。
 - `UI_ELEMENT_KIND_DIALOGUE_ADVANCE=6` 以及普通 `DialogueBox` 新增的语义推进元素，是追加枚举值与结果元素的 V1 Minor 兼容增补。旧调用方必须忽略无法识别的 UI Kind，不能尝试激活未知元素；依赖 MCP Tool Schema 的调用方需要更新 Tool Catalog 后才能识别并使用 `dialogue_advance`。

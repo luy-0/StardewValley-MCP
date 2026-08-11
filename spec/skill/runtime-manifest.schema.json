@@ -64,7 +64,7 @@
           "uniqueItems": true,
           "items": {
             "type": "string",
-            "pattern": "^stardew_[a-z0-9]+(?:_[a-z0-9]+)*$"
+            "pattern": "^stardew_(?!skill_)[a-z0-9]+(?:_[a-z0-9]+)*$"
           }
         }
       }

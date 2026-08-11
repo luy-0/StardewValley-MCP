@@ -15,6 +15,7 @@ class SkillAbort(Exception):
     phase: str
     retryable: bool = False
     details: dict[str, Any] | None = None
+    outcome: str = "failed"
 
 
 async def run(ctx, arguments: dict[str, Any]) -> dict[str, Any]:
@@ -55,6 +56,7 @@ async def run(ctx, arguments: dict[str, Any]) -> dict[str, Any]:
                     "到床导航结果未知，且未观察到睡眠问题；禁止重放",
                     "navigate",
                     details={"navigation": navigation},
+                    outcome="unknown",
                 )
             await _fallback_interact(ctx, bed, deadline)
             prompt = await _wait_for_sleep_prompt(ctx, bed, deadline, attempts=10)
@@ -78,6 +80,14 @@ async def run(ctx, arguments: dict[str, Any]) -> dict[str, Any]:
                 "uiRevision": prompt["uiRevision"],
             },
         )
+        if activation.get("status") == "unknown":
+            raise SkillAbort(
+                "sleep_confirmation_unknown",
+                "睡眠肯定响应结果未知，禁止重放",
+                "confirm_sleep",
+                details={"activation": activation},
+                outcome="unknown",
+            )
         if activation.get("status") != "succeeded":
             raise SkillAbort(
                 "sleep_confirmation_failed",
@@ -113,14 +123,14 @@ async def run(ctx, arguments: dict[str, Any]) -> dict[str, Any]:
         }
     except SkillAbort as error:
         return {
-            "status": "failed",
+            "status": error.outcome,
             "error": {
                 "code": error.code,
                 "message": error.message,
                 "retryable": error.retryable,
             },
             "output": {
-                "finalStatus": "failed",
+                "finalStatus": error.outcome,
                 "phase": error.phase,
                 "dateBefore": before.get("date"),
                 "bedRef": bed.get("ref") if bed else None,
@@ -135,6 +145,14 @@ async def run(ctx, arguments: dict[str, Any]) -> dict[str, Any]:
 
 async def _runtime(ctx, phase: str) -> dict[str, Any]:
     result = await ctx.call_tool("stardew_query_runtime", {})
+    if result.get("status") == "unknown":
+        raise SkillAbort(
+            "runtime_query_unknown",
+            "无法确认游戏运行状态",
+            phase,
+            details={"result": result},
+            outcome="unknown",
+        )
     if result.get("status") != "succeeded":
         raise SkillAbort(
             "runtime_query_failed",
@@ -160,7 +178,13 @@ async def _find_bed(ctx, home_location_id: str, player_position: dict[str, Any])
             },
         )
         if result.get("status") == "unknown":
-            raise SkillAbort("bed_query_unknown", "床位查询结果未知", "find_bed", details={"result": result})
+            raise SkillAbort(
+                "bed_query_unknown",
+                "床位查询结果未知",
+                "find_bed",
+                details={"result": result},
+                outcome="unknown",
+            )
         if result.get("status") != "succeeded":
             continue
         for entity in result["output"]["snapshot"].get("entities", []):
@@ -195,7 +219,13 @@ async def _wait_for_sleep_prompt(
         _ensure_time(deadline, "wait_sleep_prompt")
         result = await ctx.call_tool("stardew_query_ui", {})
         if result.get("status") == "unknown":
-            raise SkillAbort("ui_query_unknown", "睡眠问题查询结果未知", "wait_sleep_prompt", details={"result": result})
+            raise SkillAbort(
+                "ui_query_unknown",
+                "睡眠问题查询结果未知",
+                "wait_sleep_prompt",
+                details={"result": result},
+                outcome="unknown",
+            )
         if result.get("status") == "succeeded":
             snapshot = result["output"]["snapshot"]
             prompt = await _sleep_prompt(ctx, snapshot, bed)
@@ -220,7 +250,11 @@ async def _wait_for_sleep_prompt(
 
 async def _sleep_prompt(ctx, snapshot: dict[str, Any], bed: dict[str, Any]) -> dict[str, Any] | None:
     menu = snapshot.get("menu") or {}
-    if not snapshot.get("menuOpen") or menu.get("menuType") != "DialogueBox":
+    if (
+        not snapshot.get("menuOpen")
+        or menu.get("menuType") != "DialogueBox"
+        or menu.get("dialogueKind") != "sleep_confirmation"
+    ):
         return None
     responses = sorted(
         (
@@ -239,6 +273,7 @@ async def _sleep_prompt(ctx, snapshot: dict[str, Any], bed: dict[str, Any]) -> d
             "睡眠问题出现时无法确认当前玩家状态，禁止选择对话响应",
             "wait_sleep_prompt",
             details={"result": players_result},
+            outcome="unknown",
         )
     if players_result.get("status") != "succeeded":
         raise SkillAbort(
@@ -273,6 +308,7 @@ async def _fallback_interact(ctx, bed: dict[str, Any], deadline: float) -> None:
             "床旁站位结果未知，禁止继续提交交互",
             "fallback_interact",
             details={"navigation": navigation},
+            outcome="unknown",
         )
     if navigation.get("status") != "succeeded":
         raise SkillAbort(
@@ -289,6 +325,7 @@ async def _fallback_interact(ctx, bed: dict[str, Any], deadline: float) -> None:
             "床交互结果未知，禁止重放",
             "fallback_interact",
             details={"interaction": interaction},
+            outcome="unknown",
         )
     if interaction.get("status") != "succeeded":
         raise SkillAbort(
@@ -310,7 +347,12 @@ async def _wait_for_new_day(
         _ensure_time(deadline, "wait_new_day")
         runtime_result = await ctx.call_tool("stardew_query_runtime", {})
         if runtime_result.get("status") == "unknown":
-            raise SkillAbort("runtime_query_unknown", "换日期间运行状态未知", "wait_new_day")
+            raise SkillAbort(
+                "runtime_query_unknown",
+                "换日期间运行状态未知",
+                "wait_new_day",
+                outcome="unknown",
+            )
         if runtime_result.get("status") != "succeeded":
             await asyncio.sleep(0.5)
             continue
@@ -324,7 +366,12 @@ async def _wait_for_new_day(
 
         ui_result = await ctx.call_tool("stardew_query_ui", {})
         if ui_result.get("status") == "unknown":
-            raise SkillAbort("post_sleep_ui_unknown", "换日菜单状态未知", "drain_post_sleep_ui")
+            raise SkillAbort(
+                "post_sleep_ui_unknown",
+                "换日菜单状态未知",
+                "drain_post_sleep_ui",
+                outcome="unknown",
+            )
         if ui_result.get("status") != "succeeded":
             await asyncio.sleep(0.5)
             continue
@@ -366,7 +413,12 @@ async def _wait_for_new_day(
 
         close_result = await ctx.call_tool("stardew_close_menu", {})
         if close_result.get("status") == "unknown":
-            raise SkillAbort("post_sleep_close_unknown", "换日菜单关闭结果未知", "drain_post_sleep_ui")
+            raise SkillAbort(
+                "post_sleep_close_unknown",
+                "换日菜单关闭结果未知",
+                "drain_post_sleep_ui",
+                outcome="unknown",
+            )
         if close_result.get("status") == "succeeded":
             ui_steps += 1
         await asyncio.sleep(0.5)

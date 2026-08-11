@@ -88,7 +88,10 @@ internal sealed class QueryRuntimeHandler : IImmediateCapabilityHandler
                     DailyLuck = new DailyLuckFact
                     {
                         Value = player.DailyLuck,
-                        Tier = DailyLuckTierFor(player),
+                        Tier = RuntimeProjectionPolicy.ClassifyDailyLuck(
+                            player.DailyLuck,
+                            player.team.sharedDailyLuck.Value
+                        ),
                     },
                     QueenOfSauce = QueryQueenOfSauce(warnings),
                 },
@@ -157,19 +160,6 @@ internal sealed class QueryRuntimeHandler : IImmediateCapabilityHandler
             Game1.weather_sunny => WeatherKind.Sun,
             _ => WeatherKind.Unspecified,
         };
-    }
-
-    private static DailyLuckTier DailyLuckTierFor(Farmer player)
-    {
-        if (player.DailyLuck < -0.07)
-            return DailyLuckTier.VeryUnlucky;
-        if (player.DailyLuck < -0.02)
-            return DailyLuckTier.Unlucky;
-        if (player.DailyLuck > 0.07 || player.team.sharedDailyLuck.Value == 0.12)
-            return DailyLuckTier.VeryLucky;
-        if (player.DailyLuck > 0.02)
-            return DailyLuckTier.Lucky;
-        return DailyLuckTier.Neutral;
     }
 
     private static TvCookingRecipeFact QueryQueenOfSauce(List<QueryWarning> warnings)

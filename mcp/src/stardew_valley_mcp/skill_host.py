@@ -61,6 +61,7 @@ class SkillContext:
         self.__last_tool: str | None = None
         self.__pending_mutating_tool: str | None = None
         self.__last_effectful_tool: str | None = None
+        self.__last_unknown_tool: str | None = None
 
     def revoke(self) -> None:
         self.__active = False
@@ -68,6 +69,10 @@ class SkillContext:
     @property
     def mutation_outcome_possible(self) -> bool:
         return self.__last_effectful_tool is not None or self.__pending_mutating_tool is not None
+
+    @property
+    def unknown_mutation_possible(self) -> bool:
+        return self.__last_unknown_tool is not None or self.__pending_mutating_tool is not None
 
     def timeout_diagnostics(self) -> dict[str, Any]:
         pending = self.__pending_mutating_tool is not None
@@ -107,6 +112,8 @@ class SkillContext:
             self.__pending_mutating_tool = None
             if result.get("status") in {"succeeded", "unknown"}:
                 self.__last_effectful_tool = name
+            if result.get("status") == "unknown":
+                self.__last_unknown_tool = name
         return result
 
 
@@ -146,6 +153,8 @@ class SkillHost:
             Draft202012Validator(skill.input_schema).validate(arguments)
         except ValidationError:
             return _failure("invalid_arguments", "参数不符合 Skill 输入 Schema")
+        except Exception:
+            return _failure("skill_internal", "Skill 输入 Schema 无法执行")
 
         tool_read_only = {
             tool.name: bool(tool.annotations and tool.annotations.readOnlyHint is True)
@@ -168,6 +177,22 @@ class SkillHost:
                             context.timeout_diagnostics(),
                         )
                     return _failure("skill_output_invalid", "Skill 返回结果不符合公开 Schema")
+                if result.get("status") == "failed" and context.unknown_mutation_possible:
+                    return _unknown(
+                        "skill_unknown_outcome_preserved",
+                        "变更 Tool 的结果未知，Skill 不得将其降级为失败；禁止自动重放",
+                        context.timeout_diagnostics(),
+                    )
+                if (
+                    result.get("status") == "failed"
+                    and result.get("error", {}).get("retryable") is True
+                    and context.mutation_outcome_possible
+                ):
+                    return _unknown(
+                        "skill_retry_unsafe_after_mutation",
+                        "Skill 已执行变更，后续失败不能安全自动重试",
+                        context.timeout_diagnostics(),
+                    )
                 return result
         except TimeoutError:
             diagnostics = context.timeout_diagnostics()

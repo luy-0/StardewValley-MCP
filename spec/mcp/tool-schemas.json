@@ -322,6 +322,16 @@
         "SIDE_EFFECT_UNSPECIFIED": "unspecified"
       }
     },
+    "stardew_valley.mcp.v1.UiDialogueKind": {
+      "jsonToProto": {
+        "sleep_confirmation": "UI_DIALOGUE_KIND_SLEEP_CONFIRMATION",
+        "unspecified": "UI_DIALOGUE_KIND_UNSPECIFIED"
+      },
+      "protoToJson": {
+        "UI_DIALOGUE_KIND_SLEEP_CONFIRMATION": "sleep_confirmation",
+        "UI_DIALOGUE_KIND_UNSPECIFIED": "unspecified"
+      }
+    },
     "stardew_valley.mcp.v1.UiElementKind": {
       "jsonToProto": {
         "button": "UI_ELEMENT_KIND_BUTTON",
@@ -24521,6 +24531,13 @@
           "UiMenuFact": {
             "additionalProperties": false,
             "properties": {
+              "dialogueKind": {
+                "enum": [
+                  "unspecified",
+                  "sleep_confirmation"
+                ],
+                "type": "string"
+              },
               "dialogueText": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",

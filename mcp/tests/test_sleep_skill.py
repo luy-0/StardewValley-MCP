@@ -72,7 +72,11 @@ def _sleep_prompt():
             "snapshot": {
                 "menuOpen": True,
                 "uiRevision": "a" * 64,
-                "menu": {"menuType": "DialogueBox", "dialogueText": "Go to sleep for the night?"},
+                "menu": {
+                    "menuType": "DialogueBox",
+                    "dialogueKind": "sleep_confirmation",
+                    "dialogueText": "Go to sleep for the night?",
+                },
                 "elements": [
                     {
                         "ref": {"value": "yes-ref"},
@@ -222,6 +226,25 @@ def test_sleep_skill_host_accepts_the_script_result_against_public_output_schema
     assert result["output"]["finalStatus"] == "completed"
 
 
+def test_sleep_confirmation_unknown_is_preserved_and_not_retryable() -> None:
+    class Context(_SuccessfulContext):
+        async def call_tool(self, name, arguments):
+            if name == "stardew_activate_ui":
+                self.calls.append((name, arguments))
+                return {
+                    "status": "unknown",
+                    "error": {"code": "unknown_outcome", "message": "结果未知", "retryable": False},
+                }
+            return await super().call_tool(name, arguments)
+
+    result = asyncio.run(_run()(Context(), {"timeoutSeconds": 60}))
+
+    assert result["status"] == "unknown"
+    assert result["error"]["code"] == "sleep_confirmation_unknown"
+    assert result["error"]["retryable"] is False
+    assert result["output"]["finalStatus"] == "unknown"
+
+
 def test_arbitrary_two_choice_dialogue_without_bed_context_is_not_sleep_prompt() -> None:
     module = _module()
     dialogue = _sleep_prompt()
@@ -234,6 +257,29 @@ def test_arbitrary_two_choice_dialogue_without_bed_context_is_not_sleep_prompt()
             assert name == "stardew_query_players"
             assert arguments == {}
             return _players(is_in_bed=False)
+
+    result = asyncio.run(
+        module._sleep_prompt(
+            Context(),
+            dialogue["output"]["snapshot"],
+            _bed_query()["output"]["snapshot"]["entities"][0],
+        )
+    )
+
+    assert result is None
+
+
+def test_arbitrary_two_choice_dialogue_on_bed_is_not_sleep_prompt_without_semantic_kind() -> None:
+    module = _module()
+    dialogue = _sleep_prompt()
+    dialogue["output"]["snapshot"]["menu"].pop("dialogueKind")
+    dialogue["output"]["snapshot"]["menu"]["dialogueText"] = "Donate the item?"
+    dialogue["output"]["snapshot"]["elements"][0]["label"] = "Donate"
+    dialogue["output"]["snapshot"]["elements"][1]["label"] = "Keep"
+
+    class Context:
+        async def call_tool(self, name, arguments):
+            raise AssertionError(f"不应为未知对话读取玩家或激活响应: {name} {arguments}")
 
     result = asyncio.run(
         module._sleep_prompt(

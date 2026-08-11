@@ -245,6 +245,8 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 
 非选择型 `DialogueBox` 必须且只能投影一个 `DIALOGUE_ADVANCE`。当前页后面仍有页面时标签为“继续”，否则为“结束”；判断必须与游戏自身的下一页/关闭图标语义一致。只有正文完整呈现、菜单不在过渡且 `safetyTimer <= 0` 时 `enabled=true`。问题对话只投影 `DIALOGUE_RESPONSE`，不得同时投影推进元素。页面变化、对话关闭或菜单替换后旧推进 Ref 必须 stale；同一稳定页面的重复查询与 `inspect` 必须复用同一 Ref。
 
+`UiMenuFact.dialogue_kind` 只在实现能从游戏稳定、语言无关的问题语义键确认时出现。V1 仅公开原版 `Sleep` 问题为 `SLEEP_CONFIRMATION`；普通问题、事件问题、第三方键、键不可读或派生 `DialogueBox` 都保持缺省，不得从 `dialogue_text`、按钮标签、响应顺序或玩家位置猜测语义。
+
 精确原版 `ShopMenu` 只投影当前 viewport 的出售行，每行包含稳定 Ref、可读时的 ItemFact、原版单轮价格与有限库存；非金币货币和额外交换物分别使用 `UI_PRICE_CURRENCY_UNREPRESENTED` 与 `UI_PRICE_PARTIAL` warning。商品行始终 `enabled=false`，不得通过 `activate_ui` 点击；普通金币实物只能将该 Ref 与同一 UI Revision 交给 `purchase_shop_item`。滚出 viewport、售罄移除、菜单／组件／商品对象替换后旧 Ref stale；价格或库存变化必须推进 UI Revision。
 
 精确原版 `GameMenu` 当前位于精确原版 Inventory 页时，必须在顶部 Tab 之外投影所有已解锁玩家背包格与实际存在的装备槽。背包视觉组件可以多于玩家 `MaxItems`，但只公开 `0..MaxItems-1` 的真实 Slot；Snapshot 必须恰好有一条 PLAYER `UiInventoryLink`，其 Item Ref 与 Inventory Revision 必须复用同一时刻 `query_inventory(include_empty_slots=true)` 的权威结果。装备槽使用 `EQUIPMENT_SLOT + equipment_slot_kind + 同种类内 index`，固定 Hat、Left Ring、Right Ring、Boots、Shirt、Pants 的 index 为 0，Trinket 使用从 0 开始的 ordinal。装备物品不属于玩家背包，非空槽只嵌入不带 Ref 的完整 `ItemFact`，空槽缺省 `item`；背包空槽缺省 `item_ref`。背包格与装备槽都必须存在、`enabled=false`，不得通过 `activate_ui` 点击。

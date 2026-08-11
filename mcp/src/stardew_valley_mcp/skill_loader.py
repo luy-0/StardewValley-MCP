@@ -113,6 +113,8 @@ def _load_skill(directory: Path, validator: Draft202012Validator) -> ExecutableS
         Draft202012Validator.check_schema(output_schema)
     except Exception as error:
         raise SkillLoadError(f"Skill '{directory.name}' 的 JSON Schema 无效") from error
+    _validate_schema_refs(input_schema, f"Skill '{directory.name}' Input Schema")
+    _validate_schema_refs(output_schema, f"Skill '{directory.name}' Output Schema")
 
     entrypoint_path, separator, function_name = manifest["entrypoint"].partition(":")
     if not separator:
@@ -188,6 +190,49 @@ def _load_json(path: Path, label: str) -> dict[str, Any]:
     if not isinstance(value, dict):
         raise SkillLoadError(f"{label} 必须是 JSON 对象")
     return value
+
+
+def _validate_schema_refs(schema: dict[str, Any], label: str) -> None:
+    """V1 只允许可在同一 JSON 文档内静态解析的本地引用。"""
+
+    for node in _walk_json(schema):
+        if "$dynamicRef" in node:
+            raise SkillLoadError(f"{label} 不支持 $dynamicRef")
+        reference = node.get("$ref")
+        if reference is None:
+            continue
+        if not isinstance(reference, str) or not reference.startswith("#"):
+            raise SkillLoadError(f"{label} 的 $ref 必须引用当前 JSON 文档")
+        if not _local_ref_exists(schema, reference):
+            raise SkillLoadError(f"{label} 包含无法解析的本地 $ref: {reference}")
+
+
+def _walk_json(value: Any):
+    if isinstance(value, dict):
+        yield value
+        for child in value.values():
+            yield from _walk_json(child)
+    elif isinstance(value, list):
+        for child in value:
+            yield from _walk_json(child)
+
+
+def _local_ref_exists(schema: dict[str, Any], reference: str) -> bool:
+    if reference == "#":
+        return True
+    if not reference.startswith("#/"):
+        return False
+    current: Any = schema
+    for raw_part in reference[2:].split("/"):
+        part = raw_part.replace("~1", "/").replace("~0", "~")
+        if isinstance(current, dict) and part in current:
+            current = current[part]
+            continue
+        if isinstance(current, list) and part.isdigit() and int(part) < len(current):
+            current = current[int(part)]
+            continue
+        return False
+    return True
 
 
 def _contract_schema_path() -> Path:
