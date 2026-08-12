@@ -1017,6 +1017,20 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
                 and items[1].tool_kind == 5,
                 "完整背包 Fixture 未覆盖语言无关的 Scythe tool_kind",
             )
+        if name == "query-world.success-complete.json":
+            tiles = frame.command_event.result.query_world.snapshot.tiles
+            require(
+                len(tiles) == 2
+                and tiles[0].HasField("watering_can_refillable")
+                and tiles[1].HasField("watering_can_refillable")
+                and not tiles[0].watering_can_refillable
+                and tiles[1].watering_can_refillable
+                and tiles[0].HasField("pathfinding_blocked")
+                and tiles[1].HasField("pathfinding_blocked")
+                and not tiles[0].pathfinding_blocked
+                and not tiles[1].pathfinding_blocked,
+                "完整世界 Fixture 未覆盖补水与原生寻路 Tile 事实的 presence",
+            )
         if name == "query-ui.success-dialogue.json":
             elements = frame.command_event.result.query_ui.snapshot.elements
             require(

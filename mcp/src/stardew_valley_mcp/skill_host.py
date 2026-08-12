@@ -62,6 +62,8 @@ class SkillContext:
         self.__pending_mutating_tool: str | None = None
         self.__last_effectful_tool: str | None = None
         self.__last_unknown_tool: str | None = None
+        self.__last_unknown_call_number: int | None = None
+        self.__last_successful_read_call_number: int | None = None
 
     def revoke(self) -> None:
         self.__active = False
@@ -73,6 +75,23 @@ class SkillContext:
     @property
     def unknown_mutation_possible(self) -> bool:
         return self.__last_unknown_tool is not None or self.__pending_mutating_tool is not None
+
+    def resolve_unknown_mutation(self, tool_name: str) -> None:
+        """确认最近一次 unknown 变更已被独立只读后置事实唯一解决。"""
+        if not self.__active:
+            raise RuntimeError("本次 Skill 调用权柄已撤销")
+        if self.__pending_mutating_tool is not None:
+            raise RuntimeError("变更 Tool 尚未返回")
+        if self.__last_unknown_tool != tool_name:
+            raise ValueError("只能解决最近一次 unknown 变更 Tool")
+        if (
+            self.__last_unknown_call_number is None
+            or self.__last_successful_read_call_number is None
+            or self.__last_successful_read_call_number <= self.__last_unknown_call_number
+        ):
+            raise RuntimeError("unknown 变更后尚无成功的独立只读后置查询")
+        self.__last_unknown_tool = None
+        self.__last_unknown_call_number = None
 
     def timeout_diagnostics(self) -> dict[str, Any]:
         pending = self.__pending_mutating_tool is not None
@@ -104,6 +123,15 @@ class SkillContext:
             }
         self.__last_tool = name
         mutating = name in self.__mutating_tools
+        if mutating and self.__last_unknown_tool is not None:
+            return {
+                "status": "failed",
+                "error": {
+                    "code": "skill_unknown_mutation_unresolved",
+                    "message": "上一项 unknown 变更尚未由独立只读后置事实解决，禁止继续变更",
+                    "retryable": False,
+                },
+            }
         if mutating:
             self.__pending_mutating_tool = name
         result = await self.__client.call_tool(name, arguments)
@@ -114,6 +142,9 @@ class SkillContext:
                 self.__last_effectful_tool = name
             if result.get("status") == "unknown":
                 self.__last_unknown_tool = name
+                self.__last_unknown_call_number = self.__calls_completed
+        elif result.get("status") == "succeeded":
+            self.__last_successful_read_call_number = self.__calls_completed
         return result
 
 
@@ -177,10 +208,10 @@ class SkillHost:
                             context.timeout_diagnostics(),
                         )
                     return _failure("skill_output_invalid", "Skill 返回结果不符合公开 Schema")
-                if result.get("status") == "failed" and context.unknown_mutation_possible:
+                if result.get("status") != "unknown" and context.unknown_mutation_possible:
                     return _unknown(
                         "skill_unknown_outcome_preserved",
-                        "变更 Tool 的结果未知，Skill 不得将其降级为失败；禁止自动重放",
+                        "变更 Tool 的结果未知，Skill 不得将其改写为确定终态；禁止自动重放",
                         context.timeout_diagnostics(),
                     )
                 if (

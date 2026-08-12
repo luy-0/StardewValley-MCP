@@ -146,6 +146,7 @@ async def run(ctx, arguments: dict[str, Any]) -> dict[str, Any]:
                     position = (await _runtime(ctx, deadline))["player"]["position"]
                     if _manhattan(_key(position), key) != 1:
                         raise SkillAbort("navigation_unknown", "导航结果未知，禁止提交收获动作", "unknown_outcome", "unknown")
+                    ctx.resolve_unknown_mutation("stardew_navigate")
                 elif navigation.get("status") != "succeeded":
                     if _tool_stop_reason(navigation) == "cancelled":
                         stop_reason = "cancelled"
@@ -216,6 +217,10 @@ async def run(ctx, arguments: dict[str, Any]) -> dict[str, Any]:
             completed_positions = await _completed_positions(ctx, area, pending, deadline)
             tracking["postconditionPending"] = False
             if key in completed_positions:
+                if mutation.get("status") == "unknown":
+                    ctx.resolve_unknown_mutation(
+                        "stardew_use_tool" if action == "scythe" else "stardew_interact"
+                    )
                 succeeded += len(completed_positions)
                 if action == "interact":
                     interacted += len(completed_positions)

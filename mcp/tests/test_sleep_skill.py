@@ -226,6 +226,38 @@ def test_sleep_skill_host_accepts_the_script_result_against_public_output_schema
     assert result["output"]["finalStatus"] == "completed"
 
 
+def test_sleep_skill_host_resolves_unknown_navigation_from_prompt_and_bed_facts() -> None:
+    class Client(_SuccessfulContext):
+        async def available_tools(self):
+            read_only = {
+                "stardew_query_runtime", "stardew_query_players",
+                "stardew_query_world", "stardew_query_ui",
+            }
+            return [
+                types.Tool(
+                    name=name,
+                    inputSchema={"type": "object"},
+                    annotations=types.ToolAnnotations(readOnlyHint=name in read_only),
+                )
+                for name in load_executable_skills([SKILL_DIR])[0].allowed_tools
+            ]
+
+        async def call_tool(self, name, arguments):
+            if name == "stardew_navigate":
+                self.calls.append((name, arguments))
+                return {
+                    "status": "unknown",
+                    "error": {"code": "unknown_outcome", "message": "结果未知", "retryable": False},
+                }
+            return await super().call_tool(name, arguments)
+
+    skill = load_executable_skills([SKILL_DIR])[0]
+    result = asyncio.run(SkillHost(Client(), [skill]).invoke(skill.name, {"timeoutSeconds": 60}))
+
+    assert result["status"] == "succeeded"
+    assert result["output"]["sleepConfirmed"] is True
+
+
 def test_sleep_confirmation_unknown_is_preserved_and_not_retryable() -> None:
     class Context(_SuccessfulContext):
         async def call_tool(self, name, arguments):

@@ -325,20 +325,24 @@ class WorldSnapshot(_message.Message):
     def __init__(self, world_revision: _Optional[str] = ..., area: _Optional[_Union[_common_pb2.TileArea, _Mapping]] = ..., outdoors: _Optional[bool] = ..., tiles: _Optional[_Iterable[_Union[TileFact, _Mapping]]] = ..., entities: _Optional[_Iterable[_Union[WorldEntityFact, _Mapping]]] = ..., characters: _Optional[_Iterable[_Union[CharacterFact, _Mapping]]] = ..., entities_truncated: _Optional[bool] = ..., characters_truncated: _Optional[bool] = ...) -> None: ...
 
 class TileFact(_message.Message):
-    __slots__ = ("position", "passable", "occupied", "diggable", "water", "terrain_kind")
+    __slots__ = ("position", "passable", "occupied", "diggable", "water", "terrain_kind", "watering_can_refillable", "pathfinding_blocked")
     POSITION_FIELD_NUMBER: _ClassVar[int]
     PASSABLE_FIELD_NUMBER: _ClassVar[int]
     OCCUPIED_FIELD_NUMBER: _ClassVar[int]
     DIGGABLE_FIELD_NUMBER: _ClassVar[int]
     WATER_FIELD_NUMBER: _ClassVar[int]
     TERRAIN_KIND_FIELD_NUMBER: _ClassVar[int]
+    WATERING_CAN_REFILLABLE_FIELD_NUMBER: _ClassVar[int]
+    PATHFINDING_BLOCKED_FIELD_NUMBER: _ClassVar[int]
     position: _common_pb2.WorldPosition
     passable: bool
     occupied: bool
     diggable: bool
     water: bool
     terrain_kind: str
-    def __init__(self, position: _Optional[_Union[_common_pb2.WorldPosition, _Mapping]] = ..., passable: _Optional[bool] = ..., occupied: _Optional[bool] = ..., diggable: _Optional[bool] = ..., water: _Optional[bool] = ..., terrain_kind: _Optional[str] = ...) -> None: ...
+    watering_can_refillable: bool
+    pathfinding_blocked: bool
+    def __init__(self, position: _Optional[_Union[_common_pb2.WorldPosition, _Mapping]] = ..., passable: _Optional[bool] = ..., occupied: _Optional[bool] = ..., diggable: _Optional[bool] = ..., water: _Optional[bool] = ..., terrain_kind: _Optional[str] = ..., watering_can_refillable: _Optional[bool] = ..., pathfinding_blocked: _Optional[bool] = ...) -> None: ...
 
 class WorldEntityFact(_message.Message):
     __slots__ = ("ref", "kind", "position", "display_name", "actionable", "tree", "fruit_tree", "crop", "resource_node", "resource_clump", "machine", "container", "bed", "furniture", "loose_item", "door", "warp", "generic_object", "hoe_dirt")

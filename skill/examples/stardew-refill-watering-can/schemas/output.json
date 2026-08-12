@@ -1,0 +1,81 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$defs": {
+    "position": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["locationId", "x", "y"],
+      "properties": {
+        "locationId": { "type": "string", "minLength": 1 },
+        "x": { "type": "integer" },
+        "y": { "type": "integer" }
+      }
+    },
+    "error": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["code", "message", "retryable"],
+      "properties": {
+        "code": { "type": "string", "minLength": 1 },
+        "message": { "type": "string", "minLength": 1 },
+        "retryable": { "type": "boolean" }
+      }
+    },
+    "progress": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "finalStatus", "stopReason", "resumable", "resumeHint",
+        "waterBefore", "waterAfter", "waterCapacity", "selectedSource",
+        "selectedStand", "lastPosition", "candidateCount", "unreachableCount",
+        "scannedTileCount", "navigationAttempts", "actionsUsed", "lastConfirmedState"
+      ],
+      "properties": {
+        "finalStatus": { "enum": ["completed", "stopped", "unknown"] },
+        "stopReason": {
+          "enum": [
+            "completed", "already_full", "watering_can_missing",
+            "water_source_not_found", "water_source_unreachable",
+            "navigation_failed", "refill_not_confirmed", "deadline",
+            "cancelled", "not_ready", "query_failed", "scan_limit"
+          ]
+        },
+        "resumable": { "type": "boolean" },
+        "resumeHint": { "type": "string" },
+        "waterBefore": { "type": ["integer", "null"], "minimum": 0 },
+        "waterAfter": { "type": ["integer", "null"], "minimum": 0 },
+        "waterCapacity": { "type": ["integer", "null"], "minimum": 0 },
+        "selectedSource": { "oneOf": [{ "$ref": "#/$defs/position" }, { "type": "null" }] },
+        "selectedStand": { "oneOf": [{ "$ref": "#/$defs/position" }, { "type": "null" }] },
+        "lastPosition": { "oneOf": [{ "$ref": "#/$defs/position" }, { "type": "null" }] },
+        "candidateCount": { "type": "integer", "minimum": 0 },
+        "unreachableCount": { "type": "integer", "minimum": 0 },
+        "scannedTileCount": { "type": "integer", "minimum": 0 },
+        "navigationAttempts": { "type": "integer", "minimum": 0 },
+        "actionsUsed": { "type": "integer", "minimum": 0 },
+        "lastConfirmedState": { "enum": ["unavailable", "not_full", "full"] }
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "output"],
+      "properties": {
+        "status": { "const": "succeeded" },
+        "output": { "$ref": "#/$defs/progress" }
+      }
+    },
+    {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "error", "output"],
+      "properties": {
+        "status": { "enum": ["failed", "unknown"] },
+        "error": { "$ref": "#/$defs/error" },
+        "output": { "$ref": "#/$defs/progress" }
+      }
+    }
+  ]
+}

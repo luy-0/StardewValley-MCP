@@ -146,6 +146,10 @@ message TileFact {
   bool diggable = 4;
   bool water = 5;
   string terrain_kind = 6;
+  // 当前玩家能否在该格通过喷壶原生动作补水；以游戏公开判定为权威。
+  optional bool watering_can_refillable = 7;
+  // 当前玩家使用原生 PathFindController 时，该格是否会被碰撞判定阻挡。
+  optional bool pathfinding_blocked = 8;
 }
 
 message WorldEntityFact {

@@ -82,7 +82,7 @@ Host 必须在调用前验证输入，并在返回前验证输出。脚本已经
 
 可执行 Skill 使用 `succeeded`、`failed`、`unknown` 三种顶层状态。`failed` 表示可以确认任务没有成功完成；`unknown` 表示已经可能产生存档变化，但当前证据不足以确认任务终态。
 
-- 变更 Tool 返回 `unknown` 后禁止自动重放。只有后续独立只读事实能够唯一证明任务级后置条件已经成立时，受信任脚本才可以把整个 Skill 收敛为 `succeeded`；否则必须停止并保持 `unknown`。
+- 变更 Tool 返回 `unknown` 后禁止自动重放，也禁止继续提交其他变更。只有后续独立只读事实能够唯一证明该次变更的后置条件已经成立时，受信任脚本才可以调用 `ctx.resolve_unknown_mutation(tool_name)` 清除最近一次未知变更；工具名称必须与最近一次 `unknown` 变更 Tool 完全一致。脚本随后仍需验证任务级后置条件，证据不足时必须停止并保持 `unknown`。
 - 变更 Tool 正在执行或已经成功后发生宿主超时，Host 必须返回 `unknown`、`retryable=false`，并包含最后 Tool、变更 Tool、完成调用数和阶段。
 - 变更 Tool 提交期间连接中断或脚本异常时，只要结果可能已经生效，Host 同样必须返回 `unknown`，不能降级成可重试的内部失败。
 - 纯只读流程在宿主超时时可以返回 `failed`、`retryable=true`。

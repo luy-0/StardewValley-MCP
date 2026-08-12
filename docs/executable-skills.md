@@ -11,11 +11,12 @@
 3. `schemas/`：定义 Agent 输入和整个 Skill 的结构化结果；
 4. `scripts/run.py`：通过受限 `SkillContext` 串行编排原子 Tool。
 
-权威字段与执行规则见 [`../spec/skill/README.md`](../spec/skill/README.md)。当前发行包内置三个示例：
+权威字段与执行规则见 [`../spec/skill/README.md`](../spec/skill/README.md)。当前发行包内置四个示例：
 
 - [`stardew-water-crops`](../skill/examples/stardew-water-crops/)：有界浇灌显式矩形范围，支持安全蓄力与结构化部分进度；
 - [`stardew-harvest-crops`](../skill/examples/stardew-harvest-crops/)：按公开收获语义执行手摘或镰刀收获，并汇总背包变化；
 - [`stardew-sleep-until-next-day`](../skill/examples/stardew-sleep-until-next-day/)：完成回家、上床、确认睡眠和换日收敛。
+- [`stardew-refill-watering-can`](../skill/examples/stardew-refill-watering-can/)：扫描当前地图的原生补水地块，基于当前玩家的原生寻路碰撞事实按 BFS 可达成本选择岸边站位，并复查喷壶是否装满。
 
 ## 最小维护原则
 

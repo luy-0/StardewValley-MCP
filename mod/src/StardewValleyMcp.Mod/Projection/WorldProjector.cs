@@ -29,6 +29,17 @@ internal static class WorldProjector
                     Diggable = location.doesTileHaveProperty(x, y, "Diggable", "Back") is not null,
                     Water = location.isWaterTile(x, y),
                     TerrainKind = TerrainKind(location, tile, x, y),
+                    WateringCanRefillable = location.CanRefillWateringCanOnTile(x, y),
+                    PathfindingBlocked = location.isCollidingPosition(
+                        new Rectangle(x * Game1.tileSize + 1, y * Game1.tileSize + 1, Game1.tileSize - 2, Game1.tileSize - 2),
+                        Game1.viewport,
+                        isFarmer: true,
+                        damagesFarmer: 0,
+                        glider: false,
+                        character: Game1.player,
+                        pathfinding: true,
+                        skipCollisionEffects: true
+                    ),
                 });
             }
         }

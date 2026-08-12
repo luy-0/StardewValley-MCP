@@ -22808,6 +22808,9 @@
               "passable": {
                 "type": "boolean"
               },
+              "pathfindingBlocked": {
+                "type": "boolean"
+              },
               "position": {
                 "$ref": "#/$defs/WorldPosition"
               },
@@ -22817,6 +22820,9 @@
                 "type": "string"
               },
               "water": {
+                "type": "boolean"
+              },
+              "wateringCanRefillable": {
                 "type": "boolean"
               }
             },

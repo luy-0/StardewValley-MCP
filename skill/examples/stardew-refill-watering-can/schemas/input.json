@@ -1,0 +1,9 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "timeoutSeconds": { "type": "integer", "minimum": 5, "maximum": 300, "default": 120 },
+    "maxScanTiles": { "type": "integer", "minimum": 1024, "maximum": 65536, "default": 16384 }
+  }
+}
