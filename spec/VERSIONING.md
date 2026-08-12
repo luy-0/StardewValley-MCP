@@ -28,6 +28,7 @@
 
 ### 当前 V1 的兼容性增补
 
+- `EmoteKind` 在保留既有 `1..8` 编号与语义的前提下追加原版玩家表情，`emote` 能力契约版本升至 `1.1.0`。这是输入枚举的 Minor 扩展：旧调用方仍可继续发送原八项；新调用方必须以 Mod 公告的精确能力版本为准，不得向旧实现发送新增枚举，也不得发送任意原始整数。
 - `TileFact.watering_can_refillable=7` 与 `TileFact.pathfinding_blocked=8` 是带 presence 的 `query_world` V1 Minor 可选结果增补。旧接收方可以忽略；新调用方只能使用实现显式返回的游戏原生补水判定与当前玩家原生寻路碰撞判定，任一字段缺失时必须安全停止，不得把既有 `water`、`passable`、`occupied` 或零值解释为等价事实。
 - `query_players=35` 及其 Request／Result、`PlayersSnapshot`、`PlayerPresenceFact` 与 `PlayerRelation` 是新增的独立只读能力分支，属于 V1 Minor 兼容增补。旧 Mod 不会公告该能力，旧 MCP 也不会暴露对应 Tool；新调用方必须把 `player_id` 视为当前存档内的不透明身份，并允许离线玩家缺少全部实时字段。
 - `RuntimeSnapshot.daily_luck/queen_of_sauce`、`PlayerFact.home_location_id`、`WeatherFact.kind/tomorrow` 以及相关追加枚举／消息是 `query_runtime` 的 V1 Minor 结果增补。旧接收方可以忽略这些字段；新接收方面对未升级发送方的字段零值时不得伪造运势、菜谱、住宅或天气事实，应依赖握手后的同版本能力目录。

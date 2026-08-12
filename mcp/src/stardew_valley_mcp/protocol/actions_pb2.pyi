@@ -21,6 +21,20 @@ class EmoteKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     EMOTE_KIND_ANGRY: _ClassVar[EmoteKind]
     EMOTE_KIND_SLEEP: _ClassVar[EmoteKind]
     EMOTE_KIND_MUSIC: _ClassVar[EmoteKind]
+    EMOTE_KIND_NOTE: _ClassVar[EmoteKind]
+    EMOTE_KIND_GAME: _ClassVar[EmoteKind]
+    EMOTE_KIND_X: _ClassVar[EmoteKind]
+    EMOTE_KIND_PAUSE: _ClassVar[EmoteKind]
+    EMOTE_KIND_BLUSH: _ClassVar[EmoteKind]
+    EMOTE_KIND_YES: _ClassVar[EmoteKind]
+    EMOTE_KIND_NO: _ClassVar[EmoteKind]
+    EMOTE_KIND_SICK: _ClassVar[EmoteKind]
+    EMOTE_KIND_LAUGH: _ClassVar[EmoteKind]
+    EMOTE_KIND_SURPRISED: _ClassVar[EmoteKind]
+    EMOTE_KIND_HI: _ClassVar[EmoteKind]
+    EMOTE_KIND_TAUNT: _ClassVar[EmoteKind]
+    EMOTE_KIND_UH: _ClassVar[EmoteKind]
+    EMOTE_KIND_JAR: _ClassVar[EmoteKind]
 
 class ArrivalMode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -49,6 +63,20 @@ EMOTE_KIND_QUESTION: EmoteKind
 EMOTE_KIND_ANGRY: EmoteKind
 EMOTE_KIND_SLEEP: EmoteKind
 EMOTE_KIND_MUSIC: EmoteKind
+EMOTE_KIND_NOTE: EmoteKind
+EMOTE_KIND_GAME: EmoteKind
+EMOTE_KIND_X: EmoteKind
+EMOTE_KIND_PAUSE: EmoteKind
+EMOTE_KIND_BLUSH: EmoteKind
+EMOTE_KIND_YES: EmoteKind
+EMOTE_KIND_NO: EmoteKind
+EMOTE_KIND_SICK: EmoteKind
+EMOTE_KIND_LAUGH: EmoteKind
+EMOTE_KIND_SURPRISED: EmoteKind
+EMOTE_KIND_HI: EmoteKind
+EMOTE_KIND_TAUNT: EmoteKind
+EMOTE_KIND_UH: EmoteKind
+EMOTE_KIND_JAR: EmoteKind
 ARRIVAL_MODE_UNSPECIFIED: ArrivalMode
 ARRIVAL_MODE_EXACT: ArrivalMode
 ARRIVAL_MODE_ADJACENT: ArrivalMode

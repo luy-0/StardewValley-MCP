@@ -75,17 +75,34 @@ public sealed class SocialActionHandlerTests
         });
     }
 
-    [TestCase(EmoteKind.Happy, "happy", 32)]
-    [TestCase(EmoteKind.Sad, "sad", 28)]
-    [TestCase(EmoteKind.Heart, "heart", 20)]
-    [TestCase(EmoteKind.Exclamation, "exclamation", 16)]
-    [TestCase(EmoteKind.Question, "question", 8)]
-    [TestCase(EmoteKind.Angry, "angry", 12)]
-    [TestCase(EmoteKind.Sleep, "sleep", 24)]
-    [TestCase(EmoteKind.Music, "music", 56)]
-    public void EmoteMapsEveryPublicEnumAndConfirmsLocalState(EmoteKind kind, string expectedName, int expectedIndex)
+    [TestCase(EmoteKind.Happy, "happy", 32, false)]
+    [TestCase(EmoteKind.Sad, "sad", 28, false)]
+    [TestCase(EmoteKind.Heart, "heart", 20, false)]
+    [TestCase(EmoteKind.Exclamation, "exclamation", 16, false)]
+    [TestCase(EmoteKind.Question, "question", 8, false)]
+    [TestCase(EmoteKind.Angry, "angry", 12, false)]
+    [TestCase(EmoteKind.Sleep, "sleep", 24, false)]
+    [TestCase(EmoteKind.Music, "music", 56, true)]
+    [TestCase(EmoteKind.Note, "note", 56, false)]
+    [TestCase(EmoteKind.Game, "game", 52, false)]
+    [TestCase(EmoteKind.X, "x", 36, false)]
+    [TestCase(EmoteKind.Pause, "pause", 40, false)]
+    [TestCase(EmoteKind.Blush, "blush", 60, false)]
+    [TestCase(EmoteKind.Yes, "yes", 56, true)]
+    [TestCase(EmoteKind.No, "no", 36, true)]
+    [TestCase(EmoteKind.Sick, "sick", 12, true)]
+    [TestCase(EmoteKind.Laugh, "laugh", 56, true)]
+    [TestCase(EmoteKind.Surprised, "surprised", 16, true)]
+    [TestCase(EmoteKind.Hi, "hi", 56, true)]
+    [TestCase(EmoteKind.Taunt, "taunt", 12, true)]
+    [TestCase(EmoteKind.Uh, "uh", 40, true)]
+    [TestCase(EmoteKind.Jar, "jar", -1, true)]
+    public void EmoteMapsEveryPublicEnumAndConfirmsLocalState(EmoteKind kind, string expectedName, int expectedIndex, bool expectedAnimation)
     {
-        var game = new FakeSocialGame { EmoteIndexByName = { [expectedName] = expectedIndex } };
+        var game = new FakeSocialGame
+        {
+            EmoteByName = { [expectedName] = (expectedIndex < 0 ? null : expectedIndex, expectedAnimation) },
+        };
         var handler = new EmoteHandler(game);
 
         var result = handler.Execute(CommandId, new CommandRequest { Emote = new EmoteRequest { Emote = kind } });
@@ -101,16 +118,37 @@ public sealed class SocialActionHandlerTests
     [Test]
     public void EmoteRejectsUnspecifiedAndReportsBlockedOrUnconfirmedGameState()
     {
-        var invalid = new EmoteHandler(new FakeSocialGame()).Validate(new CommandRequest { Emote = new EmoteRequest { Emote = EmoteKind.Unspecified } });
+        var handler = new EmoteHandler(new FakeSocialGame());
+        var invalid = handler.Validate(new CommandRequest { Emote = new EmoteRequest { Emote = EmoteKind.Unspecified } });
+        var unknown = handler.Validate(new CommandRequest { Emote = new EmoteRequest { Emote = (EmoteKind)999 } });
         var blocked = new EmoteHandler(new FakeSocialGame { CanEmote = false }).Execute(CommandId, new CommandRequest { Emote = new EmoteRequest { Emote = EmoteKind.Happy } });
         var unconfirmed = new EmoteHandler(new FakeSocialGame()).Execute(CommandId, new CommandRequest { Emote = new EmoteRequest { Emote = EmoteKind.Happy } });
 
         Assert.Multiple(() =>
         {
             Assert.That(invalid!.Code, Is.EqualTo(ErrorCode.InvalidArgument));
+            Assert.That(unknown!.Code, Is.EqualTo(ErrorCode.InvalidArgument));
             Assert.That(blocked.Error.Code, Is.EqualTo(ErrorCode.NotReady));
             Assert.That(unconfirmed.Error.Code, Is.EqualTo(ErrorCode.ExecutionFailed));
         });
+    }
+
+    [Test]
+    public void AnimationOnlyEmoteDoesNotDependOnAnOlderBubbleState()
+    {
+        var game = new FakeSocialGame
+        {
+            IsEmoting = true,
+            CurrentEmote = 32,
+            EmoteByName = { ["jar"] = (null, true) },
+        };
+
+        var result = new EmoteHandler(game).Execute(
+            CommandId,
+            new CommandRequest { Emote = new EmoteRequest { Emote = EmoteKind.Jar } }
+        );
+
+        Assert.That(result.State, Is.EqualTo(CommandState.Succeeded));
     }
 
     private static CommandRequest SayRequest(string content) => new() { Say = new SayRequest { Content = content } };
@@ -120,12 +158,13 @@ public sealed class SocialActionHandlerTests
     {
         public bool IsChatReady { get; set; } = true;
         public bool CanEmote { get; set; } = true;
-        public bool IsEmoting { get; private set; }
-        public int CurrentEmote { get; private set; } = -1;
+        public bool IsEmoting { get; set; }
+        public bool IsEmoteAnimating { get; private set; }
+        public int CurrentEmote { get; set; } = -1;
         public bool SendSucceeds { get; set; } = true;
         public string? SentChat { get; private set; }
         public string? BroadcastName { get; private set; }
-        public Dictionary<string, int> EmoteIndexByName { get; } = new(StringComparer.Ordinal);
+        public Dictionary<string, (int? IconIndex, bool Animating)> EmoteByName { get; } = new(StringComparer.Ordinal);
 
         public bool TrySendChat(string content)
         {
@@ -136,10 +175,14 @@ public sealed class SocialActionHandlerTests
         public void BroadcastEmote(string emoteName)
         {
             BroadcastName = emoteName;
-            if (!EmoteIndexByName.TryGetValue(emoteName, out var index))
+            if (!EmoteByName.TryGetValue(emoteName, out var state))
                 return;
-            IsEmoting = true;
-            CurrentEmote = index;
+            if (state.IconIndex is not null)
+            {
+                IsEmoting = true;
+                CurrentEmote = state.IconIndex.Value;
+            }
+            IsEmoteAnimating = state.Animating;
         }
     }
 }
