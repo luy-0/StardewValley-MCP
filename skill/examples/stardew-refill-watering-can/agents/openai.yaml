@@ -1,0 +1,4 @@
+interface:
+  display_name: "星露谷喷壶补水"
+  short_description: "扫描当前地图并在最近可达水源装满唯一喷壶"
+  default_prompt: "使用 $stardew-refill-watering-can 在当前地图找到最近水源并装满喷壶。"

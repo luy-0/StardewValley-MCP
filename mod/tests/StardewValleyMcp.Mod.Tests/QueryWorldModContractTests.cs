@@ -6,6 +6,34 @@ namespace StardewValleyMcp.Mod.Tests;
 public sealed class QueryWorldModContractTests
 {
     [Test]
+    public void TileRefillabilityUsesAdditiveFieldSeven()
+    {
+        var field = TileFact.Descriptor.FindFieldByName("watering_can_refillable");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(field, Is.Not.Null);
+            Assert.That(field!.FieldNumber, Is.EqualTo(7));
+            Assert.That(field.PropertyName, Is.EqualTo(nameof(TileFact.WateringCanRefillable)));
+            Assert.That(field.HasPresence, Is.True);
+        });
+    }
+
+    [Test]
+    public void TilePathfindingBlockageUsesAdditiveFieldEight()
+    {
+        var field = TileFact.Descriptor.FindFieldByName("pathfinding_blocked");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(field, Is.Not.Null);
+            Assert.That(field!.FieldNumber, Is.EqualTo(8));
+            Assert.That(field.PropertyName, Is.EqualTo(nameof(TileFact.PathfindingBlocked)));
+            Assert.That(field.HasPresence, Is.True);
+        });
+    }
+
+    [Test]
     public void FarmingAndBedProjectionPoliciesExposeSkillControlFacts()
     {
         var interact = WorldProjectionPolicy.HarvestActionFor(usesScythe: false);

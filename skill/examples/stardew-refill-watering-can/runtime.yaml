@@ -1,0 +1,27 @@
+schemaVersion: "1"
+entrypoint: scripts/run.py:run
+
+tool:
+  name: stardew_skill_refill_watering_can
+  title: 查找最近水源并装满喷壶
+  description: 扫描当前地图的原生补水地块，按可达路径成本选择最近岸边站位并将唯一喷壶装满。
+  inputSchema: schemas/input.json
+  outputSchema: schemas/output.json
+  annotations:
+    readOnlyHint: false
+    destructiveHint: true
+    idempotentHint: false
+    openWorldHint: false
+
+requires:
+  tools:
+    - stardew_query_runtime
+    - stardew_query_inventory
+    - stardew_query_world
+    - stardew_navigate
+    - stardew_equip
+    - stardew_use_tool
+
+execution:
+  timeoutSeconds: 305
+  concurrency: exclusive

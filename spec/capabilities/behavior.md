@@ -223,7 +223,9 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 - `entity_kinds` 仅在 `include_entities` 未显式设为 `false` 时允许。
 - `max_entities`、`max_characters` 为 `1..512`；0 分别使用默认值 256。
 - Tile 按 `(y,x)` 排序且在区域合法时不得截断；Entity 与 Character 分别按 Ref Value UTF-8 升序排序后截断，并设置各自的 `*_truncated`。
-- Tile 的布尔字段没有 Unknown presence；任一 Tile 读取因 Location 或第三方 override 异常而无法完成时，整个命令必须以 `EXECUTION_FAILED` 失败，不得把不可读字段伪造为 `false`，也不得依赖传输层将异常改写为通用 `INTERNAL`。
+- 新实现必须对每个 Tile 显式返回 `TileFact.watering_can_refillable`，并直接使用当前 Location 的 `CanRefillWateringCanOnTile` 对当前玩家判定；不得用 `water`、地图属性、地图名或坐标表猜测。字段缺失表示发送方尚不支持该 V1 Minor 事实，调用方必须停止而不能解释为 `false`。`water=true` 不保证喷壶可以补水，`water=false` 也不能覆盖游戏或第三方 Location 的明确补水判定。
+- 新实现必须对每个 Tile 显式返回 `TileFact.pathfinding_blocked`，并使用当前玩家与原生 `PathFindController` 相同的 `isCollidingPosition(..., pathfinding:true)` Tile 矩形判定，同时禁止触发碰撞副作用。它是当前查询时刻、当前玩家的路径事实，可包含建筑、对象、角色与其他实时阻挡；不得由 `passable` 或 `occupied` 推导。字段缺失同样表示发送方尚不支持该 V1 Minor 事实。
+- 除明确带 presence 的 `watering_can_refillable` 与 `pathfinding_blocked` 兼容增补外，Tile 的既有布尔字段没有 Unknown presence；任一 Tile 读取因 Location 或第三方 override 异常而无法完成时，整个命令必须以 `EXECUTION_FAILED` 失败，不得把不可读字段伪造为 `false`，也不得依赖传输层将异常改写为通用 `INTERNAL`。
 - 需要完整集合时，调用方必须缩小区域重新查询；V1 不提供跨 Revision Cursor。
 
 ### `query_inventory`

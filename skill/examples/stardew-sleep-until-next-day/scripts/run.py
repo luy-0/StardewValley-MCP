@@ -71,6 +71,9 @@ async def run(ctx, arguments: dict[str, Any]) -> dict[str, Any]:
                 )
             raise SkillAbort("sleep_prompt_missing", "到达床位后没有出现睡眠问题", "wait_sleep_prompt", True)
 
+        if navigation.get("status") == "unknown":
+            # 睡眠问题与玩家在床状态共同构成独立只读后置事实，足以收敛导航终态。
+            ctx.resolve_unknown_mutation("stardew_navigate")
         sleep_prompt_seen = True
         progress.append("sleep_prompt_seen")
         activation = await ctx.call_tool(

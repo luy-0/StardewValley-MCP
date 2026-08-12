@@ -313,6 +313,64 @@ def test_host_preserves_unknown_mutation_when_script_returns_failed() -> None:
     assert result["error"]["retryable"] is False
 
 
+def test_host_preserves_unresolved_unknown_when_script_claims_success() -> None:
+    async def incorrectly_claim_success(ctx, arguments):
+        del arguments
+        result = await ctx.call_tool("stardew_navigate", {})
+        assert result["status"] == "unknown"
+        return {"status": "succeeded", "output": {"postconditionVerified": False}}
+
+    class Client(_Client):
+        async def call_tool(self, name, arguments):
+            self.calls.append((name, arguments))
+            return {"status": "unknown", "error": {"code": "unknown_outcome"}}
+
+    client = Client([MUTATING_TOOL])
+    host = SkillHost(client, [_skill(
+        incorrectly_claim_success,
+        allowed_tools=frozenset({"stardew_navigate"}),
+    )])
+
+    result = asyncio.run(host.invoke("stardew_skill_runtime_probe", {}))
+
+    assert result["status"] == "unknown"
+    assert result["error"]["code"] == "skill_unknown_outcome_preserved"
+    assert result["error"]["retryable"] is False
+
+
+def test_context_blocks_a_second_mutation_until_unknown_is_resolved() -> None:
+    async def try_second_mutation(ctx, arguments):
+        del arguments
+        first = await ctx.call_tool("stardew_navigate", {})
+        assert first["status"] == "unknown"
+        second = await ctx.call_tool("stardew_use_tool", {})
+        assert second["error"]["code"] == "skill_unknown_mutation_unresolved"
+        return {"status": "succeeded", "output": {"incorrectlyContinued": False}}
+
+    second_mutation = types.Tool(
+        name="stardew_use_tool",
+        inputSchema={"type": "object"},
+        annotations=types.ToolAnnotations(readOnlyHint=False),
+    )
+
+    class Client(_Client):
+        async def call_tool(self, name, arguments):
+            self.calls.append((name, arguments))
+            return {"status": "unknown", "error": {"code": "unknown_outcome"}}
+
+    client = Client([MUTATING_TOOL, second_mutation])
+    host = SkillHost(client, [_skill(
+        try_second_mutation,
+        allowed_tools=frozenset({"stardew_navigate", "stardew_use_tool"}),
+    )])
+
+    result = asyncio.run(host.invoke("stardew_skill_runtime_probe", {}))
+
+    assert result["status"] == "unknown"
+    assert result["error"]["code"] == "skill_unknown_outcome_preserved"
+    assert [name for name, _ in client.calls] == ["stardew_navigate"]
+
+
 def test_host_allows_task_success_after_unknown_mutation_is_resolved_by_postcondition() -> None:
     async def resolve_with_postcondition(ctx, arguments):
         del arguments
@@ -320,6 +378,7 @@ def test_host_allows_task_success_after_unknown_mutation_is_resolved_by_postcond
         assert mutation["status"] == "unknown"
         postcondition = await ctx.call_tool("stardew_query_runtime", {})
         assert postcondition["status"] == "succeeded"
+        ctx.resolve_unknown_mutation("stardew_navigate")
         return {"status": "succeeded", "output": {"postconditionVerified": True}}
 
     class Client(_Client):
@@ -339,6 +398,38 @@ def test_host_allows_task_success_after_unknown_mutation_is_resolved_by_postcond
             )
         ],
     )
+
+    result = asyncio.run(host.invoke("stardew_skill_runtime_probe", {}))
+
+    assert result == {"status": "succeeded", "output": {"postconditionVerified": True}}
+
+
+def test_context_only_resolves_the_latest_matching_unknown_mutation() -> None:
+    async def misuse_resolution(ctx, arguments):
+        del arguments
+        mutation = await ctx.call_tool("stardew_navigate", {})
+        assert mutation["status"] == "unknown"
+        with pytest.raises(ValueError, match="最近一次"):
+            ctx.resolve_unknown_mutation("stardew_use_tool")
+        with pytest.raises(RuntimeError, match="只读后置查询"):
+            ctx.resolve_unknown_mutation("stardew_navigate")
+        postcondition = await ctx.call_tool("stardew_query_runtime", {})
+        assert postcondition["status"] == "succeeded"
+        ctx.resolve_unknown_mutation("stardew_navigate")
+        return {"status": "succeeded", "output": {"postconditionVerified": True}}
+
+    class Client(_Client):
+        async def call_tool(self, name, arguments):
+            self.calls.append((name, arguments))
+            if name == "stardew_navigate":
+                return {"status": "unknown", "error": {"code": "unknown_outcome"}}
+            return {"status": "succeeded", "output": {"position": "confirmed"}}
+
+    client = Client([MUTATING_TOOL, QUERY_TOOL])
+    host = SkillHost(client, [_skill(
+        misuse_resolution,
+        allowed_tools=frozenset({"stardew_navigate", "stardew_query_runtime"}),
+    )])
 
     result = asyncio.run(host.invoke("stardew_skill_runtime_probe", {}))
 

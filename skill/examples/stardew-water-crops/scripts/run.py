@@ -170,6 +170,7 @@ async def run(ctx, arguments: dict[str, Any]) -> dict[str, Any]:
                 position = (await _runtime(ctx, deadline))["player"]["position"]
                 if not _same_key(_key(position), _key(plan.stand)):
                     raise SkillAbort("navigation_unknown", "导航结果未知，禁止提交工具动作", "unknown_outcome", "unknown")
+                ctx.resolve_unknown_mutation("stardew_navigate")
             elif navigation.get("status") != "succeeded":
                 if _tool_stop_reason(navigation) == "cancelled":
                     stop_reason = "cancelled"
@@ -214,6 +215,8 @@ async def run(ctx, arguments: dict[str, Any]) -> dict[str, Any]:
                 pending -= confirmed
             if use.get("status") == "unknown" and confirmed != planned_keys:
                 raise SkillAbort("watering_unknown", "浇水动作结果未知且后置条件未完全确认", "unknown_outcome", "unknown")
+            if use.get("status") == "unknown":
+                ctx.resolve_unknown_mutation("stardew_use_tool")
             if use.get("status") != "succeeded" and use.get("status") != "unknown":
                 if _tool_stop_reason(use) == "cancelled":
                     stop_reason = "cancelled"

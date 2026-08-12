@@ -55,6 +55,10 @@ class WaterContext:
         self.use_status = use_status
         self.date_changes = date_changes
         self.after_use = False
+        self.resolved_unknowns: list[str] = []
+
+    def resolve_unknown_mutation(self, tool_name):
+        self.resolved_unknowns.append(tool_name)
 
     async def available_tools(self):
         read_only = {
@@ -221,6 +225,17 @@ def test_water_skill_resolves_unknown_use_tool_only_from_watered_postcondition()
     assert result["status"] == "succeeded"
     assert result["output"]["succeededCount"] == 1
     assert len([call for call in context.calls if call[0] == "stardew_use_tool"]) == 1
+    assert context.resolved_unknowns == ["stardew_use_tool"]
+
+
+def test_water_skill_host_accepts_unknown_use_after_read_only_postcondition() -> None:
+    context = WaterContext(use_status="unknown")
+    skill = load_executable_skills([SKILL_DIR])[0]
+
+    result = asyncio.run(SkillHost(context, [skill]).invoke(skill.name, {"area": AREA}))
+
+    assert result["status"] == "succeeded"
+    assert result["output"]["succeededCount"] == 1
 
 
 def test_water_skill_ignores_already_watered_crop() -> None:

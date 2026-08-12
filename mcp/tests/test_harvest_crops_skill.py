@@ -48,6 +48,10 @@ class HarvestContext:
         self.with_scythe = with_scythe
         self.mutation_changes = mutation_changes
         self.items: dict[tuple[str, int], int] = {}
+        self.resolved_unknowns: list[str] = []
+
+    def resolve_unknown_mutation(self, tool_name):
+        self.resolved_unknowns.append(tool_name)
 
     async def available_tools(self):
         read_only = {
@@ -211,6 +215,17 @@ def test_harvest_skill_resolves_unknown_mutation_from_coordinate_postcondition_w
     assert result["status"] == "succeeded"
     assert result["output"]["succeededCount"] == 1
     assert len([call for call in context.calls if call[0] == "stardew_interact"]) == 1
+    assert context.resolved_unknowns == ["stardew_interact"]
+
+
+def test_harvest_skill_host_accepts_unknown_interact_after_read_only_postcondition() -> None:
+    context = HarvestContext(mutation_status="unknown", mutation_changes=True)
+    skill = load_executable_skills([SKILL_DIR])[0]
+
+    result = asyncio.run(SkillHost(context, [skill]).invoke(skill.name, {"area": AREA}))
+
+    assert result["status"] == "succeeded"
+    assert result["output"]["succeededCount"] == 1
 
 
 def test_harvest_skill_preserves_unknown_when_target_remains_mature() -> None:

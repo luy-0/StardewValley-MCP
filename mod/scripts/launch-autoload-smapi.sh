@@ -77,7 +77,7 @@ artifacts=(
 )
 for artifact in "${artifacts[@]}"; do
   [[ -f "$build_dir/$artifact" ]] || {
-    echo "缺少构建产物 $artifact，请先运行 ./mod/scripts/build.sh。" >&2
+    echo "缺少构建产物 ${artifact}，请先运行 ./mod/scripts/build.sh。" >&2
     exit 1
   }
 done
