@@ -240,6 +240,24 @@
         "INVENTORY_TRANSFER_DIRECTION_UNSPECIFIED": "unspecified"
       }
     },
+    "stardew_valley.mcp.v1.ItemToolKind": {
+      "jsonToProto": {
+        "axe": "ITEM_TOOL_KIND_AXE",
+        "hoe": "ITEM_TOOL_KIND_HOE",
+        "pickaxe": "ITEM_TOOL_KIND_PICKAXE",
+        "scythe": "ITEM_TOOL_KIND_SCYTHE",
+        "unspecified": "ITEM_TOOL_KIND_UNSPECIFIED",
+        "watering_can": "ITEM_TOOL_KIND_WATERING_CAN"
+      },
+      "protoToJson": {
+        "ITEM_TOOL_KIND_AXE": "axe",
+        "ITEM_TOOL_KIND_HOE": "hoe",
+        "ITEM_TOOL_KIND_PICKAXE": "pickaxe",
+        "ITEM_TOOL_KIND_SCYTHE": "scythe",
+        "ITEM_TOOL_KIND_UNSPECIFIED": "unspecified",
+        "ITEM_TOOL_KIND_WATERING_CAN": "watering_can"
+      }
+    },
     "stardew_valley.mcp.v1.MenuKind": {
       "jsonToProto": {
         "collections": "MENU_KIND_COLLECTIONS",
@@ -7917,6 +7935,17 @@
               "tool": {
                 "type": "boolean"
               },
+              "toolKind": {
+                "enum": [
+                  "unspecified",
+                  "axe",
+                  "pickaxe",
+                  "hoe",
+                  "watering_can",
+                  "scythe"
+                ],
+                "type": "string"
+              },
               "toolLevel": {
                 "maximum": 4294967295,
                 "minimum": 0,
@@ -11067,6 +11096,17 @@
               },
               "tool": {
                 "type": "boolean"
+              },
+              "toolKind": {
+                "enum": [
+                  "unspecified",
+                  "axe",
+                  "pickaxe",
+                  "hoe",
+                  "watering_can",
+                  "scythe"
+                ],
+                "type": "string"
               },
               "toolLevel": {
                 "maximum": 4294967295,
@@ -14295,6 +14335,17 @@
               },
               "tool": {
                 "type": "boolean"
+              },
+              "toolKind": {
+                "enum": [
+                  "unspecified",
+                  "axe",
+                  "pickaxe",
+                  "hoe",
+                  "watering_can",
+                  "scythe"
+                ],
+                "type": "string"
               },
               "toolLevel": {
                 "maximum": 4294967295,
@@ -20480,6 +20531,17 @@
               "tool": {
                 "type": "boolean"
               },
+              "toolKind": {
+                "enum": [
+                  "unspecified",
+                  "axe",
+                  "pickaxe",
+                  "hoe",
+                  "watering_can",
+                  "scythe"
+                ],
+                "type": "string"
+              },
               "toolLevel": {
                 "maximum": 4294967295,
                 "minimum": 0,
@@ -22698,6 +22760,17 @@
               "tool": {
                 "type": "boolean"
               },
+              "toolKind": {
+                "enum": [
+                  "unspecified",
+                  "axe",
+                  "pickaxe",
+                  "hoe",
+                  "watering_can",
+                  "scythe"
+                ],
+                "type": "string"
+              },
               "toolLevel": {
                 "maximum": 4294967295,
                 "minimum": 0,
@@ -23871,6 +23944,17 @@
               },
               "tool": {
                 "type": "boolean"
+              },
+              "toolKind": {
+                "enum": [
+                  "unspecified",
+                  "axe",
+                  "pickaxe",
+                  "hoe",
+                  "watering_can",
+                  "scythe"
+                ],
+                "type": "string"
               },
               "toolLevel": {
                 "maximum": 4294967295,
@@ -26292,6 +26376,17 @@
               },
               "tool": {
                 "type": "boolean"
+              },
+              "toolKind": {
+                "enum": [
+                  "unspecified",
+                  "axe",
+                  "pickaxe",
+                  "hoe",
+                  "watering_can",
+                  "scythe"
+                ],
+                "type": "string"
               },
               "toolLevel": {
                 "maximum": 4294967295,

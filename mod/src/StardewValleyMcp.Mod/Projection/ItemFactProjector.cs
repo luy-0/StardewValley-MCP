@@ -28,6 +28,7 @@ internal static class ItemFactProjector
         };
         if (reference is not null)
             fact.Ref = reference.Clone();
+        ApplyToolKind(fact, item);
         if (item is WateringCan wateringCan)
             ApplyWateringCanFacts(
                 fact,
@@ -36,6 +37,21 @@ internal static class ItemFactProjector
                 wateringCan.IsBottomless
             );
         return fact;
+    }
+
+    private static void ApplyToolKind(ItemFact fact, Item item)
+    {
+        var kind = item switch
+        {
+            Axe => ItemToolKind.Axe,
+            Pickaxe => ItemToolKind.Pickaxe,
+            Hoe => ItemToolKind.Hoe,
+            WateringCan => ItemToolKind.WateringCan,
+            MeleeWeapon weapon when weapon.isScythe() => ItemToolKind.Scythe,
+            _ => ItemToolKind.Unspecified,
+        };
+        if (kind != ItemToolKind.Unspecified)
+            fact.ToolKind = kind;
     }
 
     internal static void ApplyWateringCanFacts(

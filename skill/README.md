@@ -9,8 +9,8 @@ skill/
 ├── examples/stardew-nearby-overview/             只读附近概览示例
 ├── examples/stardew-remove-tree/                  受控移除普通树示例
 ├── examples/stardew-plant-seed/                   单格种植指引
-├── examples/stardew-water-crops/                  范围浇水指引
-├── examples/stardew-harvest-crops/                批量收获指引
+├── examples/stardew-water-crops/                  可执行范围浇水示例
+├── examples/stardew-harvest-crops/                可执行批量收获示例
 ├── examples/stardew-sleep-until-next-day/         可执行换日示例
 ├── scripts/validate_skills.py
 └── tests/
@@ -20,7 +20,7 @@ skill/
 
 Prompt 型 Skill 适合短步骤、高自由度、需要 Agent 根据上下文决策的任务，只需 `SKILL.md`。可执行 Skill 适合重复、多目标、时序敏感或游戏时间持续推进的任务，需要额外提供 `runtime.yaml`、输入／输出 Schema 和 `scripts/run.py`。
 
-睡眠示例是当前随 MCP 发行包交付的可执行 Skill。它由通用 Loader 从 `runtime.yaml` 发现，复用当前 Owner Session，只获得声明的原子 Tool 子集，不创建第二连接，也不进入 Mod Capability Manifest。
+浇水、收获与睡眠是当前随 MCP 发行包交付的三个可执行 Skill。它们由通用 Loader 从 `runtime.yaml` 发现，复用当前 Owner Session，只获得各自声明的原子 Tool 子集，不创建第二连接，也不进入 Mod Capability Manifest。
 
 ## 创建 Prompt 型 Skill
 

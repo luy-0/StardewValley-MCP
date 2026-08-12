@@ -227,6 +227,15 @@ message ResourceClumpFact {
   uint32 required_tool_level = 6;
 }
 
+enum ItemToolKind {
+  ITEM_TOOL_KIND_UNSPECIFIED = 0;
+  ITEM_TOOL_KIND_AXE = 1;
+  ITEM_TOOL_KIND_PICKAXE = 2;
+  ITEM_TOOL_KIND_HOE = 3;
+  ITEM_TOOL_KIND_WATERING_CAN = 4;
+  ITEM_TOOL_KIND_SCYTHE = 5;
+}
+
 message ItemFact {
   // QueryInventory 返回的非空 Slot Item 携带可用于 inspect 的 INVENTORY_ITEM Ref；
   // 是否可用于具体动作由能力行为契约决定。
@@ -243,6 +252,8 @@ message ItemFact {
   optional uint32 water_remaining = 9;
   optional uint32 water_capacity = 10;
   optional bool bottomless = 11;
+  // 仅公开 use_tool 支持且能稳定分类的工具；其他 Tool 保持缺省。
+  optional ItemToolKind tool_kind = 12;
 }
 
 message MachineFact {

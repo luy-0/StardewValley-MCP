@@ -51,7 +51,7 @@ Skill 开发入口，只包含接口定义、Prompt／可执行模板、最小�
 
 ## 项目状态
 
-当前预览版已经具备独立的 Mod、MCP Python 包，以及公共 V1 契约定义的二十一项原语能力：六项只读能力和十五项需要明确授权的变更能力。MCP 默认仍只读，只有显式启用写权限，并且公共 Manifest、MCP 支持集与 Mod 握手公告同时包含对应能力时，才会暴露操作 Tool。仓库同时提供 Prompt 型与可执行 `SKILL.md` 模板、六个最小示例和静态校验工具；其中睡眠示例由通用 Loader 动态加载，在一次调用中复用当前 Owner Session 完成换日闭环。
+当前预览版已经具备独立的 Mod、MCP Python 包，以及公共 V1 契约定义的二十一项原语能力：六项只读能力和十五项需要明确授权的变更能力。MCP 默认仍只读，只有显式启用写权限，并且公共 Manifest、MCP 支持集与 Mod 握手公告同时包含对应能力时，才会暴露操作 Tool。仓库同时提供 Prompt 型与可执行 `SKILL.md` 模板、六个最小示例和静态校验工具；浇水、收获与睡眠三个示例由通用 Loader 动态加载，在一次调用中复用当前 Owner Session 完成确定性工作流。
 
 普通用户的源码安装与调用方法见[快速开始](docs/getting-started.md)；需要自动完成安装的 Agent 使用 [AGENT-GUIDE.md](AGENT-GUIDE.md)。本地完整回归入口为：
 

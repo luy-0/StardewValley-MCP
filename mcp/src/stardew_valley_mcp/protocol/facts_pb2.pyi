@@ -60,6 +60,15 @@ class CropHarvestAction(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     CROP_HARVEST_ACTION_INTERACT: _ClassVar[CropHarvestAction]
     CROP_HARVEST_ACTION_SCYTHE: _ClassVar[CropHarvestAction]
 
+class ItemToolKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    ITEM_TOOL_KIND_UNSPECIFIED: _ClassVar[ItemToolKind]
+    ITEM_TOOL_KIND_AXE: _ClassVar[ItemToolKind]
+    ITEM_TOOL_KIND_PICKAXE: _ClassVar[ItemToolKind]
+    ITEM_TOOL_KIND_HOE: _ClassVar[ItemToolKind]
+    ITEM_TOOL_KIND_WATERING_CAN: _ClassVar[ItemToolKind]
+    ITEM_TOOL_KIND_SCYTHE: _ClassVar[ItemToolKind]
+
 class CharacterKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     CHARACTER_KIND_UNSPECIFIED: _ClassVar[CharacterKind]
@@ -138,6 +147,12 @@ ENTITY_KIND_HOE_DIRT: EntityKind
 CROP_HARVEST_ACTION_UNSPECIFIED: CropHarvestAction
 CROP_HARVEST_ACTION_INTERACT: CropHarvestAction
 CROP_HARVEST_ACTION_SCYTHE: CropHarvestAction
+ITEM_TOOL_KIND_UNSPECIFIED: ItemToolKind
+ITEM_TOOL_KIND_AXE: ItemToolKind
+ITEM_TOOL_KIND_PICKAXE: ItemToolKind
+ITEM_TOOL_KIND_HOE: ItemToolKind
+ITEM_TOOL_KIND_WATERING_CAN: ItemToolKind
+ITEM_TOOL_KIND_SCYTHE: ItemToolKind
 CHARACTER_KIND_UNSPECIFIED: CharacterKind
 CHARACTER_KIND_NPC: CharacterKind
 CHARACTER_KIND_MONSTER: CharacterKind
@@ -448,7 +463,7 @@ class ResourceClumpFact(_message.Message):
     def __init__(self, clump_kind: _Optional[str] = ..., width: _Optional[int] = ..., height: _Optional[int] = ..., health: _Optional[int] = ..., required_tool: _Optional[str] = ..., required_tool_level: _Optional[int] = ...) -> None: ...
 
 class ItemFact(_message.Message):
-    __slots__ = ("ref", "qualified_item_id", "display_name", "stack", "quality", "category", "tool", "tool_level", "water_remaining", "water_capacity", "bottomless")
+    __slots__ = ("ref", "qualified_item_id", "display_name", "stack", "quality", "category", "tool", "tool_level", "water_remaining", "water_capacity", "bottomless", "tool_kind")
     REF_FIELD_NUMBER: _ClassVar[int]
     QUALIFIED_ITEM_ID_FIELD_NUMBER: _ClassVar[int]
     DISPLAY_NAME_FIELD_NUMBER: _ClassVar[int]
@@ -460,6 +475,7 @@ class ItemFact(_message.Message):
     WATER_REMAINING_FIELD_NUMBER: _ClassVar[int]
     WATER_CAPACITY_FIELD_NUMBER: _ClassVar[int]
     BOTTOMLESS_FIELD_NUMBER: _ClassVar[int]
+    TOOL_KIND_FIELD_NUMBER: _ClassVar[int]
     ref: _refs_pb2.Ref
     qualified_item_id: str
     display_name: str
@@ -471,7 +487,8 @@ class ItemFact(_message.Message):
     water_remaining: int
     water_capacity: int
     bottomless: bool
-    def __init__(self, ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., qualified_item_id: _Optional[str] = ..., display_name: _Optional[str] = ..., stack: _Optional[int] = ..., quality: _Optional[int] = ..., category: _Optional[str] = ..., tool: _Optional[bool] = ..., tool_level: _Optional[int] = ..., water_remaining: _Optional[int] = ..., water_capacity: _Optional[int] = ..., bottomless: _Optional[bool] = ...) -> None: ...
+    tool_kind: ItemToolKind
+    def __init__(self, ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., qualified_item_id: _Optional[str] = ..., display_name: _Optional[str] = ..., stack: _Optional[int] = ..., quality: _Optional[int] = ..., category: _Optional[str] = ..., tool: _Optional[bool] = ..., tool_level: _Optional[int] = ..., water_remaining: _Optional[int] = ..., water_capacity: _Optional[int] = ..., bottomless: _Optional[bool] = ..., tool_kind: _Optional[_Union[ItemToolKind, str]] = ...) -> None: ...
 
 class MachineFact(_message.Message):
     __slots__ = ("qualified_item_id", "ready_for_harvest", "minutes_until_ready", "held_item")

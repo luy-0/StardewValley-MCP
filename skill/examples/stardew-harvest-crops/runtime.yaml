@@ -1,0 +1,29 @@
+schemaVersion: "1"
+entrypoint: scripts/run.py:run
+
+tool:
+  name: stardew_skill_harvest_crops
+  title: 有界收获指定范围作物
+  description: 在一次调用中查询指定范围，按公开收获方式逐项操作并复查作物与背包事实。
+  inputSchema: schemas/input.json
+  outputSchema: schemas/output.json
+  annotations:
+    readOnlyHint: false
+    destructiveHint: true
+    idempotentHint: false
+    openWorldHint: false
+
+requires:
+  tools:
+    - stardew_query_runtime
+    - stardew_query_inventory
+    - stardew_query_world
+    - stardew_inspect
+    - stardew_navigate
+    - stardew_equip
+    - stardew_interact
+    - stardew_use_tool
+
+execution:
+  timeoutSeconds: 905
+  concurrency: exclusive
