@@ -9,6 +9,7 @@ internal interface ISocialActionGameApi
     bool IsChatReady { get; }
     bool CanEmote { get; }
     bool IsEmoting { get; }
+    bool IsEmoteAnimating { get; }
     int CurrentEmote { get; }
     bool TrySendChat(string content);
     void BroadcastEmote(string emoteName);
@@ -114,23 +115,39 @@ internal sealed class EmoteHandler : IImmediateCapabilityHandler
         {
             return Failed(commandId, ErrorCode.ExecutionFailed, "游戏拒绝触发表情", "failed");
         }
-        if (!_game.IsEmoting || _game.CurrentEmote != emote.IconIndex)
+        var iconConfirmed = emote.IconIndex is null
+            || _game.IsEmoting && _game.CurrentEmote == emote.IconIndex;
+        if (!iconConfirmed || (emote.RequiresAnimation && !_game.IsEmoteAnimating))
             return Failed(commandId, ErrorCode.ExecutionFailed, "未观察到请求的本地表情状态", "failed");
         return Succeeded(commandId, new CapabilityResult { Emote = new EmoteResult { Emote = request.Emote.Emote } });
     }
 
-    internal static bool TryGetEmote(EmoteKind kind, out (string Name, int IconIndex) emote)
+    internal static bool TryGetEmote(EmoteKind kind, out (string Name, int? IconIndex, bool RequiresAnimation) emote)
     {
         emote = kind switch
         {
-            EmoteKind.Happy => ("happy", 32),
-            EmoteKind.Sad => ("sad", 28),
-            EmoteKind.Heart => ("heart", 20),
-            EmoteKind.Exclamation => ("exclamation", 16),
-            EmoteKind.Question => ("question", 8),
-            EmoteKind.Angry => ("angry", 12),
-            EmoteKind.Sleep => ("sleep", 24),
-            EmoteKind.Music => ("music", 56),
+            EmoteKind.Happy => ("happy", 32, false),
+            EmoteKind.Sad => ("sad", 28, false),
+            EmoteKind.Heart => ("heart", 20, false),
+            EmoteKind.Exclamation => ("exclamation", 16, false),
+            EmoteKind.Question => ("question", 8, false),
+            EmoteKind.Angry => ("angry", 12, false),
+            EmoteKind.Sleep => ("sleep", 24, false),
+            EmoteKind.Music => ("music", 56, true),
+            EmoteKind.Note => ("note", 56, false),
+            EmoteKind.Game => ("game", 52, false),
+            EmoteKind.X => ("x", 36, false),
+            EmoteKind.Pause => ("pause", 40, false),
+            EmoteKind.Blush => ("blush", 60, false),
+            EmoteKind.Yes => ("yes", 56, true),
+            EmoteKind.No => ("no", 36, true),
+            EmoteKind.Sick => ("sick", 12, true),
+            EmoteKind.Laugh => ("laugh", 56, true),
+            EmoteKind.Surprised => ("surprised", 16, true),
+            EmoteKind.Hi => ("hi", 56, true),
+            EmoteKind.Taunt => ("taunt", 12, true),
+            EmoteKind.Uh => ("uh", 40, true),
+            EmoteKind.Jar => ("jar", null, true),
             _ => default,
         };
         return emote.Name is not null;
@@ -152,6 +169,7 @@ internal sealed class StardewSocialActionGameApi : ISocialActionGameApi
     public bool IsChatReady => Context.IsWorldReady && Game1.player is not null && Game1.chatBox is not null;
     public bool CanEmote => Context.IsWorldReady && Game1.player is not null && Game1.player.CanEmote();
     public bool IsEmoting => Game1.player?.IsEmoting ?? false;
+    public bool IsEmoteAnimating => Game1.player?.isEmoteAnimating ?? false;
     public int CurrentEmote => Game1.player?.CurrentEmote ?? -1;
 
     public bool TrySendChat(string content)

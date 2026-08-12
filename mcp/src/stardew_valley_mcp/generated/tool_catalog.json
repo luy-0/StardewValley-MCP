@@ -59,7 +59,7 @@
     },
     {
       "cancellable": false,
-      "contract_version": "1.0.0",
+      "contract_version": "1.1.0",
       "default_timeout_ms": 5000,
       "description": "让当前玩家播放一个受支持的游戏表情。",
       "destructive": false,
@@ -3529,7 +3529,21 @@
               "question",
               "angry",
               "sleep",
-              "music"
+              "music",
+              "note",
+              "game",
+              "x",
+              "pause",
+              "blush",
+              "yes",
+              "no",
+              "sick",
+              "laugh",
+              "surprised",
+              "hi",
+              "taunt",
+              "uh",
+              "jar"
             ],
             "type": "string"
           }
@@ -3554,7 +3568,21 @@
                   "question",
                   "angry",
                   "sleep",
-                  "music"
+                  "music",
+                  "note",
+                  "game",
+                  "x",
+                  "pause",
+                  "blush",
+                  "yes",
+                  "no",
+                  "sick",
+                  "laugh",
+                  "surprised",
+                  "hi",
+                  "taunt",
+                  "uh",
+                  "jar"
                 ],
                 "type": "string"
               }

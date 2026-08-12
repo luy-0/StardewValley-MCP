@@ -113,25 +113,53 @@
     "stardew_valley.mcp.v1.EmoteKind": {
       "jsonToProto": {
         "angry": "EMOTE_KIND_ANGRY",
+        "blush": "EMOTE_KIND_BLUSH",
         "exclamation": "EMOTE_KIND_EXCLAMATION",
+        "game": "EMOTE_KIND_GAME",
         "happy": "EMOTE_KIND_HAPPY",
         "heart": "EMOTE_KIND_HEART",
+        "hi": "EMOTE_KIND_HI",
+        "jar": "EMOTE_KIND_JAR",
+        "laugh": "EMOTE_KIND_LAUGH",
         "music": "EMOTE_KIND_MUSIC",
+        "no": "EMOTE_KIND_NO",
+        "note": "EMOTE_KIND_NOTE",
+        "pause": "EMOTE_KIND_PAUSE",
         "question": "EMOTE_KIND_QUESTION",
         "sad": "EMOTE_KIND_SAD",
+        "sick": "EMOTE_KIND_SICK",
         "sleep": "EMOTE_KIND_SLEEP",
-        "unspecified": "EMOTE_KIND_UNSPECIFIED"
+        "surprised": "EMOTE_KIND_SURPRISED",
+        "taunt": "EMOTE_KIND_TAUNT",
+        "uh": "EMOTE_KIND_UH",
+        "unspecified": "EMOTE_KIND_UNSPECIFIED",
+        "x": "EMOTE_KIND_X",
+        "yes": "EMOTE_KIND_YES"
       },
       "protoToJson": {
         "EMOTE_KIND_ANGRY": "angry",
+        "EMOTE_KIND_BLUSH": "blush",
         "EMOTE_KIND_EXCLAMATION": "exclamation",
+        "EMOTE_KIND_GAME": "game",
         "EMOTE_KIND_HAPPY": "happy",
         "EMOTE_KIND_HEART": "heart",
+        "EMOTE_KIND_HI": "hi",
+        "EMOTE_KIND_JAR": "jar",
+        "EMOTE_KIND_LAUGH": "laugh",
         "EMOTE_KIND_MUSIC": "music",
+        "EMOTE_KIND_NO": "no",
+        "EMOTE_KIND_NOTE": "note",
+        "EMOTE_KIND_PAUSE": "pause",
         "EMOTE_KIND_QUESTION": "question",
         "EMOTE_KIND_SAD": "sad",
+        "EMOTE_KIND_SICK": "sick",
         "EMOTE_KIND_SLEEP": "sleep",
-        "EMOTE_KIND_UNSPECIFIED": "unspecified"
+        "EMOTE_KIND_SURPRISED": "surprised",
+        "EMOTE_KIND_TAUNT": "taunt",
+        "EMOTE_KIND_UH": "uh",
+        "EMOTE_KIND_UNSPECIFIED": "unspecified",
+        "EMOTE_KIND_X": "x",
+        "EMOTE_KIND_YES": "yes"
       }
     },
     "stardew_valley.mcp.v1.EntityKind": {
@@ -1440,7 +1468,21 @@
               "question",
               "angry",
               "sleep",
-              "music"
+              "music",
+              "note",
+              "game",
+              "x",
+              "pause",
+              "blush",
+              "yes",
+              "no",
+              "sick",
+              "laugh",
+              "surprised",
+              "hi",
+              "taunt",
+              "uh",
+              "jar"
             ],
             "type": "string"
           }
@@ -1465,7 +1507,21 @@
                   "question",
                   "angry",
                   "sleep",
-                  "music"
+                  "music",
+                  "note",
+                  "game",
+                  "x",
+                  "pause",
+                  "blush",
+                  "yes",
+                  "no",
+                  "sick",
+                  "laugh",
+                  "surprised",
+                  "hi",
+                  "taunt",
+                  "uh",
+                  "jar"
                 ],
                 "type": "string"
               }

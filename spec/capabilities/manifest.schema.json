@@ -28,7 +28,7 @@
         "id": {"type": "string", "pattern": "^[a-z][a-z0-9_]*$"},
         "title": {"type": "string", "minLength": 1, "maxLength": 80},
         "description": {"type": "string", "minLength": 1, "maxLength": 300},
-        "contract_version": {"const": "1.0.0"},
+        "contract_version": {"type": "string", "pattern": "^1\\.[0-9]+\\.[0-9]+$"},
         "request": {"type": "string", "pattern": "^[A-Z][A-Za-z0-9]*Request$"},
         "result": {"type": "string", "pattern": "^[A-Z][A-Za-z0-9]*Result$"},
         "side_effect": {"enum": ["read_only", "mutating"]},

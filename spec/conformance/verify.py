@@ -307,6 +307,14 @@ def verify_action_fixtures() -> None:
     require(len(paths) == len(set(paths)), "动作 Fixture 路径重复")
     documents = [load_json(FIXTURE_ROOT / path) for path in paths]
     require({document.get("capability") for document in documents} == expected, "V1 变更能力 Fixture 集合不完整")
+    emote_enum = list(
+        catalog["enumMappings"]["stardew_valley.mcp.v1.EmoteKind"]["jsonToProto"]
+    )
+    require(
+        all(isinstance(value, str) for value in emote_enum)
+        and {"yes", "no"}.issubset(emote_enum),
+        "EmoteKind JSON 枚举必须保留字符串 yes/no，不能被 YAML 解析为布尔值",
+    )
     for document in documents:
         capability = document["capability"]
         require(

@@ -172,7 +172,7 @@ output_messages:
   EmoteResult:
     fields:
       emote:
-        enum: [happy, sad, heart, exclamation, question, angry, sleep, music]
+        enum: [happy, sad, heart, exclamation, question, angry, sleep, music, note, game, x, pause, blush, "yes", "no", sick, laugh, surprised, hi, taunt, uh, jar]
 
   FaceResult:
     fields:

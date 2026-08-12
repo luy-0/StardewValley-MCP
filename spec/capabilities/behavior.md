@@ -77,8 +77,9 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 
 ### `emote`
 
-- `emote` 必须是 Manifest 当前实现支持的非 `UNSPECIFIED` 值。
-- 成功要求玩家进入对应 Emote 状态；仅发送按键不能视为成功。
+- `emote` 必须是 Manifest 当前实现支持的非 `UNSPECIFIED` 值。公开集合严格对应原版 `Farmer.EMOTES` 注册表：`happy`、`sad`、`heart`、`exclamation`、`note`、`sleep`、`game`、`question`、`x`、`pause`、`blush`、`angry`、`yes`、`no`、`sick`、`laugh`、`surprised`、`hi`、`taunt`、`uh`、`music` 与 `jar`。
+- 成功要求玩家进入与请求匹配的原版状态：图标表情必须确认对应图标；带角色动画的表情还必须确认动画启动；`jar` 没有图标，只确认其角色动画。仅发送按键或事件不能视为成功。
+- 不开放任意内部整数、未在 `Farmer.EMOTES` 注册的 NPC／剧情表情或第三方 Mod 表情。`UNSPECIFIED` 与未知枚举必须返回 `INVALID_ARGUMENT`，不得静默回退。
 
 ### `face`
 

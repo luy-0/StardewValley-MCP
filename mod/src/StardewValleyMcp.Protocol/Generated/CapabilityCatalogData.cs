@@ -55,7 +55,7 @@ internal static class CapabilityCatalogData
             ["emote"] = new CapabilityDescriptor
             {
                 Id = "emote",
-                ContractVersion = "1.0.0",
+                ContractVersion = "1.1.0",
                 SideEffect = SideEffect.Mutating,
                 Execution = ExecutionMode.Immediate,
                 Cancellable = false,
