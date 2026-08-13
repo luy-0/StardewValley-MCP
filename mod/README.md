@@ -16,7 +16,7 @@ Mod 不实现 MCP，不加载 Skill，也不拥有智能体身份。
 
 ## 当前实现状态
 
-当前已建立独立的 .NET 6 Solution、公共 Proto 生成项目和 SMAPI Host。Host 只在配置的 loopback 地址启动 Proto TCP Listener，通过共享秘密完成 HMAC 认证。Registry 当前显式注册五项只读 Handler 和十五项需要明确授权的变更 Handler，共二十项公共能力；`transfer_inventory_item` 通过当前箱子 UI、Item Ref 与双方 Revision 执行两 Tick 原子转移，`set_equipment_slot` 与 `move_inventory_item` 分别负责装备槽变更与玩家背包内的整件移动或交换，`craft_item` 与 `purchase_shop_item` 分别负责按当前 UI Ref 制作和购买。`use_tool` 支持 Axe、Pickaxe、Scythe、Hoe 与 Watering Can，并由独立 Driver 观察工具的接受、释放和收敛生命周期。
+当前已建立独立的 .NET 6 Solution、公共 Proto 生成项目和 SMAPI Host。Host 只在配置的 loopback 地址启动 Proto TCP Listener，通过共享秘密完成 HMAC 认证。Registry 当前显式注册六项只读 Handler 和十六项需要明确授权的变更 Handler，共二十二项公共能力；`transfer_inventory_item` 通过当前箱子 UI、Item Ref 与双方 Revision 执行两 Tick 原子转移，`set_equipment_slot` 与 `move_inventory_item` 分别负责装备槽变更与玩家背包内的整件移动或交换，`discard_inventory_item` 复用游戏原生背包垃圾桶语义，`craft_item` 与 `purchase_shop_item` 分别负责按当前 UI Ref 制作和购买。`use_tool` 支持 Axe、Pickaxe、Scythe、Hoe 与 Watering Can，并由独立 Driver 观察工具的接受、释放和收敛生命周期。
 
 以下命令均从仓库根目录执行。生成并测试公共协议：
 
@@ -26,7 +26,7 @@ uv run --project mcp python scripts/generate_protocol.py --check
 dotnet test mod/tests/StardewValleyMcp.Protocol.Tests/StardewValleyMcp.Protocol.Tests.csproj -p:RestoreLockedMode=true
 ```
 
-构建 Mod 需要本机合法安装 Stardew Valley 1.6 与 SMAPI。构建脚本默认不会写入游戏目录：
+本地部署与实机测试需要合法安装 Stardew Valley 1.6 与 SMAPI。纯 CI 构建使用固定版本的公开引用程序集；构建脚本默认不会写入游戏目录：
 
 ```bash
 ./mod/scripts/build.sh --package

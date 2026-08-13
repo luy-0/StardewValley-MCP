@@ -1,14 +1,14 @@
 # 快速开始
 
-当前预览版提供二十一项公共 Tool：六项观察能力和十五项需要明确授权的变更能力，其中 `query_players` 返回本存档中自己、在线队友与离线农场工，`transfer_inventory_item` 用于当前受支持箱子菜单中的单项原子转移，`set_equipment_slot` 用于当前原版背包页面中的穿戴、替换与取下，`move_inventory_item` 用于玩家背包页内的整件移动或交换，`craft_item` 与 `purchase_shop_item` 分别负责按当前 UI Ref 制作和购买。MCP 默认只暴露只读能力；只有显式加入 `--allow-write`，才会暴露当前 Mod 同时公告的操作能力。
+当前预览版提供二十二项公共 Tool：六项观察能力和十六项需要明确授权的变更能力，其中 `query_players` 返回本存档中自己、在线队友与离线农场工，`transfer_inventory_item` 用于当前受支持箱子菜单中的单项原子转移，`set_equipment_slot` 用于当前原版背包页面中的穿戴、替换与取下，`move_inventory_item` 用于玩家背包页内的整件移动或交换，`discard_inventory_item` 按游戏原生背包垃圾桶规则丢弃物品，`craft_item` 与 `purchase_shop_item` 分别负责按当前 UI Ref 制作和购买。MCP 默认只暴露只读能力；只有显式加入 `--allow-write`，才会暴露当前 Mod 同时公告的操作能力。
 
-当前采用源码优先发布方式，不提供预编译 Mod 或安装器。Agent 从源码自动安装时，请使用根目录的 [`AGENT-GUIDE.md`](../AGENT-GUIDE.md)。
+GitHub Release 发布后，普通用户应优先下载同一版本的 Mod ZIP 与 MCP wheel，并使用随包 `SHA256SUMS.txt` 校验文件；尚无 Release 或需要参与开发时再使用源码安装。Agent 从源码自动安装时，请使用根目录的 [`AGENT-GUIDE.md`](../AGENT-GUIDE.md)。
 
 ## 一、前置条件
 
 - Stardew Valley 1.6；
 - SMAPI 4.1.0 或更高版本；
-- Git 与 .NET 6 SDK；
+- 使用发行包时不需要 Git 或 .NET SDK；从源码构建 Mod 时需要 Git 与能构建 `net6.0` 的 .NET SDK；
 - Python 3.11 或更高版本；
 - [`uv`](https://docs.astral.sh/uv/)；
 - 支持本地 stdio MCP Server 的客户端。
@@ -18,7 +18,13 @@ Mod 产物必须继续以 `net6.0` 匹配游戏宿主；CI 使用受支持的新
 
 ## 二、安装 Mod
 
-### macOS
+### 从 GitHub Release 安装
+
+在仓库 Releases 页面下载与目标版本相同的 `StardewValleyMCP-Mod-v<版本>.zip` 和 `SHA256SUMS.txt`，先按校验和确认文件完整，再把 ZIP 中的 `StardewValleyMCP` 目录解压到游戏的 `Mods` 目录。预发布版本用于公开测试，遇到问题时应同时提供版本号和对应 Release 链接。
+
+### 从源码安装
+
+#### macOS
 
 Steam 默认位置可以直接使用构建脚本的自动发现；也可以显式设置：
 
@@ -29,7 +35,7 @@ export STARDEW_VALLEY_GAME_PATH="$HOME/Library/Application Support/Steam/steamap
 
 脚本会恢复锁定依赖、运行 Mod 与 Protocol 测试、构建 Release 版本，并安装到游戏的 `Mods/StardewValleyMCP/`。
 
-### Windows
+#### Windows
 
 安装 Git for Windows 后，在 Git Bash 中执行：
 
@@ -40,7 +46,7 @@ export STARDEW_VALLEY_GAME_PATH='C:/Program Files (x86)/Steam/steamapps/common/S
 
 如果游戏不在 Steam 默认目录，请替换环境变量。PowerShell 用户也可以把相同目录设置为 `$env:STARDEW_VALLEY_GAME_PATH`，再通过 Git Bash 调用构建脚本。
 
-### 只生成 Mod ZIP
+#### 只生成 Mod ZIP
 
 不直接安装时使用：
 
@@ -61,6 +67,19 @@ export STARDEW_VALLEY_GAME_PATH='C:/Program Files (x86)/Steam/steamapps/common/S
 共享秘密只应进入本机 MCP 进程环境或客户端秘密存储。不要把完整 `config.json`、共享秘密或本机绝对路径提交到仓库、粘贴到聊天或写入日志。
 
 ## 四、安装 MCP 服务端
+
+### 从 GitHub Release 安装
+
+下载同一版本的 `stardew_valley_mcp-<PEP 440 版本>-py3-none-any.whl`，校验后执行：
+
+```bash
+uv tool install ./stardew_valley_mcp-<版本>-py3-none-any.whl
+stardew-valley-mcp doctor
+```
+
+Mod 使用 SemVer（例如 `0.1.0-alpha.1`），wheel 文件名使用等价的 Python PEP 440 版本（例如 `0.1.0a1`），二者属于同一个仓库产品版本。
+
+### 从源码安装
 
 从仓库根目录安装命令行工具：
 

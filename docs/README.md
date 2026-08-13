@@ -14,6 +14,7 @@ Agent 自动安装入口是 [`../AGENT-GUIDE.md`](../AGENT-GUIDE.md)。
 - [Agent 自动安装指南](../AGENT-GUIDE.md)；
 - [Agent Skill 开发面](../skill/README.md)；
 - [可执行 Skill 开发与维护](executable-skills.md)；
+- [版本、Tag 与 GitHub Release 维护流程](releasing.md)；
 - [公共契约索引](../spec/README.md)；
 - [贡献指南](../CONTRIBUTING.md)。
 

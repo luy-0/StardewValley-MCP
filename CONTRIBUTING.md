@@ -41,4 +41,6 @@
 ./scripts/verify.sh --with-mod
 ```
 
+产品版本、Tag 和 Release 只能按[发版流程](docs/releasing.md)修改。版本变化必须先经过普通 PR 合并；Release 工作流不会替维护者临时改写源码版本，也不得通过移动旧 Tag 覆盖已经发布的产物。
+
 新增或升级依赖时，必须按实际发行内容同步检查 [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) 与包审计规则。贡献默认依照仓库的 [Apache License 2.0](LICENSE) 提交。

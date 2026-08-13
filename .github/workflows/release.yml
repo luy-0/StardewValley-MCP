@@ -1,0 +1,165 @@
+name: Release
+
+on:
+  pull_request:
+    paths:
+      - VERSION
+      - .github/workflows/ci.yml
+      - .github/workflows/release.yml
+      - scripts/audit_packages.py
+      - scripts/prepare_release_assets.py
+      - scripts/release_version.py
+      - scripts/tests/**
+      - mod/scripts/build.sh
+      - mod/src/StardewValleyMcp.Mod/StardewValleyMcp.Mod.csproj
+      - mod/src/StardewValleyMcp.Mod/manifest.json
+      - mcp/pyproject.toml
+      - mcp/uv.lock
+      - mcp/src/stardew_valley_mcp/__init__.py
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name != 'push' }}
+
+jobs:
+  build-release-assets:
+    name: Build and audit release assets
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      REFERENCE_ASSEMBLIES_COMMIT: 0141355fecb8536715ecff22f99374b5e632cbed
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      prerelease: ${{ steps.version.outputs.prerelease }}
+      checkout-sha: ${{ steps.source.outputs.checkout-sha }}
+
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: 验证发行源与版本
+        id: source
+        shell: bash
+        run: |
+          checkout_sha="$(git rev-parse HEAD)"
+          echo "checkout-sha=$checkout_sha" >> "$GITHUB_OUTPUT"
+          if [[ "$GITHUB_EVENT_NAME" == "workflow_dispatch" && "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo "手动发行演练只允许从 main 分支执行" >&2
+            exit 1
+          fi
+          if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
+            tag_ref="refs/tags/$GITHUB_REF_NAME"
+            test "$(git cat-file -t "$tag_ref")" = "tag" || {
+              echo "发行 Tag 必须是 annotated Tag" >&2
+              exit 1
+            }
+            test "$(git rev-list -n 1 "$tag_ref")" = "$checkout_sha" || {
+              echo "Tag 指向与 checkout SHA 不一致" >&2
+              exit 1
+            }
+            python3 scripts/release_version.py check --tag "$GITHUB_REF_NAME"
+            GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" \
+              python3 scripts/prepare_release_assets.py \
+                --verify-github-tag "$GITHUB_REF_NAME" \
+                --expected-commit "$checkout_sha"
+            git fetch --no-tags origin +refs/heads/main:refs/remotes/origin/main
+            git merge-base --is-ancestor "$checkout_sha" refs/remotes/origin/main || {
+              echo "Tag 必须指向 main 历史中的提交" >&2
+              exit 1
+            }
+          else
+            python3 scripts/release_version.py check
+          fi
+      - name: 读取源码版本
+        id: version
+        shell: bash
+        run: |
+          version="$(python3 scripts/release_version.py show --format semver)"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          if [[ "$version" == *-* ]]; then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: actions/setup-dotnet@26b0ec14cb23fa6904739307f278c14f94c95bf1 # v5.4.0
+        with:
+          dotnet-version: |
+            10.0.x
+            6.0.x
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        with:
+          version: "0.11.32"
+      - uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b # v3.0.0
+        with:
+          version: "34.1"
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+      - name: 检出固定的游戏引用程序集
+        shell: bash
+        run: |
+          reference_path="$RUNNER_TEMP/stardew-reference-assemblies"
+          git init "$reference_path"
+          git -C "$reference_path" remote add origin \
+            https://github.com/StardewModders/mod-reference-assemblies.git
+          git -C "$reference_path" fetch --depth=1 origin "$REFERENCE_ASSEMBLIES_COMMIT"
+          git -C "$reference_path" checkout --detach FETCH_HEAD
+          test "$(git -C "$reference_path" rev-parse HEAD)" = "$REFERENCE_ASSEMBLIES_COMMIT"
+          echo "STARDEW_VALLEY_GAME_PATH=$reference_path" >> "$GITHUB_ENV"
+      - name: 构建、测试并审计全部发行包
+        shell: bash
+        run: ./scripts/verify.sh --with-mod
+      - name: 生成固定发行产物与校验和
+        shell: bash
+        run: python3 scripts/prepare_release_assets.py --output "$RUNNER_TEMP/release-assets"
+      - name: 上传发行演练产物
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: release-assets
+          path: ${{ runner.temp }}/release-assets/*
+          if-no-files-found: error
+          retention-days: 14
+
+  publish-draft:
+    name: Create Draft GitHub Release
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+    needs: build-release-assets
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+
+    steps:
+      - name: 下载已审计发行产物
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+        with:
+          name: release-assets
+          path: release-assets
+      - name: 确认 Draft Release 输入精确为四项产物
+        shell: bash
+        run: |
+          mapfile -t assets < <(find release-assets -maxdepth 1 -type f -print | sort)
+          test "${#assets[@]}" -eq 4 || {
+            echo "Draft Release 必须且只能包含四项产物" >&2
+            printf '%s\n' "${assets[@]}" >&2
+            exit 1
+          }
+          grep -F "  StardewValleyMCP-Mod-v${{ needs.build-release-assets.outputs.version }}.zip" \
+            release-assets/SHA256SUMS.txt
+          (cd release-assets && sha256sum --check SHA256SUMS.txt)
+      - name: 创建待人工验收的 Draft Release
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          target_commitish: ${{ needs.build-release-assets.outputs.checkout-sha }}
+          draft: true
+          prerelease: ${{ needs.build-release-assets.outputs.prerelease == 'true' }}
+          generate_release_notes: true
+          fail_on_unmatched_files: true
+          files: release-assets/*
