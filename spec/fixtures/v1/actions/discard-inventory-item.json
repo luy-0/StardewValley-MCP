@@ -1,0 +1,9 @@
+{
+  "capability": "discard_inventory_item",
+  "minimalInput": {"itemRef":{"value":"player-item-ref"},"quantity":1,"playerInventoryRevision":"0000000000000000000000000000000000000000000000000000000000000000"},
+  "fullInput": {"itemRef":{"value":"player-item-ref-stack"},"quantity":12,"playerInventoryRevision":"1111111111111111111111111111111111111111111111111111111111111111"},
+  "invalidInput": {"itemRef":{"value":"player-item-ref"},"quantity":0,"playerInventoryRevision":"0000000000000000000000000000000000000000000000000000000000000000"},
+  "accepted": {"state":"accepted","phase":"queued"},
+  "succeeded": {"status":"succeeded","commandId":"41000000-0000-4000-8000-000000000016","output":{"requestedQuantity":12,"discardedQuantity":12,"sourceSlotIndex":3,"sourceRemainingQuantity":8,"playerInventoryRevision":"2222222222222222222222222222222222222222222222222222222222222222","moneyBefore":500,"moneyAfter":507,"moneyRefunded":7}},
+  "failed": {"status":"failed","commandId":"41000000-0000-4000-8000-000000000016","error":{"code":"item_not_discardable","message":"游戏本体不允许将该物品放入背包垃圾桶","retryable":false}}
+}

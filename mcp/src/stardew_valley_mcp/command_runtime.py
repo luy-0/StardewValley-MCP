@@ -36,6 +36,8 @@ _ERRORS = {
     common_pb2.ERROR_CODE_EXECUTION_FAILED: ("failed", "execution_failed", False),
     common_pb2.ERROR_CODE_PROTOCOL_VIOLATION: ("failed", "upstream_protocol_error", False),
     common_pb2.ERROR_CODE_INTERNAL: ("failed", "internal_error", False),
+    common_pb2.ERROR_CODE_ITEM_NOT_DISCARDABLE: ("failed", "item_not_discardable", False),
+    common_pb2.ERROR_CODE_COMMIT_OUTCOME_UNKNOWN: ("unknown", "unknown_outcome", False),
 }
 
 DEFAULT_DISCOVERY_TIMEOUT_SECONDS = 6.0
@@ -55,6 +57,18 @@ _FAILED_ERROR_CODES = {
     common_pb2.ERROR_CODE_EXECUTION_FAILED,
     common_pb2.ERROR_CODE_INTERNAL,
 }
+_CAPABILITY_FAILED_ERROR_CODES = {
+    "discard_inventory_item": {
+        common_pb2.ERROR_CODE_ITEM_NOT_DISCARDABLE,
+        common_pb2.ERROR_CODE_COMMIT_OUTCOME_UNKNOWN,
+    },
+}
+
+
+def _failed_error_code_allowed(capability_id: str, code: int) -> bool:
+    return code in _FAILED_ERROR_CODES or code in _CAPABILITY_FAILED_ERROR_CODES.get(
+        capability_id, set()
+    )
 
 
 def _error(
@@ -432,7 +446,9 @@ class CommandRuntime:
                 raise ProtocolError("CANCELLED 错误码无效")
             if state == capabilities_pb2.COMMAND_STATE_TIMED_OUT and event.error.code != common_pb2.ERROR_CODE_DEADLINE_EXCEEDED:
                 raise ProtocolError("TIMED_OUT 错误码无效")
-            if state == capabilities_pb2.COMMAND_STATE_FAILED and event.error.code not in _FAILED_ERROR_CODES:
+            if state == capabilities_pb2.COMMAND_STATE_FAILED and not _failed_error_code_allowed(
+                waiter.capability_id, event.error.code
+            ):
                 raise ProtocolError("FAILED 错误码无效")
         waiter.accepted = True
         waiter.current = _clone(event)

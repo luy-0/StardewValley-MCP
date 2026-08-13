@@ -158,6 +158,17 @@ Mod 在游戏世界就绪且本地控制服务运行期间，必须保证单机�
 - 成功必须确认两槽结果、其他槽不变、所有 Stack 不变、游标仍为空、对象守恒、两项 Revision 在真实写入后变化，并返回源槽、目标槽、`changed`、`swapped` 与新玩家 Inventory Revision。真实写入成功后源与目标旧 Item Ref 失效，Slot Ref 仍绑定同一组件；调用方必须重新查询取得新 Revision 和 Item Ref。同槽 no-op 不改变 Ref 或 Revision。
 - 写入或后置校验失败时，必须以两槽局部 journal 尽力停止提交后的当前 Item、清空计划对象、恢复原对象与原持有状态。回滚不得覆盖第三方在失败窗口写入的未知对象；无法安全恢复或确认时返回 `EXECUTION_FAILED` 并要求重新查询。能力不承诺撤销第三方 Item callback 已产生的历史副作用。
 
+### `discard_inventory_item`
+
+- 请求必须提供当前玩家背包 `query_inventory` 签发的非空 Item Ref、产生该 Ref 的玩家 Inventory Revision，以及 `1..2147483647` 的明确数量。不要求打开 Inventory UI；容器 Item Ref、UI Slot Ref、非 `INVENTORY_ITEM` Ref 或其他玩家来源必须以 `INVALID_ARGUMENT` 拒绝。
+- 数量超过当前 Stack 返回 `OUT_OF_RANGE`；Item Ref、玩家 Inventory Revision、Slot、对象身份或 Stack 已变化返回 `STALE_REF`。当前实例从未签发的合法 Ref 返回 `NOT_FOUND`。这些失败都必须发生在提交前且保持背包与金币不变。
+- 可丢弃性必须在游戏主线程按当前物品实例的 `canBeTrashed()` 结果判定。返回 false 时以 `ITEM_NOT_DISCARDABLE` 拒绝；不得根据本地化名称、显示文本、贴图、物品 ID、是否继承 Tool 或手写白名单猜测。Fishing Rod、Pan、Slingshot 等只要原生结果为 true 就必须允许，不能把“工具”作为统一拒绝类别。
+- 实现必须分两个 Tick 完成预检与提交。提交前重新验证游戏与玩家状态、背包 backing、Ref/Revision、Slot、对象身份、Stack、数量和 `canBeTrashed()`；同步提交开始前允许取消，越过提交点后取消返回 `CONFLICT`，原命令继续收敛真实终态。
+- 提交语义必须等同原生背包垃圾桶并调用 `Utility.trashItem`，不得只减 Stack 或清空 Slot 伪造垃圾桶。部分堆叠必须对与请求数量相同的拆分对象执行原生垃圾桶逻辑，并在原 Slot 保留剩余 Stack；完整堆叠必须清空原 Slot。其他 Slot 的对象身份、Stack 与顺序逐项不变，`CurrentToolIndex` 数值不变。
+- 成功必须返回请求数量、实际丢弃数量、原 Slot、源剩余数量、新玩家 Inventory Revision，以及金币前值、后值和原生返还额。`discarded_quantity` 必须等于请求数量，`money_after = money_before + money_refunded`；返还为零也必须显式返回。金币返还是垃圾桶副作用，不把该行为解释为出售或出货。
+- 进入 `Utility.trashItem` 前的 Slot 拆分或移除失败时，必须以单 Slot journal 恢复目标对象身份、Stack 与可观察持有状态，并且不得覆盖失败窗口中第三方写入的未知对象；回滚后置条件全部确认时返回 `EXECUTION_FAILED`，回滚无法确认时返回 `COMMIT_OUTCOME_UNKNOWN`。一旦已经进入 `Utility.trashItem`，其金币累计、特殊物品、成就检查、音效与第三方回调无法由本能力证明完整撤销；此后发生异常或后置条件无法确认时同样必须直接返回 `COMMIT_OUTCOME_UNKNOWN`，由 MCP 投影为不可重试的 unknown，不得通过写回 Slot 或金币把它降级成确定失败。
+- Deadline 在提交前到达时必须零副作用；`Utility.trashItem` 已执行后不得先报告超时再继续写入。线路在提交后、确认前断开时，MCP 只能返回 `unknown`，调用方必须先重新查询背包和金币，禁止自动重放。
+
 ### `craft_item`
 
 - 请求必须提供当前精确原版非烹饪 Crafting 页签发的 Recipe Ref、当前 UI Revision 与 `1..25` 的制作轮数。能力不接受配方名称，也不重新构造配方；Recipe Ref 必须仍绑定同一菜单、页面、组件和原版 `CraftingRecipe` 对象。

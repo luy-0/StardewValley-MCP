@@ -25,7 +25,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChJjYXBhYmlsaXRpZXMucHJvdG8SFXN0YXJkZXdfdmFsbGV5Lm1jcC52MRoN",
-            "YWN0aW9ucy5wcm90bxoMY29tbW9uLnByb3RvGg1xdWVyaWVzLnByb3RvIpML",
+            "YWN0aW9ucy5wcm90bxoMY29tbW9uLnByb3RvGg1xdWVyaWVzLnByb3RvIukL",
             "Cg5Db21tYW5kUmVxdWVzdBISCgpjb21tYW5kX2lkGAEgASgJEhIKCnRpbWVv",
             "dXRfbXMYAiABKA0SMAoDc2F5GAogASgLMiEuc3RhcmRld192YWxsZXkubWNw",
             "LnYxLlNheVJlcXVlc3RIABI0CgVlbW90ZRgLIAEoCzIjLnN0YXJkZXdfdmFs",
@@ -48,73 +48,77 @@ namespace StardewValleyMcp.Protocol.V1 {
             "b3ZlSW52ZW50b3J5SXRlbVJlcXVlc3RIABI9CgpjcmFmdF9pdGVtGBcgASgL",
             "Micuc3RhcmRld192YWxsZXkubWNwLnYxLkNyYWZ0SXRlbVJlcXVlc3RIABJM",
             "ChJwdXJjaGFzZV9zaG9wX2l0ZW0YGCABKAsyLi5zdGFyZGV3X3ZhbGxleS5t",
-            "Y3AudjEuUHVyY2hhc2VTaG9wSXRlbVJlcXVlc3RIABJDCg1xdWVyeV9ydW50",
-            "aW1lGB4gASgLMiouc3RhcmRld192YWxsZXkubWNwLnYxLlF1ZXJ5UnVudGlt",
-            "ZVJlcXVlc3RIABI/CgtxdWVyeV93b3JsZBgfIAEoCzIoLnN0YXJkZXdfdmFs",
-            "bGV5Lm1jcC52MS5RdWVyeVdvcmxkUmVxdWVzdEgAEkcKD3F1ZXJ5X2ludmVu",
-            "dG9yeRggIAEoCzIsLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5RdWVyeUludmVu",
-            "dG9yeVJlcXVlc3RIABI5CghxdWVyeV91aRghIAEoCzIlLnN0YXJkZXdfdmFs",
-            "bGV5Lm1jcC52MS5RdWVyeVVpUmVxdWVzdEgAEjgKB2luc3BlY3QYIiABKAsy",
-            "JS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuSW5zcGVjdFJlcXVlc3RIABJDCg1x",
-            "dWVyeV9wbGF5ZXJzGCMgASgLMiouc3RhcmRld192YWxsZXkubWNwLnYxLlF1",
-            "ZXJ5UGxheWVyc1JlcXVlc3RIAEILCglvcGVyYXRpb24i1QoKEENhcGFiaWxp",
-            "dHlSZXN1bHQSLwoDc2F5GAogASgLMiAuc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LlNheVJlc3VsdEgAEjMKBWVtb3RlGAsgASgLMiIuc3RhcmRld192YWxsZXku",
-            "bWNwLnYxLkVtb3RlUmVzdWx0SAASMQoEZmFjZRgMIAEoCzIhLnN0YXJkZXdf",
-            "dmFsbGV5Lm1jcC52MS5GYWNlUmVzdWx0SAASOQoIbmF2aWdhdGUYDSABKAsy",
-            "JS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuTmF2aWdhdGVSZXN1bHRIABI5Cghp",
-            "bnRlcmFjdBgOIAEoCzIlLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5JbnRlcmFj",
-            "dFJlc3VsdEgAEjgKCHVzZV90b29sGA8gASgLMiQuc3RhcmRld192YWxsZXku",
-            "bWNwLnYxLlVzZVRvb2xSZXN1bHRIABIzCgVlcXVpcBgQIAEoCzIiLnN0YXJk",
-            "ZXdfdmFsbGV5Lm1jcC52MS5FcXVpcFJlc3VsdEgAEjoKCW9wZW5fbWVudRgR",
-            "IAEoCzIlLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5PcGVuTWVudVJlc3VsdEgA",
-            "Ej4KC2FjdGl2YXRlX3VpGBIgASgLMicuc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LkFjdGl2YXRlVWlSZXN1bHRIABI8CgpjbG9zZV9tZW51GBMgASgLMiYuc3Rh",
-            "cmRld192YWxsZXkubWNwLnYxLkNsb3NlTWVudVJlc3VsdEgAElUKF3RyYW5z",
-            "ZmVyX2ludmVudG9yeV9pdGVtGBQgASgLMjIuc3RhcmRld192YWxsZXkubWNw",
-            "LnYxLlRyYW5zZmVySW52ZW50b3J5SXRlbVJlc3VsdEgAEksKEnNldF9lcXVp",
-            "cG1lbnRfc2xvdBgVIAEoCzItLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5TZXRF",
-            "cXVpcG1lbnRTbG90UmVzdWx0SAASTQoTbW92ZV9pbnZlbnRvcnlfaXRlbRgW",
-            "IAEoCzIuLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5Nb3ZlSW52ZW50b3J5SXRl",
-            "bVJlc3VsdEgAEjwKCmNyYWZ0X2l0ZW0YFyABKAsyJi5zdGFyZGV3X3ZhbGxl",
-            "eS5tY3AudjEuQ3JhZnRJdGVtUmVzdWx0SAASSwoScHVyY2hhc2Vfc2hvcF9p",
-            "dGVtGBggASgLMi0uc3RhcmRld192YWxsZXkubWNwLnYxLlB1cmNoYXNlU2hv",
-            "cEl0ZW1SZXN1bHRIABJCCg1xdWVyeV9ydW50aW1lGB4gASgLMikuc3RhcmRl",
-            "d192YWxsZXkubWNwLnYxLlF1ZXJ5UnVudGltZVJlc3VsdEgAEj4KC3F1ZXJ5",
-            "X3dvcmxkGB8gASgLMicuc3RhcmRld192YWxsZXkubWNwLnYxLlF1ZXJ5V29y",
-            "bGRSZXN1bHRIABJGCg9xdWVyeV9pbnZlbnRvcnkYICABKAsyKy5zdGFyZGV3",
-            "X3ZhbGxleS5tY3AudjEuUXVlcnlJbnZlbnRvcnlSZXN1bHRIABI4CghxdWVy",
-            "eV91aRghIAEoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5RdWVyeVVpUmVz",
-            "dWx0SAASNwoHaW5zcGVjdBgiIAEoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
-            "MS5JbnNwZWN0UmVzdWx0SAASQgoNcXVlcnlfcGxheWVycxgjIAEoCzIpLnN0",
-            "YXJkZXdfdmFsbGV5Lm1jcC52MS5RdWVyeVBsYXllcnNSZXN1bHRIAEIICgZy",
-            "ZXN1bHQijgIKDENvbW1hbmRFdmVudBISCgpjb21tYW5kX2lkGAEgASgJEjIK",
-            "BXN0YXRlGAIgASgOMiMuc3RhcmRld192YWxsZXkubWNwLnYxLkNvbW1hbmRT",
-            "dGF0ZRINCgVwaGFzZRgDIAEoCRIdChBwcm9ncmVzc19wZXJjZW50GAQgASgN",
-            "SAGIAQESOQoGcmVzdWx0GAogASgLMicuc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LkNhcGFiaWxpdHlSZXN1bHRIABItCgVlcnJvchgLIAEoCzIcLnN0YXJkZXdf",
-            "dmFsbGV5Lm1jcC52MS5FcnJvckgAQgkKB291dGNvbWVCEwoRX3Byb2dyZXNz",
-            "X3BlcmNlbnQiOgoUQ2FuY2VsQ29tbWFuZFJlcXVlc3QSEgoKY29tbWFuZF9p",
-            "ZBgBIAEoCRIOCgZyZWFzb24YAiABKAkirwEKFUNhbmNlbENvbW1hbmRSZXNw",
-            "b25zZRISCgpjb21tYW5kX2lkGAEgASgJEhAKCGFjY2VwdGVkGAIgASgIEjQK",
-            "B2N1cnJlbnQYAyABKAsyIy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQ29tbWFu",
-            "ZEV2ZW50EjAKBWVycm9yGAQgASgLMhwuc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LkVycm9ySACIAQFCCAoGX2Vycm9yIi0KF0dldENvbW1hbmRTdGF0dXNSZXF1",
-            "ZXN0EhIKCmNvbW1hbmRfaWQYASABKAkihAEKGEdldENvbW1hbmRTdGF0dXNS",
-            "ZXNwb25zZRISCgpjb21tYW5kX2lkGAEgASgJEg0KBWZvdW5kGAIgASgIEjkK",
-            "B2N1cnJlbnQYAyABKAsyIy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQ29tbWFu",
-            "ZEV2ZW50SACIAQFCCgoIX2N1cnJlbnQq1QEKDENvbW1hbmRTdGF0ZRIdChlD",
-            "T01NQU5EX1NUQVRFX1VOU1BFQ0lGSUVEEAASGgoWQ09NTUFORF9TVEFURV9B",
-            "Q0NFUFRFRBABEhkKFUNPTU1BTkRfU1RBVEVfUlVOTklORxACEhsKF0NPTU1B",
-            "TkRfU1RBVEVfU1VDQ0VFREVEEAMSGAoUQ09NTUFORF9TVEFURV9GQUlMRUQQ",
-            "BBIbChdDT01NQU5EX1NUQVRFX0NBTkNFTExFRBAFEhsKF0NPTU1BTkRfU1RB",
-            "VEVfVElNRURfT1VUEAZCH6oCHFN0YXJkZXdWYWxsZXlNY3AuUHJvdG9jb2wu",
-            "VjFiBnByb3RvMw=="));
+            "Y3AudjEuUHVyY2hhc2VTaG9wSXRlbVJlcXVlc3RIABJUChZkaXNjYXJkX2lu",
+            "dmVudG9yeV9pdGVtGBkgASgLMjIuc3RhcmRld192YWxsZXkubWNwLnYxLkRp",
+            "c2NhcmRJbnZlbnRvcnlJdGVtUmVxdWVzdEgAEkMKDXF1ZXJ5X3J1bnRpbWUY",
+            "HiABKAsyKi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUXVlcnlSdW50aW1lUmVx",
+            "dWVzdEgAEj8KC3F1ZXJ5X3dvcmxkGB8gASgLMiguc3RhcmRld192YWxsZXku",
+            "bWNwLnYxLlF1ZXJ5V29ybGRSZXF1ZXN0SAASRwoPcXVlcnlfaW52ZW50b3J5",
+            "GCAgASgLMiwuc3RhcmRld192YWxsZXkubWNwLnYxLlF1ZXJ5SW52ZW50b3J5",
+            "UmVxdWVzdEgAEjkKCHF1ZXJ5X3VpGCEgASgLMiUuc3RhcmRld192YWxsZXku",
+            "bWNwLnYxLlF1ZXJ5VWlSZXF1ZXN0SAASOAoHaW5zcGVjdBgiIAEoCzIlLnN0",
+            "YXJkZXdfdmFsbGV5Lm1jcC52MS5JbnNwZWN0UmVxdWVzdEgAEkMKDXF1ZXJ5",
+            "X3BsYXllcnMYIyABKAsyKi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUXVlcnlQ",
+            "bGF5ZXJzUmVxdWVzdEgAQgsKCW9wZXJhdGlvbiKqCwoQQ2FwYWJpbGl0eVJl",
+            "c3VsdBIvCgNzYXkYCiABKAsyIC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuU2F5",
+            "UmVzdWx0SAASMwoFZW1vdGUYCyABKAsyIi5zdGFyZGV3X3ZhbGxleS5tY3Au",
+            "djEuRW1vdGVSZXN1bHRIABIxCgRmYWNlGAwgASgLMiEuc3RhcmRld192YWxs",
+            "ZXkubWNwLnYxLkZhY2VSZXN1bHRIABI5CghuYXZpZ2F0ZRgNIAEoCzIlLnN0",
+            "YXJkZXdfdmFsbGV5Lm1jcC52MS5OYXZpZ2F0ZVJlc3VsdEgAEjkKCGludGVy",
+            "YWN0GA4gASgLMiUuc3RhcmRld192YWxsZXkubWNwLnYxLkludGVyYWN0UmVz",
+            "dWx0SAASOAoIdXNlX3Rvb2wYDyABKAsyJC5zdGFyZGV3X3ZhbGxleS5tY3Au",
+            "djEuVXNlVG9vbFJlc3VsdEgAEjMKBWVxdWlwGBAgASgLMiIuc3RhcmRld192",
+            "YWxsZXkubWNwLnYxLkVxdWlwUmVzdWx0SAASOgoJb3Blbl9tZW51GBEgASgL",
+            "MiUuc3RhcmRld192YWxsZXkubWNwLnYxLk9wZW5NZW51UmVzdWx0SAASPgoL",
+            "YWN0aXZhdGVfdWkYEiABKAsyJy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQWN0",
+            "aXZhdGVVaVJlc3VsdEgAEjwKCmNsb3NlX21lbnUYEyABKAsyJi5zdGFyZGV3",
+            "X3ZhbGxleS5tY3AudjEuQ2xvc2VNZW51UmVzdWx0SAASVQoXdHJhbnNmZXJf",
+            "aW52ZW50b3J5X2l0ZW0YFCABKAsyMi5zdGFyZGV3X3ZhbGxleS5tY3AudjEu",
+            "VHJhbnNmZXJJbnZlbnRvcnlJdGVtUmVzdWx0SAASSwoSc2V0X2VxdWlwbWVu",
+            "dF9zbG90GBUgASgLMi0uc3RhcmRld192YWxsZXkubWNwLnYxLlNldEVxdWlw",
+            "bWVudFNsb3RSZXN1bHRIABJNChNtb3ZlX2ludmVudG9yeV9pdGVtGBYgASgL",
+            "Mi4uc3RhcmRld192YWxsZXkubWNwLnYxLk1vdmVJbnZlbnRvcnlJdGVtUmVz",
+            "dWx0SAASPAoKY3JhZnRfaXRlbRgXIAEoCzImLnN0YXJkZXdfdmFsbGV5Lm1j",
+            "cC52MS5DcmFmdEl0ZW1SZXN1bHRIABJLChJwdXJjaGFzZV9zaG9wX2l0ZW0Y",
+            "GCABKAsyLS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUHVyY2hhc2VTaG9wSXRl",
+            "bVJlc3VsdEgAElMKFmRpc2NhcmRfaW52ZW50b3J5X2l0ZW0YGSABKAsyMS5z",
+            "dGFyZGV3X3ZhbGxleS5tY3AudjEuRGlzY2FyZEludmVudG9yeUl0ZW1SZXN1",
+            "bHRIABJCCg1xdWVyeV9ydW50aW1lGB4gASgLMikuc3RhcmRld192YWxsZXku",
+            "bWNwLnYxLlF1ZXJ5UnVudGltZVJlc3VsdEgAEj4KC3F1ZXJ5X3dvcmxkGB8g",
+            "ASgLMicuc3RhcmRld192YWxsZXkubWNwLnYxLlF1ZXJ5V29ybGRSZXN1bHRI",
+            "ABJGCg9xdWVyeV9pbnZlbnRvcnkYICABKAsyKy5zdGFyZGV3X3ZhbGxleS5t",
+            "Y3AudjEuUXVlcnlJbnZlbnRvcnlSZXN1bHRIABI4CghxdWVyeV91aRghIAEo",
+            "CzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5RdWVyeVVpUmVzdWx0SAASNwoH",
+            "aW5zcGVjdBgiIAEoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5JbnNwZWN0",
+            "UmVzdWx0SAASQgoNcXVlcnlfcGxheWVycxgjIAEoCzIpLnN0YXJkZXdfdmFs",
+            "bGV5Lm1jcC52MS5RdWVyeVBsYXllcnNSZXN1bHRIAEIICgZyZXN1bHQijgIK",
+            "DENvbW1hbmRFdmVudBISCgpjb21tYW5kX2lkGAEgASgJEjIKBXN0YXRlGAIg",
+            "ASgOMiMuc3RhcmRld192YWxsZXkubWNwLnYxLkNvbW1hbmRTdGF0ZRINCgVw",
+            "aGFzZRgDIAEoCRIdChBwcm9ncmVzc19wZXJjZW50GAQgASgNSAGIAQESOQoG",
+            "cmVzdWx0GAogASgLMicuc3RhcmRld192YWxsZXkubWNwLnYxLkNhcGFiaWxp",
+            "dHlSZXN1bHRIABItCgVlcnJvchgLIAEoCzIcLnN0YXJkZXdfdmFsbGV5Lm1j",
+            "cC52MS5FcnJvckgAQgkKB291dGNvbWVCEwoRX3Byb2dyZXNzX3BlcmNlbnQi",
+            "OgoUQ2FuY2VsQ29tbWFuZFJlcXVlc3QSEgoKY29tbWFuZF9pZBgBIAEoCRIO",
+            "CgZyZWFzb24YAiABKAkirwEKFUNhbmNlbENvbW1hbmRSZXNwb25zZRISCgpj",
+            "b21tYW5kX2lkGAEgASgJEhAKCGFjY2VwdGVkGAIgASgIEjQKB2N1cnJlbnQY",
+            "AyABKAsyIy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQ29tbWFuZEV2ZW50EjAK",
+            "BWVycm9yGAQgASgLMhwuc3RhcmRld192YWxsZXkubWNwLnYxLkVycm9ySACI",
+            "AQFCCAoGX2Vycm9yIi0KF0dldENvbW1hbmRTdGF0dXNSZXF1ZXN0EhIKCmNv",
+            "bW1hbmRfaWQYASABKAkihAEKGEdldENvbW1hbmRTdGF0dXNSZXNwb25zZRIS",
+            "Cgpjb21tYW5kX2lkGAEgASgJEg0KBWZvdW5kGAIgASgIEjkKB2N1cnJlbnQY",
+            "AyABKAsyIy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuQ29tbWFuZEV2ZW50SACI",
+            "AQFCCgoIX2N1cnJlbnQq1QEKDENvbW1hbmRTdGF0ZRIdChlDT01NQU5EX1NU",
+            "QVRFX1VOU1BFQ0lGSUVEEAASGgoWQ09NTUFORF9TVEFURV9BQ0NFUFRFRBAB",
+            "EhkKFUNPTU1BTkRfU1RBVEVfUlVOTklORxACEhsKF0NPTU1BTkRfU1RBVEVf",
+            "U1VDQ0VFREVEEAMSGAoUQ09NTUFORF9TVEFURV9GQUlMRUQQBBIbChdDT01N",
+            "QU5EX1NUQVRFX0NBTkNFTExFRBAFEhsKF0NPTU1BTkRfU1RBVEVfVElNRURf",
+            "T1VUEAZCH6oCHFN0YXJkZXdWYWxsZXlNY3AuUHJvdG9jb2wuVjFiBnByb3Rv",
+            "Mw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::StardewValleyMcp.Protocol.V1.ActionsReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.CommonReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.QueriesReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.CommandState), }, null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CommandRequest), global::StardewValleyMcp.Protocol.V1.CommandRequest.Parser, new[]{ "CommandId", "TimeoutMs", "Say", "Emote", "Face", "Navigate", "Interact", "UseTool", "Equip", "OpenMenu", "ActivateUi", "CloseMenu", "TransferInventoryItem", "SetEquipmentSlot", "MoveInventoryItem", "CraftItem", "PurchaseShopItem", "QueryRuntime", "QueryWorld", "QueryInventory", "QueryUi", "Inspect", "QueryPlayers" }, new[]{ "Operation" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CapabilityResult), global::StardewValleyMcp.Protocol.V1.CapabilityResult.Parser, new[]{ "Say", "Emote", "Face", "Navigate", "Interact", "UseTool", "Equip", "OpenMenu", "ActivateUi", "CloseMenu", "TransferInventoryItem", "SetEquipmentSlot", "MoveInventoryItem", "CraftItem", "PurchaseShopItem", "QueryRuntime", "QueryWorld", "QueryInventory", "QueryUi", "Inspect", "QueryPlayers" }, new[]{ "Result" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CommandRequest), global::StardewValleyMcp.Protocol.V1.CommandRequest.Parser, new[]{ "CommandId", "TimeoutMs", "Say", "Emote", "Face", "Navigate", "Interact", "UseTool", "Equip", "OpenMenu", "ActivateUi", "CloseMenu", "TransferInventoryItem", "SetEquipmentSlot", "MoveInventoryItem", "CraftItem", "PurchaseShopItem", "DiscardInventoryItem", "QueryRuntime", "QueryWorld", "QueryInventory", "QueryUi", "Inspect", "QueryPlayers" }, new[]{ "Operation" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CapabilityResult), global::StardewValleyMcp.Protocol.V1.CapabilityResult.Parser, new[]{ "Say", "Emote", "Face", "Navigate", "Interact", "UseTool", "Equip", "OpenMenu", "ActivateUi", "CloseMenu", "TransferInventoryItem", "SetEquipmentSlot", "MoveInventoryItem", "CraftItem", "PurchaseShopItem", "DiscardInventoryItem", "QueryRuntime", "QueryWorld", "QueryInventory", "QueryUi", "Inspect", "QueryPlayers" }, new[]{ "Result" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CommandEvent), global::StardewValleyMcp.Protocol.V1.CommandEvent.Parser, new[]{ "CommandId", "State", "Phase", "ProgressPercent", "Result", "Error" }, new[]{ "Outcome", "ProgressPercent" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CancelCommandRequest), global::StardewValleyMcp.Protocol.V1.CancelCommandRequest.Parser, new[]{ "CommandId", "Reason" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CancelCommandResponse), global::StardewValleyMcp.Protocol.V1.CancelCommandResponse.Parser, new[]{ "CommandId", "Accepted", "Current", "Error" }, new[]{ "Error" }, null, null, null),
@@ -221,6 +225,9 @@ namespace StardewValleyMcp.Protocol.V1 {
           break;
         case OperationOneofCase.PurchaseShopItem:
           PurchaseShopItem = other.PurchaseShopItem.Clone();
+          break;
+        case OperationOneofCase.DiscardInventoryItem:
+          DiscardInventoryItem = other.DiscardInventoryItem.Clone();
           break;
         case OperationOneofCase.QueryRuntime:
           QueryRuntime = other.QueryRuntime.Clone();
@@ -461,6 +468,18 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "discard_inventory_item" field.</summary>
+    public const int DiscardInventoryItemFieldNumber = 25;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemRequest DiscardInventoryItem {
+      get { return operationCase_ == OperationOneofCase.DiscardInventoryItem ? (global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemRequest) operation_ : null; }
+      set {
+        operation_ = value;
+        operationCase_ = value == null ? OperationOneofCase.None : OperationOneofCase.DiscardInventoryItem;
+      }
+    }
+
     /// <summary>Field number for the "query_runtime" field.</summary>
     public const int QueryRuntimeFieldNumber = 30;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -552,6 +571,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       MoveInventoryItem = 22,
       CraftItem = 23,
       PurchaseShopItem = 24,
+      DiscardInventoryItem = 25,
       QueryRuntime = 30,
       QueryWorld = 31,
       QueryInventory = 32,
@@ -605,6 +625,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (!object.Equals(MoveInventoryItem, other.MoveInventoryItem)) return false;
       if (!object.Equals(CraftItem, other.CraftItem)) return false;
       if (!object.Equals(PurchaseShopItem, other.PurchaseShopItem)) return false;
+      if (!object.Equals(DiscardInventoryItem, other.DiscardInventoryItem)) return false;
       if (!object.Equals(QueryRuntime, other.QueryRuntime)) return false;
       if (!object.Equals(QueryWorld, other.QueryWorld)) return false;
       if (!object.Equals(QueryInventory, other.QueryInventory)) return false;
@@ -636,6 +657,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (operationCase_ == OperationOneofCase.MoveInventoryItem) hash ^= MoveInventoryItem.GetHashCode();
       if (operationCase_ == OperationOneofCase.CraftItem) hash ^= CraftItem.GetHashCode();
       if (operationCase_ == OperationOneofCase.PurchaseShopItem) hash ^= PurchaseShopItem.GetHashCode();
+      if (operationCase_ == OperationOneofCase.DiscardInventoryItem) hash ^= DiscardInventoryItem.GetHashCode();
       if (operationCase_ == OperationOneofCase.QueryRuntime) hash ^= QueryRuntime.GetHashCode();
       if (operationCase_ == OperationOneofCase.QueryWorld) hash ^= QueryWorld.GetHashCode();
       if (operationCase_ == OperationOneofCase.QueryInventory) hash ^= QueryInventory.GetHashCode();
@@ -728,6 +750,10 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (operationCase_ == OperationOneofCase.PurchaseShopItem) {
         output.WriteRawTag(194, 1);
         output.WriteMessage(PurchaseShopItem);
+      }
+      if (operationCase_ == OperationOneofCase.DiscardInventoryItem) {
+        output.WriteRawTag(202, 1);
+        output.WriteMessage(DiscardInventoryItem);
       }
       if (operationCase_ == OperationOneofCase.QueryRuntime) {
         output.WriteRawTag(242, 1);
@@ -831,6 +857,10 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(194, 1);
         output.WriteMessage(PurchaseShopItem);
       }
+      if (operationCase_ == OperationOneofCase.DiscardInventoryItem) {
+        output.WriteRawTag(202, 1);
+        output.WriteMessage(DiscardInventoryItem);
+      }
       if (operationCase_ == OperationOneofCase.QueryRuntime) {
         output.WriteRawTag(242, 1);
         output.WriteMessage(QueryRuntime);
@@ -915,6 +945,9 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (operationCase_ == OperationOneofCase.PurchaseShopItem) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(PurchaseShopItem);
+      }
+      if (operationCase_ == OperationOneofCase.DiscardInventoryItem) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(DiscardInventoryItem);
       }
       if (operationCase_ == OperationOneofCase.QueryRuntime) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(QueryRuntime);
@@ -1042,6 +1075,12 @@ namespace StardewValleyMcp.Protocol.V1 {
             PurchaseShopItem = new global::StardewValleyMcp.Protocol.V1.PurchaseShopItemRequest();
           }
           PurchaseShopItem.MergeFrom(other.PurchaseShopItem);
+          break;
+        case OperationOneofCase.DiscardInventoryItem:
+          if (DiscardInventoryItem == null) {
+            DiscardInventoryItem = new global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemRequest();
+          }
+          DiscardInventoryItem.MergeFrom(other.DiscardInventoryItem);
           break;
         case OperationOneofCase.QueryRuntime:
           if (QueryRuntime == null) {
@@ -1241,6 +1280,15 @@ namespace StardewValleyMcp.Protocol.V1 {
             }
             input.ReadMessage(subBuilder);
             PurchaseShopItem = subBuilder;
+            break;
+          }
+          case 202: {
+            global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemRequest();
+            if (operationCase_ == OperationOneofCase.DiscardInventoryItem) {
+              subBuilder.MergeFrom(DiscardInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            DiscardInventoryItem = subBuilder;
             break;
           }
           case 242: {
@@ -1459,6 +1507,15 @@ namespace StardewValleyMcp.Protocol.V1 {
             PurchaseShopItem = subBuilder;
             break;
           }
+          case 202: {
+            global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemRequest();
+            if (operationCase_ == OperationOneofCase.DiscardInventoryItem) {
+              subBuilder.MergeFrom(DiscardInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            DiscardInventoryItem = subBuilder;
+            break;
+          }
           case 242: {
             global::StardewValleyMcp.Protocol.V1.QueryRuntimeRequest subBuilder = new global::StardewValleyMcp.Protocol.V1.QueryRuntimeRequest();
             if (operationCase_ == OperationOneofCase.QueryRuntime) {
@@ -1600,6 +1657,9 @@ namespace StardewValleyMcp.Protocol.V1 {
           break;
         case ResultOneofCase.PurchaseShopItem:
           PurchaseShopItem = other.PurchaseShopItem.Clone();
+          break;
+        case ResultOneofCase.DiscardInventoryItem:
+          DiscardInventoryItem = other.DiscardInventoryItem.Clone();
           break;
         case ResultOneofCase.QueryRuntime:
           QueryRuntime = other.QueryRuntime.Clone();
@@ -1810,6 +1870,18 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "discard_inventory_item" field.</summary>
+    public const int DiscardInventoryItemFieldNumber = 25;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemResult DiscardInventoryItem {
+      get { return resultCase_ == ResultOneofCase.DiscardInventoryItem ? (global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemResult) result_ : null; }
+      set {
+        result_ = value;
+        resultCase_ = value == null ? ResultOneofCase.None : ResultOneofCase.DiscardInventoryItem;
+      }
+    }
+
     /// <summary>Field number for the "query_runtime" field.</summary>
     public const int QueryRuntimeFieldNumber = 30;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1901,6 +1973,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       MoveInventoryItem = 22,
       CraftItem = 23,
       PurchaseShopItem = 24,
+      DiscardInventoryItem = 25,
       QueryRuntime = 30,
       QueryWorld = 31,
       QueryInventory = 32,
@@ -1952,6 +2025,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (!object.Equals(MoveInventoryItem, other.MoveInventoryItem)) return false;
       if (!object.Equals(CraftItem, other.CraftItem)) return false;
       if (!object.Equals(PurchaseShopItem, other.PurchaseShopItem)) return false;
+      if (!object.Equals(DiscardInventoryItem, other.DiscardInventoryItem)) return false;
       if (!object.Equals(QueryRuntime, other.QueryRuntime)) return false;
       if (!object.Equals(QueryWorld, other.QueryWorld)) return false;
       if (!object.Equals(QueryInventory, other.QueryInventory)) return false;
@@ -1981,6 +2055,7 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (resultCase_ == ResultOneofCase.MoveInventoryItem) hash ^= MoveInventoryItem.GetHashCode();
       if (resultCase_ == ResultOneofCase.CraftItem) hash ^= CraftItem.GetHashCode();
       if (resultCase_ == ResultOneofCase.PurchaseShopItem) hash ^= PurchaseShopItem.GetHashCode();
+      if (resultCase_ == ResultOneofCase.DiscardInventoryItem) hash ^= DiscardInventoryItem.GetHashCode();
       if (resultCase_ == ResultOneofCase.QueryRuntime) hash ^= QueryRuntime.GetHashCode();
       if (resultCase_ == ResultOneofCase.QueryWorld) hash ^= QueryWorld.GetHashCode();
       if (resultCase_ == ResultOneofCase.QueryInventory) hash ^= QueryInventory.GetHashCode();
@@ -2065,6 +2140,10 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (resultCase_ == ResultOneofCase.PurchaseShopItem) {
         output.WriteRawTag(194, 1);
         output.WriteMessage(PurchaseShopItem);
+      }
+      if (resultCase_ == ResultOneofCase.DiscardInventoryItem) {
+        output.WriteRawTag(202, 1);
+        output.WriteMessage(DiscardInventoryItem);
       }
       if (resultCase_ == ResultOneofCase.QueryRuntime) {
         output.WriteRawTag(242, 1);
@@ -2160,6 +2239,10 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(194, 1);
         output.WriteMessage(PurchaseShopItem);
       }
+      if (resultCase_ == ResultOneofCase.DiscardInventoryItem) {
+        output.WriteRawTag(202, 1);
+        output.WriteMessage(DiscardInventoryItem);
+      }
       if (resultCase_ == ResultOneofCase.QueryRuntime) {
         output.WriteRawTag(242, 1);
         output.WriteMessage(QueryRuntime);
@@ -2238,6 +2321,9 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (resultCase_ == ResultOneofCase.PurchaseShopItem) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(PurchaseShopItem);
+      }
+      if (resultCase_ == ResultOneofCase.DiscardInventoryItem) {
+        size += 2 + pb::CodedOutputStream.ComputeMessageSize(DiscardInventoryItem);
       }
       if (resultCase_ == ResultOneofCase.QueryRuntime) {
         size += 2 + pb::CodedOutputStream.ComputeMessageSize(QueryRuntime);
@@ -2359,6 +2445,12 @@ namespace StardewValleyMcp.Protocol.V1 {
             PurchaseShopItem = new global::StardewValleyMcp.Protocol.V1.PurchaseShopItemResult();
           }
           PurchaseShopItem.MergeFrom(other.PurchaseShopItem);
+          break;
+        case ResultOneofCase.DiscardInventoryItem:
+          if (DiscardInventoryItem == null) {
+            DiscardInventoryItem = new global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemResult();
+          }
+          DiscardInventoryItem.MergeFrom(other.DiscardInventoryItem);
           break;
         case ResultOneofCase.QueryRuntime:
           if (QueryRuntime == null) {
@@ -2550,6 +2642,15 @@ namespace StardewValleyMcp.Protocol.V1 {
             }
             input.ReadMessage(subBuilder);
             PurchaseShopItem = subBuilder;
+            break;
+          }
+          case 202: {
+            global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemResult subBuilder = new global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemResult();
+            if (resultCase_ == ResultOneofCase.DiscardInventoryItem) {
+              subBuilder.MergeFrom(DiscardInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            DiscardInventoryItem = subBuilder;
             break;
           }
           case 242: {
@@ -2758,6 +2859,15 @@ namespace StardewValleyMcp.Protocol.V1 {
             }
             input.ReadMessage(subBuilder);
             PurchaseShopItem = subBuilder;
+            break;
+          }
+          case 202: {
+            global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemResult subBuilder = new global::StardewValleyMcp.Protocol.V1.DiscardInventoryItemResult();
+            if (resultCase_ == ResultOneofCase.DiscardInventoryItem) {
+              subBuilder.MergeFrom(DiscardInventoryItem);
+            }
+            input.ReadMessage(subBuilder);
+            DiscardInventoryItem = subBuilder;
             break;
           }
           case 242: {

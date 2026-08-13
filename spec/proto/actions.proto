@@ -190,6 +190,23 @@ message MoveInventoryItemResult {
   string player_inventory_revision = 5;
 }
 
+message DiscardInventoryItemRequest {
+  Ref item_ref = 1;
+  uint32 quantity = 2;
+  string player_inventory_revision = 3;
+}
+
+message DiscardInventoryItemResult {
+  uint32 requested_quantity = 1;
+  uint32 discarded_quantity = 2;
+  uint32 source_slot_index = 3;
+  uint32 source_remaining_quantity = 4;
+  string player_inventory_revision = 5;
+  uint32 money_before = 6;
+  uint32 money_after = 7;
+  uint32 money_refunded = 8;
+}
+
 enum CraftItemStopReason {
   CRAFT_ITEM_STOP_REASON_UNSPECIFIED = 0;
   CRAFT_ITEM_STOP_REASON_COMPLETED = 1;

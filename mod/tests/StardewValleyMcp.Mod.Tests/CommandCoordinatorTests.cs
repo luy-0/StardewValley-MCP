@@ -274,6 +274,26 @@ public sealed class CommandCoordinatorTests
         });
     }
 
+    [TestCase(ErrorCode.ItemNotDiscardable)]
+    [TestCase(ErrorCode.CommitOutcomeUnknown)]
+    public void DiscardSpecificFailureCodesFromOtherCapabilitiesBecomeInternal(ErrorCode code)
+    {
+        var coordinator = NewCoordinator(new FakeClock(), new SpecificFailureHandler(code));
+        var events = new List<CommandEvent>();
+        coordinator.EventPublished += events.Add;
+        var request = RuntimeRequest("19191919-1919-4919-8919-191919191919");
+
+        coordinator.Submit(request);
+        coordinator.ReleaseAccepted(request.CommandId);
+        coordinator.Tick();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(events.Single().State, Is.EqualTo(CommandState.Failed));
+            Assert.That(events.Single().Error.Code, Is.EqualTo(ErrorCode.Internal));
+        });
+    }
+
     [Test]
     public void ActiveMutationTickAlsoAdvancesOneQueuedReadOnlyCommand()
     {
@@ -415,6 +435,22 @@ public sealed class CommandCoordinatorTests
                     LastConfirmedPosition = new WorldPosition { LocationId = "Farm", X = 3, Y = 4 },
                 },
             },
+        };
+    }
+
+    private sealed class SpecificFailureHandler : IImmediateCapabilityHandler
+    {
+        private readonly ErrorCode _code;
+
+        public SpecificFailureHandler(ErrorCode code) => _code = code;
+        public string Id => "query_runtime";
+        public CommandRequest.OperationOneofCase Operation => CommandRequest.OperationOneofCase.QueryRuntime;
+        public Error? Validate(CommandRequest request) => null;
+        public CommandEvent Execute(string commandId, CommandRequest request) => new()
+        {
+            CommandId = commandId,
+            State = CommandState.Failed,
+            Error = new Error { Code = _code, Message = "discard failure" },
         };
     }
 

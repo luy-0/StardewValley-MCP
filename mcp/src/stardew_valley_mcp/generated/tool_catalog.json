@@ -58,6 +58,25 @@
       "title": "制作物品"
     },
     {
+      "cancellable": true,
+      "contract_version": "1.0.0",
+      "default_timeout_ms": 10000,
+      "description": "使用玩家背包物品 Ref 与 Inventory Revision，通过游戏原生垃圾桶永久处理明确数量并报告金币返还。",
+      "destructive": true,
+      "execution": "long_running",
+      "id": "discard_inventory_item",
+      "max_timeout_ms": 30000,
+      "request": "DiscardInventoryItemRequest",
+      "required_scope": "game:write",
+      "result": "DiscardInventoryItemResult",
+      "risk": [
+        "changes_save",
+        "consumes_item"
+      ],
+      "side_effect": "mutating",
+      "title": "丢弃背包物品"
+    },
+    {
       "cancellable": false,
       "contract_version": "1.1.0",
       "default_timeout_ms": 5000,
@@ -673,6 +692,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -1107,6 +1148,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -1689,6 +1752,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -2108,6 +2193,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -2813,6 +2920,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -3221,6 +3350,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -3507,6 +3658,1095 @@
       "requestType": "CraftItemRequest",
       "resultType": "CraftItemResult",
       "title": "制作物品"
+    },
+    {
+      "annotations": {
+        "destructiveHint": true,
+        "idempotentHint": false,
+        "readOnlyHint": false
+      },
+      "capabilityId": "discard_inventory_item",
+      "description": "使用玩家背包物品 Ref 与 Inventory Revision，通过游戏原生垃圾桶永久处理明确数量并报告金币返还。",
+      "inputSchema": {
+        "$defs": {
+          "Ref": {
+            "additionalProperties": false,
+            "properties": {
+              "value": {
+                "maxLength": 512,
+                "minLength": 1,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "value"
+            ],
+            "type": "object"
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "additionalProperties": false,
+        "properties": {
+          "itemRef": {
+            "$ref": "#/$defs/Ref"
+          },
+          "playerInventoryRevision": {
+            "maxLength": 512,
+            "pattern": "^[0-9a-f]{64}$",
+            "type": "string"
+          },
+          "quantity": {
+            "maximum": 2147483647,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "itemRef",
+          "playerInventoryRevision",
+          "quantity"
+        ],
+        "type": "object"
+      },
+      "name": "stardew_discard_inventory_item",
+      "outputSchema": {
+        "$defs": {
+          "DiscardInventoryItemResult": {
+            "additionalProperties": false,
+            "properties": {
+              "discardedQuantity": {
+                "maximum": 2147483647,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "moneyAfter": {
+                "maximum": 2147483647,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "moneyBefore": {
+                "maximum": 2147483647,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "moneyRefunded": {
+                "maximum": 2147483647,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "playerInventoryRevision": {
+                "maxLength": 512,
+                "pattern": "^[0-9a-f]{64}$",
+                "type": "string"
+              },
+              "requestedQuantity": {
+                "maximum": 2147483647,
+                "minimum": 1,
+                "type": "integer"
+              },
+              "sourceRemainingQuantity": {
+                "maximum": 2147483647,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "sourceSlotIndex": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              }
+            },
+            "required": [
+              "discardedQuantity",
+              "moneyAfter",
+              "moneyBefore",
+              "moneyRefunded",
+              "playerInventoryRevision",
+              "requestedQuantity",
+              "sourceRemainingQuantity",
+              "sourceSlotIndex"
+            ],
+            "type": "object"
+          },
+          "FailedToolError": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "busy"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "capability_changed"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "capability_denied"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "command_cancelled"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "command_timeout"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "conflict"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "context_expired"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "execution_failed"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "internal_error"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "not_found"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "not_ready"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "out_of_range"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "route_unavailable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "stale_ref"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "unauthenticated"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "upstream_protocol_error"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "StardewToolError": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "busy"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "capability_changed"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "capability_denied"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "command_cancelled"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "command_timeout"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "conflict"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "context_expired"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "execution_failed"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "internal_error"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "not_found"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "not_ready"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "out_of_range"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "route_unavailable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "stale_ref"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "unauthenticated"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryAfterMs": {
+                    "maximum": 180000,
+                    "minimum": 1,
+                    "type": "integer"
+                  },
+                  "retryable": {
+                    "const": true
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "unknown_outcome"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "upstream_protocol_error"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              }
+            ]
+          },
+          "UnknownToolError": {
+            "oneOf": [
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "unknown_outcome"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              }
+            ]
+          }
+        },
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "additionalProperties": false,
+            "properties": {
+              "commandId": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "output": {
+                "$ref": "#/$defs/DiscardInventoryItemResult"
+              },
+              "status": {
+                "const": "succeeded"
+              }
+            },
+            "required": [
+              "status",
+              "commandId",
+              "output"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "commandId": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "error": {
+                "$ref": "#/$defs/FailedToolError"
+              },
+              "status": {
+                "const": "failed"
+              }
+            },
+            "required": [
+              "status",
+              "commandId",
+              "error"
+            ],
+            "type": "object"
+          },
+          {
+            "additionalProperties": false,
+            "properties": {
+              "commandId": {
+                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$",
+                "type": "string"
+              },
+              "error": {
+                "$ref": "#/$defs/UnknownToolError"
+              },
+              "status": {
+                "const": "unknown"
+              }
+            },
+            "required": [
+              "status",
+              "commandId",
+              "error"
+            ],
+            "type": "object"
+          }
+        ]
+      },
+      "requestType": "DiscardInventoryItemRequest",
+      "resultType": "DiscardInventoryItemResult",
+      "title": "丢弃背包物品"
     },
     {
       "annotations": {
@@ -3833,6 +5073,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -4220,6 +5482,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -4867,6 +6151,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -5344,6 +6650,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -5945,6 +7273,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -6332,6 +7682,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -7148,7 +8520,9 @@
                   "idempotency_record_expired",
                   "execution_failed",
                   "protocol_violation",
-                  "internal"
+                  "internal",
+                  "item_not_discardable",
+                  "commit_outcome_unknown"
                 ],
                 "type": "string"
               },
@@ -7387,6 +8761,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -9195,6 +10591,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -10652,6 +12070,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -11079,6 +12519,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -11712,6 +13174,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -12133,6 +13617,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -13002,6 +14508,44 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "details": {
@@ -13707,6 +15251,44 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "details": {
+                    "additionalProperties": false,
+                    "oneOf": [
+                      {
+                        "required": [
+                          "navigation"
+                        ]
+                      }
+                    ],
+                    "properties": {
+                      "navigation": {
+                        "$ref": "#/$defs/NavigationFailureContext"
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "details": {
                     "additionalProperties": false,
@@ -14476,6 +16058,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -14907,6 +16511,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -15509,6 +17135,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -16039,6 +17687,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -16631,6 +18301,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -17245,6 +18937,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -17769,6 +19483,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -18405,6 +20141,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -19001,6 +20759,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -19568,6 +21348,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -20373,6 +22175,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -20912,6 +22736,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -22195,6 +24041,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -23341,6 +25209,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -24782,6 +26672,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -25183,6 +27095,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -25808,6 +27742,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -26326,6 +28282,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -26948,6 +28926,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -27335,6 +29335,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,
@@ -28032,6 +30054,28 @@
                 "additionalProperties": false,
                 "properties": {
                   "code": {
+                    "const": "item_not_discardable"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
                     "const": "not_found"
                   },
                   "message": {
@@ -28439,6 +30483,28 @@
                 "properties": {
                   "code": {
                     "const": "invalid_arguments"
+                  },
+                  "message": {
+                    "maxLength": 512,
+                    "minLength": 1,
+                    "type": "string"
+                  },
+                  "retryable": {
+                    "const": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "message",
+                  "retryable"
+                ],
+                "type": "object"
+              },
+              {
+                "additionalProperties": false,
+                "properties": {
+                  "code": {
+                    "const": "item_not_discardable"
                   },
                   "message": {
                     "maxLength": 512,

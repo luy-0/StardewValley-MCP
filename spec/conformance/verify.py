@@ -133,7 +133,7 @@ def verify_manifest_against_proto(manifest: dict[str, Any], messages: dict[str, 
     capabilities = manifest["capabilities"]
     ids = [item["id"] for item in capabilities]
     require(len(ids) == len(set(ids)), "Manifest capability ID 重复")
-    require(len(ids) == 21, f"V1 候选能力数量应为 21，实际为 {len(ids)}")
+    require(len(ids) == 22, f"V1 候选能力数量应为 22，实际为 {len(ids)}")
     requests = oneof_fields(messages["CommandRequest"], "operation")
     results = oneof_fields(messages["CapabilityResult"], "result")
     require(set(ids) == set(requests) == set(results), "Manifest、Request、Result 能力集合不一致")
@@ -161,6 +161,16 @@ def verify_error_map(enums: dict[str, Any]) -> None:
     require(mappings["ERROR_CODE_DEADLINE_EXCEEDED"]["tool_code"] == "command_timeout", "Deadline 映射错误")
     require(mappings["ERROR_CODE_CANCELLED"]["tool_code"] == "command_cancelled", "Cancel 映射错误")
     require(mappings["ERROR_CODE_IDEMPOTENCY_RECORD_EXPIRED"]["outcome"] == "unknown", "幂等过期必须投影为 unknown")
+    require(
+        mappings["ERROR_CODE_ITEM_NOT_DISCARDABLE"]
+        == {"tool_code": "item_not_discardable", "outcome": "failed", "retryable": False},
+        "不可丢弃物品错误映射无效",
+    )
+    require(
+        mappings["ERROR_CODE_COMMIT_OUTCOME_UNKNOWN"]
+        == {"tool_code": "unknown_outcome", "outcome": "unknown", "retryable": False},
+        "提交结果未知错误映射无效",
+    )
     local_errors = error_map.get("local_errors", {})
     require(isinstance(local_errors, dict), "MCP local_errors 必须是对象")
     require("route_unavailable" in local_errors, "MCP 本地路由错误未显式定义")
@@ -182,6 +192,13 @@ def verify_tool_schema_catalog(manifest: dict[str, Any]) -> None:
         read_only = next(item["side_effect"] == "read_only" for item in manifest["capabilities"] if f"stardew_{item['id']}" == name)
         require(tool["annotations"]["idempotentHint"] == read_only, f"Tool 幂等 Annotation 错误: {name}")
 
+    discard_annotations = tools["stardew_discard_inventory_item"]["annotations"]
+    require(
+        discard_annotations
+        == {"readOnlyHint": False, "destructiveHint": True, "idempotentHint": False},
+        "discard_inventory_item Tool Annotation 错误",
+    )
+
     command_id = "a3e96c3f-5e71-4f43-8053-111111111111"
     invalid_cases = [
         (tools["stardew_say"]["inputSchema"], {"content": "a\0b"}, "say 输入接受 NUL"),
@@ -193,6 +210,21 @@ def verify_tool_schema_catalog(manifest: dict[str, Any]) -> None:
             tools["stardew_inspect"]["outputSchema"],
             {"status": "succeeded", "commandId": command_id, "output": {"items": [{"resolution": {"ref": {"value": "ref-1"}, "status": "resolved", "kind": "world_entity"}}], "warnings": []}},
             "Resolved Inspect 接受缺失 Fact",
+        ),
+        (
+            tools["stardew_discard_inventory_item"]["inputSchema"],
+            {"itemRef": {"value": "item-1"}, "quantity": 0, "playerInventoryRevision": "0" * 64},
+            "discard_inventory_item 接受零数量",
+        ),
+        (
+            tools["stardew_discard_inventory_item"]["inputSchema"],
+            {"itemRef": {"value": "item-1"}, "quantity": -1, "playerInventoryRevision": "0" * 64},
+            "discard_inventory_item 接受负数量",
+        ),
+        (
+            tools["stardew_discard_inventory_item"]["inputSchema"],
+            {"itemRef": {"value": "item-1"}, "quantity": 2147483648, "playerInventoryRevision": "0" * 64},
+            "discard_inventory_item 接受数量上溢",
         ),
     ]
     for schema, instance, message in invalid_cases:
@@ -210,6 +242,7 @@ def verify_tool_schema_catalog(manifest: dict[str, Any]) -> None:
         "stardew_transfer_inventory_item": {"direction": "player_to_container", "itemRef": {"value": "item-1"}, "quantity": 1, "uiRevision": revision, "playerInventoryRevision": revision, "containerInventoryRevision": revision},
         "stardew_set_equipment_slot": {"equipmentSlotRef": {"value": "equipment-1"}, "clear": True, "uiRevision": revision, "playerInventoryRevision": revision},
         "stardew_move_inventory_item": {"itemRef": {"value": "item-1"}, "destinationSlotRef": {"value": "slot-1"}, "uiRevision": revision, "playerInventoryRevision": revision},
+        "stardew_discard_inventory_item": {"itemRef": {"value": "item-1"}, "quantity": 1, "playerInventoryRevision": revision},
         "stardew_craft_item": {"recipeRef": {"value": "recipe-1"}, "craftCount": 1, "uiRevision": revision},
         "stardew_purchase_shop_item": {"saleRef": {"value": "sale-1"}, "purchaseCount": 1, "uiRevision": revision},
         "stardew_open_menu": {"menu": "inventory"},
@@ -232,6 +265,22 @@ def verify_tool_schema_catalog(manifest: dict[str, Any]) -> None:
         validator = Draft202012Validator(tool["outputSchema"])
         validator.validate(failed)
         validator.validate(unknown)
+
+    discard_validator = Draft202012Validator(tools["stardew_discard_inventory_item"]["outputSchema"])
+    discard_validator.validate(
+        {
+            "status": "failed",
+            "commandId": command_id,
+            "error": {"code": "item_not_discardable", "message": "该物品不能进入原生背包垃圾桶", "retryable": False},
+        }
+    )
+    discard_validator.validate(
+        {
+            "status": "unknown",
+            "commandId": command_id,
+            "error": {"code": "unknown_outcome", "message": "原生垃圾桶提交结果无法确认", "retryable": False},
+        }
+    )
 
     navigation_failure = {
         "status": "failed",
@@ -301,7 +350,7 @@ def verify_action_fixtures() -> None:
     tools = {tool["capabilityId"]: tool for tool in catalog["tools"]}
     expected = {
         "say", "emote", "face", "navigate", "interact",
-        "use_tool", "equip", "transfer_inventory_item", "set_equipment_slot", "move_inventory_item", "craft_item", "purchase_shop_item", "open_menu", "activate_ui", "close_menu",
+        "use_tool", "equip", "transfer_inventory_item", "set_equipment_slot", "move_inventory_item", "discard_inventory_item", "craft_item", "purchase_shop_item", "open_menu", "activate_ui", "close_menu",
     }
     paths = index.get("actionFixtures", [])
     require(len(paths) == len(set(paths)), "动作 Fixture 路径重复")
@@ -360,6 +409,27 @@ def verify_action_fixtures() -> None:
             require(
                 document["failed"]["error"]["code"] == "invalid_arguments",
                 "use_tool Fixture 未固定不支持工具错误",
+            )
+        if capability == "discard_inventory_item":
+            output = document["succeeded"]["output"]
+            require(
+                output["requestedQuantity"] == output["discardedQuantity"] == document["fullInput"]["quantity"],
+                "discard_inventory_item Fixture 的请求数量与实际丢弃数量不一致",
+            )
+            require(output["sourceRemainingQuantity"] > 0, "discard_inventory_item Fixture 未固定部分堆叠语义")
+            require(output["moneyRefunded"] > 0, "discard_inventory_item Fixture 必须覆盖非零垃圾桶返金")
+            require(
+                output["moneyAfter"] == output["moneyBefore"] + output["moneyRefunded"],
+                "discard_inventory_item Fixture 的金币前后值与返还额不一致",
+            )
+            require(
+                document["failed"]["error"]
+                == {
+                    "code": "item_not_discardable",
+                    "message": "游戏本体不允许将该物品放入背包垃圾桶",
+                    "retryable": False,
+                },
+                "discard_inventory_item Fixture 未固定原生不可丢弃错误",
             )
 
 

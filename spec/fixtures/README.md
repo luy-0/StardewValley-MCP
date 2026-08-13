@@ -47,7 +47,7 @@ fixtures/v1/
 
 `profiles.observation` 固定六项观察能力集合（`query_runtime`、`query_players`、`query_world`、`query_inventory`、`query_ui`、`inspect`）及其独立 digest/HMAC/Fence。每项都有独立成功与失败生命周期；players 固定自己、在线队友与离线农场工的字段边界，world、inventory、inspect 分别保留最小和完整成功投影，完整 inventory 同时固定语言无关的 `toolKind`，UI 覆盖无菜单、顶层菜单、Inventory 页、Crafting 页、普通对话、睡眠确认与箱子菜单 Snapshot。睡眠确认场景固定语言无关的 `dialogueKind` 及两个响应元素，并通过 Python 与 C# Proto 往返校验。它是协议 Contract Fixture；实际 ServerReady 必须仅由已注册 Handler ID 从静态 Catalog 生成。
 
-`actionFixtures` 为 V1 的十三项变更能力各保留一个聚合文件。每个文件固定最小输入、完整输入、非法输入、`ACCEPTED` 检查点、成功 Tool 结果和失败 Tool 结果；这样可以覆盖能力契约，又不会演变成每项能力六个平铺文件。`navigate`、`interact`、`use_tool`、`transfer_inventory_item`、`set_equipment_slot` 与 `move_inventory_item` 的文件还固定各自的长时执行门禁与失败语义。
+`actionFixtures` 为 V1 的十六项变更能力各保留一个聚合文件。每个文件固定最小输入、完整输入、非法输入、`ACCEPTED` 检查点、成功 Tool 结果和失败 Tool 结果；这样可以覆盖能力契约，又不会演变成每项能力六个平铺文件。`navigate`、`interact`、`use_tool`、`transfer_inventory_item`、`set_equipment_slot`、`move_inventory_item` 与 `discard_inventory_item` 的文件还固定各自的长时执行门禁与失败语义。
 
 ## 为什么包含 HMAC Fixture
 

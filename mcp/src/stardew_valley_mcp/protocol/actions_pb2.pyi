@@ -300,6 +300,36 @@ class MoveInventoryItemResult(_message.Message):
     player_inventory_revision: str
     def __init__(self, source_slot_index: _Optional[int] = ..., destination_slot_index: _Optional[int] = ..., changed: _Optional[bool] = ..., swapped: _Optional[bool] = ..., player_inventory_revision: _Optional[str] = ...) -> None: ...
 
+class DiscardInventoryItemRequest(_message.Message):
+    __slots__ = ("item_ref", "quantity", "player_inventory_revision")
+    ITEM_REF_FIELD_NUMBER: _ClassVar[int]
+    QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    item_ref: _refs_pb2.Ref
+    quantity: int
+    player_inventory_revision: str
+    def __init__(self, item_ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., quantity: _Optional[int] = ..., player_inventory_revision: _Optional[str] = ...) -> None: ...
+
+class DiscardInventoryItemResult(_message.Message):
+    __slots__ = ("requested_quantity", "discarded_quantity", "source_slot_index", "source_remaining_quantity", "player_inventory_revision", "money_before", "money_after", "money_refunded")
+    REQUESTED_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    DISCARDED_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    SOURCE_SLOT_INDEX_FIELD_NUMBER: _ClassVar[int]
+    SOURCE_REMAINING_QUANTITY_FIELD_NUMBER: _ClassVar[int]
+    PLAYER_INVENTORY_REVISION_FIELD_NUMBER: _ClassVar[int]
+    MONEY_BEFORE_FIELD_NUMBER: _ClassVar[int]
+    MONEY_AFTER_FIELD_NUMBER: _ClassVar[int]
+    MONEY_REFUNDED_FIELD_NUMBER: _ClassVar[int]
+    requested_quantity: int
+    discarded_quantity: int
+    source_slot_index: int
+    source_remaining_quantity: int
+    player_inventory_revision: str
+    money_before: int
+    money_after: int
+    money_refunded: int
+    def __init__(self, requested_quantity: _Optional[int] = ..., discarded_quantity: _Optional[int] = ..., source_slot_index: _Optional[int] = ..., source_remaining_quantity: _Optional[int] = ..., player_inventory_revision: _Optional[str] = ..., money_before: _Optional[int] = ..., money_after: _Optional[int] = ..., money_refunded: _Optional[int] = ...) -> None: ...
+
 class CraftingMaterialConsumption(_message.Message):
     __slots__ = ("ingredient_key", "quantity")
     INGREDIENT_KEY_FIELD_NUMBER: _ClassVar[int]

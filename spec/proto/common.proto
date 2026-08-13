@@ -45,6 +45,10 @@ enum ErrorCode {
   ERROR_CODE_EXECUTION_FAILED = 17;
   ERROR_CODE_PROTOCOL_VIOLATION = 18;
   ERROR_CODE_INTERNAL = 19;
+  // 目标物品按游戏原生 canBeTrashed 语义不可进入背包垃圾桶。
+  ERROR_CODE_ITEM_NOT_DISCARDABLE = 20;
+  // 不可逆提交已经进入且回滚后置条件无法确认；调用方不得自动重放。
+  ERROR_CODE_COMMIT_OUTCOME_UNKNOWN = 21;
 }
 
 message Error {

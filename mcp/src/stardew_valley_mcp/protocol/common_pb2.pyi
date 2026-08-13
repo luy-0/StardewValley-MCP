@@ -47,6 +47,8 @@ class ErrorCode(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     ERROR_CODE_EXECUTION_FAILED: _ClassVar[ErrorCode]
     ERROR_CODE_PROTOCOL_VIOLATION: _ClassVar[ErrorCode]
     ERROR_CODE_INTERNAL: _ClassVar[ErrorCode]
+    ERROR_CODE_ITEM_NOT_DISCARDABLE: _ClassVar[ErrorCode]
+    ERROR_CODE_COMMIT_OUTCOME_UNKNOWN: _ClassVar[ErrorCode]
 DIRECTION_UNSPECIFIED: Direction
 DIRECTION_UP: Direction
 DIRECTION_RIGHT: Direction
@@ -80,6 +82,8 @@ ERROR_CODE_IDEMPOTENCY_RECORD_EXPIRED: ErrorCode
 ERROR_CODE_EXECUTION_FAILED: ErrorCode
 ERROR_CODE_PROTOCOL_VIOLATION: ErrorCode
 ERROR_CODE_INTERNAL: ErrorCode
+ERROR_CODE_ITEM_NOT_DISCARDABLE: ErrorCode
+ERROR_CODE_COMMIT_OUTCOME_UNKNOWN: ErrorCode
 
 class Error(_message.Message):
     __slots__ = ("code", "message", "navigation")

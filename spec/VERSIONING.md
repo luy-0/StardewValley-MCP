@@ -43,6 +43,7 @@
 - `transfer_inventory_item`、`InventoryTransferDirection` 及其 Request/Result 是新增的独立能力分支，属于 V1 Minor 兼容增补。旧实现不会公告该能力，旧 MCP 也不会暴露对应 Tool；新调用方必须从当前 `query_ui` 取得 UI Revision、双方 Inventory Revision 和源 Item Ref，不能把已有槽位元素解释为可点击。
 - `set_equipment_slot` 及其 Request/Result 是新增的独立能力分支，属于 V1 Minor 兼容增补。调用方必须使用当前原版背包页面签发的 Equipment Slot Ref、UI Revision 和玩家 Inventory Revision；穿戴时还必须使用当前玩家背包 Item Ref。
 - `move_inventory_item` 及其 Request/Result 是新增的独立能力分支，属于 V1 Minor 兼容增补。调用方必须使用当前原版背包页面签发的玩家 Item Ref、目标 Item Slot Ref、UI Revision 和玩家 Inventory Revision；能力只执行整件移动、整件交换或同槽幂等成功。
+- `discard_inventory_item=25`、`DiscardInventoryItemRequest/Result`、`ERROR_CODE_ITEM_NOT_DISCARDABLE=20` 与 `ERROR_CODE_COMMIT_OUTCOME_UNKNOWN=21` 是新增独立写能力分支及其专用失败/unknown 语义，属于 V1 Minor 兼容增补。旧实现不会公告该能力，旧 MCP 不会暴露对应 Tool；调用方必须使用当前玩家背包 Item Ref、玩家 Inventory Revision 与明确数量。该能力等同游戏原生背包垃圾桶，以 `canBeTrashed` 判定并保留 `Utility.trashItem` 的金币返还；不能解释为出售、出货、转移或世界掉落。提交已经进入且回滚无法确认时必须保留 unknown，调用方不得自动重放。
 - `craft_item`、`CraftItemStopReason` 及其 Request/Result 是新增的独立能力分支，属于 V1 Minor 兼容增补。调用方必须使用当前 Crafting 页签发的 Recipe Ref 与 UI Revision；批量请求可以在至少完成一轮后以结构化停止原因返回部分成功。
 - `purchase_shop_item` 及其 Request/Result 是新增的独立能力分支，属于 V1 Minor 兼容增补。调用方必须使用当前精确原版商店视口签发的 Sale Ref 与 UI Revision；首版只支持全有或全无的普通金币实物购买。
 - 首个稳定公开版本发布前，Shop 商品行从通用 `activate_ui` 坐标激活中移除并固定为 `enabled=false`，作为 V1 候选契约的发布前纠错；商品行 Ref 继续存在，只能交给 `purchase_shop_item`。稳定版本发布后若再次收窄既有能力输入集合，必须按 Major 变更处理。

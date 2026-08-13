@@ -156,6 +156,20 @@ capabilities:
     required_scope: game:write
     risk: [changes_save]
     destructive: true
+  - id: discard_inventory_item
+    title: 丢弃背包物品
+    description: 使用玩家背包物品 Ref 与 Inventory Revision，通过游戏原生垃圾桶永久处理明确数量并报告金币返还。
+    contract_version: 1.0.0
+    request: DiscardInventoryItemRequest
+    result: DiscardInventoryItemResult
+    side_effect: mutating
+    execution: long_running
+    cancellable: true
+    default_timeout_ms: 10000
+    max_timeout_ms: 30000
+    required_scope: game:write
+    risk: [changes_save, consumes_item]
+    destructive: true
   - id: craft_item
     title: 制作物品
     description: 使用当前 Crafting 页面签发的配方 Ref 执行一次有界制作批次。
