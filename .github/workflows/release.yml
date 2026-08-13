@@ -45,6 +45,9 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
+      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
+        with:
+          version: "0.11.32"
       - name: 验证发行源与版本
         id: source
         shell: bash
@@ -94,9 +97,6 @@ jobs:
           dotnet-version: |
             10.0.x
             6.0.x
-      - uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
-        with:
-          version: "0.11.32"
       - uses: arduino/setup-protoc@c65c819552d16ad3c9b72d9dfd5ba5237b9c906b # v3.0.0
         with:
           version: "34.1"
