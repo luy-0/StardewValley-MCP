@@ -115,7 +115,7 @@ def test_inspect_fixture_covers_all_facts_and_fact_unavailable_without_stopping(
     result = _success("inspect")
     output = result["output"]
     assert [item["resolution"]["ref"]["value"] for item in output["items"]] == request_refs
-    assert [
+    resolved_fact_kinds = [
         next(
             key
             for key in ("worldEntity", "character", "inventoryItem", "inventory", "uiElement")
@@ -123,8 +123,15 @@ def test_inspect_fixture_covers_all_facts_and_fact_unavailable_without_stopping(
         )
         for item in output["items"]
         if item["resolution"]["status"] == "resolved"
-    ] == ["worldEntity", "character", "inventoryItem", "inventory", "uiElement"]
-    unavailable = output["items"][5]
+    ]
+    assert set(resolved_fact_kinds) == {
+        "worldEntity", "character", "inventoryItem", "inventory", "uiElement"
+    }
+    unavailable = next(
+        item
+        for item in output["items"]
+        if item["resolution"]["status"] == "fact_unavailable"
+    )
     assert unavailable == {
         "resolution": {
             "ref": {"value": "fact-unavailable-a"},

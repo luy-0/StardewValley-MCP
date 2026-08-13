@@ -5,7 +5,7 @@
 | 契约 | V1 候选 | 版本位置 |
 |---|---:|---|
 | Mod–MCP 线路协议 | `1.0` | `ProtocolVersion` 与 Proto package |
-| 公开能力契约 | `1.0.0` | `capabilities/manifest.yaml` |
+| 公开能力契约 | 按能力独立，当前为 `1.0.0` 或 `1.1.0` | `capabilities/manifest.yaml` |
 | 可执行 Skill 包契约 | `1` | `skill/runtime-manifest.schema.json` 的 `schemaVersion` |
 
 仓库产品版本独立于上述契约版本。实现完成前产品使用 `0.x` 预览版本；这不改变已经冻结的候选契约编号。
@@ -28,6 +28,7 @@
 
 ### 当前 V1 的兼容性增补
 
+- `CropFact`、`MachineFact`、`FarmAnimalFact` 与 `FurnitureFact` 追加的生长、加工、照料、归属和交互事实全部带 presence（`interaction_kinds` 依 repeated 规则除外），`query_world` 与复用同一公共投影的 `inspect` 能力契约版本同步升至 `1.1.0`。旧接收方可以忽略这些结果字段；新调用方只有在字段明确出现时才能使用，不能把零值、空字符串、空枚举集合、`UNSPECIFIED` 或机器 `UNKNOWN` 解释成已确认的业务状态。`FurnitureFact.interaction_profile_complete=true` 时，空的 `interaction_kinds` 才表示已完整判断为普通装饰家具。
 - `EmoteKind` 在保留既有 `1..8` 编号与语义的前提下追加原版玩家表情，`emote` 能力契约版本升至 `1.1.0`。这是输入枚举的 Minor 扩展：旧调用方仍可继续发送原八项；新调用方必须以 Mod 公告的精确能力版本为准，不得向旧实现发送新增枚举，也不得发送任意原始整数。
 - `TileFact.watering_can_refillable=7` 与 `TileFact.pathfinding_blocked=8` 是带 presence 的 `query_world` V1 Minor 可选结果增补。旧接收方可以忽略；新调用方只能使用实现显式返回的游戏原生补水判定与当前玩家原生寻路碰撞判定，任一字段缺失时必须安全停止，不得把既有 `water`、`passable`、`occupied` 或零值解释为等价事实。
 - `query_players=35` 及其 Request／Result、`PlayersSnapshot`、`PlayerPresenceFact` 与 `PlayerRelation` 是新增的独立只读能力分支，属于 V1 Minor 兼容增补。旧 Mod 不会公告该能力，旧 MCP 也不会暴露对应 Tool；新调用方必须把 `player_id` 视为当前存档内的不透明身份，并允许离线玩家缺少全部实时字段。

@@ -100,7 +100,7 @@ internal static class CapabilityCatalogData
             ["inspect"] = new CapabilityDescriptor
             {
                 Id = "inspect",
-                ContractVersion = "1.0.0",
+                ContractVersion = "1.1.0",
                 SideEffect = SideEffect.ReadOnly,
                 Execution = ExecutionMode.Immediate,
                 Cancellable = false,
@@ -250,7 +250,7 @@ internal static class CapabilityCatalogData
             ["query_world"] = new CapabilityDescriptor
             {
                 Id = "query_world",
-                ContractVersion = "1.0.0",
+                ContractVersion = "1.1.0",
                 SideEffect = SideEffect.ReadOnly,
                 Execution = ExecutionMode.Immediate,
                 Cancellable = false,

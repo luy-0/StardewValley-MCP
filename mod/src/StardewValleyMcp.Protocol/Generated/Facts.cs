@@ -103,170 +103,230 @@ namespace StardewValleyMcp.Protocol.V1 {
             "bW9zc3kYBCABKAgSDgoGaGVhbHRoGAUgASgBInsKDUZydWl0VHJlZUZhY3QS",
             "FQoNZnJ1aXRfaXRlbV9pZBgBIAEoCRIUCgxncm93dGhfc3RhZ2UYAiABKA0S",
             "GQoRZGF5c191bnRpbF9tYXR1cmUYAyABKA0SEwoLZnJ1aXRfY291bnQYBCAB",
-            "KA0SDQoFc3R1bXAYBSABKAgi1wEKCENyb3BGYWN0Eg8KB2Nyb3BfaWQYASAB",
+            "KA0SDQoFc3R1bXAYBSABKAgi9QUKCENyb3BGYWN0Eg8KB2Nyb3BfaWQYASAB",
             "KAkSFwoPaGFydmVzdF9pdGVtX2lkGAIgASgJEhQKDGdyb3d0aF9waGFzZRgD",
             "IAEoDRIZChFyZWFkeV9mb3JfaGFydmVzdBgEIAEoCBIPCgd3YXRlcmVkGAUg",
             "ASgIEgwKBGRlYWQYBiABKAgSDwoHcmVncm93cxgHIAEoCBJACg5oYXJ2ZXN0",
             "X2FjdGlvbhgIIAEoDjIoLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5Dcm9wSGFy",
-            "dmVzdEFjdGlvbiIeCgtIb2VEaXJ0RmFjdBIPCgd3YXRlcmVkGAEgASgIIlUK",
-            "EFJlc291cmNlTm9kZUZhY3QSEQoJbm9kZV9raW5kGAEgASgJEhcKD2hpdHNf",
-            "dG9fZGVzdHJveRgCIAEoDRIVCg1yZXF1aXJlZF90b29sGAMgASgJIooBChFS",
-            "ZXNvdXJjZUNsdW1wRmFjdBISCgpjbHVtcF9raW5kGAEgASgJEg0KBXdpZHRo",
-            "GAIgASgNEg4KBmhlaWdodBgDIAEoDRIOCgZoZWFsdGgYBCABKA0SFQoNcmVx",
-            "dWlyZWRfdG9vbBgFIAEoCRIbChNyZXF1aXJlZF90b29sX2xldmVsGAYgASgN",
-            "IpoDCghJdGVtRmFjdBIsCgNyZWYYASABKAsyGi5zdGFyZGV3X3ZhbGxleS5t",
-            "Y3AudjEuUmVmSACIAQESGQoRcXVhbGlmaWVkX2l0ZW1faWQYAiABKAkSFAoM",
-            "ZGlzcGxheV9uYW1lGAMgASgJEg0KBXN0YWNrGAQgASgNEg8KB3F1YWxpdHkY",
-            "BSABKA0SEAoIY2F0ZWdvcnkYBiABKAkSDAoEdG9vbBgHIAEoCBISCgp0b29s",
-            "X2xldmVsGAggASgNEhwKD3dhdGVyX3JlbWFpbmluZxgJIAEoDUgBiAEBEhsK",
-            "DndhdGVyX2NhcGFjaXR5GAogASgNSAKIAQESFwoKYm90dG9tbGVzcxgLIAEo",
-            "CEgDiAEBEjsKCXRvb2xfa2luZBgMIAEoDjIjLnN0YXJkZXdfdmFsbGV5Lm1j",
-            "cC52MS5JdGVtVG9vbEtpbmRIBIgBAUIGCgRfcmVmQhIKEF93YXRlcl9yZW1h",
-            "aW5pbmdCEQoPX3dhdGVyX2NhcGFjaXR5Qg0KC19ib3R0b21sZXNzQgwKCl90",
-            "b29sX2tpbmQipwEKC01hY2hpbmVGYWN0EhkKEXF1YWxpZmllZF9pdGVtX2lk",
-            "GAEgASgJEhkKEXJlYWR5X2Zvcl9oYXJ2ZXN0GAIgASgIEhsKE21pbnV0ZXNf",
-            "dW50aWxfcmVhZHkYAyABKAUSNwoJaGVsZF9pdGVtGAQgASgLMh8uc3RhcmRl",
-            "d192YWxsZXkubWNwLnYxLkl0ZW1GYWN0SACIAQFCDAoKX2hlbGRfaXRlbSJN",
-            "Cg1Db250YWluZXJGYWN0EhYKDmNvbnRhaW5lcl9raW5kGAEgASgJEhAKCGNh",
-            "cGFjaXR5GAIgASgNEhIKCml0ZW1fY291bnQYAyABKA0imAEKB0JlZEZhY3QS",
-            "EQoJY2FuX3NsZWVwGAEgASgIEjwKDm9jY3VwaWVkX3RpbGVzGAIgAygLMiQu",
-            "c3RhcmRld192YWxsZXkubWNwLnYxLldvcmxkUG9zaXRpb24SPAoOc2xlZXBf",
-            "cG9zaXRpb24YAyABKAsyJC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuV29ybGRQ",
-            "b3NpdGlvbiJ3Cg1GdXJuaXR1cmVGYWN0EhYKDmZ1cm5pdHVyZV9raW5kGAEg",
-            "ASgJEhAKCHJvdGF0aW9uGAIgASgNEjwKDm9jY3VwaWVkX3RpbGVzGAMgAygL",
-            "MiQuc3RhcmRld192YWxsZXkubWNwLnYxLldvcmxkUG9zaXRpb24iUwoNTG9v",
-            "c2VJdGVtRmFjdBItCgRpdGVtGAEgASgLMh8uc3RhcmRld192YWxsZXkubWNw",
-            "LnYxLkl0ZW1GYWN0EhMKC2Nhbl9waWNrX3VwGAIgASgIIpIBCghEb29yRmFj",
-            "dBITCgZsb2NrZWQYASABKAhIAIgBARIaChJ0YXJnZXRfbG9jYXRpb25faWQY",
-            "AiABKAkSOgoLdGFyZ2V0X3RpbGUYAyABKAsyIC5zdGFyZGV3X3ZhbGxleS5t",
-            "Y3AudjEuVGlsZVBvaW50SAGIAQFCCQoHX2xvY2tlZEIOCgxfdGFyZ2V0X3Rp",
-            "bGUiVwoIV2FycEZhY3QSOQoLZGVzdGluYXRpb24YASABKAsyJC5zdGFyZGV3",
-            "X3ZhbGxleS5tY3AudjEuV29ybGRQb3NpdGlvbhIQCghucGNfb25seRgCIAEo",
-            "CCJEChFHZW5lcmljT2JqZWN0RmFjdBIUCgxydW50aW1lX3R5cGUYASABKAkS",
-            "GQoRcXVhbGlmaWVkX2l0ZW1faWQYAiABKAkiiwQKDUNoYXJhY3RlckZhY3QS",
-            "JwoDcmVmGAEgASgLMhouc3RhcmRld192YWxsZXkubWNwLnYxLlJlZhIyCgRr",
-            "aW5kGAIgASgOMiQuc3RhcmRld192YWxsZXkubWNwLnYxLkNoYXJhY3Rlcktp",
-            "bmQSDAoEbmFtZRgDIAEoCRIUCgxkaXNwbGF5X25hbWUYBCABKAkSNgoIcG9z",
-            "aXRpb24YBSABKAsyJC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuV29ybGRQb3Np",
-            "dGlvbhIwCgZmYWNpbmcYBiABKA4yIC5zdGFyZGV3X3ZhbGxleS5tY3AudjEu",
-            "RGlyZWN0aW9uEi0KA25wYxgUIAEoCzIeLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
-            "MS5OcGNGYWN0SAASNQoHbW9uc3RlchgVIAEoCzIiLnN0YXJkZXdfdmFsbGV5",
-            "Lm1jcC52MS5Nb25zdGVyRmFjdEgAEjwKC2Zhcm1fYW5pbWFsGBYgASgLMiUu",
-            "c3RhcmRld192YWxsZXkubWNwLnYxLkZhcm1BbmltYWxGYWN0SAASLQoDcGV0",
-            "GBcgASgLMh4uc3RhcmRld192YWxsZXkubWNwLnYxLlBldEZhY3RIABIxCgVo",
-            "b3JzZRgYIAEoCzIgLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5Ib3JzZUZhY3RI",
-            "AEIJCgdkZXRhaWxzIlEKB05wY0ZhY3QSFQoNY2FuX3NvY2lhbGl6ZRgBIAEo",
-            "CBIZChFmcmllbmRzaGlwX3BvaW50cxgCIAEoBRIUCgxoYXNfZGlhbG9ndWUY",
-            "AyABKAgiSQoLTW9uc3RlckZhY3QSDgoGaGVhbHRoGAEgASgFEhIKCm1heF9o",
-            "ZWFsdGgYAiABKAUSFgoOY29udGFjdF9kYW1hZ2UYAyABKAUieQoORmFybUFu",
-            "aW1hbEZhY3QSEwoLYW5pbWFsX3R5cGUYASABKAkSFQoNcHJvZHVjZV9yZWFk",
-            "eRgCIAEoCBIUCgxwZXR0ZWRfdG9kYXkYAyABKAgSEgoKZnJpZW5kc2hpcBgE",
-            "IAEoBRIRCgloYXBwaW5lc3MYBSABKAUiRQoHUGV0RmFjdBIQCghwZXRfdHlw",
-            "ZRgBIAEoCRIUCgxwZXR0ZWRfdG9kYXkYAiABKAgSEgoKZnJpZW5kc2hpcBgD",
-            "IAEoBSIeCglIb3JzZUZhY3QSEQoJaGFzX3JpZGVyGAEgASgIItoBChFJbnZl",
-            "bnRvcnlTbmFwc2hvdBIaChJpbnZlbnRvcnlfcmV2aXNpb24YASABKAkSFgoO",
-            "Y29udGFpbmVyX2tpbmQYAiABKAkSNgoNY29udGFpbmVyX3JlZhgDIAEoCzIa",
-            "LnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWZIAIgBARISCgpzbG90X2NvdW50",
-            "GAQgASgNEjMKBXNsb3RzGAUgAygLMiQuc3RhcmRld192YWxsZXkubWNwLnYx",
-            "LkludmVudG9yeVNsb3RCEAoOX2NvbnRhaW5lcl9yZWYiWwoNSW52ZW50b3J5",
-            "U2xvdBINCgVpbmRleBgBIAEoDRIyCgRpdGVtGAIgASgLMh8uc3RhcmRld192",
-            "YWxsZXkubWNwLnYxLkl0ZW1GYWN0SACIAQFCBwoFX2l0ZW0iggEKG0NyYWZ0",
-            "aW5nTWF0ZXJpYWxSZXF1aXJlbWVudBIWCg5pbmdyZWRpZW50X2tleRgBIAEo",
-            "CRIUCgxkaXNwbGF5X25hbWUYAiABKAkSGQoRcmVxdWlyZWRfcXVhbnRpdHkY",
-            "AyABKA0SGgoSYXZhaWxhYmxlX3F1YW50aXR5GAQgASgNIlcKEkNyYWZ0aW5n",
-            "T3V0cHV0RmFjdBIZChFxdWFsaWZpZWRfaXRlbV9pZBgBIAEoCRIUCgxkaXNw",
-            "bGF5X25hbWUYAiABKAkSEAoIcXVhbnRpdHkYAyABKA0i7AEKEkNyYWZ0aW5n",
-            "UmVjaXBlRmFjdBISCgpyZWNpcGVfa2V5GAEgASgJEhQKDGRpc3BsYXlfbmFt",
-            "ZRgCIAEoCRINCgVrbm93bhgDIAEoCBIRCgljcmFmdGFibGUYBCABKAgSRQoJ",
-            "bWF0ZXJpYWxzGAUgAygLMjIuc3RhcmRld192YWxsZXkubWNwLnYxLkNyYWZ0",
-            "aW5nTWF0ZXJpYWxSZXF1aXJlbWVudBJDChBwb3NzaWJsZV9vdXRwdXRzGAYg",
-            "AygLMikuc3RhcmRld192YWxsZXkubWNwLnYxLkNyYWZ0aW5nT3V0cHV0RmFj",
-            "dCLBAQoPVWlJbnZlbnRvcnlMaW5rEjQKBHNpZGUYASABKA4yJi5zdGFyZGV3",
-            "X3ZhbGxleS5tY3AudjEuVWlJbnZlbnRvcnlTaWRlEhoKEmludmVudG9yeV9y",
-            "ZXZpc2lvbhgCIAEoCRISCgpzbG90X2NvdW50GAMgASgNEjYKDWNvbnRhaW5l",
-            "cl9yZWYYBCABKAsyGi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuUmVmSACIAQFC",
-            "EAoOX2NvbnRhaW5lcl9yZWYi6AEKClVpU25hcHNob3QSEwoLdWlfcmV2aXNp",
-            "b24YASABKAkSEQoJbWVudV9vcGVuGAIgASgIEjQKBG1lbnUYAyABKAsyIS5z",
-            "dGFyZGV3X3ZhbGxleS5tY3AudjEuVWlNZW51RmFjdEgAiAEBEjYKCGVsZW1l",
-            "bnRzGAQgAygLMiQuc3RhcmRld192YWxsZXkubWNwLnYxLlVpRWxlbWVudEZh",
-            "Y3QSOwoLaW52ZW50b3JpZXMYBSADKAsyJi5zdGFyZGV3X3ZhbGxleS5tY3Au",
-            "djEuVWlJbnZlbnRvcnlMaW5rQgcKBV9tZW51IvABCgpVaU1lbnVGYWN0EhEK",
-            "CW1lbnVfdHlwZRgBIAEoCRI3CgltZW51X2tpbmQYAiABKA4yHy5zdGFyZGV3",
-            "X3ZhbGxleS5tY3AudjEuTWVudUtpbmRIAIgBARINCgV0aXRsZRgDIAEoCRIN",
-            "CgVtb2RhbBgEIAEoCBIVCg1kaWFsb2d1ZV90ZXh0GAUgASgJEkEKDWRpYWxv",
-            "Z3VlX2tpbmQYBiABKA4yJS5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVWlEaWFs",
-            "b2d1ZUtpbmRIAYgBAUIMCgpfbWVudV9raW5kQhAKDl9kaWFsb2d1ZV9raW5k",
-            "IrMFCg1VaUVsZW1lbnRGYWN0EicKA3JlZhgBIAEoCzIaLnN0YXJkZXdfdmFs",
-            "bGV5Lm1jcC52MS5SZWYSMgoEa2luZBgCIAEoDjIkLnN0YXJkZXdfdmFsbGV5",
-            "Lm1jcC52MS5VaUVsZW1lbnRLaW5kEg0KBWxhYmVsGAMgASgJEg8KB3Zpc2li",
-            "bGUYBCABKAgSDwoHZW5hYmxlZBgFIAEoCBIxCgZjZW50ZXIYBiABKAsyIS5z",
-            "dGFyZGV3X3ZhbGxleS5tY3AudjEuUGl4ZWxQb2ludBINCgVpbmRleBgHIAEo",
-            "DRIyCgRpdGVtGAggASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkl0ZW1G",
-            "YWN0SACIAQESEgoFcHJpY2UYCSABKANIAYgBARISCgVzdG9jaxgKIAEoDUgC",
-            "iAEBEkMKDmludmVudG9yeV9zaWRlGAsgASgOMiYuc3RhcmRld192YWxsZXku",
-            "bWNwLnYxLlVpSW52ZW50b3J5U2lkZUgDiAEBEjEKCGl0ZW1fcmVmGAwgASgL",
-            "Mhouc3RhcmRld192YWxsZXkubWNwLnYxLlJlZkgEiAEBEkwKE2VxdWlwbWVu",
-            "dF9zbG90X2tpbmQYDSABKA4yKi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVWlF",
-            "cXVpcG1lbnRTbG90S2luZEgFiAEBEkcKD2NyYWZ0aW5nX3JlY2lwZRgOIAEo",
-            "CzIpLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5DcmFmdGluZ1JlY2lwZUZhY3RI",
-            "BogBAUIHCgVfaXRlbUIICgZfcHJpY2VCCAoGX3N0b2NrQhEKD19pbnZlbnRv",
-            "cnlfc2lkZUILCglfaXRlbV9yZWZCFgoUX2VxdWlwbWVudF9zbG90X2tpbmRC",
-            "EgoQX2NyYWZ0aW5nX3JlY2lwZSpoCg5QbGF5ZXJSZWxhdGlvbhIfChtQTEFZ",
-            "RVJfUkVMQVRJT05fVU5TUEVDSUZJRUQQABIaChZQTEFZRVJfUkVMQVRJT05f",
-            "TVlTRUxGEAESGQoVUExBWUVSX1JFTEFUSU9OX09USEVSEAIq8AEKC1dlYXRo",
-            "ZXJLaW5kEhwKGFdFQVRIRVJfS0lORF9VTlNQRUNJRklFRBAAEhQKEFdFQVRI",
-            "RVJfS0lORF9TVU4QARIVChFXRUFUSEVSX0tJTkRfUkFJThACEhYKEldFQVRI",
-            "RVJfS0lORF9TVE9STRADEhUKEVdFQVRIRVJfS0lORF9TTk9XEAQSFQoRV0VB",
-            "VEhFUl9LSU5EX1dJTkQQBRIbChdXRUFUSEVSX0tJTkRfR1JFRU5fUkFJThAG",
-            "EhkKFVdFQVRIRVJfS0lORF9GRVNUSVZBTBAHEhgKFFdFQVRIRVJfS0lORF9X",
-            "RURESU5HEAgqxwEKDURhaWx5THVja1RpZXISHwobREFJTFlfTFVDS19USUVS",
-            "X1VOU1BFQ0lGSUVEEAASIAocREFJTFlfTFVDS19USUVSX1ZFUllfVU5MVUNL",
-            "WRABEhsKF0RBSUxZX0xVQ0tfVElFUl9VTkxVQ0tZEAISGwoXREFJTFlfTFVD",
-            "S19USUVSX05FVVRSQUwQAxIZChVEQUlMWV9MVUNLX1RJRVJfTFVDS1kQBBIe",
-            "ChpEQUlMWV9MVUNLX1RJRVJfVkVSWV9MVUNLWRAFKpYDCgpFbnRpdHlLaW5k",
-            "EhsKF0VOVElUWV9LSU5EX1VOU1BFQ0lGSUVEEAASFAoQRU5USVRZX0tJTkRf",
-            "VFJFRRABEhoKFkVOVElUWV9LSU5EX0ZSVUlUX1RSRUUQAhIUChBFTlRJVFlf",
-            "S0lORF9DUk9QEAMSHQoZRU5USVRZX0tJTkRfUkVTT1VSQ0VfTk9ERRAEEh4K",
-            "GkVOVElUWV9LSU5EX1JFU09VUkNFX0NMVU1QEAUSFwoTRU5USVRZX0tJTkRf",
-            "TUFDSElORRAGEhkKFUVOVElUWV9LSU5EX0NPTlRBSU5FUhAHEhMKD0VOVElU",
-            "WV9LSU5EX0JFRBAIEhkKFUVOVElUWV9LSU5EX0ZVUk5JVFVSRRAJEhoKFkVO",
-            "VElUWV9LSU5EX0xPT1NFX0lURU0QChIUChBFTlRJVFlfS0lORF9ET09SEAsS",
-            "FAoQRU5USVRZX0tJTkRfV0FSUBAMEh4KGkVOVElUWV9LSU5EX0dFTkVSSUNf",
-            "T0JKRUNUEA0SGAoURU5USVRZX0tJTkRfSE9FX0RJUlQQDip6ChFDcm9wSGFy",
-            "dmVzdEFjdGlvbhIjCh9DUk9QX0hBUlZFU1RfQUNUSU9OX1VOU1BFQ0lGSUVE",
-            "EAASIAocQ1JPUF9IQVJWRVNUX0FDVElPTl9JTlRFUkFDVBABEh4KGkNST1Bf",
-            "SEFSVkVTVF9BQ1RJT05fU0NZVEhFEAIqtgEKDEl0ZW1Ub29sS2luZBIeChpJ",
-            "VEVNX1RPT0xfS0lORF9VTlNQRUNJRklFRBAAEhYKEklURU1fVE9PTF9LSU5E",
-            "X0FYRRABEhoKFklURU1fVE9PTF9LSU5EX1BJQ0tBWEUQAhIWChJJVEVNX1RP",
-            "T0xfS0lORF9IT0UQAxIfChtJVEVNX1RPT0xfS0lORF9XQVRFUklOR19DQU4Q",
-            "BBIZChVJVEVNX1RPT0xfS0lORF9TQ1lUSEUQBSq1AQoNQ2hhcmFjdGVyS2lu",
-            "ZBIeChpDSEFSQUNURVJfS0lORF9VTlNQRUNJRklFRBAAEhYKEkNIQVJBQ1RF",
-            "Ul9LSU5EX05QQxABEhoKFkNIQVJBQ1RFUl9LSU5EX01PTlNURVIQAhIeChpD",
-            "SEFSQUNURVJfS0lORF9GQVJNX0FOSU1BTBADEhYKEkNIQVJBQ1RFUl9LSU5E",
-            "X1BFVBAEEhgKFENIQVJBQ1RFUl9LSU5EX0hPUlNFEAUqtgIKDVVpRWxlbWVu",
-            "dEtpbmQSHwobVUlfRUxFTUVOVF9LSU5EX1VOU1BFQ0lGSUVEEAASGgoWVUlf",
-            "RUxFTUVOVF9LSU5EX0JVVFRPThABEhcKE1VJX0VMRU1FTlRfS0lORF9UQUIQ",
-            "AhIaChZVSV9FTEVNRU5UX0tJTkRfT1BUSU9OEAMSHQoZVUlfRUxFTUVOVF9L",
-            "SU5EX0lURU1fU0xPVBAEEiUKIVVJX0VMRU1FTlRfS0lORF9ESUFMT0dVRV9S",
-            "RVNQT05TRRAFEiQKIFVJX0VMRU1FTlRfS0lORF9ESUFMT0dVRV9BRFZBTkNF",
-            "EAYSIgoeVUlfRUxFTUVOVF9LSU5EX0VRVUlQTUVOVF9TTE9UEAcSIwofVUlf",
-            "RUxFTUVOVF9LSU5EX0NSQUZUSU5HX1JFQ0lQRRAIKlsKDlVpRGlhbG9ndWVL",
-            "aW5kEiAKHFVJX0RJQUxPR1VFX0tJTkRfVU5TUEVDSUZJRUQQABInCiNVSV9E",
-            "SUFMT0dVRV9LSU5EX1NMRUVQX0NPTkZJUk1BVElPThABKnMKD1VpSW52ZW50",
-            "b3J5U2lkZRIhCh1VSV9JTlZFTlRPUllfU0lERV9VTlNQRUNJRklFRBAAEhwK",
-            "GFVJX0lOVkVOVE9SWV9TSURFX1BMQVlFUhABEh8KG1VJX0lOVkVOVE9SWV9T",
-            "SURFX0NPTlRBSU5FUhACKrQCChNVaUVxdWlwbWVudFNsb3RLaW5kEiYKIlVJ",
-            "X0VRVUlQTUVOVF9TTE9UX0tJTkRfVU5TUEVDSUZJRUQQABIeChpVSV9FUVVJ",
-            "UE1FTlRfU0xPVF9LSU5EX0hBVBABEiQKIFVJX0VRVUlQTUVOVF9TTE9UX0tJ",
-            "TkRfTEVGVF9SSU5HEAISJQohVUlfRVFVSVBNRU5UX1NMT1RfS0lORF9SSUdI",
-            "VF9SSU5HEAMSIAocVUlfRVFVSVBNRU5UX1NMT1RfS0lORF9CT09UUxAEEiAK",
-            "HFVJX0VRVUlQTUVOVF9TTE9UX0tJTkRfU0hJUlQQBRIgChxVSV9FUVVJUE1F",
-            "TlRfU0xPVF9LSU5EX1BBTlRTEAYSIgoeVUlfRVFVSVBNRU5UX1NMT1RfS0lO",
-            "RF9UUklOS0VUEAdCH6oCHFN0YXJkZXdWYWxsZXlNY3AuUHJvdG9jb2wuVjFi",
-            "BnByb3RvMw=="));
+            "dmVzdEFjdGlvbhIbCg5oYXNfZmVydGlsaXplchgJIAEoCEgAiAEBEh8KEmZl",
+            "cnRpbGl6ZXJfaXRlbV9pZBgKIAEoCUgBiAEBEh0KEGdyb3d0aF9waGFzZV9k",
+            "YXkYCyABKA1IAogBARIiChVncm93dGhfcGhhc2VfZHVyYXRpb24YDCABKA1I",
+            "A4gBARIfChJncm93dGhfcGhhc2VfY291bnQYDSABKA1IBIgBARItCiBncm93",
+            "dGhfZGF5c19yZW1haW5pbmdfaWZfd2F0ZXJlZBgOIAEoDUgFiAEBEhgKC3Jl",
+            "Z3Jvd19kYXlzGA8gASgNSAaIAQESIgoVcmVncm93X2RheXNfcmVtYWluaW5n",
+            "GBAgASgNSAeIAQESEwoGbWF0dXJlGBEgASgISAiIAQESGwoObmVlZHNfd2F0",
+            "ZXJpbmcYEiABKAhICYgBAUIRCg9faGFzX2ZlcnRpbGl6ZXJCFQoTX2ZlcnRp",
+            "bGl6ZXJfaXRlbV9pZEITChFfZ3Jvd3RoX3BoYXNlX2RheUIYChZfZ3Jvd3Ro",
+            "X3BoYXNlX2R1cmF0aW9uQhUKE19ncm93dGhfcGhhc2VfY291bnRCIwohX2dy",
+            "b3d0aF9kYXlzX3JlbWFpbmluZ19pZl93YXRlcmVkQg4KDF9yZWdyb3dfZGF5",
+            "c0IYChZfcmVncm93X2RheXNfcmVtYWluaW5nQgkKB19tYXR1cmVCEQoPX25l",
+            "ZWRzX3dhdGVyaW5nIh4KC0hvZURpcnRGYWN0Eg8KB3dhdGVyZWQYASABKAgi",
+            "VQoQUmVzb3VyY2VOb2RlRmFjdBIRCglub2RlX2tpbmQYASABKAkSFwoPaGl0",
+            "c190b19kZXN0cm95GAIgASgNEhUKDXJlcXVpcmVkX3Rvb2wYAyABKAkiigEK",
+            "EVJlc291cmNlQ2x1bXBGYWN0EhIKCmNsdW1wX2tpbmQYASABKAkSDQoFd2lk",
+            "dGgYAiABKA0SDgoGaGVpZ2h0GAMgASgNEg4KBmhlYWx0aBgEIAEoDRIVCg1y",
+            "ZXF1aXJlZF90b29sGAUgASgJEhsKE3JlcXVpcmVkX3Rvb2xfbGV2ZWwYBiAB",
+            "KA0imgMKCEl0ZW1GYWN0EiwKA3JlZhgBIAEoCzIaLnN0YXJkZXdfdmFsbGV5",
+            "Lm1jcC52MS5SZWZIAIgBARIZChFxdWFsaWZpZWRfaXRlbV9pZBgCIAEoCRIU",
+            "CgxkaXNwbGF5X25hbWUYAyABKAkSDQoFc3RhY2sYBCABKA0SDwoHcXVhbGl0",
+            "eRgFIAEoDRIQCghjYXRlZ29yeRgGIAEoCRIMCgR0b29sGAcgASgIEhIKCnRv",
+            "b2xfbGV2ZWwYCCABKA0SHAoPd2F0ZXJfcmVtYWluaW5nGAkgASgNSAGIAQES",
+            "GwoOd2F0ZXJfY2FwYWNpdHkYCiABKA1IAogBARIXCgpib3R0b21sZXNzGAsg",
+            "ASgISAOIAQESOwoJdG9vbF9raW5kGAwgASgOMiMuc3RhcmRld192YWxsZXku",
+            "bWNwLnYxLkl0ZW1Ub29sS2luZEgEiAEBQgYKBF9yZWZCEgoQX3dhdGVyX3Jl",
+            "bWFpbmluZ0IRCg9fd2F0ZXJfY2FwYWNpdHlCDQoLX2JvdHRvbWxlc3NCDAoK",
+            "X3Rvb2xfa2luZCKzAgoLTWFjaGluZUZhY3QSGQoRcXVhbGlmaWVkX2l0ZW1f",
+            "aWQYASABKAkSGQoRcmVhZHlfZm9yX2hhcnZlc3QYAiABKAgSGwoTbWludXRl",
+            "c191bnRpbF9yZWFkeRgDIAEoBRI3CgloZWxkX2l0ZW0YBCABKAsyHy5zdGFy",
+            "ZGV3X3ZhbGxleS5tY3AudjEuSXRlbUZhY3RIAIgBARI3CgVzdGF0ZRgFIAEo",
+            "DjIjLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5NYWNoaW5lU3RhdGVIAYgBARI4",
+            "CgppbnB1dF9pdGVtGAYgASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkl0",
+            "ZW1GYWN0SAKIAQFCDAoKX2hlbGRfaXRlbUIICgZfc3RhdGVCDQoLX2lucHV0",
+            "X2l0ZW0iTQoNQ29udGFpbmVyRmFjdBIWCg5jb250YWluZXJfa2luZBgBIAEo",
+            "CRIQCghjYXBhY2l0eRgCIAEoDRISCgppdGVtX2NvdW50GAMgASgNIpgBCgdC",
+            "ZWRGYWN0EhEKCWNhbl9zbGVlcBgBIAEoCBI8Cg5vY2N1cGllZF90aWxlcxgC",
+            "IAMoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5Xb3JsZFBvc2l0aW9uEjwK",
+            "DnNsZWVwX3Bvc2l0aW9uGAMgASgLMiQuc3RhcmRld192YWxsZXkubWNwLnYx",
+            "LldvcmxkUG9zaXRpb24i0gUKDUZ1cm5pdHVyZUZhY3QSFgoOZnVybml0dXJl",
+            "X2tpbmQYASABKAkSEAoIcm90YXRpb24YAiABKA0SPAoOb2NjdXBpZWRfdGls",
+            "ZXMYAyADKAsyJC5zdGFyZGV3X3ZhbGxleS5tY3AudjEuV29ybGRQb3NpdGlv",
+            "bhIeChFxdWFsaWZpZWRfaXRlbV9pZBgEIAEoCUgAiAEBEhsKDnJvdGF0aW9u",
+            "X2NvdW50GAUgASgNSAGIAQESFwoKY2FuX3JvdGF0ZRgGIAEoCEgCiAEBEhoK",
+            "DXNlYXRfY2FwYWNpdHkYByABKA1IA4gBARIbCg5vY2N1cGllZF9zZWF0cxgI",
+            "IAEoDUgEiAEBEh0KEGhhc19zdXJmYWNlX2l0ZW0YCSABKAhIBYgBARI6Cgxz",
+            "dXJmYWNlX2l0ZW0YCiABKAsyHy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuSXRl",
+            "bUZhY3RIBogBARISCgVpc19vbhgLIAEoCEgHiAEBEkoKEWludGVyYWN0aW9u",
+            "X2tpbmRzGAwgAygOMi8uc3RhcmRld192YWxsZXkubWNwLnYxLkZ1cm5pdHVy",
+            "ZUludGVyYWN0aW9uS2luZBIpChxpbnRlcmFjdGlvbl9wcm9maWxlX2NvbXBs",
+            "ZXRlGA0gASgISAiIAQESHwoSc3RvcmFnZV9pdGVtX2NvdW50GA4gASgNSAmI",
+            "AQFCFAoSX3F1YWxpZmllZF9pdGVtX2lkQhEKD19yb3RhdGlvbl9jb3VudEIN",
+            "CgtfY2FuX3JvdGF0ZUIQCg5fc2VhdF9jYXBhY2l0eUIRCg9fb2NjdXBpZWRf",
+            "c2VhdHNCEwoRX2hhc19zdXJmYWNlX2l0ZW1CDwoNX3N1cmZhY2VfaXRlbUII",
+            "CgZfaXNfb25CHwodX2ludGVyYWN0aW9uX3Byb2ZpbGVfY29tcGxldGVCFQoT",
+            "X3N0b3JhZ2VfaXRlbV9jb3VudCJTCg1Mb29zZUl0ZW1GYWN0Ei0KBGl0ZW0Y",
+            "ASABKAsyHy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuSXRlbUZhY3QSEwoLY2Fu",
+            "X3BpY2tfdXAYAiABKAgikgEKCERvb3JGYWN0EhMKBmxvY2tlZBgBIAEoCEgA",
+            "iAEBEhoKEnRhcmdldF9sb2NhdGlvbl9pZBgCIAEoCRI6Cgt0YXJnZXRfdGls",
+            "ZRgDIAEoCzIgLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5UaWxlUG9pbnRIAYgB",
+            "AUIJCgdfbG9ja2VkQg4KDF90YXJnZXRfdGlsZSJXCghXYXJwRmFjdBI5Cgtk",
+            "ZXN0aW5hdGlvbhgBIAEoCzIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5Xb3Js",
+            "ZFBvc2l0aW9uEhAKCG5wY19vbmx5GAIgASgIIkQKEUdlbmVyaWNPYmplY3RG",
+            "YWN0EhQKDHJ1bnRpbWVfdHlwZRgBIAEoCRIZChFxdWFsaWZpZWRfaXRlbV9p",
+            "ZBgCIAEoCSKLBAoNQ2hhcmFjdGVyRmFjdBInCgNyZWYYASABKAsyGi5zdGFy",
+            "ZGV3X3ZhbGxleS5tY3AudjEuUmVmEjIKBGtpbmQYAiABKA4yJC5zdGFyZGV3",
+            "X3ZhbGxleS5tY3AudjEuQ2hhcmFjdGVyS2luZBIMCgRuYW1lGAMgASgJEhQK",
+            "DGRpc3BsYXlfbmFtZRgEIAEoCRI2Cghwb3NpdGlvbhgFIAEoCzIkLnN0YXJk",
+            "ZXdfdmFsbGV5Lm1jcC52MS5Xb3JsZFBvc2l0aW9uEjAKBmZhY2luZxgGIAEo",
+            "DjIgLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5EaXJlY3Rpb24SLQoDbnBjGBQg",
+            "ASgLMh4uc3RhcmRld192YWxsZXkubWNwLnYxLk5wY0ZhY3RIABI1Cgdtb25z",
+            "dGVyGBUgASgLMiIuc3RhcmRld192YWxsZXkubWNwLnYxLk1vbnN0ZXJGYWN0",
+            "SAASPAoLZmFybV9hbmltYWwYFiABKAsyJS5zdGFyZGV3X3ZhbGxleS5tY3Au",
+            "djEuRmFybUFuaW1hbEZhY3RIABItCgNwZXQYFyABKAsyHi5zdGFyZGV3X3Zh",
+            "bGxleS5tY3AudjEuUGV0RmFjdEgAEjEKBWhvcnNlGBggASgLMiAuc3RhcmRl",
+            "d192YWxsZXkubWNwLnYxLkhvcnNlRmFjdEgAQgkKB2RldGFpbHMiUQoHTnBj",
+            "RmFjdBIVCg1jYW5fc29jaWFsaXplGAEgASgIEhkKEWZyaWVuZHNoaXBfcG9p",
+            "bnRzGAIgASgFEhQKDGhhc19kaWFsb2d1ZRgDIAEoCCJJCgtNb25zdGVyRmFj",
+            "dBIOCgZoZWFsdGgYASABKAUSEgoKbWF4X2hlYWx0aBgCIAEoBRIWCg5jb250",
+            "YWN0X2RhbWFnZRgDIAEoBSKgBwoORmFybUFuaW1hbEZhY3QSEwoLYW5pbWFs",
+            "X3R5cGUYASABKAkSFQoNcHJvZHVjZV9yZWFkeRgCIAEoCBIUCgxwZXR0ZWRf",
+            "dG9kYXkYAyABKAgSEgoKZnJpZW5kc2hpcBgEIAEoBRIRCgloYXBwaW5lc3MY",
+            "BSABKAUSFQoIZnVsbG5lc3MYBiABKA1IAIgBARIWCglmZWRfdG9kYXkYByAB",
+            "KAhIAYgBARIeChFhdXRvX3BldHRlZF90b2RheRgIIAEoCEgCiAEBEhwKD3By",
+            "b2R1Y2VfaXRlbV9pZBgJIAEoCUgDiAEBEhwKD3Byb2R1Y2VfcXVhbGl0eRgK",
+            "IAEoDUgEiAEBEloKFnByb2R1Y2VfaGFydmVzdF9tZXRob2QYCyABKA4yNS5z",
+            "dGFyZGV3X3ZhbGxleS5tY3AudjEuRmFybUFuaW1hbFByb2R1Y2VIYXJ2ZXN0",
+            "TWV0aG9kSAWIAQESFQoIYWdlX2RheXMYDCABKA1IBogBARISCgVhZHVsdBgN",
+            "IAEoCEgHiAEBEh4KEWRheXNfdW50aWxfbWF0dXJlGA4gASgNSAiIAQESJAoX",
+            "ZGF5c19zaW5jZV9sYXN0X3Byb2R1Y2UYDyABKA1ICYgBARIhChRiYXNlX2Rh",
+            "eXNfdG9fcHJvZHVjZRgQIAEoDUgKiAEBEh4KEWhhc19ob21lX2J1aWxkaW5n",
+            "GBEgASgISAuIAQESHQoQaG9tZV9idWlsZGluZ19pZBgSIAEoCUgMiAEBEh8K",
+            "EmhvbWVfYnVpbGRpbmdfdHlwZRgTIAEoCUgNiAEBEh0KEGluX2hvbWVfYnVp",
+            "bGRpbmcYFCABKAhIDogBAUILCglfZnVsbG5lc3NCDAoKX2ZlZF90b2RheUIU",
+            "ChJfYXV0b19wZXR0ZWRfdG9kYXlCEgoQX3Byb2R1Y2VfaXRlbV9pZEISChBf",
+            "cHJvZHVjZV9xdWFsaXR5QhkKF19wcm9kdWNlX2hhcnZlc3RfbWV0aG9kQgsK",
+            "CV9hZ2VfZGF5c0IICgZfYWR1bHRCFAoSX2RheXNfdW50aWxfbWF0dXJlQhoK",
+            "GF9kYXlzX3NpbmNlX2xhc3RfcHJvZHVjZUIXChVfYmFzZV9kYXlzX3RvX3By",
+            "b2R1Y2VCFAoSX2hhc19ob21lX2J1aWxkaW5nQhMKEV9ob21lX2J1aWxkaW5n",
+            "X2lkQhUKE19ob21lX2J1aWxkaW5nX3R5cGVCEwoRX2luX2hvbWVfYnVpbGRp",
+            "bmciRQoHUGV0RmFjdBIQCghwZXRfdHlwZRgBIAEoCRIUCgxwZXR0ZWRfdG9k",
+            "YXkYAiABKAgSEgoKZnJpZW5kc2hpcBgDIAEoBSIeCglIb3JzZUZhY3QSEQoJ",
+            "aGFzX3JpZGVyGAEgASgIItoBChFJbnZlbnRvcnlTbmFwc2hvdBIaChJpbnZl",
+            "bnRvcnlfcmV2aXNpb24YASABKAkSFgoOY29udGFpbmVyX2tpbmQYAiABKAkS",
+            "NgoNY29udGFpbmVyX3JlZhgDIAEoCzIaLnN0YXJkZXdfdmFsbGV5Lm1jcC52",
+            "MS5SZWZIAIgBARISCgpzbG90X2NvdW50GAQgASgNEjMKBXNsb3RzGAUgAygL",
+            "MiQuc3RhcmRld192YWxsZXkubWNwLnYxLkludmVudG9yeVNsb3RCEAoOX2Nv",
+            "bnRhaW5lcl9yZWYiWwoNSW52ZW50b3J5U2xvdBINCgVpbmRleBgBIAEoDRIy",
+            "CgRpdGVtGAIgASgLMh8uc3RhcmRld192YWxsZXkubWNwLnYxLkl0ZW1GYWN0",
+            "SACIAQFCBwoFX2l0ZW0iggEKG0NyYWZ0aW5nTWF0ZXJpYWxSZXF1aXJlbWVu",
+            "dBIWCg5pbmdyZWRpZW50X2tleRgBIAEoCRIUCgxkaXNwbGF5X25hbWUYAiAB",
+            "KAkSGQoRcmVxdWlyZWRfcXVhbnRpdHkYAyABKA0SGgoSYXZhaWxhYmxlX3F1",
+            "YW50aXR5GAQgASgNIlcKEkNyYWZ0aW5nT3V0cHV0RmFjdBIZChFxdWFsaWZp",
+            "ZWRfaXRlbV9pZBgBIAEoCRIUCgxkaXNwbGF5X25hbWUYAiABKAkSEAoIcXVh",
+            "bnRpdHkYAyABKA0i7AEKEkNyYWZ0aW5nUmVjaXBlRmFjdBISCgpyZWNpcGVf",
+            "a2V5GAEgASgJEhQKDGRpc3BsYXlfbmFtZRgCIAEoCRINCgVrbm93bhgDIAEo",
+            "CBIRCgljcmFmdGFibGUYBCABKAgSRQoJbWF0ZXJpYWxzGAUgAygLMjIuc3Rh",
+            "cmRld192YWxsZXkubWNwLnYxLkNyYWZ0aW5nTWF0ZXJpYWxSZXF1aXJlbWVu",
+            "dBJDChBwb3NzaWJsZV9vdXRwdXRzGAYgAygLMikuc3RhcmRld192YWxsZXku",
+            "bWNwLnYxLkNyYWZ0aW5nT3V0cHV0RmFjdCLBAQoPVWlJbnZlbnRvcnlMaW5r",
+            "EjQKBHNpZGUYASABKA4yJi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVWlJbnZl",
+            "bnRvcnlTaWRlEhoKEmludmVudG9yeV9yZXZpc2lvbhgCIAEoCRISCgpzbG90",
+            "X2NvdW50GAMgASgNEjYKDWNvbnRhaW5lcl9yZWYYBCABKAsyGi5zdGFyZGV3",
+            "X3ZhbGxleS5tY3AudjEuUmVmSACIAQFCEAoOX2NvbnRhaW5lcl9yZWYi6AEK",
+            "ClVpU25hcHNob3QSEwoLdWlfcmV2aXNpb24YASABKAkSEQoJbWVudV9vcGVu",
+            "GAIgASgIEjQKBG1lbnUYAyABKAsyIS5zdGFyZGV3X3ZhbGxleS5tY3AudjEu",
+            "VWlNZW51RmFjdEgAiAEBEjYKCGVsZW1lbnRzGAQgAygLMiQuc3RhcmRld192",
+            "YWxsZXkubWNwLnYxLlVpRWxlbWVudEZhY3QSOwoLaW52ZW50b3JpZXMYBSAD",
+            "KAsyJi5zdGFyZGV3X3ZhbGxleS5tY3AudjEuVWlJbnZlbnRvcnlMaW5rQgcK",
+            "BV9tZW51IvABCgpVaU1lbnVGYWN0EhEKCW1lbnVfdHlwZRgBIAEoCRI3Cglt",
+            "ZW51X2tpbmQYAiABKA4yHy5zdGFyZGV3X3ZhbGxleS5tY3AudjEuTWVudUtp",
+            "bmRIAIgBARINCgV0aXRsZRgDIAEoCRINCgVtb2RhbBgEIAEoCBIVCg1kaWFs",
+            "b2d1ZV90ZXh0GAUgASgJEkEKDWRpYWxvZ3VlX2tpbmQYBiABKA4yJS5zdGFy",
+            "ZGV3X3ZhbGxleS5tY3AudjEuVWlEaWFsb2d1ZUtpbmRIAYgBAUIMCgpfbWVu",
+            "dV9raW5kQhAKDl9kaWFsb2d1ZV9raW5kIrMFCg1VaUVsZW1lbnRGYWN0EicK",
+            "A3JlZhgBIAEoCzIaLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5SZWYSMgoEa2lu",
+            "ZBgCIAEoDjIkLnN0YXJkZXdfdmFsbGV5Lm1jcC52MS5VaUVsZW1lbnRLaW5k",
+            "Eg0KBWxhYmVsGAMgASgJEg8KB3Zpc2libGUYBCABKAgSDwoHZW5hYmxlZBgF",
+            "IAEoCBIxCgZjZW50ZXIYBiABKAsyIS5zdGFyZGV3X3ZhbGxleS5tY3AudjEu",
+            "UGl4ZWxQb2ludBINCgVpbmRleBgHIAEoDRIyCgRpdGVtGAggASgLMh8uc3Rh",
+            "cmRld192YWxsZXkubWNwLnYxLkl0ZW1GYWN0SACIAQESEgoFcHJpY2UYCSAB",
+            "KANIAYgBARISCgVzdG9jaxgKIAEoDUgCiAEBEkMKDmludmVudG9yeV9zaWRl",
+            "GAsgASgOMiYuc3RhcmRld192YWxsZXkubWNwLnYxLlVpSW52ZW50b3J5U2lk",
+            "ZUgDiAEBEjEKCGl0ZW1fcmVmGAwgASgLMhouc3RhcmRld192YWxsZXkubWNw",
+            "LnYxLlJlZkgEiAEBEkwKE2VxdWlwbWVudF9zbG90X2tpbmQYDSABKA4yKi5z",
+            "dGFyZGV3X3ZhbGxleS5tY3AudjEuVWlFcXVpcG1lbnRTbG90S2luZEgFiAEB",
+            "EkcKD2NyYWZ0aW5nX3JlY2lwZRgOIAEoCzIpLnN0YXJkZXdfdmFsbGV5Lm1j",
+            "cC52MS5DcmFmdGluZ1JlY2lwZUZhY3RIBogBAUIHCgVfaXRlbUIICgZfcHJp",
+            "Y2VCCAoGX3N0b2NrQhEKD19pbnZlbnRvcnlfc2lkZUILCglfaXRlbV9yZWZC",
+            "FgoUX2VxdWlwbWVudF9zbG90X2tpbmRCEgoQX2NyYWZ0aW5nX3JlY2lwZSpo",
+            "Cg5QbGF5ZXJSZWxhdGlvbhIfChtQTEFZRVJfUkVMQVRJT05fVU5TUEVDSUZJ",
+            "RUQQABIaChZQTEFZRVJfUkVMQVRJT05fTVlTRUxGEAESGQoVUExBWUVSX1JF",
+            "TEFUSU9OX09USEVSEAIq8AEKC1dlYXRoZXJLaW5kEhwKGFdFQVRIRVJfS0lO",
+            "RF9VTlNQRUNJRklFRBAAEhQKEFdFQVRIRVJfS0lORF9TVU4QARIVChFXRUFU",
+            "SEVSX0tJTkRfUkFJThACEhYKEldFQVRIRVJfS0lORF9TVE9STRADEhUKEVdF",
+            "QVRIRVJfS0lORF9TTk9XEAQSFQoRV0VBVEhFUl9LSU5EX1dJTkQQBRIbChdX",
+            "RUFUSEVSX0tJTkRfR1JFRU5fUkFJThAGEhkKFVdFQVRIRVJfS0lORF9GRVNU",
+            "SVZBTBAHEhgKFFdFQVRIRVJfS0lORF9XRURESU5HEAgqxwEKDURhaWx5THVj",
+            "a1RpZXISHwobREFJTFlfTFVDS19USUVSX1VOU1BFQ0lGSUVEEAASIAocREFJ",
+            "TFlfTFVDS19USUVSX1ZFUllfVU5MVUNLWRABEhsKF0RBSUxZX0xVQ0tfVElF",
+            "Ul9VTkxVQ0tZEAISGwoXREFJTFlfTFVDS19USUVSX05FVVRSQUwQAxIZChVE",
+            "QUlMWV9MVUNLX1RJRVJfTFVDS1kQBBIeChpEQUlMWV9MVUNLX1RJRVJfVkVS",
+            "WV9MVUNLWRAFKpYDCgpFbnRpdHlLaW5kEhsKF0VOVElUWV9LSU5EX1VOU1BF",
+            "Q0lGSUVEEAASFAoQRU5USVRZX0tJTkRfVFJFRRABEhoKFkVOVElUWV9LSU5E",
+            "X0ZSVUlUX1RSRUUQAhIUChBFTlRJVFlfS0lORF9DUk9QEAMSHQoZRU5USVRZ",
+            "X0tJTkRfUkVTT1VSQ0VfTk9ERRAEEh4KGkVOVElUWV9LSU5EX1JFU09VUkNF",
+            "X0NMVU1QEAUSFwoTRU5USVRZX0tJTkRfTUFDSElORRAGEhkKFUVOVElUWV9L",
+            "SU5EX0NPTlRBSU5FUhAHEhMKD0VOVElUWV9LSU5EX0JFRBAIEhkKFUVOVElU",
+            "WV9LSU5EX0ZVUk5JVFVSRRAJEhoKFkVOVElUWV9LSU5EX0xPT1NFX0lURU0Q",
+            "ChIUChBFTlRJVFlfS0lORF9ET09SEAsSFAoQRU5USVRZX0tJTkRfV0FSUBAM",
+            "Eh4KGkVOVElUWV9LSU5EX0dFTkVSSUNfT0JKRUNUEA0SGAoURU5USVRZX0tJ",
+            "TkRfSE9FX0RJUlQQDip6ChFDcm9wSGFydmVzdEFjdGlvbhIjCh9DUk9QX0hB",
+            "UlZFU1RfQUNUSU9OX1VOU1BFQ0lGSUVEEAASIAocQ1JPUF9IQVJWRVNUX0FD",
+            "VElPTl9JTlRFUkFDVBABEh4KGkNST1BfSEFSVkVTVF9BQ1RJT05fU0NZVEhF",
+            "EAIqtgEKDEl0ZW1Ub29sS2luZBIeChpJVEVNX1RPT0xfS0lORF9VTlNQRUNJ",
+            "RklFRBAAEhYKEklURU1fVE9PTF9LSU5EX0FYRRABEhoKFklURU1fVE9PTF9L",
+            "SU5EX1BJQ0tBWEUQAhIWChJJVEVNX1RPT0xfS0lORF9IT0UQAxIfChtJVEVN",
+            "X1RPT0xfS0lORF9XQVRFUklOR19DQU4QBBIZChVJVEVNX1RPT0xfS0lORF9T",
+            "Q1lUSEUQBSqXAQoMTWFjaGluZVN0YXRlEh0KGU1BQ0hJTkVfU1RBVEVfVU5T",
+            "UEVDSUZJRUQQABIZChVNQUNISU5FX1NUQVRFX1VOS05PV04QARIWChJNQUNI",
+            "SU5FX1NUQVRFX0lETEUQAhIcChhNQUNISU5FX1NUQVRFX1BST0NFU1NJTkcQ",
+            "AxIXChNNQUNISU5FX1NUQVRFX1JFQURZEAQq4gEKGEZ1cm5pdHVyZUludGVy",
+            "YWN0aW9uS2luZBIqCiZGVVJOSVRVUkVfSU5URVJBQ1RJT05fS0lORF9VTlNQ",
+            "RUNJRklFRBAAEiMKH0ZVUk5JVFVSRV9JTlRFUkFDVElPTl9LSU5EX1NFQVQQ",
+            "ARImCiJGVVJOSVRVUkVfSU5URVJBQ1RJT05fS0lORF9TVVJGQUNFEAISJgoi",
+            "RlVSTklUVVJFX0lOVEVSQUNUSU9OX0tJTkRfU1RPUkFHRRADEiUKIUZVUk5J",
+            "VFVSRV9JTlRFUkFDVElPTl9LSU5EX1RPR0dMRRAEKrUBCg1DaGFyYWN0ZXJL",
+            "aW5kEh4KGkNIQVJBQ1RFUl9LSU5EX1VOU1BFQ0lGSUVEEAASFgoSQ0hBUkFD",
+            "VEVSX0tJTkRfTlBDEAESGgoWQ0hBUkFDVEVSX0tJTkRfTU9OU1RFUhACEh4K",
+            "GkNIQVJBQ1RFUl9LSU5EX0ZBUk1fQU5JTUFMEAMSFgoSQ0hBUkFDVEVSX0tJ",
+            "TkRfUEVUEAQSGAoUQ0hBUkFDVEVSX0tJTkRfSE9SU0UQBSr0AQoeRmFybUFu",
+            "aW1hbFByb2R1Y2VIYXJ2ZXN0TWV0aG9kEjIKLkZBUk1fQU5JTUFMX1BST0RV",
+            "Q0VfSEFSVkVTVF9NRVRIT0RfVU5TUEVDSUZJRUQQABI1CjFGQVJNX0FOSU1B",
+            "TF9QUk9EVUNFX0hBUlZFU1RfTUVUSE9EX0RST1BfT1ZFUk5JR0hUEAESOAo0",
+            "RkFSTV9BTklNQUxfUFJPRFVDRV9IQVJWRVNUX01FVEhPRF9IQVJWRVNUX1dJ",
+            "VEhfVE9PTBACEi0KKUZBUk1fQU5JTUFMX1BST0RVQ0VfSEFSVkVTVF9NRVRI",
+            "T0RfRElHX1VQEAMqtgIKDVVpRWxlbWVudEtpbmQSHwobVUlfRUxFTUVOVF9L",
+            "SU5EX1VOU1BFQ0lGSUVEEAASGgoWVUlfRUxFTUVOVF9LSU5EX0JVVFRPThAB",
+            "EhcKE1VJX0VMRU1FTlRfS0lORF9UQUIQAhIaChZVSV9FTEVNRU5UX0tJTkRf",
+            "T1BUSU9OEAMSHQoZVUlfRUxFTUVOVF9LSU5EX0lURU1fU0xPVBAEEiUKIVVJ",
+            "X0VMRU1FTlRfS0lORF9ESUFMT0dVRV9SRVNQT05TRRAFEiQKIFVJX0VMRU1F",
+            "TlRfS0lORF9ESUFMT0dVRV9BRFZBTkNFEAYSIgoeVUlfRUxFTUVOVF9LSU5E",
+            "X0VRVUlQTUVOVF9TTE9UEAcSIwofVUlfRUxFTUVOVF9LSU5EX0NSQUZUSU5H",
+            "X1JFQ0lQRRAIKlsKDlVpRGlhbG9ndWVLaW5kEiAKHFVJX0RJQUxPR1VFX0tJ",
+            "TkRfVU5TUEVDSUZJRUQQABInCiNVSV9ESUFMT0dVRV9LSU5EX1NMRUVQX0NP",
+            "TkZJUk1BVElPThABKnMKD1VpSW52ZW50b3J5U2lkZRIhCh1VSV9JTlZFTlRP",
+            "UllfU0lERV9VTlNQRUNJRklFRBAAEhwKGFVJX0lOVkVOVE9SWV9TSURFX1BM",
+            "QVlFUhABEh8KG1VJX0lOVkVOVE9SWV9TSURFX0NPTlRBSU5FUhACKrQCChNV",
+            "aUVxdWlwbWVudFNsb3RLaW5kEiYKIlVJX0VRVUlQTUVOVF9TTE9UX0tJTkRf",
+            "VU5TUEVDSUZJRUQQABIeChpVSV9FUVVJUE1FTlRfU0xPVF9LSU5EX0hBVBAB",
+            "EiQKIFVJX0VRVUlQTUVOVF9TTE9UX0tJTkRfTEVGVF9SSU5HEAISJQohVUlf",
+            "RVFVSVBNRU5UX1NMT1RfS0lORF9SSUdIVF9SSU5HEAMSIAocVUlfRVFVSVBN",
+            "RU5UX1NMT1RfS0lORF9CT09UUxAEEiAKHFVJX0VRVUlQTUVOVF9TTE9UX0tJ",
+            "TkRfU0hJUlQQBRIgChxVSV9FUVVJUE1FTlRfU0xPVF9LSU5EX1BBTlRTEAYS",
+            "IgoeVUlfRVFVSVBNRU5UX1NMT1RfS0lORF9UUklOS0VUEAdCH6oCHFN0YXJk",
+            "ZXdWYWxsZXlNY3AuUHJvdG9jb2wuVjFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::StardewValleyMcp.Protocol.V1.CommonReflection.Descriptor, global::StardewValleyMcp.Protocol.V1.RefsReflection.Descriptor, },
-          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.PlayerRelation), typeof(global::StardewValleyMcp.Protocol.V1.WeatherKind), typeof(global::StardewValleyMcp.Protocol.V1.DailyLuckTier), typeof(global::StardewValleyMcp.Protocol.V1.EntityKind), typeof(global::StardewValleyMcp.Protocol.V1.CropHarvestAction), typeof(global::StardewValleyMcp.Protocol.V1.ItemToolKind), typeof(global::StardewValleyMcp.Protocol.V1.CharacterKind), typeof(global::StardewValleyMcp.Protocol.V1.UiElementKind), typeof(global::StardewValleyMcp.Protocol.V1.UiDialogueKind), typeof(global::StardewValleyMcp.Protocol.V1.UiInventorySide), typeof(global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind), }, null, new pbr::GeneratedClrTypeInfo[] {
+          new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.PlayerRelation), typeof(global::StardewValleyMcp.Protocol.V1.WeatherKind), typeof(global::StardewValleyMcp.Protocol.V1.DailyLuckTier), typeof(global::StardewValleyMcp.Protocol.V1.EntityKind), typeof(global::StardewValleyMcp.Protocol.V1.CropHarvestAction), typeof(global::StardewValleyMcp.Protocol.V1.ItemToolKind), typeof(global::StardewValleyMcp.Protocol.V1.MachineState), typeof(global::StardewValleyMcp.Protocol.V1.FurnitureInteractionKind), typeof(global::StardewValleyMcp.Protocol.V1.CharacterKind), typeof(global::StardewValleyMcp.Protocol.V1.FarmAnimalProduceHarvestMethod), typeof(global::StardewValleyMcp.Protocol.V1.UiElementKind), typeof(global::StardewValleyMcp.Protocol.V1.UiDialogueKind), typeof(global::StardewValleyMcp.Protocol.V1.UiInventorySide), typeof(global::StardewValleyMcp.Protocol.V1.UiEquipmentSlotKind), }, null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.RuntimeSnapshot), global::StardewValleyMcp.Protocol.V1.RuntimeSnapshot.Parser, new[]{ "Date", "TimeOfDay", "Player", "Weather", "Ui", "DailyLuck", "QueenOfSauce" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.PlayerFact), global::StardewValleyMcp.Protocol.V1.PlayerFact.Parser, new[]{ "Position", "Facing", "Money", "Energy", "MaxEnergy", "Health", "MaxHealth", "CanMove", "HomeLocationId" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.PlayersSnapshot), global::StardewValleyMcp.Protocol.V1.PlayersSnapshot.Parser, new[]{ "Players" }, null, null, null, null),
@@ -280,15 +340,15 @@ namespace StardewValleyMcp.Protocol.V1 {
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.WorldEntityFact), global::StardewValleyMcp.Protocol.V1.WorldEntityFact.Parser, new[]{ "Ref", "Kind", "Position", "DisplayName", "Actionable", "Tree", "FruitTree", "Crop", "ResourceNode", "ResourceClump", "Machine", "Container", "Bed", "Furniture", "LooseItem", "Door", "Warp", "GenericObject", "HoeDirt" }, new[]{ "Details", "Actionable" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.TreeFact), global::StardewValleyMcp.Protocol.V1.TreeFact.Parser, new[]{ "GrowthStage", "Stump", "Tapped", "Mossy", "Health" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.FruitTreeFact), global::StardewValleyMcp.Protocol.V1.FruitTreeFact.Parser, new[]{ "FruitItemId", "GrowthStage", "DaysUntilMature", "FruitCount", "Stump" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CropFact), global::StardewValleyMcp.Protocol.V1.CropFact.Parser, new[]{ "CropId", "HarvestItemId", "GrowthPhase", "ReadyForHarvest", "Watered", "Dead", "Regrows", "HarvestAction" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CropFact), global::StardewValleyMcp.Protocol.V1.CropFact.Parser, new[]{ "CropId", "HarvestItemId", "GrowthPhase", "ReadyForHarvest", "Watered", "Dead", "Regrows", "HarvestAction", "HasFertilizer", "FertilizerItemId", "GrowthPhaseDay", "GrowthPhaseDuration", "GrowthPhaseCount", "GrowthDaysRemainingIfWatered", "RegrowDays", "RegrowDaysRemaining", "Mature", "NeedsWatering" }, new[]{ "HasFertilizer", "FertilizerItemId", "GrowthPhaseDay", "GrowthPhaseDuration", "GrowthPhaseCount", "GrowthDaysRemainingIfWatered", "RegrowDays", "RegrowDaysRemaining", "Mature", "NeedsWatering" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.HoeDirtFact), global::StardewValleyMcp.Protocol.V1.HoeDirtFact.Parser, new[]{ "Watered" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.ResourceNodeFact), global::StardewValleyMcp.Protocol.V1.ResourceNodeFact.Parser, new[]{ "NodeKind", "HitsToDestroy", "RequiredTool" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.ResourceClumpFact), global::StardewValleyMcp.Protocol.V1.ResourceClumpFact.Parser, new[]{ "ClumpKind", "Width", "Height", "Health", "RequiredTool", "RequiredToolLevel" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.ItemFact), global::StardewValleyMcp.Protocol.V1.ItemFact.Parser, new[]{ "Ref", "QualifiedItemId", "DisplayName", "Stack", "Quality", "Category", "Tool", "ToolLevel", "WaterRemaining", "WaterCapacity", "Bottomless", "ToolKind" }, new[]{ "Ref", "WaterRemaining", "WaterCapacity", "Bottomless", "ToolKind" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.MachineFact), global::StardewValleyMcp.Protocol.V1.MachineFact.Parser, new[]{ "QualifiedItemId", "ReadyForHarvest", "MinutesUntilReady", "HeldItem" }, new[]{ "HeldItem" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.MachineFact), global::StardewValleyMcp.Protocol.V1.MachineFact.Parser, new[]{ "QualifiedItemId", "ReadyForHarvest", "MinutesUntilReady", "HeldItem", "State", "InputItem" }, new[]{ "HeldItem", "State", "InputItem" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.ContainerFact), global::StardewValleyMcp.Protocol.V1.ContainerFact.Parser, new[]{ "ContainerKind", "Capacity", "ItemCount" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.BedFact), global::StardewValleyMcp.Protocol.V1.BedFact.Parser, new[]{ "CanSleep", "OccupiedTiles", "SleepPosition" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.FurnitureFact), global::StardewValleyMcp.Protocol.V1.FurnitureFact.Parser, new[]{ "FurnitureKind", "Rotation", "OccupiedTiles" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.FurnitureFact), global::StardewValleyMcp.Protocol.V1.FurnitureFact.Parser, new[]{ "FurnitureKind", "Rotation", "OccupiedTiles", "QualifiedItemId", "RotationCount", "CanRotate", "SeatCapacity", "OccupiedSeats", "HasSurfaceItem", "SurfaceItem", "IsOn", "InteractionKinds", "InteractionProfileComplete", "StorageItemCount" }, new[]{ "QualifiedItemId", "RotationCount", "CanRotate", "SeatCapacity", "OccupiedSeats", "HasSurfaceItem", "SurfaceItem", "IsOn", "InteractionProfileComplete", "StorageItemCount" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.LooseItemFact), global::StardewValleyMcp.Protocol.V1.LooseItemFact.Parser, new[]{ "Item", "CanPickUp" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.DoorFact), global::StardewValleyMcp.Protocol.V1.DoorFact.Parser, new[]{ "Locked", "TargetLocationId", "TargetTile" }, new[]{ "Locked", "TargetTile" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.WarpFact), global::StardewValleyMcp.Protocol.V1.WarpFact.Parser, new[]{ "Destination", "NpcOnly" }, null, null, null, null),
@@ -296,7 +356,7 @@ namespace StardewValleyMcp.Protocol.V1 {
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.CharacterFact), global::StardewValleyMcp.Protocol.V1.CharacterFact.Parser, new[]{ "Ref", "Kind", "Name", "DisplayName", "Position", "Facing", "Npc", "Monster", "FarmAnimal", "Pet", "Horse" }, new[]{ "Details" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.NpcFact), global::StardewValleyMcp.Protocol.V1.NpcFact.Parser, new[]{ "CanSocialize", "FriendshipPoints", "HasDialogue" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.MonsterFact), global::StardewValleyMcp.Protocol.V1.MonsterFact.Parser, new[]{ "Health", "MaxHealth", "ContactDamage" }, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.FarmAnimalFact), global::StardewValleyMcp.Protocol.V1.FarmAnimalFact.Parser, new[]{ "AnimalType", "ProduceReady", "PettedToday", "Friendship", "Happiness" }, null, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.FarmAnimalFact), global::StardewValleyMcp.Protocol.V1.FarmAnimalFact.Parser, new[]{ "AnimalType", "ProduceReady", "PettedToday", "Friendship", "Happiness", "Fullness", "FedToday", "AutoPettedToday", "ProduceItemId", "ProduceQuality", "ProduceHarvestMethod", "AgeDays", "Adult", "DaysUntilMature", "DaysSinceLastProduce", "BaseDaysToProduce", "HasHomeBuilding", "HomeBuildingId", "HomeBuildingType", "InHomeBuilding" }, new[]{ "Fullness", "FedToday", "AutoPettedToday", "ProduceItemId", "ProduceQuality", "ProduceHarvestMethod", "AgeDays", "Adult", "DaysUntilMature", "DaysSinceLastProduce", "BaseDaysToProduce", "HasHomeBuilding", "HomeBuildingId", "HomeBuildingType", "InHomeBuilding" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.PetFact), global::StardewValleyMcp.Protocol.V1.PetFact.Parser, new[]{ "PetType", "PettedToday", "Friendship" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.HorseFact), global::StardewValleyMcp.Protocol.V1.HorseFact.Parser, new[]{ "HasRider" }, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::StardewValleyMcp.Protocol.V1.InventorySnapshot), global::StardewValleyMcp.Protocol.V1.InventorySnapshot.Parser, new[]{ "InventoryRevision", "ContainerKind", "ContainerRef", "SlotCount", "Slots" }, new[]{ "ContainerRef" }, null, null, null),
@@ -374,6 +434,22 @@ namespace StardewValleyMcp.Protocol.V1 {
     [pbr::OriginalName("ITEM_TOOL_KIND_SCYTHE")] Scythe = 5,
   }
 
+  public enum MachineState {
+    [pbr::OriginalName("MACHINE_STATE_UNSPECIFIED")] Unspecified = 0,
+    [pbr::OriginalName("MACHINE_STATE_UNKNOWN")] Unknown = 1,
+    [pbr::OriginalName("MACHINE_STATE_IDLE")] Idle = 2,
+    [pbr::OriginalName("MACHINE_STATE_PROCESSING")] Processing = 3,
+    [pbr::OriginalName("MACHINE_STATE_READY")] Ready = 4,
+  }
+
+  public enum FurnitureInteractionKind {
+    [pbr::OriginalName("FURNITURE_INTERACTION_KIND_UNSPECIFIED")] Unspecified = 0,
+    [pbr::OriginalName("FURNITURE_INTERACTION_KIND_SEAT")] Seat = 1,
+    [pbr::OriginalName("FURNITURE_INTERACTION_KIND_SURFACE")] Surface = 2,
+    [pbr::OriginalName("FURNITURE_INTERACTION_KIND_STORAGE")] Storage = 3,
+    [pbr::OriginalName("FURNITURE_INTERACTION_KIND_TOGGLE")] Toggle = 4,
+  }
+
   public enum CharacterKind {
     [pbr::OriginalName("CHARACTER_KIND_UNSPECIFIED")] Unspecified = 0,
     [pbr::OriginalName("CHARACTER_KIND_NPC")] Npc = 1,
@@ -381,6 +457,13 @@ namespace StardewValleyMcp.Protocol.V1 {
     [pbr::OriginalName("CHARACTER_KIND_FARM_ANIMAL")] FarmAnimal = 3,
     [pbr::OriginalName("CHARACTER_KIND_PET")] Pet = 4,
     [pbr::OriginalName("CHARACTER_KIND_HORSE")] Horse = 5,
+  }
+
+  public enum FarmAnimalProduceHarvestMethod {
+    [pbr::OriginalName("FARM_ANIMAL_PRODUCE_HARVEST_METHOD_UNSPECIFIED")] Unspecified = 0,
+    [pbr::OriginalName("FARM_ANIMAL_PRODUCE_HARVEST_METHOD_DROP_OVERNIGHT")] DropOvernight = 1,
+    [pbr::OriginalName("FARM_ANIMAL_PRODUCE_HARVEST_METHOD_HARVEST_WITH_TOOL")] HarvestWithTool = 2,
+    [pbr::OriginalName("FARM_ANIMAL_PRODUCE_HARVEST_METHOD_DIG_UP")] DigUp = 3,
   }
 
   public enum UiElementKind {
@@ -6315,6 +6398,7 @@ namespace StardewValleyMcp.Protocol.V1 {
   {
     private static readonly pb::MessageParser<CropFact> _parser = new pb::MessageParser<CropFact>(() => new CropFact());
     private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<CropFact> Parser { get { return _parser; } }
@@ -6342,6 +6426,7 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public CropFact(CropFact other) : this() {
+      _hasBits0 = other._hasBits0;
       cropId_ = other.cropId_;
       harvestItemId_ = other.harvestItemId_;
       growthPhase_ = other.growthPhase_;
@@ -6350,6 +6435,16 @@ namespace StardewValleyMcp.Protocol.V1 {
       dead_ = other.dead_;
       regrows_ = other.regrows_;
       harvestAction_ = other.harvestAction_;
+      hasFertilizer_ = other.hasFertilizer_;
+      fertilizerItemId_ = other.fertilizerItemId_;
+      growthPhaseDay_ = other.growthPhaseDay_;
+      growthPhaseDuration_ = other.growthPhaseDuration_;
+      growthPhaseCount_ = other.growthPhaseCount_;
+      growthDaysRemainingIfWatered_ = other.growthDaysRemainingIfWatered_;
+      regrowDays_ = other.regrowDays_;
+      regrowDaysRemaining_ = other.regrowDaysRemaining_;
+      mature_ = other.mature_;
+      needsWatering_ = other.needsWatering_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -6455,6 +6550,305 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "has_fertilizer" field.</summary>
+    public const int HasFertilizerFieldNumber = 9;
+    private readonly static bool HasFertilizerDefaultValue = false;
+
+    private bool hasFertilizer_;
+    /// <summary>
+    /// 字段存在且为 true 时，该耕地当前施有肥料；缺失不得解释为“无肥料”。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasFertilizer {
+      get { if ((_hasBits0 & 1) != 0) { return hasFertilizer_; } else { return HasFertilizerDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        hasFertilizer_ = value;
+      }
+    }
+    /// <summary>Gets whether the "has_fertilizer" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasHasFertilizer {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "has_fertilizer" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearHasFertilizer() {
+      _hasBits0 &= ~1;
+    }
+
+    /// <summary>Field number for the "fertilizer_item_id" field.</summary>
+    public const int FertilizerItemIdFieldNumber = 10;
+    private readonly static string FertilizerItemIdDefaultValue = "";
+
+    private string fertilizerItemId_;
+    /// <summary>
+    /// 当前肥料的 Qualified Item ID；仅在能安全确认肥料存在并解析其 ID 时出现。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string FertilizerItemId {
+      get { return fertilizerItemId_ ?? FertilizerItemIdDefaultValue; }
+      set {
+        fertilizerItemId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+    /// <summary>Gets whether the "fertilizer_item_id" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasFertilizerItemId {
+      get { return fertilizerItemId_ != null; }
+    }
+    /// <summary>Clears the value of the "fertilizer_item_id" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearFertilizerItemId() {
+      fertilizerItemId_ = null;
+    }
+
+    /// <summary>Field number for the "growth_phase_day" field.</summary>
+    public const int GrowthPhaseDayFieldNumber = 11;
+    private readonly static uint GrowthPhaseDayDefaultValue = 0;
+
+    private uint growthPhaseDay_;
+    /// <summary>
+    /// 当前生长阶段内已经完成的浇水生长日；成熟或再生倒计时期间可以缺失。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint GrowthPhaseDay {
+      get { if ((_hasBits0 & 2) != 0) { return growthPhaseDay_; } else { return GrowthPhaseDayDefaultValue; } }
+      set {
+        _hasBits0 |= 2;
+        growthPhaseDay_ = value;
+      }
+    }
+    /// <summary>Gets whether the "growth_phase_day" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasGrowthPhaseDay {
+      get { return (_hasBits0 & 2) != 0; }
+    }
+    /// <summary>Clears the value of the "growth_phase_day" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearGrowthPhaseDay() {
+      _hasBits0 &= ~2;
+    }
+
+    /// <summary>Field number for the "growth_phase_duration" field.</summary>
+    public const int GrowthPhaseDurationFieldNumber = 12;
+    private readonly static uint GrowthPhaseDurationDefaultValue = 0;
+
+    private uint growthPhaseDuration_;
+    /// <summary>
+    /// 当前生长阶段需要的浇水生长日；成熟或无法安全读取时可以缺失。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint GrowthPhaseDuration {
+      get { if ((_hasBits0 & 4) != 0) { return growthPhaseDuration_; } else { return GrowthPhaseDurationDefaultValue; } }
+      set {
+        _hasBits0 |= 4;
+        growthPhaseDuration_ = value;
+      }
+    }
+    /// <summary>Gets whether the "growth_phase_duration" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasGrowthPhaseDuration {
+      get { return (_hasBits0 & 4) != 0; }
+    }
+    /// <summary>Clears the value of the "growth_phase_duration" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearGrowthPhaseDuration() {
+      _hasBits0 &= ~4;
+    }
+
+    /// <summary>Field number for the "growth_phase_count" field.</summary>
+    public const int GrowthPhaseCountFieldNumber = 13;
+    private readonly static uint GrowthPhaseCountDefaultValue = 0;
+
+    private uint growthPhaseCount_;
+    /// <summary>
+    /// 生长阶段总数，包含最终成熟阶段。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint GrowthPhaseCount {
+      get { if ((_hasBits0 & 8) != 0) { return growthPhaseCount_; } else { return GrowthPhaseCountDefaultValue; } }
+      set {
+        _hasBits0 |= 8;
+        growthPhaseCount_ = value;
+      }
+    }
+    /// <summary>Gets whether the "growth_phase_count" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasGrowthPhaseCount {
+      get { return (_hasBits0 & 8) != 0; }
+    }
+    /// <summary>Clears the value of the "growth_phase_count" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearGrowthPhaseCount() {
+      _hasBits0 &= ~8;
+    }
+
+    /// <summary>Field number for the "growth_days_remaining_if_watered" field.</summary>
+    public const int GrowthDaysRemainingIfWateredFieldNumber = 14;
+    private readonly static uint GrowthDaysRemainingIfWateredDefaultValue = 0;
+
+    private uint growthDaysRemainingIfWatered_;
+    /// <summary>
+    /// 假设之后每个需要浇水的生长日都满足条件，距离首次成熟还需的生长日。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint GrowthDaysRemainingIfWatered {
+      get { if ((_hasBits0 & 16) != 0) { return growthDaysRemainingIfWatered_; } else { return GrowthDaysRemainingIfWateredDefaultValue; } }
+      set {
+        _hasBits0 |= 16;
+        growthDaysRemainingIfWatered_ = value;
+      }
+    }
+    /// <summary>Gets whether the "growth_days_remaining_if_watered" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasGrowthDaysRemainingIfWatered {
+      get { return (_hasBits0 & 16) != 0; }
+    }
+    /// <summary>Clears the value of the "growth_days_remaining_if_watered" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearGrowthDaysRemainingIfWatered() {
+      _hasBits0 &= ~16;
+    }
+
+    /// <summary>Field number for the "regrow_days" field.</summary>
+    public const int RegrowDaysFieldNumber = 15;
+    private readonly static uint RegrowDaysDefaultValue = 0;
+
+    private uint regrowDays_;
+    /// <summary>
+    /// 每次收获后重新产出的基础间隔；不再生的作物保持缺失。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint RegrowDays {
+      get { if ((_hasBits0 & 32) != 0) { return regrowDays_; } else { return RegrowDaysDefaultValue; } }
+      set {
+        _hasBits0 |= 32;
+        regrowDays_ = value;
+      }
+    }
+    /// <summary>Gets whether the "regrow_days" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasRegrowDays {
+      get { return (_hasBits0 & 32) != 0; }
+    }
+    /// <summary>Clears the value of the "regrow_days" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearRegrowDays() {
+      _hasBits0 &= ~32;
+    }
+
+    /// <summary>Field number for the "regrow_days_remaining" field.</summary>
+    public const int RegrowDaysRemainingFieldNumber = 16;
+    private readonly static uint RegrowDaysRemainingDefaultValue = 0;
+
+    private uint regrowDaysRemaining_;
+    /// <summary>
+    /// 成熟再生作物距离下一次可收获还需的生长日；首次生长期间保持缺失。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint RegrowDaysRemaining {
+      get { if ((_hasBits0 & 64) != 0) { return regrowDaysRemaining_; } else { return RegrowDaysRemainingDefaultValue; } }
+      set {
+        _hasBits0 |= 64;
+        regrowDaysRemaining_ = value;
+      }
+    }
+    /// <summary>Gets whether the "regrow_days_remaining" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasRegrowDaysRemaining {
+      get { return (_hasBits0 & 64) != 0; }
+    }
+    /// <summary>Clears the value of the "regrow_days_remaining" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearRegrowDaysRemaining() {
+      _hasBits0 &= ~64;
+    }
+
+    /// <summary>Field number for the "mature" field.</summary>
+    public const int MatureFieldNumber = 17;
+    private readonly static bool MatureDefaultValue = false;
+
+    private bool mature_;
+    /// <summary>
+    /// 活着且已经到达最终生长阶段；再生倒计时期间仍为 true。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Mature {
+      get { if ((_hasBits0 & 128) != 0) { return mature_; } else { return MatureDefaultValue; } }
+      set {
+        _hasBits0 |= 128;
+        mature_ = value;
+      }
+    }
+    /// <summary>Gets whether the "mature" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasMature {
+      get { return (_hasBits0 & 128) != 0; }
+    }
+    /// <summary>Clears the value of the "mature" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearMature() {
+      _hasBits0 &= ~128;
+    }
+
+    /// <summary>Field number for the "needs_watering" field.</summary>
+    public const int NeedsWateringFieldNumber = 18;
+    private readonly static bool NeedsWateringDefaultValue = false;
+
+    private bool needsWatering_;
+    /// <summary>
+    /// 当前作物是否需要浇水才能继续推进生长。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool NeedsWatering {
+      get { if ((_hasBits0 & 256) != 0) { return needsWatering_; } else { return NeedsWateringDefaultValue; } }
+      set {
+        _hasBits0 |= 256;
+        needsWatering_ = value;
+      }
+    }
+    /// <summary>Gets whether the "needs_watering" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasNeedsWatering {
+      get { return (_hasBits0 & 256) != 0; }
+    }
+    /// <summary>Clears the value of the "needs_watering" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearNeedsWatering() {
+      _hasBits0 &= ~256;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -6478,6 +6872,16 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (Dead != other.Dead) return false;
       if (Regrows != other.Regrows) return false;
       if (HarvestAction != other.HarvestAction) return false;
+      if (HasFertilizer != other.HasFertilizer) return false;
+      if (FertilizerItemId != other.FertilizerItemId) return false;
+      if (GrowthPhaseDay != other.GrowthPhaseDay) return false;
+      if (GrowthPhaseDuration != other.GrowthPhaseDuration) return false;
+      if (GrowthPhaseCount != other.GrowthPhaseCount) return false;
+      if (GrowthDaysRemainingIfWatered != other.GrowthDaysRemainingIfWatered) return false;
+      if (RegrowDays != other.RegrowDays) return false;
+      if (RegrowDaysRemaining != other.RegrowDaysRemaining) return false;
+      if (Mature != other.Mature) return false;
+      if (NeedsWatering != other.NeedsWatering) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -6493,6 +6897,16 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (Dead != false) hash ^= Dead.GetHashCode();
       if (Regrows != false) hash ^= Regrows.GetHashCode();
       if (HarvestAction != global::StardewValleyMcp.Protocol.V1.CropHarvestAction.Unspecified) hash ^= HarvestAction.GetHashCode();
+      if (HasHasFertilizer) hash ^= HasFertilizer.GetHashCode();
+      if (HasFertilizerItemId) hash ^= FertilizerItemId.GetHashCode();
+      if (HasGrowthPhaseDay) hash ^= GrowthPhaseDay.GetHashCode();
+      if (HasGrowthPhaseDuration) hash ^= GrowthPhaseDuration.GetHashCode();
+      if (HasGrowthPhaseCount) hash ^= GrowthPhaseCount.GetHashCode();
+      if (HasGrowthDaysRemainingIfWatered) hash ^= GrowthDaysRemainingIfWatered.GetHashCode();
+      if (HasRegrowDays) hash ^= RegrowDays.GetHashCode();
+      if (HasRegrowDaysRemaining) hash ^= RegrowDaysRemaining.GetHashCode();
+      if (HasMature) hash ^= Mature.GetHashCode();
+      if (HasNeedsWatering) hash ^= NeedsWatering.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -6543,6 +6957,46 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(64);
         output.WriteEnum((int) HarvestAction);
       }
+      if (HasHasFertilizer) {
+        output.WriteRawTag(72);
+        output.WriteBool(HasFertilizer);
+      }
+      if (HasFertilizerItemId) {
+        output.WriteRawTag(82);
+        output.WriteString(FertilizerItemId);
+      }
+      if (HasGrowthPhaseDay) {
+        output.WriteRawTag(88);
+        output.WriteUInt32(GrowthPhaseDay);
+      }
+      if (HasGrowthPhaseDuration) {
+        output.WriteRawTag(96);
+        output.WriteUInt32(GrowthPhaseDuration);
+      }
+      if (HasGrowthPhaseCount) {
+        output.WriteRawTag(104);
+        output.WriteUInt32(GrowthPhaseCount);
+      }
+      if (HasGrowthDaysRemainingIfWatered) {
+        output.WriteRawTag(112);
+        output.WriteUInt32(GrowthDaysRemainingIfWatered);
+      }
+      if (HasRegrowDays) {
+        output.WriteRawTag(120);
+        output.WriteUInt32(RegrowDays);
+      }
+      if (HasRegrowDaysRemaining) {
+        output.WriteRawTag(128, 1);
+        output.WriteUInt32(RegrowDaysRemaining);
+      }
+      if (HasMature) {
+        output.WriteRawTag(136, 1);
+        output.WriteBool(Mature);
+      }
+      if (HasNeedsWatering) {
+        output.WriteRawTag(144, 1);
+        output.WriteBool(NeedsWatering);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -6585,6 +7039,46 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(64);
         output.WriteEnum((int) HarvestAction);
       }
+      if (HasHasFertilizer) {
+        output.WriteRawTag(72);
+        output.WriteBool(HasFertilizer);
+      }
+      if (HasFertilizerItemId) {
+        output.WriteRawTag(82);
+        output.WriteString(FertilizerItemId);
+      }
+      if (HasGrowthPhaseDay) {
+        output.WriteRawTag(88);
+        output.WriteUInt32(GrowthPhaseDay);
+      }
+      if (HasGrowthPhaseDuration) {
+        output.WriteRawTag(96);
+        output.WriteUInt32(GrowthPhaseDuration);
+      }
+      if (HasGrowthPhaseCount) {
+        output.WriteRawTag(104);
+        output.WriteUInt32(GrowthPhaseCount);
+      }
+      if (HasGrowthDaysRemainingIfWatered) {
+        output.WriteRawTag(112);
+        output.WriteUInt32(GrowthDaysRemainingIfWatered);
+      }
+      if (HasRegrowDays) {
+        output.WriteRawTag(120);
+        output.WriteUInt32(RegrowDays);
+      }
+      if (HasRegrowDaysRemaining) {
+        output.WriteRawTag(128, 1);
+        output.WriteUInt32(RegrowDaysRemaining);
+      }
+      if (HasMature) {
+        output.WriteRawTag(136, 1);
+        output.WriteBool(Mature);
+      }
+      if (HasNeedsWatering) {
+        output.WriteRawTag(144, 1);
+        output.WriteBool(NeedsWatering);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -6618,6 +7112,36 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (HarvestAction != global::StardewValleyMcp.Protocol.V1.CropHarvestAction.Unspecified) {
         size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) HarvestAction);
+      }
+      if (HasHasFertilizer) {
+        size += 1 + 1;
+      }
+      if (HasFertilizerItemId) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(FertilizerItemId);
+      }
+      if (HasGrowthPhaseDay) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(GrowthPhaseDay);
+      }
+      if (HasGrowthPhaseDuration) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(GrowthPhaseDuration);
+      }
+      if (HasGrowthPhaseCount) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(GrowthPhaseCount);
+      }
+      if (HasGrowthDaysRemainingIfWatered) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(GrowthDaysRemainingIfWatered);
+      }
+      if (HasRegrowDays) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(RegrowDays);
+      }
+      if (HasRegrowDaysRemaining) {
+        size += 2 + pb::CodedOutputStream.ComputeUInt32Size(RegrowDaysRemaining);
+      }
+      if (HasMature) {
+        size += 2 + 1;
+      }
+      if (HasNeedsWatering) {
+        size += 2 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -6654,6 +7178,36 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (other.HarvestAction != global::StardewValleyMcp.Protocol.V1.CropHarvestAction.Unspecified) {
         HarvestAction = other.HarvestAction;
+      }
+      if (other.HasHasFertilizer) {
+        HasFertilizer = other.HasFertilizer;
+      }
+      if (other.HasFertilizerItemId) {
+        FertilizerItemId = other.FertilizerItemId;
+      }
+      if (other.HasGrowthPhaseDay) {
+        GrowthPhaseDay = other.GrowthPhaseDay;
+      }
+      if (other.HasGrowthPhaseDuration) {
+        GrowthPhaseDuration = other.GrowthPhaseDuration;
+      }
+      if (other.HasGrowthPhaseCount) {
+        GrowthPhaseCount = other.GrowthPhaseCount;
+      }
+      if (other.HasGrowthDaysRemainingIfWatered) {
+        GrowthDaysRemainingIfWatered = other.GrowthDaysRemainingIfWatered;
+      }
+      if (other.HasRegrowDays) {
+        RegrowDays = other.RegrowDays;
+      }
+      if (other.HasRegrowDaysRemaining) {
+        RegrowDaysRemaining = other.RegrowDaysRemaining;
+      }
+      if (other.HasMature) {
+        Mature = other.Mature;
+      }
+      if (other.HasNeedsWatering) {
+        NeedsWatering = other.NeedsWatering;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -6706,6 +7260,46 @@ namespace StardewValleyMcp.Protocol.V1 {
             HarvestAction = (global::StardewValleyMcp.Protocol.V1.CropHarvestAction) input.ReadEnum();
             break;
           }
+          case 72: {
+            HasFertilizer = input.ReadBool();
+            break;
+          }
+          case 82: {
+            FertilizerItemId = input.ReadString();
+            break;
+          }
+          case 88: {
+            GrowthPhaseDay = input.ReadUInt32();
+            break;
+          }
+          case 96: {
+            GrowthPhaseDuration = input.ReadUInt32();
+            break;
+          }
+          case 104: {
+            GrowthPhaseCount = input.ReadUInt32();
+            break;
+          }
+          case 112: {
+            GrowthDaysRemainingIfWatered = input.ReadUInt32();
+            break;
+          }
+          case 120: {
+            RegrowDays = input.ReadUInt32();
+            break;
+          }
+          case 128: {
+            RegrowDaysRemaining = input.ReadUInt32();
+            break;
+          }
+          case 136: {
+            Mature = input.ReadBool();
+            break;
+          }
+          case 144: {
+            NeedsWatering = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -6755,6 +7349,46 @@ namespace StardewValleyMcp.Protocol.V1 {
           }
           case 64: {
             HarvestAction = (global::StardewValleyMcp.Protocol.V1.CropHarvestAction) input.ReadEnum();
+            break;
+          }
+          case 72: {
+            HasFertilizer = input.ReadBool();
+            break;
+          }
+          case 82: {
+            FertilizerItemId = input.ReadString();
+            break;
+          }
+          case 88: {
+            GrowthPhaseDay = input.ReadUInt32();
+            break;
+          }
+          case 96: {
+            GrowthPhaseDuration = input.ReadUInt32();
+            break;
+          }
+          case 104: {
+            GrowthPhaseCount = input.ReadUInt32();
+            break;
+          }
+          case 112: {
+            GrowthDaysRemainingIfWatered = input.ReadUInt32();
+            break;
+          }
+          case 120: {
+            RegrowDays = input.ReadUInt32();
+            break;
+          }
+          case 128: {
+            RegrowDaysRemaining = input.ReadUInt32();
+            break;
+          }
+          case 136: {
+            Mature = input.ReadBool();
+            break;
+          }
+          case 144: {
+            NeedsWatering = input.ReadBool();
             break;
           }
         }
@@ -8317,6 +8951,7 @@ namespace StardewValleyMcp.Protocol.V1 {
   {
     private static readonly pb::MessageParser<MachineFact> _parser = new pb::MessageParser<MachineFact>(() => new MachineFact());
     private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<MachineFact> Parser { get { return _parser; } }
@@ -8344,10 +8979,13 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public MachineFact(MachineFact other) : this() {
+      _hasBits0 = other._hasBits0;
       qualifiedItemId_ = other.qualifiedItemId_;
       readyForHarvest_ = other.readyForHarvest_;
       minutesUntilReady_ = other.minutesUntilReady_;
       heldItem_ = other.heldItem_ != null ? other.heldItem_.Clone() : null;
+      state_ = other.state_;
+      inputItem_ = other.inputItem_ != null ? other.inputItem_.Clone() : null;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -8396,12 +9034,60 @@ namespace StardewValleyMcp.Protocol.V1 {
     /// <summary>Field number for the "held_item" field.</summary>
     public const int HeldItemFieldNumber = 4;
     private global::StardewValleyMcp.Protocol.V1.ItemFact heldItem_;
+    /// <summary>
+    /// 当前预测输出或处理中间产物；最终收取结果仍以游戏原生收取行为为准。
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public global::StardewValleyMcp.Protocol.V1.ItemFact HeldItem {
       get { return heldItem_; }
       set {
         heldItem_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "state" field.</summary>
+    public const int StateFieldNumber = 5;
+    private readonly static global::StardewValleyMcp.Protocol.V1.MachineState StateDefaultValue = global::StardewValleyMcp.Protocol.V1.MachineState.Unspecified;
+
+    private global::StardewValleyMcp.Protocol.V1.MachineState state_;
+    /// <summary>
+    /// 仅在运行态可安全读取时出现；特殊或不一致状态显式使用 UNKNOWN。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.MachineState State {
+      get { if ((_hasBits0 & 1) != 0) { return state_; } else { return StateDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        state_ = value;
+      }
+    }
+    /// <summary>Gets whether the "state" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasState {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "state" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearState() {
+      _hasBits0 &= ~1;
+    }
+
+    /// <summary>Field number for the "input_item" field.</summary>
+    public const int InputItemFieldNumber = 6;
+    private global::StardewValleyMcp.Protocol.V1.ItemFact inputItem_;
+    /// <summary>
+    /// 游戏保留且能安全读取时返回最近一次投入的物品事实。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.ItemFact InputItem {
+      get { return inputItem_; }
+      set {
+        inputItem_ = value;
       }
     }
 
@@ -8424,6 +9110,8 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (ReadyForHarvest != other.ReadyForHarvest) return false;
       if (MinutesUntilReady != other.MinutesUntilReady) return false;
       if (!object.Equals(HeldItem, other.HeldItem)) return false;
+      if (State != other.State) return false;
+      if (!object.Equals(InputItem, other.InputItem)) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -8435,6 +9123,8 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (ReadyForHarvest != false) hash ^= ReadyForHarvest.GetHashCode();
       if (MinutesUntilReady != 0) hash ^= MinutesUntilReady.GetHashCode();
       if (heldItem_ != null) hash ^= HeldItem.GetHashCode();
+      if (HasState) hash ^= State.GetHashCode();
+      if (inputItem_ != null) hash ^= InputItem.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -8469,6 +9159,14 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(34);
         output.WriteMessage(HeldItem);
       }
+      if (HasState) {
+        output.WriteRawTag(40);
+        output.WriteEnum((int) State);
+      }
+      if (inputItem_ != null) {
+        output.WriteRawTag(50);
+        output.WriteMessage(InputItem);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -8495,6 +9193,14 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(34);
         output.WriteMessage(HeldItem);
       }
+      if (HasState) {
+        output.WriteRawTag(40);
+        output.WriteEnum((int) State);
+      }
+      if (inputItem_ != null) {
+        output.WriteRawTag(50);
+        output.WriteMessage(InputItem);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -8516,6 +9222,12 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (heldItem_ != null) {
         size += 1 + pb::CodedOutputStream.ComputeMessageSize(HeldItem);
+      }
+      if (HasState) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) State);
+      }
+      if (inputItem_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(InputItem);
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -8543,6 +9255,15 @@ namespace StardewValleyMcp.Protocol.V1 {
           HeldItem = new global::StardewValleyMcp.Protocol.V1.ItemFact();
         }
         HeldItem.MergeFrom(other.HeldItem);
+      }
+      if (other.HasState) {
+        State = other.State;
+      }
+      if (other.inputItem_ != null) {
+        if (inputItem_ == null) {
+          InputItem = new global::StardewValleyMcp.Protocol.V1.ItemFact();
+        }
+        InputItem.MergeFrom(other.InputItem);
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -8582,6 +9303,17 @@ namespace StardewValleyMcp.Protocol.V1 {
             input.ReadMessage(HeldItem);
             break;
           }
+          case 40: {
+            State = (global::StardewValleyMcp.Protocol.V1.MachineState) input.ReadEnum();
+            break;
+          }
+          case 50: {
+            if (inputItem_ == null) {
+              InputItem = new global::StardewValleyMcp.Protocol.V1.ItemFact();
+            }
+            input.ReadMessage(InputItem);
+            break;
+          }
         }
       }
     #endif
@@ -8618,6 +9350,17 @@ namespace StardewValleyMcp.Protocol.V1 {
               HeldItem = new global::StardewValleyMcp.Protocol.V1.ItemFact();
             }
             input.ReadMessage(HeldItem);
+            break;
+          }
+          case 40: {
+            State = (global::StardewValleyMcp.Protocol.V1.MachineState) input.ReadEnum();
+            break;
+          }
+          case 50: {
+            if (inputItem_ == null) {
+              InputItem = new global::StardewValleyMcp.Protocol.V1.ItemFact();
+            }
+            input.ReadMessage(InputItem);
             break;
           }
         }
@@ -9180,6 +9923,7 @@ namespace StardewValleyMcp.Protocol.V1 {
   {
     private static readonly pb::MessageParser<FurnitureFact> _parser = new pb::MessageParser<FurnitureFact>(() => new FurnitureFact());
     private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<FurnitureFact> Parser { get { return _parser; } }
@@ -9207,9 +9951,21 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public FurnitureFact(FurnitureFact other) : this() {
+      _hasBits0 = other._hasBits0;
       furnitureKind_ = other.furnitureKind_;
       rotation_ = other.rotation_;
       occupiedTiles_ = other.occupiedTiles_.Clone();
+      qualifiedItemId_ = other.qualifiedItemId_;
+      rotationCount_ = other.rotationCount_;
+      canRotate_ = other.canRotate_;
+      seatCapacity_ = other.seatCapacity_;
+      occupiedSeats_ = other.occupiedSeats_;
+      hasSurfaceItem_ = other.hasSurfaceItem_;
+      surfaceItem_ = other.surfaceItem_ != null ? other.surfaceItem_.Clone() : null;
+      isOn_ = other.isOn_;
+      interactionKinds_ = other.interactionKinds_.Clone();
+      interactionProfileComplete_ = other.interactionProfileComplete_;
+      storageItemCount_ = other.storageItemCount_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -9254,6 +10010,280 @@ namespace StardewValleyMcp.Protocol.V1 {
       get { return occupiedTiles_; }
     }
 
+    /// <summary>Field number for the "qualified_item_id" field.</summary>
+    public const int QualifiedItemIdFieldNumber = 4;
+    private readonly static string QualifiedItemIdDefaultValue = "";
+
+    private string qualifiedItemId_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string QualifiedItemId {
+      get { return qualifiedItemId_ ?? QualifiedItemIdDefaultValue; }
+      set {
+        qualifiedItemId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+    /// <summary>Gets whether the "qualified_item_id" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasQualifiedItemId {
+      get { return qualifiedItemId_ != null; }
+    }
+    /// <summary>Clears the value of the "qualified_item_id" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearQualifiedItemId() {
+      qualifiedItemId_ = null;
+    }
+
+    /// <summary>Field number for the "rotation_count" field.</summary>
+    public const int RotationCountFieldNumber = 5;
+    private readonly static uint RotationCountDefaultValue = 0;
+
+    private uint rotationCount_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint RotationCount {
+      get { if ((_hasBits0 & 1) != 0) { return rotationCount_; } else { return RotationCountDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        rotationCount_ = value;
+      }
+    }
+    /// <summary>Gets whether the "rotation_count" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasRotationCount {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "rotation_count" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearRotationCount() {
+      _hasBits0 &= ~1;
+    }
+
+    /// <summary>Field number for the "can_rotate" field.</summary>
+    public const int CanRotateFieldNumber = 6;
+    private readonly static bool CanRotateDefaultValue = false;
+
+    private bool canRotate_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool CanRotate {
+      get { if ((_hasBits0 & 2) != 0) { return canRotate_; } else { return CanRotateDefaultValue; } }
+      set {
+        _hasBits0 |= 2;
+        canRotate_ = value;
+      }
+    }
+    /// <summary>Gets whether the "can_rotate" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasCanRotate {
+      get { return (_hasBits0 & 2) != 0; }
+    }
+    /// <summary>Clears the value of the "can_rotate" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearCanRotate() {
+      _hasBits0 &= ~2;
+    }
+
+    /// <summary>Field number for the "seat_capacity" field.</summary>
+    public const int SeatCapacityFieldNumber = 7;
+    private readonly static uint SeatCapacityDefaultValue = 0;
+
+    private uint seatCapacity_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint SeatCapacity {
+      get { if ((_hasBits0 & 4) != 0) { return seatCapacity_; } else { return SeatCapacityDefaultValue; } }
+      set {
+        _hasBits0 |= 4;
+        seatCapacity_ = value;
+      }
+    }
+    /// <summary>Gets whether the "seat_capacity" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasSeatCapacity {
+      get { return (_hasBits0 & 4) != 0; }
+    }
+    /// <summary>Clears the value of the "seat_capacity" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearSeatCapacity() {
+      _hasBits0 &= ~4;
+    }
+
+    /// <summary>Field number for the "occupied_seats" field.</summary>
+    public const int OccupiedSeatsFieldNumber = 8;
+    private readonly static uint OccupiedSeatsDefaultValue = 0;
+
+    private uint occupiedSeats_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint OccupiedSeats {
+      get { if ((_hasBits0 & 8) != 0) { return occupiedSeats_; } else { return OccupiedSeatsDefaultValue; } }
+      set {
+        _hasBits0 |= 8;
+        occupiedSeats_ = value;
+      }
+    }
+    /// <summary>Gets whether the "occupied_seats" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasOccupiedSeats {
+      get { return (_hasBits0 & 8) != 0; }
+    }
+    /// <summary>Clears the value of the "occupied_seats" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearOccupiedSeats() {
+      _hasBits0 &= ~8;
+    }
+
+    /// <summary>Field number for the "has_surface_item" field.</summary>
+    public const int HasSurfaceItemFieldNumber = 9;
+    private readonly static bool HasSurfaceItemDefaultValue = false;
+
+    private bool hasSurfaceItem_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasSurfaceItem {
+      get { if ((_hasBits0 & 16) != 0) { return hasSurfaceItem_; } else { return HasSurfaceItemDefaultValue; } }
+      set {
+        _hasBits0 |= 16;
+        hasSurfaceItem_ = value;
+      }
+    }
+    /// <summary>Gets whether the "has_surface_item" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasHasSurfaceItem {
+      get { return (_hasBits0 & 16) != 0; }
+    }
+    /// <summary>Clears the value of the "has_surface_item" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearHasSurfaceItem() {
+      _hasBits0 &= ~16;
+    }
+
+    /// <summary>Field number for the "surface_item" field.</summary>
+    public const int SurfaceItemFieldNumber = 10;
+    private global::StardewValleyMcp.Protocol.V1.ItemFact surfaceItem_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.ItemFact SurfaceItem {
+      get { return surfaceItem_; }
+      set {
+        surfaceItem_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "is_on" field.</summary>
+    public const int IsOnFieldNumber = 11;
+    private readonly static bool IsOnDefaultValue = false;
+
+    private bool isOn_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool IsOn {
+      get { if ((_hasBits0 & 32) != 0) { return isOn_; } else { return IsOnDefaultValue; } }
+      set {
+        _hasBits0 |= 32;
+        isOn_ = value;
+      }
+    }
+    /// <summary>Gets whether the "is_on" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasIsOn {
+      get { return (_hasBits0 & 32) != 0; }
+    }
+    /// <summary>Clears the value of the "is_on" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearIsOn() {
+      _hasBits0 &= ~32;
+    }
+
+    /// <summary>Field number for the "interaction_kinds" field.</summary>
+    public const int InteractionKindsFieldNumber = 12;
+    private static readonly pb::FieldCodec<global::StardewValleyMcp.Protocol.V1.FurnitureInteractionKind> _repeated_interactionKinds_codec
+        = pb::FieldCodec.ForEnum(98, x => (int) x, x => (global::StardewValleyMcp.Protocol.V1.FurnitureInteractionKind) x);
+    private readonly pbc::RepeatedField<global::StardewValleyMcp.Protocol.V1.FurnitureInteractionKind> interactionKinds_ = new pbc::RepeatedField<global::StardewValleyMcp.Protocol.V1.FurnitureInteractionKind>();
+    /// <summary>
+    /// 保守公开且可由语言无关事实确认的交互能力集合。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public pbc::RepeatedField<global::StardewValleyMcp.Protocol.V1.FurnitureInteractionKind> InteractionKinds {
+      get { return interactionKinds_; }
+    }
+
+    /// <summary>Field number for the "interaction_profile_complete" field.</summary>
+    public const int InteractionProfileCompleteFieldNumber = 13;
+    private readonly static bool InteractionProfileCompleteDefaultValue = false;
+
+    private bool interactionProfileComplete_;
+    /// <summary>
+    /// true 表示本轮已完整判断交互能力，此时空集合才表示普通装饰家具。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool InteractionProfileComplete {
+      get { if ((_hasBits0 & 64) != 0) { return interactionProfileComplete_; } else { return InteractionProfileCompleteDefaultValue; } }
+      set {
+        _hasBits0 |= 64;
+        interactionProfileComplete_ = value;
+      }
+    }
+    /// <summary>Gets whether the "interaction_profile_complete" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasInteractionProfileComplete {
+      get { return (_hasBits0 & 64) != 0; }
+    }
+    /// <summary>Clears the value of the "interaction_profile_complete" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearInteractionProfileComplete() {
+      _hasBits0 &= ~64;
+    }
+
+    /// <summary>Field number for the "storage_item_count" field.</summary>
+    public const int StorageItemCountFieldNumber = 14;
+    private readonly static uint StorageItemCountDefaultValue = 0;
+
+    private uint storageItemCount_;
+    /// <summary>
+    /// STORAGE 家具当前可安全确认的非空物品数量。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint StorageItemCount {
+      get { if ((_hasBits0 & 128) != 0) { return storageItemCount_; } else { return StorageItemCountDefaultValue; } }
+      set {
+        _hasBits0 |= 128;
+        storageItemCount_ = value;
+      }
+    }
+    /// <summary>Gets whether the "storage_item_count" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasStorageItemCount {
+      get { return (_hasBits0 & 128) != 0; }
+    }
+    /// <summary>Clears the value of the "storage_item_count" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearStorageItemCount() {
+      _hasBits0 &= ~128;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -9272,6 +10302,17 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (FurnitureKind != other.FurnitureKind) return false;
       if (Rotation != other.Rotation) return false;
       if(!occupiedTiles_.Equals(other.occupiedTiles_)) return false;
+      if (QualifiedItemId != other.QualifiedItemId) return false;
+      if (RotationCount != other.RotationCount) return false;
+      if (CanRotate != other.CanRotate) return false;
+      if (SeatCapacity != other.SeatCapacity) return false;
+      if (OccupiedSeats != other.OccupiedSeats) return false;
+      if (HasSurfaceItem != other.HasSurfaceItem) return false;
+      if (!object.Equals(SurfaceItem, other.SurfaceItem)) return false;
+      if (IsOn != other.IsOn) return false;
+      if(!interactionKinds_.Equals(other.interactionKinds_)) return false;
+      if (InteractionProfileComplete != other.InteractionProfileComplete) return false;
+      if (StorageItemCount != other.StorageItemCount) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -9282,6 +10323,17 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (FurnitureKind.Length != 0) hash ^= FurnitureKind.GetHashCode();
       if (Rotation != 0) hash ^= Rotation.GetHashCode();
       hash ^= occupiedTiles_.GetHashCode();
+      if (HasQualifiedItemId) hash ^= QualifiedItemId.GetHashCode();
+      if (HasRotationCount) hash ^= RotationCount.GetHashCode();
+      if (HasCanRotate) hash ^= CanRotate.GetHashCode();
+      if (HasSeatCapacity) hash ^= SeatCapacity.GetHashCode();
+      if (HasOccupiedSeats) hash ^= OccupiedSeats.GetHashCode();
+      if (HasHasSurfaceItem) hash ^= HasSurfaceItem.GetHashCode();
+      if (surfaceItem_ != null) hash ^= SurfaceItem.GetHashCode();
+      if (HasIsOn) hash ^= IsOn.GetHashCode();
+      hash ^= interactionKinds_.GetHashCode();
+      if (HasInteractionProfileComplete) hash ^= InteractionProfileComplete.GetHashCode();
+      if (HasStorageItemCount) hash ^= StorageItemCount.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -9309,6 +10361,47 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteUInt32(Rotation);
       }
       occupiedTiles_.WriteTo(output, _repeated_occupiedTiles_codec);
+      if (HasQualifiedItemId) {
+        output.WriteRawTag(34);
+        output.WriteString(QualifiedItemId);
+      }
+      if (HasRotationCount) {
+        output.WriteRawTag(40);
+        output.WriteUInt32(RotationCount);
+      }
+      if (HasCanRotate) {
+        output.WriteRawTag(48);
+        output.WriteBool(CanRotate);
+      }
+      if (HasSeatCapacity) {
+        output.WriteRawTag(56);
+        output.WriteUInt32(SeatCapacity);
+      }
+      if (HasOccupiedSeats) {
+        output.WriteRawTag(64);
+        output.WriteUInt32(OccupiedSeats);
+      }
+      if (HasHasSurfaceItem) {
+        output.WriteRawTag(72);
+        output.WriteBool(HasSurfaceItem);
+      }
+      if (surfaceItem_ != null) {
+        output.WriteRawTag(82);
+        output.WriteMessage(SurfaceItem);
+      }
+      if (HasIsOn) {
+        output.WriteRawTag(88);
+        output.WriteBool(IsOn);
+      }
+      interactionKinds_.WriteTo(output, _repeated_interactionKinds_codec);
+      if (HasInteractionProfileComplete) {
+        output.WriteRawTag(104);
+        output.WriteBool(InteractionProfileComplete);
+      }
+      if (HasStorageItemCount) {
+        output.WriteRawTag(112);
+        output.WriteUInt32(StorageItemCount);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -9328,6 +10421,47 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteUInt32(Rotation);
       }
       occupiedTiles_.WriteTo(ref output, _repeated_occupiedTiles_codec);
+      if (HasQualifiedItemId) {
+        output.WriteRawTag(34);
+        output.WriteString(QualifiedItemId);
+      }
+      if (HasRotationCount) {
+        output.WriteRawTag(40);
+        output.WriteUInt32(RotationCount);
+      }
+      if (HasCanRotate) {
+        output.WriteRawTag(48);
+        output.WriteBool(CanRotate);
+      }
+      if (HasSeatCapacity) {
+        output.WriteRawTag(56);
+        output.WriteUInt32(SeatCapacity);
+      }
+      if (HasOccupiedSeats) {
+        output.WriteRawTag(64);
+        output.WriteUInt32(OccupiedSeats);
+      }
+      if (HasHasSurfaceItem) {
+        output.WriteRawTag(72);
+        output.WriteBool(HasSurfaceItem);
+      }
+      if (surfaceItem_ != null) {
+        output.WriteRawTag(82);
+        output.WriteMessage(SurfaceItem);
+      }
+      if (HasIsOn) {
+        output.WriteRawTag(88);
+        output.WriteBool(IsOn);
+      }
+      interactionKinds_.WriteTo(ref output, _repeated_interactionKinds_codec);
+      if (HasInteractionProfileComplete) {
+        output.WriteRawTag(104);
+        output.WriteBool(InteractionProfileComplete);
+      }
+      if (HasStorageItemCount) {
+        output.WriteRawTag(112);
+        output.WriteUInt32(StorageItemCount);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -9345,6 +10479,37 @@ namespace StardewValleyMcp.Protocol.V1 {
         size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Rotation);
       }
       size += occupiedTiles_.CalculateSize(_repeated_occupiedTiles_codec);
+      if (HasQualifiedItemId) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(QualifiedItemId);
+      }
+      if (HasRotationCount) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(RotationCount);
+      }
+      if (HasCanRotate) {
+        size += 1 + 1;
+      }
+      if (HasSeatCapacity) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(SeatCapacity);
+      }
+      if (HasOccupiedSeats) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(OccupiedSeats);
+      }
+      if (HasHasSurfaceItem) {
+        size += 1 + 1;
+      }
+      if (surfaceItem_ != null) {
+        size += 1 + pb::CodedOutputStream.ComputeMessageSize(SurfaceItem);
+      }
+      if (HasIsOn) {
+        size += 1 + 1;
+      }
+      size += interactionKinds_.CalculateSize(_repeated_interactionKinds_codec);
+      if (HasInteractionProfileComplete) {
+        size += 1 + 1;
+      }
+      if (HasStorageItemCount) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(StorageItemCount);
+      }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
       }
@@ -9364,6 +10529,40 @@ namespace StardewValleyMcp.Protocol.V1 {
         Rotation = other.Rotation;
       }
       occupiedTiles_.Add(other.occupiedTiles_);
+      if (other.HasQualifiedItemId) {
+        QualifiedItemId = other.QualifiedItemId;
+      }
+      if (other.HasRotationCount) {
+        RotationCount = other.RotationCount;
+      }
+      if (other.HasCanRotate) {
+        CanRotate = other.CanRotate;
+      }
+      if (other.HasSeatCapacity) {
+        SeatCapacity = other.SeatCapacity;
+      }
+      if (other.HasOccupiedSeats) {
+        OccupiedSeats = other.OccupiedSeats;
+      }
+      if (other.HasHasSurfaceItem) {
+        HasSurfaceItem = other.HasSurfaceItem;
+      }
+      if (other.surfaceItem_ != null) {
+        if (surfaceItem_ == null) {
+          SurfaceItem = new global::StardewValleyMcp.Protocol.V1.ItemFact();
+        }
+        SurfaceItem.MergeFrom(other.SurfaceItem);
+      }
+      if (other.HasIsOn) {
+        IsOn = other.IsOn;
+      }
+      interactionKinds_.Add(other.interactionKinds_);
+      if (other.HasInteractionProfileComplete) {
+        InteractionProfileComplete = other.InteractionProfileComplete;
+      }
+      if (other.HasStorageItemCount) {
+        StorageItemCount = other.StorageItemCount;
+      }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
 
@@ -9395,6 +10594,54 @@ namespace StardewValleyMcp.Protocol.V1 {
             occupiedTiles_.AddEntriesFrom(input, _repeated_occupiedTiles_codec);
             break;
           }
+          case 34: {
+            QualifiedItemId = input.ReadString();
+            break;
+          }
+          case 40: {
+            RotationCount = input.ReadUInt32();
+            break;
+          }
+          case 48: {
+            CanRotate = input.ReadBool();
+            break;
+          }
+          case 56: {
+            SeatCapacity = input.ReadUInt32();
+            break;
+          }
+          case 64: {
+            OccupiedSeats = input.ReadUInt32();
+            break;
+          }
+          case 72: {
+            HasSurfaceItem = input.ReadBool();
+            break;
+          }
+          case 82: {
+            if (surfaceItem_ == null) {
+              SurfaceItem = new global::StardewValleyMcp.Protocol.V1.ItemFact();
+            }
+            input.ReadMessage(SurfaceItem);
+            break;
+          }
+          case 88: {
+            IsOn = input.ReadBool();
+            break;
+          }
+          case 98:
+          case 96: {
+            interactionKinds_.AddEntriesFrom(input, _repeated_interactionKinds_codec);
+            break;
+          }
+          case 104: {
+            InteractionProfileComplete = input.ReadBool();
+            break;
+          }
+          case 112: {
+            StorageItemCount = input.ReadUInt32();
+            break;
+          }
         }
       }
     #endif
@@ -9424,6 +10671,54 @@ namespace StardewValleyMcp.Protocol.V1 {
           }
           case 26: {
             occupiedTiles_.AddEntriesFrom(ref input, _repeated_occupiedTiles_codec);
+            break;
+          }
+          case 34: {
+            QualifiedItemId = input.ReadString();
+            break;
+          }
+          case 40: {
+            RotationCount = input.ReadUInt32();
+            break;
+          }
+          case 48: {
+            CanRotate = input.ReadBool();
+            break;
+          }
+          case 56: {
+            SeatCapacity = input.ReadUInt32();
+            break;
+          }
+          case 64: {
+            OccupiedSeats = input.ReadUInt32();
+            break;
+          }
+          case 72: {
+            HasSurfaceItem = input.ReadBool();
+            break;
+          }
+          case 82: {
+            if (surfaceItem_ == null) {
+              SurfaceItem = new global::StardewValleyMcp.Protocol.V1.ItemFact();
+            }
+            input.ReadMessage(SurfaceItem);
+            break;
+          }
+          case 88: {
+            IsOn = input.ReadBool();
+            break;
+          }
+          case 98:
+          case 96: {
+            interactionKinds_.AddEntriesFrom(ref input, _repeated_interactionKinds_codec);
+            break;
+          }
+          case 104: {
+            InteractionProfileComplete = input.ReadBool();
+            break;
+          }
+          case 112: {
+            StorageItemCount = input.ReadUInt32();
             break;
           }
         }
@@ -11699,6 +12994,7 @@ namespace StardewValleyMcp.Protocol.V1 {
   {
     private static readonly pb::MessageParser<FarmAnimalFact> _parser = new pb::MessageParser<FarmAnimalFact>(() => new FarmAnimalFact());
     private pb::UnknownFieldSet _unknownFields;
+    private int _hasBits0;
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public static pb::MessageParser<FarmAnimalFact> Parser { get { return _parser; } }
@@ -11726,11 +13022,27 @@ namespace StardewValleyMcp.Protocol.V1 {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public FarmAnimalFact(FarmAnimalFact other) : this() {
+      _hasBits0 = other._hasBits0;
       animalType_ = other.animalType_;
       produceReady_ = other.produceReady_;
       pettedToday_ = other.pettedToday_;
       friendship_ = other.friendship_;
       happiness_ = other.happiness_;
+      fullness_ = other.fullness_;
+      fedToday_ = other.fedToday_;
+      autoPettedToday_ = other.autoPettedToday_;
+      produceItemId_ = other.produceItemId_;
+      produceQuality_ = other.produceQuality_;
+      produceHarvestMethod_ = other.produceHarvestMethod_;
+      ageDays_ = other.ageDays_;
+      adult_ = other.adult_;
+      daysUntilMature_ = other.daysUntilMature_;
+      daysSinceLastProduce_ = other.daysSinceLastProduce_;
+      baseDaysToProduce_ = other.baseDaysToProduce_;
+      hasHomeBuilding_ = other.hasHomeBuilding_;
+      homeBuildingId_ = other.homeBuildingId_;
+      homeBuildingType_ = other.homeBuildingType_;
+      inHomeBuilding_ = other.inHomeBuilding_;
       _unknownFields = pb::UnknownFieldSet.Clone(other._unknownFields);
     }
 
@@ -11800,6 +13112,417 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
     }
 
+    /// <summary>Field number for the "fullness" field.</summary>
+    public const int FullnessFieldNumber = 6;
+    private readonly static uint FullnessDefaultValue = 0;
+
+    private uint fullness_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint Fullness {
+      get { if ((_hasBits0 & 1) != 0) { return fullness_; } else { return FullnessDefaultValue; } }
+      set {
+        _hasBits0 |= 1;
+        fullness_ = value;
+      }
+    }
+    /// <summary>Gets whether the "fullness" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasFullness {
+      get { return (_hasBits0 & 1) != 0; }
+    }
+    /// <summary>Clears the value of the "fullness" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearFullness() {
+      _hasBits0 &= ~1;
+    }
+
+    /// <summary>Field number for the "fed_today" field.</summary>
+    public const int FedTodayFieldNumber = 7;
+    private readonly static bool FedTodayDefaultValue = false;
+
+    private bool fedToday_;
+    /// <summary>
+    /// 当且仅当 fullness >= 200 时为 true。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool FedToday {
+      get { if ((_hasBits0 & 2) != 0) { return fedToday_; } else { return FedTodayDefaultValue; } }
+      set {
+        _hasBits0 |= 2;
+        fedToday_ = value;
+      }
+    }
+    /// <summary>Gets whether the "fed_today" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasFedToday {
+      get { return (_hasBits0 & 2) != 0; }
+    }
+    /// <summary>Clears the value of the "fed_today" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearFedToday() {
+      _hasBits0 &= ~2;
+    }
+
+    /// <summary>Field number for the "auto_petted_today" field.</summary>
+    public const int AutoPettedTodayFieldNumber = 8;
+    private readonly static bool AutoPettedTodayDefaultValue = false;
+
+    private bool autoPettedToday_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool AutoPettedToday {
+      get { if ((_hasBits0 & 4) != 0) { return autoPettedToday_; } else { return AutoPettedTodayDefaultValue; } }
+      set {
+        _hasBits0 |= 4;
+        autoPettedToday_ = value;
+      }
+    }
+    /// <summary>Gets whether the "auto_petted_today" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasAutoPettedToday {
+      get { return (_hasBits0 & 4) != 0; }
+    }
+    /// <summary>Clears the value of the "auto_petted_today" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearAutoPettedToday() {
+      _hasBits0 &= ~4;
+    }
+
+    /// <summary>Field number for the "produce_item_id" field.</summary>
+    public const int ProduceItemIdFieldNumber = 9;
+    private readonly static string ProduceItemIdDefaultValue = "";
+
+    private string produceItemId_;
+    /// <summary>
+    /// 仅表示动物身上当前可收取的产物，不包含已经落到地面的隔夜产物。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string ProduceItemId {
+      get { return produceItemId_ ?? ProduceItemIdDefaultValue; }
+      set {
+        produceItemId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+    /// <summary>Gets whether the "produce_item_id" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasProduceItemId {
+      get { return produceItemId_ != null; }
+    }
+    /// <summary>Clears the value of the "produce_item_id" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearProduceItemId() {
+      produceItemId_ = null;
+    }
+
+    /// <summary>Field number for the "produce_quality" field.</summary>
+    public const int ProduceQualityFieldNumber = 10;
+    private readonly static uint ProduceQualityDefaultValue = 0;
+
+    private uint produceQuality_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint ProduceQuality {
+      get { if ((_hasBits0 & 8) != 0) { return produceQuality_; } else { return ProduceQualityDefaultValue; } }
+      set {
+        _hasBits0 |= 8;
+        produceQuality_ = value;
+      }
+    }
+    /// <summary>Gets whether the "produce_quality" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasProduceQuality {
+      get { return (_hasBits0 & 8) != 0; }
+    }
+    /// <summary>Clears the value of the "produce_quality" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearProduceQuality() {
+      _hasBits0 &= ~8;
+    }
+
+    /// <summary>Field number for the "produce_harvest_method" field.</summary>
+    public const int ProduceHarvestMethodFieldNumber = 11;
+    private readonly static global::StardewValleyMcp.Protocol.V1.FarmAnimalProduceHarvestMethod ProduceHarvestMethodDefaultValue = global::StardewValleyMcp.Protocol.V1.FarmAnimalProduceHarvestMethod.Unspecified;
+
+    private global::StardewValleyMcp.Protocol.V1.FarmAnimalProduceHarvestMethod produceHarvestMethod_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public global::StardewValleyMcp.Protocol.V1.FarmAnimalProduceHarvestMethod ProduceHarvestMethod {
+      get { if ((_hasBits0 & 16) != 0) { return produceHarvestMethod_; } else { return ProduceHarvestMethodDefaultValue; } }
+      set {
+        _hasBits0 |= 16;
+        produceHarvestMethod_ = value;
+      }
+    }
+    /// <summary>Gets whether the "produce_harvest_method" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasProduceHarvestMethod {
+      get { return (_hasBits0 & 16) != 0; }
+    }
+    /// <summary>Clears the value of the "produce_harvest_method" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearProduceHarvestMethod() {
+      _hasBits0 &= ~16;
+    }
+
+    /// <summary>Field number for the "age_days" field.</summary>
+    public const int AgeDaysFieldNumber = 12;
+    private readonly static uint AgeDaysDefaultValue = 0;
+
+    private uint ageDays_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint AgeDays {
+      get { if ((_hasBits0 & 32) != 0) { return ageDays_; } else { return AgeDaysDefaultValue; } }
+      set {
+        _hasBits0 |= 32;
+        ageDays_ = value;
+      }
+    }
+    /// <summary>Gets whether the "age_days" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasAgeDays {
+      get { return (_hasBits0 & 32) != 0; }
+    }
+    /// <summary>Clears the value of the "age_days" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearAgeDays() {
+      _hasBits0 &= ~32;
+    }
+
+    /// <summary>Field number for the "adult" field.</summary>
+    public const int AdultFieldNumber = 13;
+    private readonly static bool AdultDefaultValue = false;
+
+    private bool adult_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool Adult {
+      get { if ((_hasBits0 & 64) != 0) { return adult_; } else { return AdultDefaultValue; } }
+      set {
+        _hasBits0 |= 64;
+        adult_ = value;
+      }
+    }
+    /// <summary>Gets whether the "adult" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasAdult {
+      get { return (_hasBits0 & 64) != 0; }
+    }
+    /// <summary>Clears the value of the "adult" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearAdult() {
+      _hasBits0 &= ~64;
+    }
+
+    /// <summary>Field number for the "days_until_mature" field.</summary>
+    public const int DaysUntilMatureFieldNumber = 14;
+    private readonly static uint DaysUntilMatureDefaultValue = 0;
+
+    private uint daysUntilMature_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint DaysUntilMature {
+      get { if ((_hasBits0 & 128) != 0) { return daysUntilMature_; } else { return DaysUntilMatureDefaultValue; } }
+      set {
+        _hasBits0 |= 128;
+        daysUntilMature_ = value;
+      }
+    }
+    /// <summary>Gets whether the "days_until_mature" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasDaysUntilMature {
+      get { return (_hasBits0 & 128) != 0; }
+    }
+    /// <summary>Clears the value of the "days_until_mature" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearDaysUntilMature() {
+      _hasBits0 &= ~128;
+    }
+
+    /// <summary>Field number for the "days_since_last_produce" field.</summary>
+    public const int DaysSinceLastProduceFieldNumber = 15;
+    private readonly static uint DaysSinceLastProduceDefaultValue = 0;
+
+    private uint daysSinceLastProduce_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint DaysSinceLastProduce {
+      get { if ((_hasBits0 & 256) != 0) { return daysSinceLastProduce_; } else { return DaysSinceLastProduceDefaultValue; } }
+      set {
+        _hasBits0 |= 256;
+        daysSinceLastProduce_ = value;
+      }
+    }
+    /// <summary>Gets whether the "days_since_last_produce" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasDaysSinceLastProduce {
+      get { return (_hasBits0 & 256) != 0; }
+    }
+    /// <summary>Clears the value of the "days_since_last_produce" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearDaysSinceLastProduce() {
+      _hasBits0 &= ~256;
+    }
+
+    /// <summary>Field number for the "base_days_to_produce" field.</summary>
+    public const int BaseDaysToProduceFieldNumber = 16;
+    private readonly static uint BaseDaysToProduceDefaultValue = 0;
+
+    private uint baseDaysToProduce_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public uint BaseDaysToProduce {
+      get { if ((_hasBits0 & 512) != 0) { return baseDaysToProduce_; } else { return BaseDaysToProduceDefaultValue; } }
+      set {
+        _hasBits0 |= 512;
+        baseDaysToProduce_ = value;
+      }
+    }
+    /// <summary>Gets whether the "base_days_to_produce" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasBaseDaysToProduce {
+      get { return (_hasBits0 & 512) != 0; }
+    }
+    /// <summary>Clears the value of the "base_days_to_produce" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearBaseDaysToProduce() {
+      _hasBits0 &= ~512;
+    }
+
+    /// <summary>Field number for the "has_home_building" field.</summary>
+    public const int HasHomeBuildingFieldNumber = 17;
+    private readonly static bool HasHomeBuildingDefaultValue = false;
+
+    private bool hasHomeBuilding_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasHomeBuilding {
+      get { if ((_hasBits0 & 1024) != 0) { return hasHomeBuilding_; } else { return HasHomeBuildingDefaultValue; } }
+      set {
+        _hasBits0 |= 1024;
+        hasHomeBuilding_ = value;
+      }
+    }
+    /// <summary>Gets whether the "has_home_building" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasHasHomeBuilding {
+      get { return (_hasBits0 & 1024) != 0; }
+    }
+    /// <summary>Clears the value of the "has_home_building" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearHasHomeBuilding() {
+      _hasBits0 &= ~1024;
+    }
+
+    /// <summary>Field number for the "home_building_id" field.</summary>
+    public const int HomeBuildingIdFieldNumber = 18;
+    private readonly static string HomeBuildingIdDefaultValue = "";
+
+    private string homeBuildingId_;
+    /// <summary>
+    /// 所属建筑实例的规范 UUID 字符串，不是建筑类型或显示名称。
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string HomeBuildingId {
+      get { return homeBuildingId_ ?? HomeBuildingIdDefaultValue; }
+      set {
+        homeBuildingId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+    /// <summary>Gets whether the "home_building_id" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasHomeBuildingId {
+      get { return homeBuildingId_ != null; }
+    }
+    /// <summary>Clears the value of the "home_building_id" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearHomeBuildingId() {
+      homeBuildingId_ = null;
+    }
+
+    /// <summary>Field number for the "home_building_type" field.</summary>
+    public const int HomeBuildingTypeFieldNumber = 19;
+    private readonly static string HomeBuildingTypeDefaultValue = "";
+
+    private string homeBuildingType_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public string HomeBuildingType {
+      get { return homeBuildingType_ ?? HomeBuildingTypeDefaultValue; }
+      set {
+        homeBuildingType_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+    /// <summary>Gets whether the "home_building_type" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasHomeBuildingType {
+      get { return homeBuildingType_ != null; }
+    }
+    /// <summary>Clears the value of the "home_building_type" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearHomeBuildingType() {
+      homeBuildingType_ = null;
+    }
+
+    /// <summary>Field number for the "in_home_building" field.</summary>
+    public const int InHomeBuildingFieldNumber = 20;
+    private readonly static bool InHomeBuildingDefaultValue = false;
+
+    private bool inHomeBuilding_;
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool InHomeBuilding {
+      get { if ((_hasBits0 & 2048) != 0) { return inHomeBuilding_; } else { return InHomeBuildingDefaultValue; } }
+      set {
+        _hasBits0 |= 2048;
+        inHomeBuilding_ = value;
+      }
+    }
+    /// <summary>Gets whether the "in_home_building" field is set</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public bool HasInHomeBuilding {
+      get { return (_hasBits0 & 2048) != 0; }
+    }
+    /// <summary>Clears the value of the "in_home_building" field</summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
+    public void ClearInHomeBuilding() {
+      _hasBits0 &= ~2048;
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     [global::System.CodeDom.Compiler.GeneratedCode("protoc", null)]
     public override bool Equals(object other) {
@@ -11820,6 +13543,21 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (PettedToday != other.PettedToday) return false;
       if (Friendship != other.Friendship) return false;
       if (Happiness != other.Happiness) return false;
+      if (Fullness != other.Fullness) return false;
+      if (FedToday != other.FedToday) return false;
+      if (AutoPettedToday != other.AutoPettedToday) return false;
+      if (ProduceItemId != other.ProduceItemId) return false;
+      if (ProduceQuality != other.ProduceQuality) return false;
+      if (ProduceHarvestMethod != other.ProduceHarvestMethod) return false;
+      if (AgeDays != other.AgeDays) return false;
+      if (Adult != other.Adult) return false;
+      if (DaysUntilMature != other.DaysUntilMature) return false;
+      if (DaysSinceLastProduce != other.DaysSinceLastProduce) return false;
+      if (BaseDaysToProduce != other.BaseDaysToProduce) return false;
+      if (HasHomeBuilding != other.HasHomeBuilding) return false;
+      if (HomeBuildingId != other.HomeBuildingId) return false;
+      if (HomeBuildingType != other.HomeBuildingType) return false;
+      if (InHomeBuilding != other.InHomeBuilding) return false;
       return Equals(_unknownFields, other._unknownFields);
     }
 
@@ -11832,6 +13570,21 @@ namespace StardewValleyMcp.Protocol.V1 {
       if (PettedToday != false) hash ^= PettedToday.GetHashCode();
       if (Friendship != 0) hash ^= Friendship.GetHashCode();
       if (Happiness != 0) hash ^= Happiness.GetHashCode();
+      if (HasFullness) hash ^= Fullness.GetHashCode();
+      if (HasFedToday) hash ^= FedToday.GetHashCode();
+      if (HasAutoPettedToday) hash ^= AutoPettedToday.GetHashCode();
+      if (HasProduceItemId) hash ^= ProduceItemId.GetHashCode();
+      if (HasProduceQuality) hash ^= ProduceQuality.GetHashCode();
+      if (HasProduceHarvestMethod) hash ^= ProduceHarvestMethod.GetHashCode();
+      if (HasAgeDays) hash ^= AgeDays.GetHashCode();
+      if (HasAdult) hash ^= Adult.GetHashCode();
+      if (HasDaysUntilMature) hash ^= DaysUntilMature.GetHashCode();
+      if (HasDaysSinceLastProduce) hash ^= DaysSinceLastProduce.GetHashCode();
+      if (HasBaseDaysToProduce) hash ^= BaseDaysToProduce.GetHashCode();
+      if (HasHasHomeBuilding) hash ^= HasHomeBuilding.GetHashCode();
+      if (HasHomeBuildingId) hash ^= HomeBuildingId.GetHashCode();
+      if (HasHomeBuildingType) hash ^= HomeBuildingType.GetHashCode();
+      if (HasInHomeBuilding) hash ^= InHomeBuilding.GetHashCode();
       if (_unknownFields != null) {
         hash ^= _unknownFields.GetHashCode();
       }
@@ -11870,6 +13623,66 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(40);
         output.WriteInt32(Happiness);
       }
+      if (HasFullness) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(Fullness);
+      }
+      if (HasFedToday) {
+        output.WriteRawTag(56);
+        output.WriteBool(FedToday);
+      }
+      if (HasAutoPettedToday) {
+        output.WriteRawTag(64);
+        output.WriteBool(AutoPettedToday);
+      }
+      if (HasProduceItemId) {
+        output.WriteRawTag(74);
+        output.WriteString(ProduceItemId);
+      }
+      if (HasProduceQuality) {
+        output.WriteRawTag(80);
+        output.WriteUInt32(ProduceQuality);
+      }
+      if (HasProduceHarvestMethod) {
+        output.WriteRawTag(88);
+        output.WriteEnum((int) ProduceHarvestMethod);
+      }
+      if (HasAgeDays) {
+        output.WriteRawTag(96);
+        output.WriteUInt32(AgeDays);
+      }
+      if (HasAdult) {
+        output.WriteRawTag(104);
+        output.WriteBool(Adult);
+      }
+      if (HasDaysUntilMature) {
+        output.WriteRawTag(112);
+        output.WriteUInt32(DaysUntilMature);
+      }
+      if (HasDaysSinceLastProduce) {
+        output.WriteRawTag(120);
+        output.WriteUInt32(DaysSinceLastProduce);
+      }
+      if (HasBaseDaysToProduce) {
+        output.WriteRawTag(128, 1);
+        output.WriteUInt32(BaseDaysToProduce);
+      }
+      if (HasHasHomeBuilding) {
+        output.WriteRawTag(136, 1);
+        output.WriteBool(HasHomeBuilding);
+      }
+      if (HasHomeBuildingId) {
+        output.WriteRawTag(146, 1);
+        output.WriteString(HomeBuildingId);
+      }
+      if (HasHomeBuildingType) {
+        output.WriteRawTag(154, 1);
+        output.WriteString(HomeBuildingType);
+      }
+      if (HasInHomeBuilding) {
+        output.WriteRawTag(160, 1);
+        output.WriteBool(InHomeBuilding);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(output);
       }
@@ -11900,6 +13713,66 @@ namespace StardewValleyMcp.Protocol.V1 {
         output.WriteRawTag(40);
         output.WriteInt32(Happiness);
       }
+      if (HasFullness) {
+        output.WriteRawTag(48);
+        output.WriteUInt32(Fullness);
+      }
+      if (HasFedToday) {
+        output.WriteRawTag(56);
+        output.WriteBool(FedToday);
+      }
+      if (HasAutoPettedToday) {
+        output.WriteRawTag(64);
+        output.WriteBool(AutoPettedToday);
+      }
+      if (HasProduceItemId) {
+        output.WriteRawTag(74);
+        output.WriteString(ProduceItemId);
+      }
+      if (HasProduceQuality) {
+        output.WriteRawTag(80);
+        output.WriteUInt32(ProduceQuality);
+      }
+      if (HasProduceHarvestMethod) {
+        output.WriteRawTag(88);
+        output.WriteEnum((int) ProduceHarvestMethod);
+      }
+      if (HasAgeDays) {
+        output.WriteRawTag(96);
+        output.WriteUInt32(AgeDays);
+      }
+      if (HasAdult) {
+        output.WriteRawTag(104);
+        output.WriteBool(Adult);
+      }
+      if (HasDaysUntilMature) {
+        output.WriteRawTag(112);
+        output.WriteUInt32(DaysUntilMature);
+      }
+      if (HasDaysSinceLastProduce) {
+        output.WriteRawTag(120);
+        output.WriteUInt32(DaysSinceLastProduce);
+      }
+      if (HasBaseDaysToProduce) {
+        output.WriteRawTag(128, 1);
+        output.WriteUInt32(BaseDaysToProduce);
+      }
+      if (HasHasHomeBuilding) {
+        output.WriteRawTag(136, 1);
+        output.WriteBool(HasHomeBuilding);
+      }
+      if (HasHomeBuildingId) {
+        output.WriteRawTag(146, 1);
+        output.WriteString(HomeBuildingId);
+      }
+      if (HasHomeBuildingType) {
+        output.WriteRawTag(154, 1);
+        output.WriteString(HomeBuildingType);
+      }
+      if (HasInHomeBuilding) {
+        output.WriteRawTag(160, 1);
+        output.WriteBool(InHomeBuilding);
+      }
       if (_unknownFields != null) {
         _unknownFields.WriteTo(ref output);
       }
@@ -11924,6 +13797,51 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (Happiness != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(Happiness);
+      }
+      if (HasFullness) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(Fullness);
+      }
+      if (HasFedToday) {
+        size += 1 + 1;
+      }
+      if (HasAutoPettedToday) {
+        size += 1 + 1;
+      }
+      if (HasProduceItemId) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ProduceItemId);
+      }
+      if (HasProduceQuality) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(ProduceQuality);
+      }
+      if (HasProduceHarvestMethod) {
+        size += 1 + pb::CodedOutputStream.ComputeEnumSize((int) ProduceHarvestMethod);
+      }
+      if (HasAgeDays) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(AgeDays);
+      }
+      if (HasAdult) {
+        size += 1 + 1;
+      }
+      if (HasDaysUntilMature) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(DaysUntilMature);
+      }
+      if (HasDaysSinceLastProduce) {
+        size += 1 + pb::CodedOutputStream.ComputeUInt32Size(DaysSinceLastProduce);
+      }
+      if (HasBaseDaysToProduce) {
+        size += 2 + pb::CodedOutputStream.ComputeUInt32Size(BaseDaysToProduce);
+      }
+      if (HasHasHomeBuilding) {
+        size += 2 + 1;
+      }
+      if (HasHomeBuildingId) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(HomeBuildingId);
+      }
+      if (HasHomeBuildingType) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(HomeBuildingType);
+      }
+      if (HasInHomeBuilding) {
+        size += 2 + 1;
       }
       if (_unknownFields != null) {
         size += _unknownFields.CalculateSize();
@@ -11951,6 +13869,51 @@ namespace StardewValleyMcp.Protocol.V1 {
       }
       if (other.Happiness != 0) {
         Happiness = other.Happiness;
+      }
+      if (other.HasFullness) {
+        Fullness = other.Fullness;
+      }
+      if (other.HasFedToday) {
+        FedToday = other.FedToday;
+      }
+      if (other.HasAutoPettedToday) {
+        AutoPettedToday = other.AutoPettedToday;
+      }
+      if (other.HasProduceItemId) {
+        ProduceItemId = other.ProduceItemId;
+      }
+      if (other.HasProduceQuality) {
+        ProduceQuality = other.ProduceQuality;
+      }
+      if (other.HasProduceHarvestMethod) {
+        ProduceHarvestMethod = other.ProduceHarvestMethod;
+      }
+      if (other.HasAgeDays) {
+        AgeDays = other.AgeDays;
+      }
+      if (other.HasAdult) {
+        Adult = other.Adult;
+      }
+      if (other.HasDaysUntilMature) {
+        DaysUntilMature = other.DaysUntilMature;
+      }
+      if (other.HasDaysSinceLastProduce) {
+        DaysSinceLastProduce = other.DaysSinceLastProduce;
+      }
+      if (other.HasBaseDaysToProduce) {
+        BaseDaysToProduce = other.BaseDaysToProduce;
+      }
+      if (other.HasHasHomeBuilding) {
+        HasHomeBuilding = other.HasHomeBuilding;
+      }
+      if (other.HasHomeBuildingId) {
+        HomeBuildingId = other.HomeBuildingId;
+      }
+      if (other.HasHomeBuildingType) {
+        HomeBuildingType = other.HomeBuildingType;
+      }
+      if (other.HasInHomeBuilding) {
+        InHomeBuilding = other.InHomeBuilding;
       }
       _unknownFields = pb::UnknownFieldSet.MergeFrom(_unknownFields, other._unknownFields);
     }
@@ -11991,6 +13954,66 @@ namespace StardewValleyMcp.Protocol.V1 {
             Happiness = input.ReadInt32();
             break;
           }
+          case 48: {
+            Fullness = input.ReadUInt32();
+            break;
+          }
+          case 56: {
+            FedToday = input.ReadBool();
+            break;
+          }
+          case 64: {
+            AutoPettedToday = input.ReadBool();
+            break;
+          }
+          case 74: {
+            ProduceItemId = input.ReadString();
+            break;
+          }
+          case 80: {
+            ProduceQuality = input.ReadUInt32();
+            break;
+          }
+          case 88: {
+            ProduceHarvestMethod = (global::StardewValleyMcp.Protocol.V1.FarmAnimalProduceHarvestMethod) input.ReadEnum();
+            break;
+          }
+          case 96: {
+            AgeDays = input.ReadUInt32();
+            break;
+          }
+          case 104: {
+            Adult = input.ReadBool();
+            break;
+          }
+          case 112: {
+            DaysUntilMature = input.ReadUInt32();
+            break;
+          }
+          case 120: {
+            DaysSinceLastProduce = input.ReadUInt32();
+            break;
+          }
+          case 128: {
+            BaseDaysToProduce = input.ReadUInt32();
+            break;
+          }
+          case 136: {
+            HasHomeBuilding = input.ReadBool();
+            break;
+          }
+          case 146: {
+            HomeBuildingId = input.ReadString();
+            break;
+          }
+          case 154: {
+            HomeBuildingType = input.ReadString();
+            break;
+          }
+          case 160: {
+            InHomeBuilding = input.ReadBool();
+            break;
+          }
         }
       }
     #endif
@@ -12028,6 +14051,66 @@ namespace StardewValleyMcp.Protocol.V1 {
           }
           case 40: {
             Happiness = input.ReadInt32();
+            break;
+          }
+          case 48: {
+            Fullness = input.ReadUInt32();
+            break;
+          }
+          case 56: {
+            FedToday = input.ReadBool();
+            break;
+          }
+          case 64: {
+            AutoPettedToday = input.ReadBool();
+            break;
+          }
+          case 74: {
+            ProduceItemId = input.ReadString();
+            break;
+          }
+          case 80: {
+            ProduceQuality = input.ReadUInt32();
+            break;
+          }
+          case 88: {
+            ProduceHarvestMethod = (global::StardewValleyMcp.Protocol.V1.FarmAnimalProduceHarvestMethod) input.ReadEnum();
+            break;
+          }
+          case 96: {
+            AgeDays = input.ReadUInt32();
+            break;
+          }
+          case 104: {
+            Adult = input.ReadBool();
+            break;
+          }
+          case 112: {
+            DaysUntilMature = input.ReadUInt32();
+            break;
+          }
+          case 120: {
+            DaysSinceLastProduce = input.ReadUInt32();
+            break;
+          }
+          case 128: {
+            BaseDaysToProduce = input.ReadUInt32();
+            break;
+          }
+          case 136: {
+            HasHomeBuilding = input.ReadBool();
+            break;
+          }
+          case 146: {
+            HomeBuildingId = input.ReadString();
+            break;
+          }
+          case 154: {
+            HomeBuildingType = input.ReadString();
+            break;
+          }
+          case 160: {
+            InHomeBuilding = input.ReadBool();
             break;
           }
         }

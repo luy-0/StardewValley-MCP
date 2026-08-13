@@ -69,6 +69,22 @@ class ItemToolKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     ITEM_TOOL_KIND_WATERING_CAN: _ClassVar[ItemToolKind]
     ITEM_TOOL_KIND_SCYTHE: _ClassVar[ItemToolKind]
 
+class MachineState(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    MACHINE_STATE_UNSPECIFIED: _ClassVar[MachineState]
+    MACHINE_STATE_UNKNOWN: _ClassVar[MachineState]
+    MACHINE_STATE_IDLE: _ClassVar[MachineState]
+    MACHINE_STATE_PROCESSING: _ClassVar[MachineState]
+    MACHINE_STATE_READY: _ClassVar[MachineState]
+
+class FurnitureInteractionKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    FURNITURE_INTERACTION_KIND_UNSPECIFIED: _ClassVar[FurnitureInteractionKind]
+    FURNITURE_INTERACTION_KIND_SEAT: _ClassVar[FurnitureInteractionKind]
+    FURNITURE_INTERACTION_KIND_SURFACE: _ClassVar[FurnitureInteractionKind]
+    FURNITURE_INTERACTION_KIND_STORAGE: _ClassVar[FurnitureInteractionKind]
+    FURNITURE_INTERACTION_KIND_TOGGLE: _ClassVar[FurnitureInteractionKind]
+
 class CharacterKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
     CHARACTER_KIND_UNSPECIFIED: _ClassVar[CharacterKind]
@@ -77,6 +93,13 @@ class CharacterKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     CHARACTER_KIND_FARM_ANIMAL: _ClassVar[CharacterKind]
     CHARACTER_KIND_PET: _ClassVar[CharacterKind]
     CHARACTER_KIND_HORSE: _ClassVar[CharacterKind]
+
+class FarmAnimalProduceHarvestMethod(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
+    __slots__ = ()
+    FARM_ANIMAL_PRODUCE_HARVEST_METHOD_UNSPECIFIED: _ClassVar[FarmAnimalProduceHarvestMethod]
+    FARM_ANIMAL_PRODUCE_HARVEST_METHOD_DROP_OVERNIGHT: _ClassVar[FarmAnimalProduceHarvestMethod]
+    FARM_ANIMAL_PRODUCE_HARVEST_METHOD_HARVEST_WITH_TOOL: _ClassVar[FarmAnimalProduceHarvestMethod]
+    FARM_ANIMAL_PRODUCE_HARVEST_METHOD_DIG_UP: _ClassVar[FarmAnimalProduceHarvestMethod]
 
 class UiElementKind(int, metaclass=_enum_type_wrapper.EnumTypeWrapper):
     __slots__ = ()
@@ -153,12 +176,26 @@ ITEM_TOOL_KIND_PICKAXE: ItemToolKind
 ITEM_TOOL_KIND_HOE: ItemToolKind
 ITEM_TOOL_KIND_WATERING_CAN: ItemToolKind
 ITEM_TOOL_KIND_SCYTHE: ItemToolKind
+MACHINE_STATE_UNSPECIFIED: MachineState
+MACHINE_STATE_UNKNOWN: MachineState
+MACHINE_STATE_IDLE: MachineState
+MACHINE_STATE_PROCESSING: MachineState
+MACHINE_STATE_READY: MachineState
+FURNITURE_INTERACTION_KIND_UNSPECIFIED: FurnitureInteractionKind
+FURNITURE_INTERACTION_KIND_SEAT: FurnitureInteractionKind
+FURNITURE_INTERACTION_KIND_SURFACE: FurnitureInteractionKind
+FURNITURE_INTERACTION_KIND_STORAGE: FurnitureInteractionKind
+FURNITURE_INTERACTION_KIND_TOGGLE: FurnitureInteractionKind
 CHARACTER_KIND_UNSPECIFIED: CharacterKind
 CHARACTER_KIND_NPC: CharacterKind
 CHARACTER_KIND_MONSTER: CharacterKind
 CHARACTER_KIND_FARM_ANIMAL: CharacterKind
 CHARACTER_KIND_PET: CharacterKind
 CHARACTER_KIND_HORSE: CharacterKind
+FARM_ANIMAL_PRODUCE_HARVEST_METHOD_UNSPECIFIED: FarmAnimalProduceHarvestMethod
+FARM_ANIMAL_PRODUCE_HARVEST_METHOD_DROP_OVERNIGHT: FarmAnimalProduceHarvestMethod
+FARM_ANIMAL_PRODUCE_HARVEST_METHOD_HARVEST_WITH_TOOL: FarmAnimalProduceHarvestMethod
+FARM_ANIMAL_PRODUCE_HARVEST_METHOD_DIG_UP: FarmAnimalProduceHarvestMethod
 UI_ELEMENT_KIND_UNSPECIFIED: UiElementKind
 UI_ELEMENT_KIND_BUTTON: UiElementKind
 UI_ELEMENT_KIND_TAB: UiElementKind
@@ -415,7 +452,7 @@ class FruitTreeFact(_message.Message):
     def __init__(self, fruit_item_id: _Optional[str] = ..., growth_stage: _Optional[int] = ..., days_until_mature: _Optional[int] = ..., fruit_count: _Optional[int] = ..., stump: _Optional[bool] = ...) -> None: ...
 
 class CropFact(_message.Message):
-    __slots__ = ("crop_id", "harvest_item_id", "growth_phase", "ready_for_harvest", "watered", "dead", "regrows", "harvest_action")
+    __slots__ = ("crop_id", "harvest_item_id", "growth_phase", "ready_for_harvest", "watered", "dead", "regrows", "harvest_action", "has_fertilizer", "fertilizer_item_id", "growth_phase_day", "growth_phase_duration", "growth_phase_count", "growth_days_remaining_if_watered", "regrow_days", "regrow_days_remaining", "mature", "needs_watering")
     CROP_ID_FIELD_NUMBER: _ClassVar[int]
     HARVEST_ITEM_ID_FIELD_NUMBER: _ClassVar[int]
     GROWTH_PHASE_FIELD_NUMBER: _ClassVar[int]
@@ -424,6 +461,16 @@ class CropFact(_message.Message):
     DEAD_FIELD_NUMBER: _ClassVar[int]
     REGROWS_FIELD_NUMBER: _ClassVar[int]
     HARVEST_ACTION_FIELD_NUMBER: _ClassVar[int]
+    HAS_FERTILIZER_FIELD_NUMBER: _ClassVar[int]
+    FERTILIZER_ITEM_ID_FIELD_NUMBER: _ClassVar[int]
+    GROWTH_PHASE_DAY_FIELD_NUMBER: _ClassVar[int]
+    GROWTH_PHASE_DURATION_FIELD_NUMBER: _ClassVar[int]
+    GROWTH_PHASE_COUNT_FIELD_NUMBER: _ClassVar[int]
+    GROWTH_DAYS_REMAINING_IF_WATERED_FIELD_NUMBER: _ClassVar[int]
+    REGROW_DAYS_FIELD_NUMBER: _ClassVar[int]
+    REGROW_DAYS_REMAINING_FIELD_NUMBER: _ClassVar[int]
+    MATURE_FIELD_NUMBER: _ClassVar[int]
+    NEEDS_WATERING_FIELD_NUMBER: _ClassVar[int]
     crop_id: str
     harvest_item_id: str
     growth_phase: int
@@ -432,7 +479,17 @@ class CropFact(_message.Message):
     dead: bool
     regrows: bool
     harvest_action: CropHarvestAction
-    def __init__(self, crop_id: _Optional[str] = ..., harvest_item_id: _Optional[str] = ..., growth_phase: _Optional[int] = ..., ready_for_harvest: _Optional[bool] = ..., watered: _Optional[bool] = ..., dead: _Optional[bool] = ..., regrows: _Optional[bool] = ..., harvest_action: _Optional[_Union[CropHarvestAction, str]] = ...) -> None: ...
+    has_fertilizer: bool
+    fertilizer_item_id: str
+    growth_phase_day: int
+    growth_phase_duration: int
+    growth_phase_count: int
+    growth_days_remaining_if_watered: int
+    regrow_days: int
+    regrow_days_remaining: int
+    mature: bool
+    needs_watering: bool
+    def __init__(self, crop_id: _Optional[str] = ..., harvest_item_id: _Optional[str] = ..., growth_phase: _Optional[int] = ..., ready_for_harvest: _Optional[bool] = ..., watered: _Optional[bool] = ..., dead: _Optional[bool] = ..., regrows: _Optional[bool] = ..., harvest_action: _Optional[_Union[CropHarvestAction, str]] = ..., has_fertilizer: _Optional[bool] = ..., fertilizer_item_id: _Optional[str] = ..., growth_phase_day: _Optional[int] = ..., growth_phase_duration: _Optional[int] = ..., growth_phase_count: _Optional[int] = ..., growth_days_remaining_if_watered: _Optional[int] = ..., regrow_days: _Optional[int] = ..., regrow_days_remaining: _Optional[int] = ..., mature: _Optional[bool] = ..., needs_watering: _Optional[bool] = ...) -> None: ...
 
 class HoeDirtFact(_message.Message):
     __slots__ = ("watered",)
@@ -495,16 +552,20 @@ class ItemFact(_message.Message):
     def __init__(self, ref: _Optional[_Union[_refs_pb2.Ref, _Mapping]] = ..., qualified_item_id: _Optional[str] = ..., display_name: _Optional[str] = ..., stack: _Optional[int] = ..., quality: _Optional[int] = ..., category: _Optional[str] = ..., tool: _Optional[bool] = ..., tool_level: _Optional[int] = ..., water_remaining: _Optional[int] = ..., water_capacity: _Optional[int] = ..., bottomless: _Optional[bool] = ..., tool_kind: _Optional[_Union[ItemToolKind, str]] = ...) -> None: ...
 
 class MachineFact(_message.Message):
-    __slots__ = ("qualified_item_id", "ready_for_harvest", "minutes_until_ready", "held_item")
+    __slots__ = ("qualified_item_id", "ready_for_harvest", "minutes_until_ready", "held_item", "state", "input_item")
     QUALIFIED_ITEM_ID_FIELD_NUMBER: _ClassVar[int]
     READY_FOR_HARVEST_FIELD_NUMBER: _ClassVar[int]
     MINUTES_UNTIL_READY_FIELD_NUMBER: _ClassVar[int]
     HELD_ITEM_FIELD_NUMBER: _ClassVar[int]
+    STATE_FIELD_NUMBER: _ClassVar[int]
+    INPUT_ITEM_FIELD_NUMBER: _ClassVar[int]
     qualified_item_id: str
     ready_for_harvest: bool
     minutes_until_ready: int
     held_item: ItemFact
-    def __init__(self, qualified_item_id: _Optional[str] = ..., ready_for_harvest: _Optional[bool] = ..., minutes_until_ready: _Optional[int] = ..., held_item: _Optional[_Union[ItemFact, _Mapping]] = ...) -> None: ...
+    state: MachineState
+    input_item: ItemFact
+    def __init__(self, qualified_item_id: _Optional[str] = ..., ready_for_harvest: _Optional[bool] = ..., minutes_until_ready: _Optional[int] = ..., held_item: _Optional[_Union[ItemFact, _Mapping]] = ..., state: _Optional[_Union[MachineState, str]] = ..., input_item: _Optional[_Union[ItemFact, _Mapping]] = ...) -> None: ...
 
 class ContainerFact(_message.Message):
     __slots__ = ("container_kind", "capacity", "item_count")
@@ -527,14 +588,36 @@ class BedFact(_message.Message):
     def __init__(self, can_sleep: _Optional[bool] = ..., occupied_tiles: _Optional[_Iterable[_Union[_common_pb2.WorldPosition, _Mapping]]] = ..., sleep_position: _Optional[_Union[_common_pb2.WorldPosition, _Mapping]] = ...) -> None: ...
 
 class FurnitureFact(_message.Message):
-    __slots__ = ("furniture_kind", "rotation", "occupied_tiles")
+    __slots__ = ("furniture_kind", "rotation", "occupied_tiles", "qualified_item_id", "rotation_count", "can_rotate", "seat_capacity", "occupied_seats", "has_surface_item", "surface_item", "is_on", "interaction_kinds", "interaction_profile_complete", "storage_item_count")
     FURNITURE_KIND_FIELD_NUMBER: _ClassVar[int]
     ROTATION_FIELD_NUMBER: _ClassVar[int]
     OCCUPIED_TILES_FIELD_NUMBER: _ClassVar[int]
+    QUALIFIED_ITEM_ID_FIELD_NUMBER: _ClassVar[int]
+    ROTATION_COUNT_FIELD_NUMBER: _ClassVar[int]
+    CAN_ROTATE_FIELD_NUMBER: _ClassVar[int]
+    SEAT_CAPACITY_FIELD_NUMBER: _ClassVar[int]
+    OCCUPIED_SEATS_FIELD_NUMBER: _ClassVar[int]
+    HAS_SURFACE_ITEM_FIELD_NUMBER: _ClassVar[int]
+    SURFACE_ITEM_FIELD_NUMBER: _ClassVar[int]
+    IS_ON_FIELD_NUMBER: _ClassVar[int]
+    INTERACTION_KINDS_FIELD_NUMBER: _ClassVar[int]
+    INTERACTION_PROFILE_COMPLETE_FIELD_NUMBER: _ClassVar[int]
+    STORAGE_ITEM_COUNT_FIELD_NUMBER: _ClassVar[int]
     furniture_kind: str
     rotation: int
     occupied_tiles: _containers.RepeatedCompositeFieldContainer[_common_pb2.WorldPosition]
-    def __init__(self, furniture_kind: _Optional[str] = ..., rotation: _Optional[int] = ..., occupied_tiles: _Optional[_Iterable[_Union[_common_pb2.WorldPosition, _Mapping]]] = ...) -> None: ...
+    qualified_item_id: str
+    rotation_count: int
+    can_rotate: bool
+    seat_capacity: int
+    occupied_seats: int
+    has_surface_item: bool
+    surface_item: ItemFact
+    is_on: bool
+    interaction_kinds: _containers.RepeatedScalarFieldContainer[FurnitureInteractionKind]
+    interaction_profile_complete: bool
+    storage_item_count: int
+    def __init__(self, furniture_kind: _Optional[str] = ..., rotation: _Optional[int] = ..., occupied_tiles: _Optional[_Iterable[_Union[_common_pb2.WorldPosition, _Mapping]]] = ..., qualified_item_id: _Optional[str] = ..., rotation_count: _Optional[int] = ..., can_rotate: _Optional[bool] = ..., seat_capacity: _Optional[int] = ..., occupied_seats: _Optional[int] = ..., has_surface_item: _Optional[bool] = ..., surface_item: _Optional[_Union[ItemFact, _Mapping]] = ..., is_on: _Optional[bool] = ..., interaction_kinds: _Optional[_Iterable[_Union[FurnitureInteractionKind, str]]] = ..., interaction_profile_complete: _Optional[bool] = ..., storage_item_count: _Optional[int] = ...) -> None: ...
 
 class LooseItemFact(_message.Message):
     __slots__ = ("item", "can_pick_up")
@@ -617,18 +700,48 @@ class MonsterFact(_message.Message):
     def __init__(self, health: _Optional[int] = ..., max_health: _Optional[int] = ..., contact_damage: _Optional[int] = ...) -> None: ...
 
 class FarmAnimalFact(_message.Message):
-    __slots__ = ("animal_type", "produce_ready", "petted_today", "friendship", "happiness")
+    __slots__ = ("animal_type", "produce_ready", "petted_today", "friendship", "happiness", "fullness", "fed_today", "auto_petted_today", "produce_item_id", "produce_quality", "produce_harvest_method", "age_days", "adult", "days_until_mature", "days_since_last_produce", "base_days_to_produce", "has_home_building", "home_building_id", "home_building_type", "in_home_building")
     ANIMAL_TYPE_FIELD_NUMBER: _ClassVar[int]
     PRODUCE_READY_FIELD_NUMBER: _ClassVar[int]
     PETTED_TODAY_FIELD_NUMBER: _ClassVar[int]
     FRIENDSHIP_FIELD_NUMBER: _ClassVar[int]
     HAPPINESS_FIELD_NUMBER: _ClassVar[int]
+    FULLNESS_FIELD_NUMBER: _ClassVar[int]
+    FED_TODAY_FIELD_NUMBER: _ClassVar[int]
+    AUTO_PETTED_TODAY_FIELD_NUMBER: _ClassVar[int]
+    PRODUCE_ITEM_ID_FIELD_NUMBER: _ClassVar[int]
+    PRODUCE_QUALITY_FIELD_NUMBER: _ClassVar[int]
+    PRODUCE_HARVEST_METHOD_FIELD_NUMBER: _ClassVar[int]
+    AGE_DAYS_FIELD_NUMBER: _ClassVar[int]
+    ADULT_FIELD_NUMBER: _ClassVar[int]
+    DAYS_UNTIL_MATURE_FIELD_NUMBER: _ClassVar[int]
+    DAYS_SINCE_LAST_PRODUCE_FIELD_NUMBER: _ClassVar[int]
+    BASE_DAYS_TO_PRODUCE_FIELD_NUMBER: _ClassVar[int]
+    HAS_HOME_BUILDING_FIELD_NUMBER: _ClassVar[int]
+    HOME_BUILDING_ID_FIELD_NUMBER: _ClassVar[int]
+    HOME_BUILDING_TYPE_FIELD_NUMBER: _ClassVar[int]
+    IN_HOME_BUILDING_FIELD_NUMBER: _ClassVar[int]
     animal_type: str
     produce_ready: bool
     petted_today: bool
     friendship: int
     happiness: int
-    def __init__(self, animal_type: _Optional[str] = ..., produce_ready: _Optional[bool] = ..., petted_today: _Optional[bool] = ..., friendship: _Optional[int] = ..., happiness: _Optional[int] = ...) -> None: ...
+    fullness: int
+    fed_today: bool
+    auto_petted_today: bool
+    produce_item_id: str
+    produce_quality: int
+    produce_harvest_method: FarmAnimalProduceHarvestMethod
+    age_days: int
+    adult: bool
+    days_until_mature: int
+    days_since_last_produce: int
+    base_days_to_produce: int
+    has_home_building: bool
+    home_building_id: str
+    home_building_type: str
+    in_home_building: bool
+    def __init__(self, animal_type: _Optional[str] = ..., produce_ready: _Optional[bool] = ..., petted_today: _Optional[bool] = ..., friendship: _Optional[int] = ..., happiness: _Optional[int] = ..., fullness: _Optional[int] = ..., fed_today: _Optional[bool] = ..., auto_petted_today: _Optional[bool] = ..., produce_item_id: _Optional[str] = ..., produce_quality: _Optional[int] = ..., produce_harvest_method: _Optional[_Union[FarmAnimalProduceHarvestMethod, str]] = ..., age_days: _Optional[int] = ..., adult: _Optional[bool] = ..., days_until_mature: _Optional[int] = ..., days_since_last_produce: _Optional[int] = ..., base_days_to_produce: _Optional[int] = ..., has_home_building: _Optional[bool] = ..., home_building_id: _Optional[str] = ..., home_building_type: _Optional[str] = ..., in_home_building: _Optional[bool] = ...) -> None: ...
 
 class PetFact(_message.Message):
     __slots__ = ("pet_type", "petted_today", "friendship")
