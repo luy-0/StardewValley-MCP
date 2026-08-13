@@ -234,11 +234,11 @@ ErrorCode 的使用上下文必须遵循下表；`ERROR_CODE_UNSPECIFIED` 永远
 |---|---|
 | `HandshakeRejected` | `UNAUTHENTICATED`、`UNSUPPORTED_VERSION`、`BUSY`、`INTERNAL` |
 | 接受前或控制请求的 `ProtocolError` | `INVALID_ARGUMENT`、`UNAUTHENTICATED`、`PERMISSION_DENIED`、`UNSUPPORTED_CAPABILITY`、`CAPABILITY_SET_CHANGED`、`STALE_LEASE`、`CONFLICT`、`BUSY`、`NOT_READY`、`NOT_FOUND`、`IDEMPOTENCY_RECORD_EXPIRED`、`PROTOCOL_VIOLATION`、`INTERNAL` |
-| `CommandEvent(FAILED)` | `INVALID_ARGUMENT`、`NOT_READY`、`NOT_FOUND`、`STALE_REF`、`OUT_OF_RANGE`、`EXECUTION_FAILED`、`INTERNAL` |
+| `CommandEvent(FAILED)` | `INVALID_ARGUMENT`、`NOT_READY`、`NOT_FOUND`、`STALE_REF`、`OUT_OF_RANGE`、`EXECUTION_FAILED`、`INTERNAL`、`ITEM_NOT_DISCARDABLE`、`COMMIT_OUTCOME_UNKNOWN` |
 | `CommandEvent(CANCELLED)` | 仅 `CANCELLED` |
 | `CommandEvent(TIMED_OUT)` | 仅 `DEADLINE_EXCEEDED` |
 
-`IDEMPOTENCY_RECORD_EXPIRED` 只表示 MCP 无法再取得已知执行过的完整终态，因此只能通过 `ProtocolError` 投影为 `unknown`，不得伪装成 Mod 已确认的 `FAILED`。
+`IDEMPOTENCY_RECORD_EXPIRED` 只表示 MCP 无法再取得已知执行过的完整终态，因此只能通过 `ProtocolError` 投影为 `unknown`，不得伪装成 Mod 已确认的普通失败。`COMMIT_OUTCOME_UNKNOWN` 只允许不可逆能力在提交已经进入、同步回滚后置条件仍无法确认时通过 `CommandEvent(FAILED)` 返回；MCP 必须将其投影为 `unknown/unknown_outcome/retryable=false`，不得降级成可重试失败。
 
 `INVALID_ARGUMENT` 通常应在接受前返回；但 Ref Kind、Ref 来源以及 Revision 与当前游戏对象的关系只能在游戏主线程安全点解析，这类上下文型非法输入允许在命令已接受后通过 `CommandEvent(FAILED)` 返回 `INVALID_ARGUMENT`。Transport 线程不得为了提前返回错误而读取 Ref Store 或游戏对象。
 

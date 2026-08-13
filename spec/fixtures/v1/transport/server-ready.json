@@ -6,11 +6,12 @@
     "sessionId": "f2d85b2e-4d60-4e32-bf42-fedcba654321",
     "leaseEpoch": "7",
     "capabilitySnapshot": {
-      "digest": "d00c582de37382f5b1ea8fdefaa02b88906bf4e0f78134983fe2ff5eb67dfcfb",
+      "digest": "95565e9c948ea426ffec6b87b58e79077139dbb181324d4aa6d803b967f2a2ab",
       "capabilities": [
         {"id":"activate_ui","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"ActivateUiRequest","resultType":"ActivateUiResult","requiredScope":"game:write","risks":["advances_time","changes_relationship","changes_save","consumes_item","spends_money"],"destructive":true},
         {"id":"close_menu","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"CloseMenuRequest","resultType":"CloseMenuResult","requiredScope":"game:write","destructive":false},
         {"id":"craft_item","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"CraftItemRequest","resultType":"CraftItemResult","requiredScope":"game:write","risks":["changes_save","consumes_item"],"destructive":true},
+        {"id":"discard_inventory_item","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"DiscardInventoryItemRequest","resultType":"DiscardInventoryItemResult","requiredScope":"game:write","risks":["changes_save","consumes_item"],"destructive":true},
         {"id":"emote","contractVersion":"1.1.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_IMMEDIATE","cancellable":false,"defaultTimeoutMs":5000,"maxTimeoutMs":15000,"requestType":"EmoteRequest","resultType":"EmoteResult","requiredScope":"game:write","risks":["external_communication"],"destructive":false},
         {"id":"equip","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":10000,"maxTimeoutMs":30000,"requestType":"EquipRequest","resultType":"EquipResult","requiredScope":"game:write","destructive":false},
         {"id":"face","contractVersion":"1.0.0","sideEffect":"SIDE_EFFECT_MUTATING","execution":"EXECUTION_MODE_LONG_RUNNING","cancellable":true,"defaultTimeoutMs":5000,"maxTimeoutMs":15000,"requestType":"FaceRequest","resultType":"FaceResult","requiredScope":"game:write","destructive":false},
@@ -33,6 +34,6 @@
     },
     "resultRetentionMs": 300000,
     "reconnectGraceMs": 10000,
-    "authTag": "swmvvLB0+g4L+UNbAqQYzwqBzCRpIaWk8yz+8tOuzsA="
+    "authTag": "G4CwnXUIUZMdaUxvPiPtU+KoCEUIUvrzp0livnTwAu0="
   }
 }

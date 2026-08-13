@@ -506,6 +506,7 @@ def test_default_capability_set_is_the_unique_concrete_handler_composition_root(
         "TransferInventoryItemHandler",
         "SetEquipmentSlotHandler",
         "MoveInventoryItemHandler",
+        "DiscardInventoryItemHandler",
         "CraftItemHandler",
         "PurchaseShopItemHandler",
         "OpenMenuHandler",

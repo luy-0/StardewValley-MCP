@@ -52,6 +52,21 @@ internal static class CapabilityCatalogData
                 Destructive = true,
                 Risks = { "changes_save", "consumes_item" },
             },
+            ["discard_inventory_item"] = new CapabilityDescriptor
+            {
+                Id = "discard_inventory_item",
+                ContractVersion = "1.0.0",
+                SideEffect = SideEffect.Mutating,
+                Execution = ExecutionMode.LongRunning,
+                Cancellable = true,
+                DefaultTimeoutMs = 10000,
+                MaxTimeoutMs = 30000,
+                RequestType = nameof(DiscardInventoryItemRequest),
+                ResultType = nameof(DiscardInventoryItemResult),
+                RequiredScope = "game:write",
+                Destructive = true,
+                Risks = { "changes_save", "consumes_item" },
+            },
             ["emote"] = new CapabilityDescriptor
             {
                 Id = "emote",

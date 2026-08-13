@@ -64,6 +64,11 @@ messages:
   MoveInventoryItemRequest:
     required: [itemRef, destinationSlotRef, uiRevision, playerInventoryRevision]
 
+  DiscardInventoryItemRequest:
+    required: [itemRef, quantity, playerInventoryRevision]
+    fields:
+      quantity: {minimum: 1, maximum: 2147483647}
+
   CraftItemRequest:
     required: [recipeRef, craftCount, uiRevision]
     fields:
@@ -270,6 +275,15 @@ output_messages:
     fields:
       transferredQuantity: {minimum: 1, maximum: 2147483647}
       sourceRemainingQuantity: {minimum: 0, maximum: 2147483647}
+
+  DiscardInventoryItemResult:
+    fields:
+      requestedQuantity: {minimum: 1, maximum: 2147483647}
+      discardedQuantity: {minimum: 1, maximum: 2147483647}
+      sourceRemainingQuantity: {minimum: 0, maximum: 2147483647}
+      moneyBefore: {minimum: 0, maximum: 2147483647}
+      moneyAfter: {minimum: 0, maximum: 2147483647}
+      moneyRefunded: {minimum: 0, maximum: 2147483647}
 
   CraftItemResult:
     fields:

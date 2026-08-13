@@ -528,6 +528,38 @@ def test_failed_event_accepts_contextual_invalid_argument() -> None:
     asyncio.run(exercise())
 
 
+def test_discard_specific_error_from_query_runtime_is_protocol_failure() -> None:
+    async def exercise(code: int) -> None:
+        connection = _QueueConnection()
+        runtime = CommandRuntime(connection, Catalog.load())
+        command_id = "19191919-1919-4919-8919-191919191919"
+        execute = asyncio.create_task(
+            runtime.execute(command_id, "query_runtime", queries_pb2.QueryRuntimeRequest())
+        )
+        await _until(lambda: len(connection.sent) == 1)
+        await connection.incoming.put(
+            _event(
+                command_id,
+                capabilities_pb2.COMMAND_STATE_ACCEPTED,
+                reply_to=connection.sent[0].message_id,
+            )
+        )
+        failed = _event(command_id, capabilities_pb2.COMMAND_STATE_FAILED)
+        failed.command_event.error.code = code
+        failed.command_event.error.message = "discard-only error"
+        await connection.incoming.put(failed)
+
+        result = await execute
+        assert result["error"]["code"] == "upstream_protocol_error"
+        await runtime.aclose()
+
+    for code in (
+        common_pb2.ERROR_CODE_ITEM_NOT_DISCARDABLE,
+        common_pb2.ERROR_CODE_COMMIT_OUTCOME_UNKNOWN,
+    ):
+        asyncio.run(exercise(code))
+
+
 def test_proactive_events_wait_for_correlated_acceptance_then_keep_order() -> None:
     async def exercise() -> None:
         connection = _QueueConnection()

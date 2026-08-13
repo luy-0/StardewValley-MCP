@@ -21,6 +21,8 @@ mappings:
   ERROR_CODE_EXECUTION_FAILED: {tool_code: execution_failed, outcome: failed, retryable: false}
   ERROR_CODE_PROTOCOL_VIOLATION: {tool_code: upstream_protocol_error, outcome: failed, retryable: false}
   ERROR_CODE_INTERNAL: {tool_code: internal_error, outcome: failed, retryable: false}
+  ERROR_CODE_ITEM_NOT_DISCARDABLE: {tool_code: item_not_discardable, outcome: failed, retryable: false}
+  ERROR_CODE_COMMIT_OUTCOME_UNKNOWN: {tool_code: unknown_outcome, outcome: unknown, retryable: false}
 
 # 由 MCP 自身产生、不对应 Mod Proto ErrorCode 的错误。
 local_errors:

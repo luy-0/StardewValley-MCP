@@ -314,18 +314,25 @@ internal sealed class CommandCoordinator
         else if (terminal.State is CommandState.Cancelled or CommandState.TimedOut
             || terminal.Error.Code is ErrorCode.Cancelled or ErrorCode.DeadlineExceeded)
             return Failed(record.CommandId, ErrorCode.Internal, "Handler 不得构造取消或超时终态", "failed");
-        else if (terminal.Error.Code is not (ErrorCode.InvalidArgument
-            or ErrorCode.NotReady
-            or ErrorCode.NotFound
-            or ErrorCode.StaleRef
-            or ErrorCode.OutOfRange
-            or ErrorCode.ExecutionFailed
-            or ErrorCode.Internal))
+        else if (!IsHandlerFailureAllowed(record.Request.OperationCase, terminal.Error.Code))
             return Failed(record.CommandId, ErrorCode.Internal, "Handler 返回无效失败错误码", "failed");
         if (terminal.State == CommandState.Succeeded && terminal.CalculateSize() >= MaximumSuccessfulEventBytes)
             return Failed(record.CommandId, ErrorCode.ExecutionFailed, "命令结果达到或超过 768 KiB 限制", "result_too_large");
         return terminal;
     }
+
+    private static bool IsHandlerFailureAllowed(
+        CommandRequest.OperationOneofCase operation,
+        ErrorCode code
+    ) => code is ErrorCode.InvalidArgument
+            or ErrorCode.NotReady
+            or ErrorCode.NotFound
+            or ErrorCode.StaleRef
+            or ErrorCode.OutOfRange
+            or ErrorCode.ExecutionFailed
+            or ErrorCode.Internal
+        || operation == CommandRequest.OperationOneofCase.DiscardInventoryItem
+            && code is ErrorCode.ItemNotDiscardable or ErrorCode.CommitOutcomeUnknown;
 
     private void ExpireResults()
     {

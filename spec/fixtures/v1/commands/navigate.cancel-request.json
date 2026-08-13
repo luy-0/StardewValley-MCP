@@ -3,7 +3,7 @@
   "fence": {
     "sessionId": "f2d85b2e-4d60-4e32-bf42-fedcba654321",
     "leaseEpoch": "7",
-    "capabilityDigest": "d00c582de37382f5b1ea8fdefaa02b88906bf4e0f78134983fe2ff5eb67dfcfb"
+    "capabilityDigest": "95565e9c948ea426ffec6b87b58e79077139dbb181324d4aa6d803b967f2a2ab"
   },
   "cancelCommandRequest": {
     "commandId": "b4fa7d40-6f82-4054-9164-222222222222",

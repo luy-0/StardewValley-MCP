@@ -40,6 +40,7 @@ message CommandRequest {
     MoveInventoryItemRequest move_inventory_item = 22;
     CraftItemRequest craft_item = 23;
     PurchaseShopItemRequest purchase_shop_item = 24;
+    DiscardInventoryItemRequest discard_inventory_item = 25;
 
     QueryRuntimeRequest query_runtime = 30;
     QueryWorldRequest query_world = 31;
@@ -67,6 +68,7 @@ message CapabilityResult {
     MoveInventoryItemResult move_inventory_item = 22;
     CraftItemResult craft_item = 23;
     PurchaseShopItemResult purchase_shop_item = 24;
+    DiscardInventoryItemResult discard_inventory_item = 25;
 
     QueryRuntimeResult query_runtime = 30;
     QueryWorldResult query_world = 31;

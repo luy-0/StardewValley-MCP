@@ -57,7 +57,7 @@ namespace StardewValleyMcp.Protocol.V1 {
             "RUQQABIXChNNRU5VX0tJTkRfSU5WRU5UT1JZEAESFAoQTUVOVV9LSU5EX1NL",
             "SUxMUxACEhQKEE1FTlVfS0lORF9TT0NJQUwQAxIRCg1NRU5VX0tJTkRfTUFQ",
             "EAQSFgoSTUVOVV9LSU5EX0NSQUZUSU5HEAUSGQoVTUVOVV9LSU5EX0NPTExF",
-            "Q1RJT05TEAYSFQoRTUVOVV9LSU5EX09QVElPTlMQByr1BAoJRXJyb3JDb2Rl",
+            "Q1RJT05TEAYSFQoRTUVOVV9LSU5EX09QVElPTlMQByrBBQoJRXJyb3JDb2Rl",
             "EhoKFkVSUk9SX0NPREVfVU5TUEVDSUZJRUQQABIfChtFUlJPUl9DT0RFX0lO",
             "VkFMSURfQVJHVU1FTlQQARIeChpFUlJPUl9DT0RFX1VOQVVUSEVOVElDQVRF",
             "RBACEiAKHEVSUk9SX0NPREVfUEVSTUlTU0lPTl9ERU5JRUQQAxIiCh5FUlJP",
@@ -71,8 +71,10 @@ namespace StardewValleyMcp.Protocol.V1 {
             "RhAOEhsKF0VSUk9SX0NPREVfT1VUX09GX1JBTkdFEA8SKQolRVJST1JfQ09E",
             "RV9JREVNUE9URU5DWV9SRUNPUkRfRVhQSVJFRBAQEh8KG0VSUk9SX0NPREVf",
             "RVhFQ1VUSU9OX0ZBSUxFRBAREiEKHUVSUk9SX0NPREVfUFJPVE9DT0xfVklP",
-            "TEFUSU9OEBISFwoTRVJST1JfQ09ERV9JTlRFUk5BTBATQh+qAhxTdGFyZGV3",
-            "VmFsbGV5TWNwLlByb3RvY29sLlYxYgZwcm90bzM="));
+            "TEFUSU9OEBISFwoTRVJST1JfQ09ERV9JTlRFUk5BTBATEiMKH0VSUk9SX0NP",
+            "REVfSVRFTV9OT1RfRElTQ0FSREFCTEUQFBIlCiFFUlJPUl9DT0RFX0NPTU1J",
+            "VF9PVVRDT01FX1VOS05PV04QFUIfqgIcU3RhcmRld1ZhbGxleU1jcC5Qcm90",
+            "b2NvbC5WMWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::StardewValleyMcp.Protocol.V1.Direction), typeof(global::StardewValleyMcp.Protocol.V1.MenuKind), typeof(global::StardewValleyMcp.Protocol.V1.ErrorCode), }, null, new pbr::GeneratedClrTypeInfo[] {
@@ -136,6 +138,14 @@ namespace StardewValleyMcp.Protocol.V1 {
     [pbr::OriginalName("ERROR_CODE_EXECUTION_FAILED")] ExecutionFailed = 17,
     [pbr::OriginalName("ERROR_CODE_PROTOCOL_VIOLATION")] ProtocolViolation = 18,
     [pbr::OriginalName("ERROR_CODE_INTERNAL")] Internal = 19,
+    /// <summary>
+    /// 目标物品按游戏原生 canBeTrashed 语义不可进入背包垃圾桶。
+    /// </summary>
+    [pbr::OriginalName("ERROR_CODE_ITEM_NOT_DISCARDABLE")] ItemNotDiscardable = 20,
+    /// <summary>
+    /// 不可逆提交已经进入且回滚后置条件无法确认；调用方不得自动重放。
+    /// </summary>
+    [pbr::OriginalName("ERROR_CODE_COMMIT_OUTCOME_UNKNOWN")] CommitOutcomeUnknown = 21,
   }
 
   #endregion
