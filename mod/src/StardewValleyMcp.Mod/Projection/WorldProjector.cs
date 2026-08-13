@@ -262,12 +262,6 @@ internal static class WorldProjector
     /// The caller-owned Ref remains authoritative; a changed identity guard is surfaced as
     /// stale instead of silently returning a newly signed Ref.
     /// </summary>
-    /// <remarks>
-    /// 当前实现让 inspect 与 query_world 返回同一层级的 WorldEntityFact。这保证了
-    /// Ref 解析链路一致，但尚未满足“inspect 返回更丰富对象详情”的长期目标。未来
-    /// 应将这里拆到 inspect-only detail projector：query_world 保持轻量 discovery/index，
-    /// inspect 针对少量 Ref 补充更昂贵或更细的动作相关事实。
-    /// </remarks>
     public static WorldEntityFact ProjectResolvedEntity(
         ResolvedOpaqueRef resolved,
         Ref reference,
@@ -344,7 +338,7 @@ internal static class WorldProjector
                 {
                     STree tree => ProjectTree(location, x, y, tree, refs),
                     FruitTree fruitTree => ProjectFruitTree(location, x, y, fruitTree, refs),
-                    HoeDirt { crop: not null } dirt => ProjectCrop(location, x, y, dirt, refs),
+                    HoeDirt { crop: not null } dirt => ProjectCrop(location, x, y, dirt, refs, warnings),
                     HoeDirt dirt => ProjectHoeDirt(location, x, y, dirt, refs, warnings),
                     TerrainFeature feature => ProjectGenericTerrainFeature(
                         location,
@@ -405,7 +399,7 @@ internal static class WorldProjector
         return ProjectCharacterOrFallback(
             () => target switch
             {
-                FarmAnimal animal => ProjectFarmAnimal(location, x, y, animal, refs),
+                FarmAnimal animal => ProjectFarmAnimal(location, x, y, animal, refs, warnings),
                 NPC character => ProjectCharacter(location, x, y, character, refs),
                 _ => throw new InvalidOperationException("Character Ref 目标类型无效"),
             },
@@ -573,15 +567,14 @@ internal static class WorldProjector
         int x,
         int y,
         HoeDirt dirt,
-        OpaqueRefStore refs
+        OpaqueRefStore refs,
+        ICollection<QueryWarning> warnings
     )
     {
         var crop = dirt.crop;
         var cropId = crop.netSeedIndex.Value ?? "";
         var harvestId = crop.indexOfHarvest.Value ?? "";
-        var phase = crop.currentPhase.Value;
-        var dead = crop.dead.Value;
-        return new WorldEntityFact
+        var fact = new WorldEntityFact
         {
             Ref = refs.GetOrCreate(
                 dirt,
@@ -596,23 +589,9 @@ internal static class WorldProjector
             Position = Position(location, x, y),
             DisplayName = CropDisplayName(harvestId),
             Actionable = true,
-            Crop = new CropFact
-            {
-                CropId = cropId,
-                HarvestItemId = string.IsNullOrEmpty(harvestId) ? "" : $"(O){harvestId}",
-                GrowthPhase = UInt(phase),
-                ReadyForHarvest = WorldProjectionPolicy.CropReady(
-                    dead,
-                    dirt.readyForHarvest()
-                ),
-                Watered = dirt.state.Value == 1,
-                Dead = dead,
-                Regrows = crop.RegrowsAfterHarvest(),
-                HarvestAction = WorldProjectionPolicy.HarvestActionFor(
-                    crop.GetHarvestMethod() == StardewValley.GameData.Crops.HarvestMethod.Scythe
-                ),
-            },
         };
+        fact.Crop = CropFactProjector.Project(dirt, fact.Ref, warnings);
+        return fact;
     }
 
     private static WorldEntityFact ProjectHoeDirt(
@@ -673,14 +652,6 @@ internal static class WorldProjector
         ICollection<QueryWarning> warnings
     )
     {
-        var detail = new MachineFact
-        {
-            QualifiedItemId = obj.QualifiedItemId ?? "",
-            ReadyForHarvest = obj.readyForHarvest.Value,
-            MinutesUntilReady = obj.MinutesUntilReady,
-        };
-        if (obj.heldObject.Value is { } held)
-            detail.HeldItem = ProjectItem(held);
         var fact = Entity(
             obj,
             location,
@@ -691,7 +662,7 @@ internal static class WorldProjector
             obj.DisplayName,
             null,
             $"machine:{obj.GetType().FullName}:{obj.QualifiedItemId}",
-            fact => fact.Machine = detail
+            fact => fact.Machine = MachineFactProjector.Project(obj, fact.Ref, warnings)
         );
         WorldEntityProjectionGuard.ApplyActionable(fact, () => obj.isActionable(Game1.player), warnings);
         return fact;
@@ -980,20 +951,16 @@ internal static class WorldProjector
             $"furniture:{furniture.GetType().FullName}:{furniture.QualifiedItemId}",
             fact =>
             {
-                fact.Furniture = new FurnitureFact
-                {
-                    FurnitureKind = FurnitureKind(furniture.furniture_type.Value),
-                    Rotation = UInt(furniture.currentRotation.Value),
-                };
-                fact.Furniture.OccupiedTiles.AddRange(occupied);
+                fact.Furniture = FurnitureFactProjector.Project(
+                    furniture,
+                    occupied,
+                    fact.Ref,
+                    warnings
+                );
             },
             RefLocatorKind.Furniture
         );
-        WorldEntityProjectionGuard.ApplyActionable(
-            fact,
-            () => furniture.isActionable(Game1.player),
-            warnings
-        );
+        FurnitureFactProjector.ApplyActionability(fact, warnings);
         return fact;
     }
 
@@ -1202,32 +1169,30 @@ internal static class WorldProjector
         int x,
         int y,
         FarmAnimal animal,
-        OpaqueRefStore refs
-    ) => new()
+        OpaqueRefStore refs,
+        ICollection<QueryWarning> warnings
+    )
     {
-        Ref = refs.GetOrCreate(
-            animal,
-            location,
-            RefKind.Character,
-            RefLocatorKind.Character,
-            x,
-            y,
-            $"farm_animal:{animal.myID.Value}"
-        ),
-        Kind = CharacterKind.FarmAnimal,
-        Name = animal.Name ?? "",
-        DisplayName = animal.displayName ?? animal.Name ?? "",
-        Position = Position(location, x, y),
-        Facing = DirectionOf(animal.FacingDirection),
-        FarmAnimal = new FarmAnimalFact
+        var fact = new CharacterFact
         {
-            AnimalType = animal.type.Value ?? "",
-            ProduceReady = !string.IsNullOrEmpty(animal.currentProduce.Value),
-            PettedToday = animal.wasPet.Value,
-            Friendship = animal.friendshipTowardFarmer.Value,
-            Happiness = animal.happiness.Value,
-        },
-    };
+            Ref = refs.GetOrCreate(
+                animal,
+                location,
+                RefKind.Character,
+                RefLocatorKind.Character,
+                x,
+                y,
+                $"farm_animal:{animal.myID.Value}"
+            ),
+            Kind = CharacterKind.FarmAnimal,
+            Name = animal.Name ?? "",
+            DisplayName = animal.displayName ?? animal.Name ?? "",
+            Position = Position(location, x, y),
+            Facing = DirectionOf(animal.FacingDirection),
+        };
+        fact.FarmAnimal = FarmAnimalFactProjector.Project(animal, fact.Ref, warnings);
+        return fact;
+    }
 
     private static CharacterFact ProjectCharacterFallback(
         GameLocation location,
@@ -1391,28 +1356,6 @@ internal static class WorldProjector
         756 => "mine_rock_2",
         758 => "mine_rock_3",
         _ => $"clump_{index}",
-    };
-
-    private static string FurnitureKind(int value) => value switch
-    {
-        0 => "chair",
-        1 => "bench",
-        2 => "couch",
-        3 => "armchair",
-        4 => "dresser",
-        5 => "long_table",
-        6 => "painting",
-        7 => "lamp",
-        8 => "decor",
-        10 => "bookcase",
-        11 => "table",
-        12 => "rug",
-        13 => "window",
-        14 => "fireplace",
-        15 => "bed",
-        16 => "torch",
-        17 => "sconce",
-        _ => "other",
     };
 
     private static string TreeDisplayName(string treeType) => treeType switch

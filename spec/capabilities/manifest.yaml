@@ -243,7 +243,7 @@ capabilities:
   - id: query_world
     title: 查询世界区域
     description: 获取一个有界地图区域中的地块、对象和角色事实。
-    contract_version: 1.0.0
+    contract_version: 1.1.0
     request: QueryWorldRequest
     result: QueryWorldResult
     side_effect: read_only
@@ -285,7 +285,7 @@ capabilities:
   - id: inspect
     title: 解析引用
     description: 批量解析查询结果中返回的不透明 Ref，并返回当前事实或过期状态。
-    contract_version: 1.0.0
+    contract_version: 1.1.0
     request: InspectRequest
     result: InspectResult
     side_effect: read_only

@@ -1,3 +1,4 @@
+using Google.Protobuf;
 using NUnit.Framework;
 using StardewValleyMcp.Protocol.V1;
 
@@ -205,6 +206,47 @@ public sealed class InspectModContractTests
     }
 
     [Test]
+    public void QueryAndInspectShareTheSameExpandedWorldDetailBytes()
+    {
+        var queryFact = ExpandedWorldEntity("world-ref");
+        var inspectFact = queryFact.Clone();
+        inspectFact.Ref = new Ref { Value = queryFact.Ref.Value };
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(inspectFact.ToByteArray(), Is.EqualTo(queryFact.ToByteArray()));
+            Assert.That(inspectFact.Crop.HasFertilizer, Is.True);
+            Assert.That(inspectFact.Crop.HasGrowthPhaseDay, Is.True);
+        });
+    }
+
+    [Test]
+    public void QueryAndInspectShareTheSameExpandedCharacterDetailBytes()
+    {
+        var queryFact = new CharacterFact
+        {
+            Ref = new Ref { Value = "character-ref" },
+            Kind = CharacterKind.FarmAnimal,
+            FarmAnimal = new FarmAnimalFact
+            {
+                AnimalType = "White Chicken",
+                Fullness = 200,
+                FedToday = true,
+                HasHomeBuilding = true,
+                HomeBuildingId = "11111111-1111-4111-8111-111111111111",
+            },
+        };
+        var inspectFact = queryFact.Clone();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(inspectFact.ToByteArray(), Is.EqualTo(queryFact.ToByteArray()));
+            Assert.That(inspectFact.FarmAnimal.HasFedToday, Is.True);
+            Assert.That(inspectFact.FarmAnimal.HomeBuildingId, Is.EqualTo(queryFact.FarmAnimal.HomeBuildingId));
+        });
+    }
+
+    [Test]
     public void StaleProjectionIsNotConvertedToFactUnavailable()
     {
         var reference = new Ref { Value = "stale" };
@@ -231,6 +273,21 @@ public sealed class InspectModContractTests
         request.Inspect.Refs.AddRange(refs.Select(value => new Ref { Value = value }));
         return request;
     }
+
+    private static WorldEntityFact ExpandedWorldEntity(string reference) => new()
+    {
+        Ref = new Ref { Value = reference },
+        Kind = EntityKind.Crop,
+        Crop = new CropFact
+        {
+            CropId = "472",
+            HarvestItemId = "(O)24",
+            HasFertilizer = true,
+            FertilizerItemId = "(O)368",
+            GrowthPhaseDay = 2,
+            GrowthPhaseDuration = 4,
+        },
+    };
 
     private static InspectRefLookup Resolved(
         Ref reference,

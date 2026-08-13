@@ -28,11 +28,9 @@ internal sealed class InspectProjectionContext
 
 internal static class InspectFactProjector
 {
-    // 当前 inspect 仍主要是“按 Ref 精确重查当前事实”，不是独立的深度详情查询。
-    // WorldEntity 与 Character 复用 query_world 的公开 Fact 投影，因此返回字段深度与
-    // 区域扫描基本一致。后续应拆出 inspect-only detail projector，为少量 Ref 补充
-    // query_world 不适合批量返回的事实，例如机器输入/配方状态、作物肥料与成熟估算、
-    // NPC/动物更完整状态，以及面向动作决策的相邻可站立点和阻挡原因。
+    // WorldEntity 与 Character 必须复用 query_world 的公开 Fact 投影，保证同一 Ref
+    // 在两条查询线路中的事实语义与 optional presence 一致。若未来确需高成本详情，
+    // 应另行设计明确命名的公共能力，不能在 inspect 内维护第二套同名事实。
     public static InspectProjectionResult Project(
         Ref reference,
         InspectableRefTarget target,

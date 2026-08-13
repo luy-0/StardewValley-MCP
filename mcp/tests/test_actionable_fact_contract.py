@@ -37,17 +37,16 @@ def test_actionable_presence_distinguishes_false_from_unknown() -> None:
     assert entities["entity-b"].HasField("actionable")
     assert entities["entity-b"].actionable is False
     assert not entities["entity-a"].HasField("actionable")
-    assert [
+    actionable_warnings = [
         (item.code, item.ref.value, item.message)
         for item in query_world.warnings
         if item.code == "ENTITY_ACTIONABLE_UNKNOWN"
-    ] == [
-        (
-            "ENTITY_ACTIONABLE_UNKNOWN",
-            "entity-a",
-            "无法在无副作用的前提下确定该实体对当前玩家是否可操作。",
-        )
     ]
+    assert (
+        "ENTITY_ACTIONABLE_UNKNOWN",
+        "entity-a",
+        "无法在无副作用的前提下确定该实体对当前玩家是否可操作。",
+    ) in actionable_warnings
 
 
 def test_query_world_actionable_presence_matches_generated_output_schema() -> None:
@@ -73,8 +72,13 @@ def test_inspect_unknown_actionable_has_warning_and_matches_output_schema() -> N
 
     assert entity.ref.value == "entity-a"
     assert not entity.HasField("actionable")
-    assert [(item.code, item.ref.value) for item in inspect.warnings] == [
-        ("ENTITY_ACTIONABLE_UNKNOWN", "entity-a")
+    assert (
+        "ENTITY_ACTIONABLE_UNKNOWN",
+        "entity-a",
+    ) in [
+        (item.code, item.ref.value)
+        for item in inspect.warnings
+        if item.code == "ENTITY_ACTIONABLE_UNKNOWN"
     ]
 
     output = project_message(inspect)

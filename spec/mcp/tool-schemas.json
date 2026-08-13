@@ -256,6 +256,36 @@
         "EXECUTION_MODE_UNSPECIFIED": "unspecified"
       }
     },
+    "stardew_valley.mcp.v1.FarmAnimalProduceHarvestMethod": {
+      "jsonToProto": {
+        "dig_up": "FARM_ANIMAL_PRODUCE_HARVEST_METHOD_DIG_UP",
+        "drop_overnight": "FARM_ANIMAL_PRODUCE_HARVEST_METHOD_DROP_OVERNIGHT",
+        "harvest_with_tool": "FARM_ANIMAL_PRODUCE_HARVEST_METHOD_HARVEST_WITH_TOOL",
+        "unspecified": "FARM_ANIMAL_PRODUCE_HARVEST_METHOD_UNSPECIFIED"
+      },
+      "protoToJson": {
+        "FARM_ANIMAL_PRODUCE_HARVEST_METHOD_DIG_UP": "dig_up",
+        "FARM_ANIMAL_PRODUCE_HARVEST_METHOD_DROP_OVERNIGHT": "drop_overnight",
+        "FARM_ANIMAL_PRODUCE_HARVEST_METHOD_HARVEST_WITH_TOOL": "harvest_with_tool",
+        "FARM_ANIMAL_PRODUCE_HARVEST_METHOD_UNSPECIFIED": "unspecified"
+      }
+    },
+    "stardew_valley.mcp.v1.FurnitureInteractionKind": {
+      "jsonToProto": {
+        "seat": "FURNITURE_INTERACTION_KIND_SEAT",
+        "storage": "FURNITURE_INTERACTION_KIND_STORAGE",
+        "surface": "FURNITURE_INTERACTION_KIND_SURFACE",
+        "toggle": "FURNITURE_INTERACTION_KIND_TOGGLE",
+        "unspecified": "FURNITURE_INTERACTION_KIND_UNSPECIFIED"
+      },
+      "protoToJson": {
+        "FURNITURE_INTERACTION_KIND_SEAT": "seat",
+        "FURNITURE_INTERACTION_KIND_STORAGE": "storage",
+        "FURNITURE_INTERACTION_KIND_SURFACE": "surface",
+        "FURNITURE_INTERACTION_KIND_TOGGLE": "toggle",
+        "FURNITURE_INTERACTION_KIND_UNSPECIFIED": "unspecified"
+      }
+    },
     "stardew_valley.mcp.v1.InventoryTransferDirection": {
       "jsonToProto": {
         "container_to_player": "INVENTORY_TRANSFER_DIRECTION_CONTAINER_TO_PLAYER",
@@ -284,6 +314,22 @@
         "ITEM_TOOL_KIND_SCYTHE": "scythe",
         "ITEM_TOOL_KIND_UNSPECIFIED": "unspecified",
         "ITEM_TOOL_KIND_WATERING_CAN": "watering_can"
+      }
+    },
+    "stardew_valley.mcp.v1.MachineState": {
+      "jsonToProto": {
+        "idle": "MACHINE_STATE_IDLE",
+        "processing": "MACHINE_STATE_PROCESSING",
+        "ready": "MACHINE_STATE_READY",
+        "unknown": "MACHINE_STATE_UNKNOWN",
+        "unspecified": "MACHINE_STATE_UNSPECIFIED"
+      },
+      "protoToJson": {
+        "MACHINE_STATE_IDLE": "idle",
+        "MACHINE_STATE_PROCESSING": "processing",
+        "MACHINE_STATE_READY": "ready",
+        "MACHINE_STATE_UNKNOWN": "unknown",
+        "MACHINE_STATE_UNSPECIFIED": "unspecified"
       }
     },
     "stardew_valley.mcp.v1.MenuKind": {
@@ -19931,6 +19977,44 @@
           },
           "CropFact": {
             "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "hasFertilizer": {
+                      "const": false
+                    }
+                  },
+                  "required": [
+                    "hasFertilizer"
+                  ]
+                },
+                "then": {
+                  "not": {
+                    "required": [
+                      "fertilizerItemId"
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "fertilizerItemId"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "hasFertilizer": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "hasFertilizer"
+                  ]
+                }
+              }
+            ],
             "properties": {
               "cropId": {
                 "maxLength": 512,
@@ -19940,7 +20024,32 @@
               "dead": {
                 "type": "boolean"
               },
+              "fertilizerItemId": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "growthDaysRemainingIfWatered": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
               "growthPhase": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "growthPhaseCount": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "growthPhaseDay": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "growthPhaseDuration": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -19958,8 +20067,27 @@
                 "pattern": "^[^\\u0000]*$",
                 "type": "string"
               },
+              "hasFertilizer": {
+                "type": "boolean"
+              },
+              "mature": {
+                "type": "boolean"
+              },
+              "needsWatering": {
+                "type": "boolean"
+              },
               "readyForHarvest": {
                 "type": "boolean"
+              },
+              "regrowDays": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "regrowDaysRemaining": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
               },
               "regrows": {
                 "type": "boolean"
@@ -20411,15 +20539,179 @@
           },
           "FarmAnimalFact": {
             "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "hasHomeBuilding": {
+                      "const": false
+                    }
+                  },
+                  "required": [
+                    "hasHomeBuilding"
+                  ]
+                },
+                "then": {
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "homeBuildingId"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "homeBuildingType"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "inHomeBuilding"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "homeBuildingId"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "homeBuildingType"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "inHomeBuilding"
+                      ]
+                    }
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "hasHomeBuilding": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "hasHomeBuilding"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "produceReady": {
+                      "const": false
+                    }
+                  },
+                  "required": [
+                    "produceReady"
+                  ]
+                },
+                "then": {
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "produceItemId"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "produceQuality"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "produceHarvestMethod"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "produceItemId"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "produceQuality"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "produceHarvestMethod"
+                      ]
+                    }
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "produceReady": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "produceReady"
+                  ]
+                }
+              }
+            ],
             "properties": {
+              "adult": {
+                "type": "boolean"
+              },
+              "ageDays": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
               "animalType": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
                 "type": "string"
               },
+              "autoPettedToday": {
+                "type": "boolean"
+              },
+              "baseDaysToProduce": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "daysSinceLastProduce": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "daysUntilMature": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "fedToday": {
+                "type": "boolean"
+              },
               "friendship": {
                 "maximum": 2147483647,
                 "minimum": -2147483648,
+                "type": "integer"
+              },
+              "fullness": {
+                "maximum": 255,
+                "minimum": 0,
                 "type": "integer"
               },
               "happiness": {
@@ -20427,8 +20719,42 @@
                 "minimum": -2147483648,
                 "type": "integer"
               },
+              "hasHomeBuilding": {
+                "type": "boolean"
+              },
+              "homeBuildingId": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "homeBuildingType": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "inHomeBuilding": {
+                "type": "boolean"
+              },
               "pettedToday": {
                 "type": "boolean"
+              },
+              "produceHarvestMethod": {
+                "enum": [
+                  "drop_overnight",
+                  "harvest_with_tool",
+                  "dig_up"
+                ],
+                "type": "string"
+              },
+              "produceItemId": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "produceQuality": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
               },
               "produceReady": {
                 "type": "boolean"
@@ -20481,11 +20807,78 @@
           },
           "FurnitureFact": {
             "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "hasSurfaceItem": {
+                      "const": false
+                    }
+                  },
+                  "required": [
+                    "hasSurfaceItem"
+                  ]
+                },
+                "then": {
+                  "not": {
+                    "required": [
+                      "surfaceItem"
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "surfaceItem"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "hasSurfaceItem": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "hasSurfaceItem"
+                  ]
+                }
+              }
+            ],
             "properties": {
+              "canRotate": {
+                "type": "boolean"
+              },
               "furnitureKind": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
                 "type": "string"
+              },
+              "hasSurfaceItem": {
+                "type": "boolean"
+              },
+              "interactionKinds": {
+                "items": {
+                  "enum": [
+                    "seat",
+                    "surface",
+                    "storage",
+                    "toggle"
+                  ]
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "interactionProfileComplete": {
+                "type": "boolean"
+              },
+              "isOn": {
+                "type": "boolean"
+              },
+              "occupiedSeats": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
               },
               "occupiedTiles": {
                 "items": {
@@ -20493,14 +20886,38 @@
                 },
                 "type": "array"
               },
+              "qualifiedItemId": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
               "rotation": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
+              },
+              "rotationCount": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "seatCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "storageItemCount": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "surfaceItem": {
+                "$ref": "#/$defs/ItemFact"
               }
             },
             "required": [
               "furnitureKind",
+              "interactionKinds",
               "occupiedTiles",
               "rotation"
             ],
@@ -20647,6 +21064,9 @@
               "heldItem": {
                 "$ref": "#/$defs/ItemFact"
               },
+              "inputItem": {
+                "$ref": "#/$defs/ItemFact"
+              },
               "minutesUntilReady": {
                 "maximum": 2147483647,
                 "minimum": -2147483648,
@@ -20659,6 +21079,15 @@
               },
               "readyForHarvest": {
                 "type": "boolean"
+              },
+              "state": {
+                "enum": [
+                  "unknown",
+                  "idle",
+                  "processing",
+                  "ready"
+                ],
+                "type": "string"
               }
             },
             "required": [
@@ -25189,6 +25618,44 @@
           },
           "CropFact": {
             "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "hasFertilizer": {
+                      "const": false
+                    }
+                  },
+                  "required": [
+                    "hasFertilizer"
+                  ]
+                },
+                "then": {
+                  "not": {
+                    "required": [
+                      "fertilizerItemId"
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "fertilizerItemId"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "hasFertilizer": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "hasFertilizer"
+                  ]
+                }
+              }
+            ],
             "properties": {
               "cropId": {
                 "maxLength": 512,
@@ -25198,7 +25665,32 @@
               "dead": {
                 "type": "boolean"
               },
+              "fertilizerItemId": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "growthDaysRemainingIfWatered": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
               "growthPhase": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "growthPhaseCount": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "growthPhaseDay": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "growthPhaseDuration": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
@@ -25216,8 +25708,27 @@
                 "pattern": "^[^\\u0000]*$",
                 "type": "string"
               },
+              "hasFertilizer": {
+                "type": "boolean"
+              },
+              "mature": {
+                "type": "boolean"
+              },
+              "needsWatering": {
+                "type": "boolean"
+              },
               "readyForHarvest": {
                 "type": "boolean"
+              },
+              "regrowDays": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "regrowDaysRemaining": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
               },
               "regrows": {
                 "type": "boolean"
@@ -25712,15 +26223,179 @@
           },
           "FarmAnimalFact": {
             "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "hasHomeBuilding": {
+                      "const": false
+                    }
+                  },
+                  "required": [
+                    "hasHomeBuilding"
+                  ]
+                },
+                "then": {
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "homeBuildingId"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "homeBuildingType"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "inHomeBuilding"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "homeBuildingId"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "homeBuildingType"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "inHomeBuilding"
+                      ]
+                    }
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "hasHomeBuilding": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "hasHomeBuilding"
+                  ]
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "produceReady": {
+                      "const": false
+                    }
+                  },
+                  "required": [
+                    "produceReady"
+                  ]
+                },
+                "then": {
+                  "not": {
+                    "anyOf": [
+                      {
+                        "required": [
+                          "produceItemId"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "produceQuality"
+                        ]
+                      },
+                      {
+                        "required": [
+                          "produceHarvestMethod"
+                        ]
+                      }
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "anyOf": [
+                    {
+                      "required": [
+                        "produceItemId"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "produceQuality"
+                      ]
+                    },
+                    {
+                      "required": [
+                        "produceHarvestMethod"
+                      ]
+                    }
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "produceReady": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "produceReady"
+                  ]
+                }
+              }
+            ],
             "properties": {
+              "adult": {
+                "type": "boolean"
+              },
+              "ageDays": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
               "animalType": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
                 "type": "string"
               },
+              "autoPettedToday": {
+                "type": "boolean"
+              },
+              "baseDaysToProduce": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "daysSinceLastProduce": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "daysUntilMature": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "fedToday": {
+                "type": "boolean"
+              },
               "friendship": {
                 "maximum": 2147483647,
                 "minimum": -2147483648,
+                "type": "integer"
+              },
+              "fullness": {
+                "maximum": 255,
+                "minimum": 0,
                 "type": "integer"
               },
               "happiness": {
@@ -25728,8 +26403,42 @@
                 "minimum": -2147483648,
                 "type": "integer"
               },
+              "hasHomeBuilding": {
+                "type": "boolean"
+              },
+              "homeBuildingId": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "homeBuildingType": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "inHomeBuilding": {
+                "type": "boolean"
+              },
               "pettedToday": {
                 "type": "boolean"
+              },
+              "produceHarvestMethod": {
+                "enum": [
+                  "drop_overnight",
+                  "harvest_with_tool",
+                  "dig_up"
+                ],
+                "type": "string"
+              },
+              "produceItemId": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
+              "produceQuality": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
               },
               "produceReady": {
                 "type": "boolean"
@@ -25782,11 +26491,78 @@
           },
           "FurnitureFact": {
             "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "hasSurfaceItem": {
+                      "const": false
+                    }
+                  },
+                  "required": [
+                    "hasSurfaceItem"
+                  ]
+                },
+                "then": {
+                  "not": {
+                    "required": [
+                      "surfaceItem"
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "required": [
+                    "surfaceItem"
+                  ]
+                },
+                "then": {
+                  "properties": {
+                    "hasSurfaceItem": {
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "hasSurfaceItem"
+                  ]
+                }
+              }
+            ],
             "properties": {
+              "canRotate": {
+                "type": "boolean"
+              },
               "furnitureKind": {
                 "maxLength": 512,
                 "pattern": "^[^\\u0000]*$",
                 "type": "string"
+              },
+              "hasSurfaceItem": {
+                "type": "boolean"
+              },
+              "interactionKinds": {
+                "items": {
+                  "enum": [
+                    "seat",
+                    "surface",
+                    "storage",
+                    "toggle"
+                  ]
+                },
+                "type": "array",
+                "uniqueItems": true
+              },
+              "interactionProfileComplete": {
+                "type": "boolean"
+              },
+              "isOn": {
+                "type": "boolean"
+              },
+              "occupiedSeats": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
               },
               "occupiedTiles": {
                 "items": {
@@ -25794,14 +26570,38 @@
                 },
                 "type": "array"
               },
+              "qualifiedItemId": {
+                "maxLength": 512,
+                "pattern": "^[^\\u0000]*$",
+                "type": "string"
+              },
               "rotation": {
                 "maximum": 4294967295,
                 "minimum": 0,
                 "type": "integer"
+              },
+              "rotationCount": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "seatCapacity": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "storageItemCount": {
+                "maximum": 4294967295,
+                "minimum": 0,
+                "type": "integer"
+              },
+              "surfaceItem": {
+                "$ref": "#/$defs/ItemFact"
               }
             },
             "required": [
               "furnitureKind",
+              "interactionKinds",
               "occupiedTiles",
               "rotation"
             ],
@@ -26499,6 +27299,9 @@
               "heldItem": {
                 "$ref": "#/$defs/ItemFact"
               },
+              "inputItem": {
+                "$ref": "#/$defs/ItemFact"
+              },
               "minutesUntilReady": {
                 "maximum": 2147483647,
                 "minimum": -2147483648,
@@ -26511,6 +27314,15 @@
               },
               "readyForHarvest": {
                 "type": "boolean"
+              },
+              "state": {
+                "enum": [
+                  "unknown",
+                  "idle",
+                  "processing",
+                  "ready"
+                ],
+                "type": "string"
               }
             },
             "required": [

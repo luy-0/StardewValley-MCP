@@ -209,6 +209,26 @@ message CropFact {
   bool dead = 6;
   bool regrows = 7;
   CropHarvestAction harvest_action = 8;
+  // 字段存在且为 true 时，该耕地当前施有肥料；缺失不得解释为“无肥料”。
+  optional bool has_fertilizer = 9;
+  // 当前肥料的 Qualified Item ID；仅在能安全确认肥料存在并解析其 ID 时出现。
+  optional string fertilizer_item_id = 10;
+  // 当前生长阶段内已经完成的浇水生长日；成熟或再生倒计时期间可以缺失。
+  optional uint32 growth_phase_day = 11;
+  // 当前生长阶段需要的浇水生长日；成熟或无法安全读取时可以缺失。
+  optional uint32 growth_phase_duration = 12;
+  // 生长阶段总数，包含最终成熟阶段。
+  optional uint32 growth_phase_count = 13;
+  // 假设之后每个需要浇水的生长日都满足条件，距离首次成熟还需的生长日。
+  optional uint32 growth_days_remaining_if_watered = 14;
+  // 每次收获后重新产出的基础间隔；不再生的作物保持缺失。
+  optional uint32 regrow_days = 15;
+  // 成熟再生作物距离下一次可收获还需的生长日；首次生长期间保持缺失。
+  optional uint32 regrow_days_remaining = 16;
+  // 活着且已经到达最终生长阶段；再生倒计时期间仍为 true。
+  optional bool mature = 17;
+  // 当前作物是否需要浇水才能继续推进生长。
+  optional bool needs_watering = 18;
 }
 
 // 不含作物的已耕地事实。带作物的 HoeDirt 继续使用 CropFact。
@@ -260,11 +280,24 @@ message ItemFact {
   optional ItemToolKind tool_kind = 12;
 }
 
+enum MachineState {
+  MACHINE_STATE_UNSPECIFIED = 0;
+  MACHINE_STATE_UNKNOWN = 1;
+  MACHINE_STATE_IDLE = 2;
+  MACHINE_STATE_PROCESSING = 3;
+  MACHINE_STATE_READY = 4;
+}
+
 message MachineFact {
   string qualified_item_id = 1;
   bool ready_for_harvest = 2;
   int32 minutes_until_ready = 3;
+  // 当前预测输出或处理中间产物；最终收取结果仍以游戏原生收取行为为准。
   optional ItemFact held_item = 4;
+  // 仅在运行态可安全读取时出现；特殊或不一致状态显式使用 UNKNOWN。
+  optional MachineState state = 5;
+  // 游戏保留且能安全读取时返回最近一次投入的物品事实。
+  optional ItemFact input_item = 6;
 }
 
 message ContainerFact {
@@ -280,10 +313,32 @@ message BedFact {
   WorldPosition sleep_position = 3;
 }
 
+enum FurnitureInteractionKind {
+  FURNITURE_INTERACTION_KIND_UNSPECIFIED = 0;
+  FURNITURE_INTERACTION_KIND_SEAT = 1;
+  FURNITURE_INTERACTION_KIND_SURFACE = 2;
+  FURNITURE_INTERACTION_KIND_STORAGE = 3;
+  FURNITURE_INTERACTION_KIND_TOGGLE = 4;
+}
+
 message FurnitureFact {
   string furniture_kind = 1;
   uint32 rotation = 2;
   repeated WorldPosition occupied_tiles = 3;
+  optional string qualified_item_id = 4;
+  optional uint32 rotation_count = 5;
+  optional bool can_rotate = 6;
+  optional uint32 seat_capacity = 7;
+  optional uint32 occupied_seats = 8;
+  optional bool has_surface_item = 9;
+  optional ItemFact surface_item = 10;
+  optional bool is_on = 11;
+  // 保守公开且可由语言无关事实确认的交互能力集合。
+  repeated FurnitureInteractionKind interaction_kinds = 12;
+  // true 表示本轮已完整判断交互能力，此时空集合才表示普通装饰家具。
+  optional bool interaction_profile_complete = 13;
+  // STORAGE 家具当前可安全确认的非空物品数量。
+  optional uint32 storage_item_count = 14;
 }
 
 message LooseItemFact {
@@ -345,12 +400,37 @@ message MonsterFact {
   int32 contact_damage = 3;
 }
 
+enum FarmAnimalProduceHarvestMethod {
+  FARM_ANIMAL_PRODUCE_HARVEST_METHOD_UNSPECIFIED = 0;
+  FARM_ANIMAL_PRODUCE_HARVEST_METHOD_DROP_OVERNIGHT = 1;
+  FARM_ANIMAL_PRODUCE_HARVEST_METHOD_HARVEST_WITH_TOOL = 2;
+  FARM_ANIMAL_PRODUCE_HARVEST_METHOD_DIG_UP = 3;
+}
+
 message FarmAnimalFact {
   string animal_type = 1;
   bool produce_ready = 2;
   bool petted_today = 3;
   int32 friendship = 4;
   int32 happiness = 5;
+  optional uint32 fullness = 6;
+  // 当且仅当 fullness >= 200 时为 true。
+  optional bool fed_today = 7;
+  optional bool auto_petted_today = 8;
+  // 仅表示动物身上当前可收取的产物，不包含已经落到地面的隔夜产物。
+  optional string produce_item_id = 9;
+  optional uint32 produce_quality = 10;
+  optional FarmAnimalProduceHarvestMethod produce_harvest_method = 11;
+  optional uint32 age_days = 12;
+  optional bool adult = 13;
+  optional uint32 days_until_mature = 14;
+  optional uint32 days_since_last_produce = 15;
+  optional uint32 base_days_to_produce = 16;
+  optional bool has_home_building = 17;
+  // 所属建筑实例的规范 UUID 字符串，不是建筑类型或显示名称。
+  optional string home_building_id = 18;
+  optional string home_building_type = 19;
+  optional bool in_home_building = 20;
 }
 
 message PetFact {

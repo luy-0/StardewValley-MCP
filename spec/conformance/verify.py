@@ -960,11 +960,11 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         and not offline.HasField("is_in_bed"),
         "query_players Fixture 的离线玩家不得携带实时事实",
     )
-    world_hoe_dirt = next(
-        (entity for entity in world_result.snapshot.entities if entity.ref.value == "entity-a"),
-        None,
-    )
-    inspected_hoe_dirt = inspect_result.items[0].world_entity
+    world_entities = {entity.ref.value: entity for entity in world_result.snapshot.entities}
+    world_characters = {character.ref.value: character for character in world_result.snapshot.characters}
+    inspected = {item.resolution.ref.value: item for item in inspect_result.items}
+    world_hoe_dirt = world_entities.get("entity-a")
+    inspected_hoe_dirt = inspected["entity-a"].world_entity
     require(world_hoe_dirt is not None, "Query World Fixture 缺少空 HoeDirt Fact")
     require(
         world_hoe_dirt == inspected_hoe_dirt
@@ -979,11 +979,27 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
         "Inspect Fixture 未保持请求顺序或等长",
     )
     require(
-        [item.WhichOneof("fact") for item in inspect_result.items if item.resolution.status == 1]
-        == ["world_entity", "character", "inventory_item", "inventory", "ui_element"],
+        {item.WhichOneof("fact") for item in inspect_result.items if item.resolution.status == 1}
+        == {"world_entity", "character", "inventory_item", "inventory", "ui_element"},
         "Inspect Fixture 未覆盖五种 resolved Fact",
     )
-    unavailable = inspect_result.items[5]
+    for reference in [
+        "entity-crop-complete",
+        "entity-machine-complete",
+        "entity-furniture-complete",
+        "entity-machine-partial",
+        "entity-furniture-partial",
+    ]:
+        require(
+            world_entities[reference] == inspected[reference].world_entity,
+            f"query_world 与 inspect 的公共 World Entity 投影不一致: {reference}",
+        )
+    require(
+        world_characters["character-animal-complete"]
+        == inspected["character-animal-complete"].character,
+        "query_world 与 inspect 的 Farm Animal 公共投影不一致",
+    )
+    unavailable = inspected["fact-unavailable-a"]
     require(unavailable.resolution.status == 5, "Inspect Fixture 缺少 FACT_UNAVAILABLE")
     require(unavailable.resolution.kind == 3, "FACT_UNAVAILABLE 必须保留已知 Kind")
     require(unavailable.WhichOneof("fact") is None, "FACT_UNAVAILABLE 不得携带 Fact")
@@ -1026,6 +1042,14 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
                 "完整背包 Fixture 未覆盖语言无关的 Scythe tool_kind",
             )
         if name == "query-world.success-complete.json":
+            entities = {
+                entity.ref.value: entity
+                for entity in frame.command_event.result.query_world.snapshot.entities
+            }
+            characters = {
+                character.ref.value: character
+                for character in frame.command_event.result.query_world.snapshot.characters
+            }
             tiles = frame.command_event.result.query_world.snapshot.tiles
             require(
                 len(tiles) == 2
@@ -1038,6 +1062,105 @@ def verify_observation_fixtures(transport_pb2: Any, manifest: dict[str, Any]) ->
                 and not tiles[0].pathfinding_blocked
                 and not tiles[1].pathfinding_blocked,
                 "完整世界 Fixture 未覆盖补水与原生寻路 Tile 事实的 presence",
+            )
+            crop = entities["entity-crop-complete"].crop
+            require(
+                crop.HasField("has_fertilizer") and crop.has_fertilizer
+                and crop.fertilizer_item_id == "(O)368"
+                and crop.growth_phase_day == 1
+                and crop.growth_phase_duration == 2
+                and crop.growth_phase_count == 5
+                and crop.growth_days_remaining_if_watered == 4
+                and crop.HasField("mature") and not crop.mature
+                and crop.HasField("needs_watering") and not crop.needs_watering,
+                "完整 Crop Fixture 未覆盖肥料、生长进度与 optional false presence",
+            )
+            machine = entities["entity-machine-complete"].machine
+            require(
+                machine.state == 3
+                and machine.HasField("input_item")
+                and machine.input_item.qualified_item_id == "(O)24"
+                and machine.HasField("held_item")
+                and machine.held_item.qualified_item_id == "(O)344",
+                "完整 Machine Fixture 未覆盖加工状态、输入与输出",
+            )
+            furniture = entities["entity-furniture-complete"].furniture
+            require(
+                furniture.qualified_item_id == "(F)1120"
+                and furniture.HasField("can_rotate") and furniture.can_rotate
+                and furniture.HasField("seat_capacity") and furniture.seat_capacity == 0
+                and furniture.HasField("occupied_seats") and furniture.occupied_seats == 0
+                and furniture.has_surface_item
+                and furniture.surface_item.qualified_item_id == "(O)390"
+                and list(furniture.interaction_kinds) == [2]
+                and furniture.interaction_profile_complete,
+                "完整 Furniture Fixture 未覆盖旋转、座位、表面物品与交互 profile",
+            )
+            animal = characters["character-animal-complete"].farm_animal
+            require(
+                animal.fullness == 255 and animal.fed_today
+                and animal.HasField("auto_petted_today") and not animal.auto_petted_today
+                and animal.produce_item_id == "(O)184"
+                and animal.produce_quality == 2
+                and animal.produce_harvest_method == 2
+                and animal.age_days == 40 and animal.adult
+                and animal.HasField("days_until_mature") and animal.days_until_mature == 0
+                and animal.has_home_building
+                and UUID_RE.fullmatch(animal.home_building_id) is not None
+                and animal.home_building_type == "Barn"
+                and animal.in_home_building,
+                "完整 Farm Animal Fixture 未覆盖照料、产物、成熟与建筑 UUID",
+            )
+            partial_crop = entities["entity-crop-partial"].crop
+            require(
+                not partial_crop.HasField("has_fertilizer")
+                and not partial_crop.HasField("growth_phase_count")
+                and not partial_crop.HasField("mature"),
+                "派生事实不可用时 Crop optional 字段必须缺省",
+            )
+            partial_animal = characters["character-animal-partial"].farm_animal
+            require(
+                not partial_animal.HasField("fullness")
+                and not partial_animal.HasField("fed_today")
+                and not partial_animal.HasField("has_home_building"),
+                "派生事实不可用时 Farm Animal optional 字段必须缺省",
+            )
+            partial_machine = entities["entity-machine-partial"].machine
+            require(
+                partial_machine.qualified_item_id == "(BC)custom.machine"
+                and partial_machine.minutes_until_ready == 30
+                and not partial_machine.HasField("state")
+                and not partial_machine.HasField("input_item")
+                and not partial_machine.HasField("held_item"),
+                "派生事实不可用时 Machine 必须保留核心 typed Fact 并缺省 optional 详情",
+            )
+            partial_furniture = entities["entity-furniture-partial"].furniture
+            require(
+                partial_furniture.furniture_kind == "other"
+                and len(partial_furniture.occupied_tiles) == 1
+                and not partial_furniture.HasField("qualified_item_id")
+                and not partial_furniture.HasField("rotation_count")
+                and not partial_furniture.HasField("interaction_profile_complete")
+                and not partial_furniture.HasField("has_surface_item"),
+                "派生事实不可用时 Furniture 必须保留核心 typed Fact 并缺省 optional 详情",
+            )
+            warning_pairs = {
+                (warning.code, warning.ref.value)
+                for warning in frame.command_event.result.query_world.warnings
+            }
+            require(
+                ("ENTITY_FACT_PARTIAL", "entity-crop-partial") in warning_pairs
+                and ("ENTITY_FACT_PARTIAL", "entity-machine-partial") in warning_pairs
+                and ("ENTITY_FACT_PARTIAL", "entity-furniture-partial") in warning_pairs
+                and ("CHARACTER_FACT_PARTIAL", "character-animal-partial") in warning_pairs,
+                "事实不可用 Fixture 缺少稳定 partial warning 与 Ref",
+            )
+            require(
+                not entities["entity-furniture-complete"].HasField("actionable")
+                and not entities["entity-furniture-partial"].HasField("actionable")
+                and ("ENTITY_ACTIONABLE_UNKNOWN", "entity-furniture-complete") in warning_pairs
+                and ("ENTITY_ACTIONABLE_UNKNOWN", "entity-furniture-partial") in warning_pairs,
+                "Furniture Fixture 不得把 unknown actionable 伪装成 true",
             )
         if name == "query-ui.success-dialogue.json":
             elements = frame.command_event.result.query_ui.snapshot.elements
