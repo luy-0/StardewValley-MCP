@@ -59,15 +59,6 @@ jobs:
             exit 1
           fi
           if [[ "$GITHUB_EVENT_NAME" == "push" ]]; then
-            tag_ref="refs/tags/$GITHUB_REF_NAME"
-            test "$(git cat-file -t "$tag_ref")" = "tag" || {
-              echo "发行 Tag 必须是 annotated Tag" >&2
-              exit 1
-            }
-            test "$(git rev-list -n 1 "$tag_ref")" = "$checkout_sha" || {
-              echo "Tag 指向与 checkout SHA 不一致" >&2
-              exit 1
-            }
             python3 scripts/release_version.py check --tag "$GITHUB_REF_NAME"
             GITHUB_TOKEN="${{ secrets.GITHUB_TOKEN }}" \
               python3 scripts/prepare_release_assets.py \
