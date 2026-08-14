@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>StardewValleyMcp.Mod</AssemblyName>
     <RootNamespace>StardewValleyMcp.Mod</RootNamespace>
-    <Version>0.1.0-alpha.1</Version>
+    <Version>0.1.0-alpha.2</Version>
     <NoWarn>$(NoWarn);CS8032</NoWarn>
     <ModFolderName>StardewValleyMCP</ModFolderName>
     <EnableModDeploy>false</EnableModDeploy>
