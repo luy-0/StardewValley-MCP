@@ -6,7 +6,7 @@ usage() {
 用法：./scripts/verify.sh [--with-mod]
 
 运行公共契约、Skill、MCP、Mod Protocol 与发行包门禁。
-  --with-mod  额外构建并审计 Mod ZIP；需要已安装 Stardew Valley 与 SMAPI
+  --with-mod  额外构建并审计 Mod ZIP；需要本地游戏或兼容的公开引用程序集
   -h, --help  显示本帮助
 
 依赖：uv、能构建 net6.0 的 .NET SDK，以及 Microsoft.NETCore.App 6.x Runtime。
@@ -40,6 +40,8 @@ if ! dotnet --list-runtimes | grep -Eq '^Microsoft\.NETCore\.App 6\.'; then
   exit 1
 fi
 
+python3 -m unittest discover -s "$repo_root/scripts/tests" -v
+UV_BIN="$uv_bin" python3 "$repo_root/scripts/release_version.py" check
 "$uv_bin" sync --project "$repo_root/mcp" --locked --extra dev
 "$uv_bin" run --project "$repo_root/mcp" python "$repo_root/scripts/generate_protocol.py" --check
 "$uv_bin" run --project "$repo_root/mcp" python "$repo_root/spec/conformance/verify.py"

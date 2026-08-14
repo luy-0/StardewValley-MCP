@@ -42,6 +42,8 @@ uv run --project mcp python scripts/generate_protocol.py --check
 
 Python 发行包通过 PEP 639 声明 `Apache-2.0`，并在 wheel 与 sdist 中携带许可证文本。仓库级第三方组件与分发边界见 [`../THIRD_PARTY_NOTICES.md`](../THIRD_PARTY_NOTICES.md)。
 
+GitHub Release 发布后，普通用户应优先安装对应版本的 wheel，并用同一 Release 的 `SHA256SUMS.txt` 校验文件；源码安装与开发环境继续由 `uv.lock` 锁定。产品版本与 Tag 的维护规则见[发版流程](../docs/releasing.md)。
+
 启动 `serve` 前必须设置 Mod `config.json` 中对应的 Base64 共享秘密：
 
 ```bash

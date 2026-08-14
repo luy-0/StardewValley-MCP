@@ -10,12 +10,30 @@ readme = "README.md"
 requires-python = ">=3.11"
 license = "Apache-2.0"
 license-files = ["LICENSE"]
+authors = [
+  { name = "StardewValley-MCP Contributors" },
+]
+keywords = ["mcp", "smapi", "stardew-valley"]
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Environment :: Console",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Topic :: Games/Entertainment",
+]
 dependencies = [
   "jsonschema>=4.25,<5",
   "mcp>=1.27.2,<2",
   "protobuf>=7.34.1,<8",
   "PyYAML>=6,<7",
 ]
+
+[project.urls]
+Homepage = "https://github.com/luy-0/StardewValley-MCP"
+Repository = "https://github.com/luy-0/StardewValley-MCP"
+Issues = "https://github.com/luy-0/StardewValley-MCP/issues"
+Documentation = "https://github.com/luy-0/StardewValley-MCP/tree/main/docs"
 
 [project.optional-dependencies]
 dev = [
