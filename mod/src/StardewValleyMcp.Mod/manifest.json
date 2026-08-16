@@ -1,7 +1,7 @@
 {
   "Name": "Stardew Valley MCP",
   "Author": "StardewValley-MCP Contributors",
-  "Version": "0.1.0-alpha.2",
+  "Version": "0.1.0-alpha.3",
   "Description": "通过公开 V1 协议连接 Stardew Valley 与本地 MCP 服务端。",
   "UniqueID": "StardewValleyMCP.Mod",
   "EntryDll": "StardewValleyMcp.Mod.dll",

@@ -50,13 +50,15 @@ uv run --project mcp python spec/conformance/generate_mcp_tool_schemas.py --chec
 
 ## Output Schema
 
-每个原子 Tool 的 `outputSchema` 是以下判别联合：
+每个原子 Tool 的 `outputSchema` 顶层必须显式声明 `type: object`，以满足 MCP `2025-11-25` 的 Tool Schema 约束；对象内部再使用以下判别联合：
 
 ```text
 Succeeded { status: "succeeded", commandId, output: <CapabilityResult> }
 Failed    { status: "failed", commandId, error: StardewToolError }
 Unknown   { status: "unknown", commandId, error: StardewToolError }
 ```
+
+生成器与一致性门禁必须分别验证 JSON Schema Draft 2020-12 合法性和 MCP 根对象约束。只通过通用 JSON Schema 元校验并不充分，因为合法的顶层 `oneOf` 仍可能不符合 MCP Tool 的外层定义。
 
 MCP 输出不是 Proto JSON 的逐字透传。投影层必须把 Proto 中所有非 `optional`、非 oneof 的字段正规化为显式 JSON 字段，包括零值、空字符串和空数组；因此生成的 Result Schema 会把这些字段列入 `required`。Proto `optional` 字段与未选中的 oneof 分支保持可省略，线路层是否省略默认值不改变 MCP 输出契约。
 

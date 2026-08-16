@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "stardew-valley-mcp"
-version = "0.1.0a2"
+version = "0.1.0a3"
 description = "连接本地 Stardew Valley SMAPI Mod 的 MCP 服务端"
 readme = "README.md"
 requires-python = ">=3.11"
