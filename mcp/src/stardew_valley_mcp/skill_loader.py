@@ -17,6 +17,7 @@ from jsonschema import Draft202012Validator, ValidationError
 from mcp import types
 
 from .skill_host import ExecutableSkill, SkillContext, SkillHost
+from .tool_schema import validate_mcp_tool_schema
 
 
 SkillHandler = Callable[[SkillContext, dict[str, Any]], Awaitable[dict[str, Any]]]
@@ -108,13 +109,19 @@ def _load_skill(directory: Path, validator: Draft202012Validator) -> ExecutableS
         _resolve_member(directory, tool["outputSchema"]),
         f"Skill '{directory.name}' Output Schema",
     )
-    try:
-        Draft202012Validator.check_schema(input_schema)
-        Draft202012Validator.check_schema(output_schema)
-    except Exception as error:
-        raise SkillLoadError(f"Skill '{directory.name}' 的 JSON Schema 无效") from error
     _validate_schema_refs(input_schema, f"Skill '{directory.name}' Input Schema")
     _validate_schema_refs(output_schema, f"Skill '{directory.name}' Output Schema")
+    try:
+        validate_mcp_tool_schema(
+            input_schema,
+            f"Skill '{directory.name}' Input Schema",
+        )
+        validate_mcp_tool_schema(
+            output_schema,
+            f"Skill '{directory.name}' Output Schema",
+        )
+    except ValueError as error:
+        raise SkillLoadError(str(error)) from error
 
     entrypoint_path, separator, function_name = manifest["entrypoint"].partition(":")
     if not separator:

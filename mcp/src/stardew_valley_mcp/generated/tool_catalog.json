@@ -1472,7 +1472,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "ActivateUiRequest",
       "resultType": "ActivateUiResult",
@@ -2517,7 +2518,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "CloseMenuRequest",
       "resultType": "CloseMenuResult",
@@ -3653,7 +3655,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "CraftItemRequest",
       "resultType": "CraftItemResult",
@@ -4742,7 +4745,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "DiscardInventoryItemRequest",
       "resultType": "DiscardInventoryItemResult",
@@ -5806,7 +5810,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "EmoteRequest",
       "resultType": "EmoteResult",
@@ -6974,7 +6979,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "EquipRequest",
       "resultType": "EquipResult",
@@ -8006,7 +8012,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "FaceRequest",
       "resultType": "FaceResult",
@@ -11719,7 +11726,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "InspectRequest",
       "resultType": "InspectResult",
@@ -12870,7 +12878,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "InteractRequest",
       "resultType": "InteractResult",
@@ -13941,7 +13950,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "MoveInventoryItemRequest",
       "resultType": "MoveInventoryItemResult",
@@ -15778,7 +15788,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "NavigateRequest",
       "resultType": "NavigateResult",
@@ -16835,7 +16846,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "OpenMenuRequest",
       "resultType": "OpenMenuResult",
@@ -18011,7 +18023,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "PurchaseShopItemRequest",
       "resultType": "PurchaseShopItemResult",
@@ -19240,7 +19253,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "QueryInventoryRequest",
       "resultType": "QueryInventoryResult",
@@ -20471,7 +20485,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "QueryPlayersRequest",
       "resultType": "QueryPlayersResult",
@@ -21811,7 +21826,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "QueryRuntimeRequest",
       "resultType": "QueryRuntimeResult",
@@ -23267,7 +23283,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "QueryUiRequest",
       "resultType": "QueryUiResult",
@@ -26398,7 +26415,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "QueryWorldRequest",
       "resultType": "QueryWorldResult",
@@ -27419,7 +27437,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "SayRequest",
       "resultType": "SayResult",
@@ -28606,7 +28625,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "SetEquipmentSlotRequest",
       "resultType": "SetEquipmentSlotResult",
@@ -29697,7 +29717,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "TransferInventoryItemRequest",
       "resultType": "TransferInventoryItemResult",
@@ -30866,7 +30887,8 @@
             ],
             "type": "object"
           }
-        ]
+        ],
+        "type": "object"
       },
       "requestType": "UseToolRequest",
       "resultType": "UseToolResult",

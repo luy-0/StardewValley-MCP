@@ -395,6 +395,7 @@ def output_schema(
     generated.pop("$ref")
     generated.update(
         {
+            "type": "object",
             "oneOf": [
                 {
                     "type": "object",

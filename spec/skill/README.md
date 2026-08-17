@@ -71,6 +71,8 @@ async def run(ctx, arguments):
 
 可执行 Skill Tool 必须同时声明 `inputSchema`、`outputSchema` 和完整 Annotation：
 
+- `inputSchema` 与 `outputSchema` 顶层都必须显式声明 `type: object`；内部可以继续使用 `oneOf` 等 Draft 2020-12 组合关键字。Host 必须在加载时拒绝缺少根对象声明的 Skill，避免一个无效扩展使 MCP 客户端拒绝整批 Tool；
+
 - `readOnlyHint`：整个流程是否只读；
 - `destructiveHint`：是否可能造成不便自动撤销的存档变化；
 - `idempotentHint`：相同调用重复执行是否保证等价；

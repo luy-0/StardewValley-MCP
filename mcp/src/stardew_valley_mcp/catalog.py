@@ -11,6 +11,8 @@ from typing import Any, Iterable
 
 from mcp import types
 
+from .tool_schema import require_mcp_object_root
+
 
 @dataclass(frozen=True)
 class CatalogPolicy:
@@ -50,6 +52,9 @@ class Catalog:
         self._tools = {item["capabilityId"]: item for item in document["tools"]}
         if set(self._capabilities) != set(self._tools):
             raise ValueError("public Tool Catalog capability 集合不一致")
+        for item in self._tools.values():
+            require_mcp_object_root(item["inputSchema"], f"{item['name']} inputSchema")
+            require_mcp_object_root(item["outputSchema"], f"{item['name']} outputSchema")
         self._policy = policy
         self._supported_capabilities = (
             frozenset(self._capabilities)

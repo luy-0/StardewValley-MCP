@@ -189,6 +189,8 @@ def verify_tool_schema_catalog(manifest: dict[str, Any]) -> None:
     for name, tool in tools.items():
         Draft202012Validator.check_schema(tool["inputSchema"])
         Draft202012Validator.check_schema(tool["outputSchema"])
+        require(tool["inputSchema"].get("type") == "object", f"Tool inputSchema 顶层不是 object: {name}")
+        require(tool["outputSchema"].get("type") == "object", f"Tool outputSchema 顶层不是 object: {name}")
         read_only = next(item["side_effect"] == "read_only" for item in manifest["capabilities"] if f"stardew_{item['id']}" == name)
         require(tool["annotations"]["idempotentHint"] == read_only, f"Tool 幂等 Annotation 错误: {name}")
 

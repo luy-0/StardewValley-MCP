@@ -129,6 +129,26 @@ def test_schema_references_must_resolve_inside_the_same_document(reference: str)
             load_executable_skills([skill])
 
 
+def test_output_schema_must_declare_mcp_object_root() -> None:
+    with tempfile.TemporaryDirectory() as directory:
+        skill = Path(directory) / SLEEP_SKILL.name
+        shutil.copytree(SLEEP_SKILL, skill)
+        output_path = skill / "schemas" / "output.json"
+        output_schema = json.loads(output_path.read_text(encoding="utf-8"))
+        output_schema.pop("type")
+        output_path.write_text(json.dumps(output_schema), encoding="utf-8")
+
+        with pytest.raises(SkillLoadError, match="Output Schema 顶层 type 必须是 object"):
+            load_executable_skills([skill])
+
+
+def test_all_public_executable_skill_output_schemas_have_mcp_object_root() -> None:
+    skills = load_executable_skills([ROOT / "skill" / "examples"])
+
+    assert len(skills) == 4
+    assert all(skill.output_schema.get("type") == "object" for skill in skills)
+
+
 def test_cli_accepts_multiple_explicit_trusted_skill_directories() -> None:
     args = build_parser().parse_args(
         ["serve", "--skill-dir", "one", "--skill-dir", "two", "--allow-write"]

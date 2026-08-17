@@ -8,6 +8,7 @@ import time
 from pathlib import Path
 
 import anyio
+import pytest
 from google.protobuf import json_format
 from jsonschema import Draft202012Validator
 from mcp import ClientSession
@@ -229,6 +230,35 @@ def test_catalog_intersection_and_descriptor_projection_cover_observation_fixtur
         Draft202012Validator(catalog.tool(capability).outputSchema).validate(result)
     inspect_output = project_message(getattr(frame.command_event.result, "inspect"))
     assert inspect_output["items"][0]["resolution"]["status"] == "resolved"
+
+
+def test_catalog_requires_mcp_object_root_for_every_tool_schema() -> None:
+    catalog = Catalog.load()
+
+    assert len(catalog.capability_ids) == 22
+    for capability_id in catalog.capability_ids:
+        tool = catalog.tool(capability_id)
+        assert tool.inputSchema["type"] == "object"
+        assert tool.outputSchema is not None
+        assert tool.outputSchema["type"] == "object"
+        assert len(tool.outputSchema["oneOf"]) == 3
+
+
+def test_catalog_rejects_generated_output_schema_without_mcp_object_root() -> None:
+    document = json.loads(
+        (
+            ROOT
+            / "mcp"
+            / "src"
+            / "stardew_valley_mcp"
+            / "generated"
+            / "tool_catalog.json"
+        ).read_text(encoding="utf-8")
+    )
+    document["tools"][0]["outputSchema"].pop("type")
+
+    with pytest.raises(ValueError, match="outputSchema 顶层 type 必须是 object"):
+        Catalog(document)
 
 
 def test_catalog_rejects_unknown_mod_capability_and_injects_scope_policy() -> None:
